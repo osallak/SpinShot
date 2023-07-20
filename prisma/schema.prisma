@@ -18,8 +18,8 @@ model User {
   email                String
   username             String
   avatar               String
-  password             String
-  passwordSalt         String                 @map("password_salt")
+  password             String?
+  passwordSalt         String?                @map("password_salt")
   country              String?
   twoFactorAuth        Boolean                @default(false) @map("two_factor_auth")
   status               UserStatus
@@ -29,7 +29,9 @@ model User {
   HaveAchievement      haveAchievement[]
   RoomChatConversation RoomChatConversation[]
   Sent                 Conversation[]         @relation("sender")
-  Recieved             Conversation[]         @relation("reciever")
+  Received             Conversation[]         @relation("receiver")
+  SentNotif            Notification[]         @relation("sent")
+  ReceivedNotif        Notification[]         @relation("received")
 
   @@unique([username, email])
   @@map("user")
@@ -167,13 +169,25 @@ model Message {
 model Conversation {
   id         String @id @default(uuid())
   senderId   String @map("sender_id")
-  recieverId String @map("reciever_id")
+  receiverId String @map("reciever_id")
 
   Sender   User      @relation("sender", fields: [senderId], references: [id])
-  Reciever User      @relation("reciever", fields: [recieverId], references: [id])
+  Receiver User      @relation("receiver", fields: [receiverId], references: [id])
   Messages Message[]
 
   @@map("conversation")
+}
+
+//Notification 
+
+model Notification {
+  id        String    @id @default(uuid())
+  notifType NotifType
+  sender    User      @relation("sent", fields: [senderId], references: [id])
+  receiver  User      @relation("received", fields: [receiverId], references: [id])
+
+  senderId   String @map("sender_id")
+  receiverId String @map("receiver_id")
 }
 
 //Types

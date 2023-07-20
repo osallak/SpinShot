@@ -15,8 +15,8 @@ model User {
   id                   String                 @id @default(uuid())
   firstName            String                 @map("first_name")
   lastName             String                 @map("last_name")
-  email                String
-  username             String
+  email                String                 @unique
+  username             String                 @unique
   avatar               String
   password             String?
   passwordSalt         String?                @map("password_salt")
@@ -33,7 +33,6 @@ model User {
   SentNotif            Notification[]         @relation("sent")
   ReceivedNotif        Notification[]         @relation("received")
 
-  @@unique([username, email])
   @@map("user")
 }
 
@@ -80,6 +79,7 @@ model Opponent {
 }
 
 model Game {
+  id         String @id @default(uuid())
   userId     String @map("user_id")
   opponentId String
   mode       Mode
@@ -89,7 +89,6 @@ model Game {
   user     User     @relation(fields: [userId], references: [id])
   History  History?
 
-  @@id([userId, opponentId])
   @@map("game")
 }
 
@@ -101,9 +100,9 @@ model History {
   userId        String  @map("user_id")
   opponentId    String  @map("opponent_id")
 
-  Game Game @relation(fields: [userId, opponentId], references: [userId, opponentId])
+  Game   Game   @relation(fields: [gameId], references: [id])
+  gameId String @unique
 
-  @@unique([userId, opponentId])
   @@map("history")
 }
 
@@ -133,7 +132,7 @@ model RoomChat {
   id                   String                 @id @default(uuid())
   type                 RoomType
   password             String?
-  salt                 String?
+  passwordSalt         String?
   RoomChatConversation RoomChatConversation[]
 
   @@map("room_chat")

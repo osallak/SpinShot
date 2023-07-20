@@ -9,10 +9,10 @@ import * as Joi from 'joi';
       NODE_ENV: Joi.string()
         .valid("development", "production", "test")
         .default("development"),
-      PORT: Joi.number()
+      PORT: Joi.number().default(3000)
     })
   })],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

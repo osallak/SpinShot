@@ -3,14 +3,14 @@
 import { ThemeProvider, Button } from "@material-tailwind/react";
  
 export { ThemeProvider, Button };
-import SimpleButton from '@/Components/Buttons/SimpleButton'
-import EmptyButton from '@/Components/Buttons/EmptyButton';
+import SimpleButton from '@/Components/ui/Buttons/SimpleButton'
+import EmptyButton from '@/Components/ui/Buttons/EmptyButton';
 import ExportChannels from '../../public/ExportChannels.svg'
 import CreateChannel from '../../public/CreateChannel.svg'
 import { useRouter } from 'next/router'
-import ContinueWithIntra from '@/Components/Buttons/ContinueWithIntra';
-import IconButton from '@/Components/Buttons/IconButton';
-import ToggleButton from "@/Components/Buttons/ToggleButton";
+import ContinueWithIntra from '@/Components/ui/Buttons/ContinueWithIntra';
+import IconButton from '@/Components/ui/Buttons/IconButton';
+import ToggleButton from "@/Components/ui/Buttons/ToggleButton";
 
 export default function Home() {
   const Router = useRouter();
@@ -29,6 +29,10 @@ export default function Home() {
           <IconButton onclick={() => {onclick("/Enter")}} content="Explore channels" icon={ExportChannels} />
         </div>
         <ToggleButton />
+      {/* Inputs */}
+      <div className="flex flex-col">
+        <input type="username" value="Username or Email" className="rounded-lg text- w-80 h-12 border-2 bg-transparent opacity-40" />
+      </div>
       </div> 
     </ThemeProvider>)
 }

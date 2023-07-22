@@ -1,43 +1,34 @@
-import React from "react";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import active from "../../../../public/active.svg";
+import unactive from "../../../../public/unactive.svg";
 
-
-import {
-  Tabs,
-  TabsHeader,
-  Tab,
-} from "@material-tailwind/react";
- 
-export default function ToggleButton() {
-  const [activeTab, setActiveTab] = React.useState("public");
-  const data = [
-    {
-      label: "Public",
-      value: "public",
-    },
-    {
-      label: "Private",
-      value: "private",
-    },
-  ];
+const ToggleButton = () => {
+  const [isActive, setisActive] = useState(false);
+  const Switch = () => {
+    setisActive(!isActive);
+  };
   return (
-    <Tabs value={activeTab}>
-      <TabsHeader
-        className="bg-very-dark-purple rounded-full md:w-48 md:h-10 h-7 w-40"
-        indicatorProps={{
-          className: "bg-peridot rounded-full",
-        }}
+    <div className="bg-red h-6 w-10">
+      <motion.button
+        className={`h-6 w-10 bg-light-grey bg-opacity-20 rounded-full px-0.5 flex items-center`}
+        style={{ justifyContent: isActive ? "flex-end" : "flex-start" }}
+        onClick={Switch}
       >
-        {data.map(({ label, value }) => (
-          <Tab
-            key={value}
-            value={value}
-            onClick={() => setActiveTab(value)}
-            className={activeTab === value ? "text-very-dark-purple text-sm md:text-xl font-Passion-One" : "text-pearl text-sm md:text-xl font-Passion-One"}
-          >
-            {label}
-          </Tab>
-        ))}
-      </TabsHeader>
-    </Tabs>
+        <motion.div
+          className="h-5 w-5 opacity-100 rounded-full flex justify-center items-center"
+          layout
+        >
+          {isActive ? (
+            <Image className="w-5 h-5" src={active} alt="unactive button" />
+          ) : (
+            <Image className="w-full h-full" src={unactive} alt="active button" />
+          )}
+        </motion.div>
+      </motion.button>
+    </div>
   );
 }
+
+export default ToggleButton

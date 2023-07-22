@@ -17,7 +17,8 @@ module.exports = withMT({
       colors: {
         'very-dark-purple': '#260323',
         'peridot': '#D8EA10',
-        'pearl': '#FEECFC'
+        'pearl': '#FEECFC',
+        'light-grey': '#D9D9D9'
       },
       fontFamily: {
         'Passion-One': ['Passion One']

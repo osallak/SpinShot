@@ -7,4 +7,10 @@ export type ButtonProps = {
 export type OthersProps = {
     onclick: () => void;
     content: string;
+};
+
+export type PasswordProps = {
+  onclick: () => void;
+  icon: string;
+  isState: boolean;
 }

@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Intra from "../../../../public/Intra.svg";
-import { ButtonProps } from "../../../types/ButtonProps";
+import { OthersProps } from "../../../types/ButtonProps";
 
-const ContinueWithIntra: React.FC<ButtonProps> = ({ onclick, content }) => {
+const ContinueWithIntra: React.FC<OthersProps> = ({ onclick, content }) => {
   return (
     <motion.div
       whileTap={{ scale: 0.9 }}

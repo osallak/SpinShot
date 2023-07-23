@@ -3,3 +3,8 @@ export type ButtonProps = {
   content: string;
   icon: string;
 };
+
+export type OthersProps = {
+    onclick: () => void;
+    content: string;
+}

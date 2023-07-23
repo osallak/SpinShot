@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import { ButtonProps } from "../../../types/ButtonProps";
+import { OthersProps } from "../../../types/ButtonProps";
 
-const SimpleButton: React.FC<ButtonProps> = ({ onclick, content }) => {
+const SimpleButton: React.FC<OthersProps> = ({ onclick, content }) => {
   return (
     <motion.div
       whileTap={{ scale: 0.9 }}

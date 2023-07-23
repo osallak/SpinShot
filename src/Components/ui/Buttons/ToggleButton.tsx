@@ -7,7 +7,7 @@ import unactive from "../../../../public/unactive.svg";
 const ToggleButton = () => {
   const [isActive, setisActive] = useState(false);
   const Switch = () => {
-    setisActive(!isActive);
+    setisActive((isActive) => !isActive)
   };
   return (
     <div className="bg-red h-6 w-10">

@@ -13,13 +13,12 @@ datasource db {
 //User
 model User {
   id                   String                 @id @default(uuid())
-  firstName            String                 @map("first_name")
-  lastName             String                 @map("last_name")
+  firstName            String?                 @map("first_name")
+  lastName             String?                 @map("last_name")
   email                String                 @unique
   username             String                 @unique
-  avatar               String
+  avatar               String?                 @default("")
   password             String?
-  passwordSalt         String?                @map("password_salt")
   country              String?
   twoFactorAuth        Boolean                @default(false) @map("two_factor_auth")
   status               UserStatus
@@ -132,7 +131,6 @@ model RoomChat {
   id                   String                 @id @default(uuid())
   type                 RoomType
   password             String?
-  passwordSalt         String?
   RoomChatConversation RoomChatConversation[]
 
   @@map("room_chat")

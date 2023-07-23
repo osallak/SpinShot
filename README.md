@@ -1,1 +1,1 @@
-# SpinShot
+# Spinshot

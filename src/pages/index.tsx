@@ -23,7 +23,7 @@ const Home = () => {
   };
   return (
     <ThemeProvider>
-      <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex justify-between items-center space-y-12 ">
+      <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex justify-center items-center space-y-12 ">
         <div className="w-1/2 h-full flex justify-center items-center flex-col space-y-12">
           <SimpleButton
             onclick={() => {

@@ -18,6 +18,6 @@ const ContinueWithIntra: React.FC<OthersProps> = ({ onclick, content }) => {
       </button>
     </motion.div>
   );
-}
+};
 
-export default ContinueWithIntra
+export default ContinueWithIntra;

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { InputsProps } from "@/types/InputsProps";
 import { ChangeEvent } from "react";
-
+import PasswordButton from "../Buttons/PasswordButton";
 const InputBorder: React.FC<InputsProps> = ({
   type,
   content,
@@ -21,14 +21,26 @@ const InputBorder: React.FC<InputsProps> = ({
   };
 
   return (
-    <div className={`relative w-${Width} flex flex-row items-center`}>
-      <input
-        type={type == "password" && ShowPassword ? "text" : type}
-        value={inputValue}
-        onChange={handleInputChange}
-        placeholder={content}
-        className={`bg-${Color} pl-10 pr-4 py-2 rounded-2xl w-full h-full border-${BorderSize} border-${Border} border-opacity-40 focus:outline-none placeholder:text-pearl placeholder:opacity-40 placeholder:font-Poppins, font-thin text-pearl focus:placeholder:opacity-0`}
-      />
+    <div
+      className={`rounded-2xl w-[${Width}px] h-10 flex flex-row items-center bg-${Color} border-opacity-40 px-2 border-${Border} border-${BorderSize}`}
+    >
+      <div className="w-[100%] h-full flex">
+        <motion.div className="inset-y-0 left-1.5 flex items-center pointer-events-none space-x-64">
+          <Image
+            src={icon}
+            alt="username or Email"
+            className="h-5 w-5 text-gray-500"
+          />
+        </motion.div>
+
+        <input
+          type={type == "password" && ShowPassword ? "text" : type}
+          value={inputValue}
+          onChange={handleInputChange}
+          placeholder={content}
+          className={`w-full bg-transparent pl-3 h-full focus:outline-none placeholder:text-pearl placeholder:opacity-40 placeholder:font-Poppins, font-thin text-pearl focus:placeholder:opacity-0`}
+        />
+      </div>
       {type === "password" ? (
         <PasswordButton
           ShowPassword={ShowPassword}
@@ -37,13 +49,6 @@ const InputBorder: React.FC<InputsProps> = ({
       ) : (
         ""
       )}
-      <motion.div className="absolute inset-y-0 left-1.5 pl-2 flex items-center pointer-events-none space-x-64">
-        <Image
-          src={icon}
-          alt="username or Email"
-          className="h-5 w-5 text-gray-500"
-        />
-      </motion.div>
     </div>
   );
 };

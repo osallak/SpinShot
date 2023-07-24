@@ -13,4 +13,4 @@ const EmptyButton: React.FC<OthersProps> = ({ onclick, content }) => {
   );
 };
 
-export default EmptyButton
+export default EmptyButton;

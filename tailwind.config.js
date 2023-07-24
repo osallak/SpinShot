@@ -18,10 +18,12 @@ module.exports = withMT({
         'very-dark-purple': '#260323',
         'peridot': '#D8EA10',
         'pearl': '#FEECFC',
-        'light-grey': '#D9D9D9'
+        'light-grey': '#D9D9D9',
+        'gradiant-white': '#ffffff15'
       },
       fontFamily: {
-        'Passion-One': ['Passion One']
+        'Passion-One': ['Passion One'],
+        'Poppins' : ['Poppins', 'sans-serif']
       }
     },
   },

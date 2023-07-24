@@ -4,7 +4,15 @@ import { useState } from "react";
 import { InputsProps } from "@/types/InputsProps";
 import { ChangeEvent } from "react";
 
-const InputBorder: React.FC<InputsProps> = ({ type, content, icon, Width, Border, Color, BorderSize }) => {
+const InputBorder: React.FC<InputsProps> = ({
+  type,
+  content,
+  icon,
+  Width,
+  Border,
+  Color,
+  BorderSize,
+}) => {
   const [inputValue, setInputValue] = useState("");
   const [ShowPassword, setShowPassword] = useState(false);
 

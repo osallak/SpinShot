@@ -7,8 +7,9 @@ import ContinueWithIntra from "@/Components/ui/Buttons/ContinueWithIntra";
 import SwitchButton from "@/Components/ui/Buttons/SwitchButton";
 import ToggleButton from "@/Components/ui/Buttons/ToggleButton";
 import IconButton from "@/Components/ui/Buttons/IconButton";
-import { ThemeProvider, Button } from "@material-tailwind/react";
+import { ThemeProvider, Button, input } from "@material-tailwind/react";
 import { useRouter } from "next/router";
+import { useState } from "react";
 export { ThemeProvider, Button };
 import ExportChannels from "../../public/ExportChannels.svg";
 import CreateChannel from "../../public/CreateChannel.svg";
@@ -17,7 +18,17 @@ import unactive from "../../public/unactive.svg";
 import InputBorder from "@/Components/ui/Inputs/InputBorder";
 import Email from "../../public/Email.svg";
 import lock from "../../public/lock.svg";
+import redlock from "../../public/redlock.svg";
+import user from "../../public/user.svg";
+import reduser from "../../public/reduser.svg";
+import redemail from "../../public/redemail.svg";
+
+const RegPassword = /^.{6,}$/;
+const RegEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const RegUsername = /^[a-zA-Z0-9_.]{3,16}$/;
+
 const Home = () => {
+  const [inputValue, setInputValue] = useState("");
   const Router = useRouter();
   const RedirectionFunction = (Path: string) => {
     Router.push(Path);
@@ -81,31 +92,40 @@ const Home = () => {
         </div>
         <div className="md:w-1/5 md:h-1/2 w-full h-full backdrop-blur flex justify-center items-center flex-col space-y-4 md:rounded-xl rounded-none bg-gradient-to-br from-gradiant-white to-gradiant-white">
           <InputBorder
-            type="string"
-            content="Username or Email"
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            type="username"
+            PlaceHolder="Username"
+            icon={user}
+            redicon={reduser}
+            Border="#FEECFC40"
+            Color="transparent"
+            BorderSize={2}
+            Regexp={RegUsername}
+          />
+          <InputBorder
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            type="email"
+            PlaceHolder="Email"
             icon={Email}
-            Width={400}
-            Border="pearl"
-            Color="transparent"
-            BorderSize={2}
-          />
-          <InputBorder
-            type="password"
-            content="Password"
-            icon={lock}
-            Width={400}
-            Border="none"
+            redicon={redemail}
+            Border="transparent"
             Color="very-dark-purple"
-            BorderSize={0}
+            BorderSize={2}
+            Regexp={RegEmail}
           />
           <InputBorder
+            inputValue={inputValue}
+            setInputValue={setInputValue}
             type="password"
-            content="Password"
+            PlaceHolder="Password"
             icon={lock}
-            Width={400}
-            Border="pearl"
+            redicon={redlock}
+            Border="#FEECFC40"
             Color="transparent"
             BorderSize={2}
+            Regexp={RegPassword}
           />
         </div>
       </div>

@@ -1,9 +1,12 @@
 export type InputsProps = {
-    content: string;
+    inputValue: string;
+    setInputValue: Function
     type: string
+    PlaceHolder: string;
     icon: string
-    Width: number
+    redicon: string
     Border: string
     Color: string
     BorderSize: number
+    Regexp: RegExp
 }

@@ -1,30 +1,44 @@
-import { Controller, Post, Get, Put, Delete, Req, Body } from '@nestjs/common';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { UserService } from 'src/user/user.service';
-import { UserStatus } from '@prisma/client';
+import {
+  Controller,
+  Post,
+  Get,
+  Put,
+  Delete,
+  Req,
+  Body,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { CreateUserDto } from 'src/user/dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+// import { Request } from 'express';
 
-
-export type User = {
-    id: string;
-    firstName?: string;
-    lastName?: string;
-    email: string;
-    uesrname: string;
-    password: string;
-    avatar?: string;
-    country?: string;
-    twoFactorAuth: boolean;
-    status: UserStatus;
-};
-
-@Controller('auth')
+@Controller()
 export class AuthController {
+  constructor(private authService: AuthService) {}
 
-    constructor(private userService: UserService) {}
+  // @Post('/signup/local')
+  // async signupLocal(@Request() userDto: any) {
+  //   console.log('inside controller signupLocal');
+  //   return await this.authService.signUp(userDto);
+  // }
 
-    @Post('/signup/local')
-    async signupLocal(@Body() userDto: CreateUserDto) {
-        return this.userService.create(userDto);
-    }
+  // @Post('/signin/local')
+  // // @UseGuards(LocalAuthGuard)
+  // async signinLocal(@Request() req: any) {
+  //   return req.user;
+  // }
 
+  // @Get('/user')
+  // // @UseGuards(JwtAuthGuard)
+  // async getUser(@Req() req: any) {
+  //   return req.user;
+  // }
+
+  @Get()
+ logout(): string {
+    return 'user logged out';
+  }
 }

@@ -13,11 +13,11 @@ datasource db {
 //User
 model User {
   id                   String                 @id @default(uuid())
-  firstName            String?                 @map("first_name")
-  lastName             String?                 @map("last_name")
+  firstName            String?                @map("first_name")
+  lastName             String?                @map("last_name")
   email                String                 @unique
   username             String                 @unique
-  avatar               String?                 @default("")
+  avatar               String?                @default("")
   password             String?
   country              String?
   twoFactorAuth        Boolean                @default(false) @map("two_factor_auth")

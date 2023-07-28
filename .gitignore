@@ -3,3 +3,6 @@ node_modules/
 .env
 .vscode/
 prisma/migration*
+env/*
+!env/.gitkeep
+!env/development.example.env

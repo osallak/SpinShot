@@ -1,18 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import * as Joi from 'joi';
+import configuration from './config/configuration';
+import { validationSchema } from './config/validation';
 
 @Module({
-  imports: [ConfigModule.forRoot({
-    isGlobal: true,
-    validationSchema: Joi.object({
-      NODE_ENV: Joi.string()
-        .valid("development", "production", "test")
-        .default("development"),
-      PORT: Joi.number().default(3000)
-    })
-  })],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      cache: true,
+      envFilePath: `${process.cwd()}/env/${process.env.NODE_ENV}.env`,
+      load: [configuration],
+      validationSchema,
+    }),
+  ],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

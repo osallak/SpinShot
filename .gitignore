@@ -1,8 +1,8 @@
 dist
 node_modules/
-.env
 .vscode/
 prisma/migration*
+data
 env/*
 !env/.gitkeep
 !env/development.example.env

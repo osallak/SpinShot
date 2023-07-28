@@ -38,6 +38,6 @@ const SwitchButton = () => {
       </TabsHeader>
     </Tabs>
   );
-}
+};
 
-export default SwitchButton
+export default SwitchButton;

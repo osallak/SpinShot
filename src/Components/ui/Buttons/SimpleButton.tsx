@@ -17,4 +17,4 @@ const SimpleButton: React.FC<OthersProps> = ({ onclick, content }) => {
   );
 };
 
-export default SimpleButton
+export default SimpleButton;

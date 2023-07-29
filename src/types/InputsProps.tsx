@@ -10,3 +10,15 @@ export type InputsProps = {
     BorderSize: number
     Regexp: RegExp
 }
+
+export type ConfirmProps = {
+    inputValue: string;
+    setinputValue: Function
+    setisValid: Function
+    PlaceHolder: string;
+    icon: string
+    Border: string
+    Color: string
+    BorderSize: number
+    Regexp: RegExp
+}

@@ -6,7 +6,6 @@ import user from "../../../../public/user.svg";
 import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import { useRouter } from "next/router";
 import { MouseEvent } from "react";
-import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
 
 const RegPassword = /^.{6,}$/;
 const RegEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -111,10 +110,11 @@ function Signup() {
             />
           </div>
           <div className="flex justify-center items-center lg:w-[67%] w-[70%] lg:h-[45px] h-[40px]">
-            <ConfirmationPassword
+            <InputBorder
               inputValue={inputValue}
               setinputValue={setinputValue}
               setisValid={setisValid}
+              type="password"
               PlaceHolder="Confirme Password"
               icon={user}
               Border="#FEECFC40"

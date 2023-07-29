@@ -1,14 +1,13 @@
 import Image from "next/image";
 import { useState } from "react";
-import { InputsProps } from "@/types/InputsProps";
+import { ConfirmProps } from "@/types/InputsProps";
 import { ChangeEvent } from "react";
 import PasswordButton from "../Buttons/PasswordButton";
 
-const InputBorder: React.FC<InputsProps> = ({
+const ConfirmationPassword: React.FC<ConfirmProps> = ({
   inputValue,
   setinputValue,
   setisValid,
-  type,
   PlaceHolder,
   icon,
   Border,
@@ -47,23 +46,19 @@ const InputBorder: React.FC<InputsProps> = ({
           <Image src={icon} alt="username or Email" className="h-5 w-5" />
         </div>
         <input
-          type={type == "password" && ShowPassword ? "text" : type}
+          type="password"
           onChange={handleInputChange}
           onBlur={handleBlur}
           placeholder={PlaceHolder}
           className={`w-full bg-transparent pl-3 h-full focus:outline-none placeholder:opacity-40 placeholder:font-Poppins, font-thin text-pearl focus:placeholder:opacity-0`}
         />
       </div>
-      {type === "password" ? (
         <PasswordButton
           ShowPassword={ShowPassword}
           setShowPassword={setShowPassword}
         />
-      ) : (
-        ""
-      )}
     </div>
   );
 };
 
-export default InputBorder;
+export default ConfirmationPassword;

@@ -5,7 +5,7 @@ const SimpleButton: React.FC<OthersProps> = ({onclick, content }) => {
   return (
     <motion.div
       whileTap={{ scale: 0.9 }}
-      className="md:w-40 w-32 md:h-10 h-8 rounded-full flex justify-center items-center bg-peridot"
+      className="md:w-40 w-32 md:h-10 sm:h-10 h-8 rounded-full flex justify-center items-center bg-peridot"
     >
       <button
         onClick={onclick}

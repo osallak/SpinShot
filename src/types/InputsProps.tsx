@@ -1,10 +1,10 @@
 export type InputsProps = {
     inputValue: string;
-    setInputValue: Function
+    setinputValue: Function
+    setisValid: Function
     type: string
     PlaceHolder: string;
     icon: string
-    redicon: string
     Border: string
     Color: string
     BorderSize: number

@@ -11,6 +11,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MAIL_USER, MAIL_PASS } from './global/global.constants';
+import { config } from 'dotenv';
 
 @Module({
   imports: [
@@ -27,8 +28,8 @@ import { MAIL_USER, MAIL_PASS } from './global/global.constants';
       transport: {
         service: 'gmail',
         auth: {
-          user: MAIL_USER,
-          pass: MAIL_PASS,
+          user: process.env.EMAIL,
+          pass: process.env.PASSWORD,
         },
       },
     }),
@@ -38,11 +39,7 @@ import { MAIL_USER, MAIL_PASS } from './global/global.constants';
   ],
   controllers: [AuthController],
   providers: [
-    PrismaService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    PrismaService
   ],
 })
 export class AppModule {}

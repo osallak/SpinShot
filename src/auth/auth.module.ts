@@ -15,7 +15,7 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     UserModule,
     JwtModule.register({
-      secret: JWT_SECRET,
+      secret: JWT_SECRET,//TODO: get from env & use different secret for verification token
       signOptions: { expiresIn: '1d' }, //? expires in one day 
     }),
     PassportModule,

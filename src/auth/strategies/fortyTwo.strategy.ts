@@ -27,7 +27,6 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
     profile: any,
   ): Promise<any> {
     //? here goes the logic for validating user
-    console.log(profile);
     return true;
   }
 }

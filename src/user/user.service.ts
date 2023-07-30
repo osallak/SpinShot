@@ -12,6 +12,8 @@ import { DEFAULT_AVATAR } from 'src/global/global.constants';
 import { UserStatus } from '@prisma/client';
 import { log } from 'console';
 import { MailerService } from '@nestjs-modules/mailer';
+import { verify } from 'crypto';
+import { JwtService } from '@nestjs/jwt';
 
 export type User = {
   id: string;
@@ -30,7 +32,8 @@ export type User = {
 export class UserService {
   private readonly logger = new Logger('UserService');
   constructor(private prisma: PrismaService,
-    private mailer: MailerService) {}
+    private mailer: MailerService,
+    private jwtService: JwtService) {}
 
   async findOneByEmail(email: string) {
     try {
@@ -55,6 +58,9 @@ export class UserService {
   }
 
   async findOneByUsername(username: string) {
+
+    if (!username) throw new BadRequestException('Username is required');
+
     try {
       return await this.prisma.user.findUnique({
         where: { username },
@@ -66,7 +72,6 @@ export class UserService {
   }
 
   async signUp(data: CreateUserDto): Promise<any> {
-    console.log('entered signup');
     let user: any = await this.findOneByUsername(data.username);
     if (user) {
       throw new ForbiddenException('Username already exists');
@@ -75,6 +80,7 @@ export class UserService {
     if (user) {
       throw new ForbiddenException('Email already exists');
     }
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(data.password, salt);
     user = await this.prisma.user.create({
@@ -87,14 +93,9 @@ export class UserService {
       },
     });
 
-    await this.mailer.sendMail({
-      to: data.email,
-      subject: 'Welcome to Chat App',
-      template: './welcome',
-      context: {
-        username: data.username,
-      },
-    });
+    if (!user) {
+      throw new InternalServerErrorException();
+    }
     const { password, ...rest } = data;
     return rest;
   }
@@ -106,6 +107,27 @@ export class UserService {
       throw new BadRequestException('Invalid credentials');
     }
 
+    await this.prisma.user.update({
+      where: { username: user.username },
+      data: { status: UserStatus.ONLINE },
+    });
     return user;
   }
+
+  async verifyEmail(email: string): Promise<boolean> {
+    const user = await this.findOneByEmail(email);
+    if (!user) {
+      throw new BadRequestException('Invalid email');
+    }
+
+    if (user.mailVerified) {
+      throw new BadRequestException('Email already verified');
+    }
+    await this.prisma.user.update({
+      where: { email: user.email },
+      data: { mailVerified: true },
+    });
+    return true;
+  }
+
 }

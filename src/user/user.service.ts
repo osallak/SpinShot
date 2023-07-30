@@ -101,7 +101,6 @@ export class UserService {
   }
 
   async signIn(username: string, pass: string): Promise<any> {
-    //TODO: change user status to online
     const user = await this.findOneByUsername(username);
     if (!user || !user.password || !(await bcrypt.compare(pass, user.password))) {
       throw new BadRequestException('Invalid credentials');

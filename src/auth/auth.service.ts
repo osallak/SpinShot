@@ -32,27 +32,35 @@ export class AuthService {
     return { token: await this.jwtService.signAsync(payload) };
   }
 
-  async signUp(user: CreateUserDto) {
-    const returnedUser = await this.userService.signUp(user);
-    if (!returnedUser) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+  async sendMailVerification(user: any) {
     const verificationToken = await this.jwtService.signAsync({
-      sub: returnedUser.id,
-      email: returnedUser.email,
+      sub: user.id,
+      email: user.email,
       iss: 'Transcendence',
     });
 
     if (!verificationToken) {
       throw new InternalServerErrorException('Could not create token');
     }
+
     const url = `https://localhost:3000/auth/verify?token=${verificationToken}`; //TODO: change in production
     await this.mailerService.sendMail({
-      to: returnedUser.email,
+      to: user.email,
       subject: 'Verify your email',
-      template: './email-verification',
       text: url,
     });
+  }
+  async signUp(user: CreateUserDto) {
+    const returnedUser = await this.userService.signUp(user);
+    if (!returnedUser) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    try {
+      await this.sendMailVerification(returnedUser);
+    } catch (e) {
+      this.logger.error(e.message ?? 'Could not send verification email');
+      throw new InternalServerErrorException('Could not send verification email');
+    }
   }
 
   async signIn(username: string, pass: string): Promise<any> {
@@ -62,10 +70,15 @@ export class AuthService {
     }
 
     if (user.mailVerified === false) {
-      throw new UnauthorizedException('Email not verified'); //TODO: to be verified
+      try {
+        await this.sendMailVerification(user);
+      } catch(e) {
+        this.logger.error(e.message ?? 'Could not send verification email');
+        throw new InternalServerErrorException('Could not send verification email');
+      }
+      throw new UnauthorizedException('Email not verified'); //TODO: to be discussed with frontend 
     }
 
-    this.logger.log('new signin from: ' + user.username);
     return await this.createToken(user);
   }
 

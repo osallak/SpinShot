@@ -10,7 +10,7 @@ const SimpleButton: React.FC<OthersProps> = ({ onclick, content }) => {
       <button
         type="submit"
         onClick={onclick}
-        className="rounded-full text-md md:text-xl w-full h-full font-Passion-One text-very-dark-purple"
+        className={`"bg-peridot" rounded-full text-md md:text-xl w-full h-full font-Passion-One text-very-dark-purple`}
       >
         {content}
       </button>

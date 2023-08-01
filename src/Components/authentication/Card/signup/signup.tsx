@@ -1,14 +1,13 @@
 import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
 import Image from "next/image";
 import InputBorder from "@/Components/ui/Inputs/InputBorder";
-import { ChangeEvent, useEffect, useState } from "react";
-import user from "../../../../public/user.svg";
-import email from "../../../../public/email.svg";
-import lock from "../../../../public/lock.svg";
+import { useState } from "react";
+import user from "../../../../../public/user.svg";
+import email from "../../../../../public/email.svg";
+import lock from "../../../../../public/lock.svg";
 import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import { useRouter } from "next/router";
 import { MouseEvent } from "react";
-import { FormEvent } from "react";
 import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
 
 const RegPassword = /^.{6,}$/;
@@ -21,12 +20,10 @@ const Signup: React.FC = () => {
   const [Password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
   const [isValid, setisValid] = useState(false);
-  const [next, setnext] = useState(0);
-  const [isReg, setisReg] = useState(true);
   const Router = useRouter();
-
   const SignupArray = [
     {
+      id: 0,
       inputValue: Username,
       setinputValue: setUsername,
       value: Username,
@@ -37,9 +34,10 @@ const Signup: React.FC = () => {
       Border: "#FEECFC40",
       Color: "transparent",
       BorderSize: 2,
-      isReg: isReg,
+      Reg: RegUsername,
     },
     {
+      id: 1,
       inputValue: Email,
       setinputValue: setEmail,
       value: Email,
@@ -50,9 +48,10 @@ const Signup: React.FC = () => {
       Border: "#FEECFC40",
       Color: "transparent",
       BorderSize: 2,
-      isReg: isReg,
+      Reg: RegEmail,
     },
     {
+      id: 2,
       inputValue: Password,
       setinputValue: setPassword,
       value: Password,
@@ -63,69 +62,18 @@ const Signup: React.FC = () => {
       Border: "#FEECFC40",
       Color: "transparent",
       BorderSize: 2,
-      isReg: isReg,
+      Reg: RegPassword,
     },
   ];
-
+  
   const RedirectionFunction = (
     e: MouseEvent<HTMLButtonElement>,
     Path: string
   ) => {
     e.preventDefault();
-    isValid ? Router.push(Path) : "";
+    isValid ? Router.push(Path) : '';
   };
-
-  const HandleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (Username === "") setisValid(false);
-    else setisValid(true);
-    e.persist();
-    setUsername(e.currentTarget.value);
-    const Reg = Username.match(RegUsername);
-    if (!Reg) setisReg(false);
-    else setisReg(true);
-  };
-
-  const HandleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (Email === "") setisValid(false);
-    else setisValid(true);
-    e.preventDefault();
-    e.persist();
-    setEmail(e.currentTarget.value);
-    // const Reg = Email.match(RegEmail);
-    // if (!Reg) setisReg(false)
-    // else setisReg(true)
-  };
-
-  const HandlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (Password === "") setisValid(false);
-    else setisValid(true);
-    e.preventDefault();
-    e.persist();
-    setPassword(e.currentTarget.value);
-    // const Reg = Password.match(RegPassword);
-    // if (!Reg) setisReg(false)
-    // else setisReg(true)
-  };
-
-  const HandleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (ConfirmPassword === "") setisValid(false);
-    else setisValid(true);
-    e.preventDefault();
-    e.persist();
-    setConfirmPassword(e.currentTarget.value);
-    console.log("Password: " + Password);
-    console.log("ConfirmPassword: " + ConfirmPassword);
-    if (ConfirmPassword !== Password) {
-      setisValid(false);
-    } else setisValid(true);
-    console.log(isValid);
-  };
-
-  const HandleSubmit = (e: FormEvent<HTMLInputElement>) => {
-    e.preventDefault();
-  };
-  const renderedObjects = [];
+  console.log("Username: |" + Username + "| Email: |" + Email + "")
 
   return (
     <div className="sm:w-[600px] sm:h-[750px] w-full h-full backdrop:blur bg-white/10 sm:rounded-2xl rounded-none flex justify-center items-center flex-col md:space-y-9 space-y-5">
@@ -170,9 +118,9 @@ const Signup: React.FC = () => {
             height: "100%",
           }}
         >
-          <div className=" border-green-500 w-full flex justify-center items-center flex-col sm:space-y-5 space-y-3">
+          <div className="w-full flex justify-center items-center flex-col sm:space-y-5 space-y-3">
             {SignupArray.map((SignUp) => (
-              <div className="flex justify-center items-center lg:w-[67%] w-[70%] sm:h-[45px] h-[35px]">
+              <div key={SignUp.id} className="flex justify-center items-center lg:w-[67%] w-[70%] sm:h-[45px] h-[35px]">
                 <InputBorder
                   inputValue={SignUp.inputValue}
                   setinputValue={SignUp.setinputValue}
@@ -184,10 +132,26 @@ const Signup: React.FC = () => {
                   Border={SignUp.Border}
                   Color={SignUp.Color}
                   BorderSize={2}
-                  isReg={SignUp.isReg}
+                  Reg={SignUp.Reg}
                 />
               </div>
             ))}
+              <div className="flex justify-center items-center lg:w-[67%] w-[70%] sm:h-[45px] h-[35px] ">
+                <ConfirmationPassword
+                  Password={Password}
+                  inputValue={ConfirmPassword}
+                  setinputValue={setConfirmPassword}
+                  value={ConfirmPassword}
+                  setisValid={setisValid}
+                  type="password"
+                  PlaceHolder="Confirm Password"
+                  icon={lock}
+                  Border="#FEECFC40"
+                  Color="transparent"
+                  BorderSize={2}
+                  Reg={RegPassword}
+                />
+              </div>
           </div>
           <div className="rounded-ful">
             <SimpleButton

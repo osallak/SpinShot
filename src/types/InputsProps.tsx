@@ -3,7 +3,6 @@ import { ChangeEvent } from "react";
 export type InputsProps = {
     inputValue: string
     setinputValue: Function
-    // onchange: (e: ChangeEvent<HTMLInputElement>) => void
     value: string
     setisValid: Function
     type: string
@@ -12,19 +11,20 @@ export type InputsProps = {
     Border: string
     Color: string
     BorderSize: number
-    isReg: boolean
+    Reg: RegExp
 }
 
 export type ConfirmProps = {
-    ConfirmPassword: string;
-    setConfirmPassword: Function
-    onchange: (e: ChangeEvent<HTMLInputElement>) => void
+    Password: string
+    inputValue: string
+    setinputValue: Function
     value: string
     setisValid: Function
+    type: string
     PlaceHolder: string
     icon: string
     Border: string
     Color: string
     BorderSize: number
-    isReg: boolean
+    Reg: RegExp
 }

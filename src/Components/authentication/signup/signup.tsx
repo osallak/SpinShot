@@ -1,31 +1,135 @@
 import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
 import Image from "next/image";
 import InputBorder from "@/Components/ui/Inputs/InputBorder";
-import { useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import user from "../../../../public/user.svg";
+import email from "../../../../public/email.svg";
+import lock from "../../../../public/lock.svg";
 import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import { useRouter } from "next/router";
 import { MouseEvent } from "react";
+import { FormEvent } from "react";
 import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
 
 const RegPassword = /^.{6,}$/;
 const RegEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const RegUsername = /^[a-zA-Z0-9_.]{3,16}$/;
 
-function Signup() {
+const Signup: React.FC = () => {
+  const [Username, setUsername] = useState("");
+  const [Email, setEmail] = useState("");
+  const [Password, setPassword] = useState("");
+  const [ConfirmPassword, setConfirmPassword] = useState("");
   const [isValid, setisValid] = useState(false);
+  const [next, setnext] = useState(0);
+  const [isReg, setisReg] = useState(true);
   const Router = useRouter();
+
+  const SignupArray = [
+    {
+      inputValue: Username,
+      setinputValue: setUsername,
+      value: Username,
+      setisValid: setisValid,
+      type: "username",
+      PlaceHolder: "Username",
+      icon: user,
+      Border: "#FEECFC40",
+      Color: "transparent",
+      BorderSize: 2,
+      isReg: isReg,
+    },
+    {
+      inputValue: Email,
+      setinputValue: setEmail,
+      value: Email,
+      setisValid: setisValid,
+      type: "email",
+      PlaceHolder: "Email",
+      icon: email,
+      Border: "#FEECFC40",
+      Color: "transparent",
+      BorderSize: 2,
+      isReg: isReg,
+    },
+    {
+      inputValue: Password,
+      setinputValue: setPassword,
+      value: Password,
+      setisValid: setisValid,
+      type: "password",
+      PlaceHolder: "Password",
+      icon: lock,
+      Border: "#FEECFC40",
+      Color: "transparent",
+      BorderSize: 2,
+      isReg: isReg,
+    },
+  ];
+
   const RedirectionFunction = (
     e: MouseEvent<HTMLButtonElement>,
     Path: string
   ) => {
     e.preventDefault();
-    isValid ? Router.push(Path) : console.log(isValid);
+    isValid ? Router.push(Path) : "";
   };
-  const [inputValue, setinputValue] = useState("");
+
+  const HandleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (Username === "") setisValid(false);
+    else setisValid(true);
+    e.persist();
+    setUsername(e.currentTarget.value);
+    const Reg = Username.match(RegUsername);
+    if (!Reg) setisReg(false);
+    else setisReg(true);
+  };
+
+  const HandleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (Email === "") setisValid(false);
+    else setisValid(true);
+    e.preventDefault();
+    e.persist();
+    setEmail(e.currentTarget.value);
+    // const Reg = Email.match(RegEmail);
+    // if (!Reg) setisReg(false)
+    // else setisReg(true)
+  };
+
+  const HandlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (Password === "") setisValid(false);
+    else setisValid(true);
+    e.preventDefault();
+    e.persist();
+    setPassword(e.currentTarget.value);
+    // const Reg = Password.match(RegPassword);
+    // if (!Reg) setisReg(false)
+    // else setisReg(true)
+  };
+
+  const HandleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (ConfirmPassword === "") setisValid(false);
+    else setisValid(true);
+    e.preventDefault();
+    e.persist();
+    setConfirmPassword(e.currentTarget.value);
+    console.log("Password: " + Password);
+    console.log("ConfirmPassword: " + ConfirmPassword);
+    if (ConfirmPassword !== Password) {
+      setisValid(false);
+    } else setisValid(true);
+    console.log(isValid);
+  };
+
+  const HandleSubmit = (e: FormEvent<HTMLInputElement>) => {
+    e.preventDefault();
+  };
+  const renderedObjects = [];
+
   return (
-    <div className="md:w-[600px] md:h-[750px] w-full h-full backdrop:blur bg-white/10 md:rounded-2xl rounded-none flex justify-center items-center flex-col space-y-9">
-      <div className="flex flex-col justify-center space-y-5 border-yellow-500 items-center">
+    <div className="sm:w-[600px] sm:h-[750px] w-full h-full backdrop:blur bg-white/10 sm:rounded-2xl rounded-none flex justify-center items-center flex-col md:space-y-9 space-y-5">
+      <div className="flex flex-col justify-center md:space-y-5 space-y-3 border-yellow-500 items-center">
         <div className="flex justify-cente border-gray-500 items-center">
           <svg
             className="mini"
@@ -52,8 +156,6 @@ function Signup() {
               />
             </g>
           </svg>
-
-          {/* <Image src={SpinShotlogo} alt="the logo of SpinShot game"/> */}
         </div>
         <div className="font-Poppins font-black text-pearl text-2xl text-opacity-40  border-blue-500">
           Welcome!
@@ -62,77 +164,41 @@ function Signup() {
       <div className="flex flex-col  border-green-500 lg:space-y-0 space-y-5 justify-center items-center w-[100%] h-[50%]">
         <form
           autoComplete="off"
-          className="flex justify-start items-center flex-col space-y-5  border-red-500"
+          className="flex justify-start items-center space-y-8 flex-col border-red-500"
           style={{
             width: "100%",
             height: "100%",
           }}
         >
-          <div className="flex justify-center items-center lg:w-[67%] w-[70%] lg:h-[45px] h-[40px]">
-            <InputBorder
-              inputValue={inputValue}
-              setinputValue={setinputValue}
-              setisValid={setisValid}
-              type="username"
-              PlaceHolder="Username"
-              icon={user}
-              Border="#FEECFC40"
-              Color="transparent"
-              BorderSize={2}
-              Regexp={RegUsername}
-            />
+          <div className=" border-green-500 w-full flex justify-center items-center flex-col sm:space-y-5 space-y-3">
+            {SignupArray.map((SignUp) => (
+              <div className="flex justify-center items-center lg:w-[67%] w-[70%] sm:h-[45px] h-[35px]">
+                <InputBorder
+                  inputValue={SignUp.inputValue}
+                  setinputValue={SignUp.setinputValue}
+                  value={SignUp.value}
+                  setisValid={SignUp.setisValid}
+                  type={SignUp.type}
+                  PlaceHolder={SignUp.PlaceHolder}
+                  icon={SignUp.icon}
+                  Border={SignUp.Border}
+                  Color={SignUp.Color}
+                  BorderSize={2}
+                  isReg={SignUp.isReg}
+                />
+              </div>
+            ))}
           </div>
-          <div className="flex justify-center items-center lg:w-[67%] w-[70%] lg:h-[45px] h-[40px]">
-            <InputBorder
-              inputValue={inputValue}
-              setinputValue={setinputValue}
-              setisValid={setisValid}
-              type="email"
-              PlaceHolder="Email"
-              icon={user}
-              Border="#FEECFC40"
-              Color="transparent"
-              BorderSize={2}
-              Regexp={RegEmail}
-            />
-          </div>
-          <div className="flex justify-center items-center lg:w-[67%] w-[70%] lg:h-[45px] h-[40px]">
-            <InputBorder
-              inputValue={inputValue}
-              setinputValue={setinputValue}
-              setisValid={setisValid}
-              type="password"
-              PlaceHolder="Password"
-              icon={user}
-              Border="#FEECFC40"
-              Color="transparent"
-              BorderSize={2}
-              Regexp={RegPassword}
-            />
-          </div>
-          <div className="flex justify-center items-center lg:w-[67%] w-[70%] lg:h-[45px] h-[40px]">
-            <ConfirmationPassword
-              inputValue={inputValue}
-              setinputValue={setinputValue}
-              setisValid={setisValid}
-              PlaceHolder="Confirme Password"
-              icon={user}
-              Border="#FEECFC40"
-              Color="transparent"
-              BorderSize={2}
-              Regexp={RegPassword}
+          <div className="rounded-ful">
+            <SimpleButton
+              onclick={(e) => RedirectionFunction(e, "/Signin")}
+              content="Sign up"
             />
           </div>
         </form>
-        <div className="rounded-full  border-orange-500">
-          <SimpleButton
-            onclick={(e) => RedirectionFunction(e, "/Signin")}
-            content="Sign up"
-          />
-        </div>
       </div>
     </div>
   );
-}
+};
 
 export default Signup;

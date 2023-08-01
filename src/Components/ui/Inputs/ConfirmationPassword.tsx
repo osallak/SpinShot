@@ -5,41 +5,49 @@ import { ChangeEvent } from "react";
 import PasswordButton from "../Buttons/PasswordButton";
 
 const ConfirmationPassword: React.FC<ConfirmProps> = ({
-  inputValue,
-  setinputValue,
+  ConfirmPassword,
+  setConfirmPassword,
+  onchange,
+  value,
   setisValid,
   PlaceHolder,
   icon,
   Border,
   Color,
   BorderSize,
-  Regexp,
+  isReg,
 }) => {
   const [ShowPassword, setShowPassword] = useState(false);
-  const [isReg, setisReg] = useState(true);
+  // const [isReg, setisReg] = useState(true);
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setinputValue(event.target.value);
-    const Reg = inputValue.match(Regexp);
-    if (!Reg) {
-      setisReg(false);
-      setisValid(false);
-    } else {
-      setisReg(true);
-      setisValid(true);
-    }
-  };
+  // const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  //   setConfirmPassword(event.target.value);
+  //   const Reg = ConfirmPassword.match(Regexp);
+  //   if (!Reg) {
+  //     setisReg(false);
+  //     setisValid(false)
+  //   } else {
+  //     setisReg(true);
+  //     setisValid(true);
+  //     {ConfirmPassword !== Password ? setisValid(false) : setisValid(true)};
+  //   }
+  // };
 
-  const handleBlur = () => {
-    const Reg = inputValue.match(Regexp);
-    if (!Reg) setisReg(false);
-    else setisReg(true);
-  };
+  // const handleBlur = () => {
+  //   const Reg = ConfirmPassword.match(Regexp);
+  //   if (!Reg) setisReg(false);
+  //   else setisReg(true);
+  // };
+
+  const HandleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault()
+    setConfirmPassword(event.target.value)
+  }
 
   return (
     <div
-      className={`rounded-2xl w-full h-full flex flex-row items-center bg-${Color} px-2 border-${BorderSize}`}
-      style={{ borderColor: isReg ? Border : "#FF000060" }}
+      className={`sm:rounded-2xl rounded-xl w-full h-full flex flex-row items-center bg-${Color} px-2 border-${BorderSize}`}
+      // style={{ borderColor: isReg ? Border : "#FF000060" }}
     >
       <div className="w-[100%] h-full flex">
         <div className="inset-y-0 left-1.5 flex items-center pointer-events-none space-x-64">
@@ -47,7 +55,8 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
         </div>
         <input
           type="password"
-          onChange={handleInputChange}
+          value={value}
+          onChange={HandleChange}
           onBlur={handleBlur}
           placeholder={PlaceHolder}
           className={`w-full bg-transparent pl-3 h-full focus:outline-none placeholder:opacity-40 placeholder:font-Poppins, font-thin text-pearl focus:placeholder:opacity-0`}

@@ -1,24 +1,30 @@
+import { ChangeEvent } from "react";
+
 export type InputsProps = {
-    inputValue: string;
+    inputValue: string
     setinputValue: Function
+    // onchange: (e: ChangeEvent<HTMLInputElement>) => void
+    value: string
     setisValid: Function
     type: string
-    PlaceHolder: string;
+    PlaceHolder: string
     icon: string
     Border: string
     Color: string
     BorderSize: number
-    Regexp: RegExp
+    isReg: boolean
 }
 
 export type ConfirmProps = {
-    inputValue: string;
-    setinputValue: Function
+    ConfirmPassword: string;
+    setConfirmPassword: Function
+    onchange: (e: ChangeEvent<HTMLInputElement>) => void
+    value: string
     setisValid: Function
-    PlaceHolder: string;
+    PlaceHolder: string
     icon: string
     Border: string
     Color: string
     BorderSize: number
-    Regexp: RegExp
+    isReg: boolean
 }

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { InputsProps } from "@/types/InputsProps";
 import { ChangeEvent } from "react";
 import PasswordButton from "../Buttons/PasswordButton";
@@ -7,6 +7,8 @@ import PasswordButton from "../Buttons/PasswordButton";
 const InputBorder: React.FC<InputsProps> = ({
   inputValue,
   setinputValue,
+  // onchange,
+  value,
   setisValid,
   type,
   PlaceHolder,
@@ -14,32 +16,20 @@ const InputBorder: React.FC<InputsProps> = ({
   Border,
   Color,
   BorderSize,
-  Regexp,
+  isReg,
 }) => {
   const [ShowPassword, setShowPassword] = useState(false);
-  const [isReg, setisReg] = useState(true);
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setinputValue(event.target.value);
-    const Reg = inputValue.match(Regexp);
-    if (!Reg) {
-      setisReg(false);
-      setisValid(false);
-    } else {
-      setisReg(true);
-      setisValid(true);
-    }
-  };
-
-  const handleBlur = () => {
-    const Reg = inputValue.match(Regexp);
-    if (!Reg) setisReg(false);
-    else setisReg(true);
-  };
+  useEffect(() => {
+  }, [inputValue])
+  const HandleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setinputValue(event.target.value)
+  }
 
   return (
     <div
-      className={`rounded-2xl w-full h-full flex flex-row items-center bg-${Color} px-2 border-${BorderSize}`}
+      className={`sm:rounded-2xl rounded-xl w-full h-full flex flex-row items-center bg-${Color} px-2 border-${BorderSize}`}
       style={{ borderColor: isReg ? Border : "#FF000060" }}
     >
       <div className="w-[100%] h-full flex">
@@ -48,8 +38,12 @@ const InputBorder: React.FC<InputsProps> = ({
         </div>
         <input
           type={type == "password" && ShowPassword ? "text" : type}
-          onChange={handleInputChange}
-          onBlur={handleBlur}
+          value={value}
+          onChange={(event) => HandleChange(event)}
+          // onFocus={(e) => {
+          //   console.log('Focused on input');
+          // }}
+          // onBlur={handleBlur}
           placeholder={PlaceHolder}
           className={`w-full bg-transparent pl-3 h-full focus:outline-none placeholder:opacity-40 placeholder:font-Poppins, font-thin text-pearl focus:placeholder:opacity-0`}
         />

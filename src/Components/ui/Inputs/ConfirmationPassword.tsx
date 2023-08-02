@@ -10,6 +10,7 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
   setinputValue,
   value,
   setisValid,
+  setisMatch,
   type,
   PlaceHolder,
   icon,
@@ -37,7 +38,6 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
 
   const HandleBlur = (event: FocusEvent<HTMLInputElement>) => {
     event.preventDefault()
-    console.log(inputValue)
     const isReg = inputValue.match(Reg)
     if (!isReg) {
       setValidReg(false)
@@ -46,9 +46,13 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
       setValidReg(true)
       setisValid(true)
     }
-    if (inputValue !== Password || inputValue === "") {
+    if (inputValue !== Password) {
       setisValid(false)
-    } else setisValid(true)
+      setisMatch(false)
+    } else {
+      setisMatch(true)
+      setisValid(true)
+    }
   }
 
   return (

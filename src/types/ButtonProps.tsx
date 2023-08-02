@@ -7,6 +7,7 @@ export type ButtonProps = {
 };
 
 export type OthersProps = {
-    onclick: (event: MouseEvent<HTMLButtonElement>) => void;
-    content: string;
+  Type?: "button" | "submit" | "reset" | undefined
+  onclick: (event: MouseEvent<HTMLButtonElement>) => void;
+  content: string;
 };

@@ -20,6 +20,7 @@ export type ConfirmProps = {
     setinputValue: Function
     value: string
     setisValid: Function
+    setisMatch: Function
     type: string
     PlaceHolder: string
     icon: string

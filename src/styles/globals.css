@@ -48,7 +48,7 @@ select:-webkit-autofill:focus {
   width: 120px;
   height: 120px;
 }
-@media (max-width: 768px) {
+@media (max-width: 650px) {
   .mini{
     width: 100px;
     height: 100px;

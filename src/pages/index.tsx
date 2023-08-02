@@ -1,8 +1,8 @@
 "use client";
 
-import { ThemeProvider, Button, input } from "@material-tailwind/react";
+import { ThemeProvider, Button} from "@material-tailwind/react";
 export { ThemeProvider, Button };
-import SignupPage from "./signup";
+import SignupPage from "./Signup";
 
 const Home = () => {
   return (

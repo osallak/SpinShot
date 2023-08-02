@@ -16,7 +16,7 @@ const PasswordButton = ({
   };
   return (
     <button
-      className="right-1 md:w-9 md:h-9 w-5 h-5 flex justify-center items-center"
+      className="right-1 w-9 h-9 flex justify-center items-center"
       onClick={(event) => ShowHidePassword(event)}
     >
       {ShowPassword ? (

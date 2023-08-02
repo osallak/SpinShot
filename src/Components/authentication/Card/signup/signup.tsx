@@ -1,5 +1,4 @@
 import SpinShotlogo from "../../../../theme/SpinShotlogo";
-import Image from "next/image";
 import InputBorder from "@/Components/ui/Inputs/InputBorder";
 import { useEffect, useState } from "react";
 import user from "../../../../../public/user.svg";
@@ -68,21 +67,21 @@ const Signup: React.FC = () => {
   ];
 
   useEffect (() => {
-    if (!Username || !Email || !Password || !ConfirmPassword || !isMatch)
+    if (!Username || !Email || !Password || !ConfirmPassword)
       setisValid(false);
-  }, [isValid, isMatch])
+  }, [isValid])
 
   const RedirectionFunction = (
     e: MouseEvent<HTMLButtonElement>,
     Path: string
   ) => {
     e.preventDefault();
-    if (isValid) Router.push(Path);
+    if (isValid && isMatch) Router.push(Path);
   };
   
   return (
-    <div className="sm:w-[600px] sm:h-[750px] w-full h-full backdrop:blur bg-white/10 sm:rounded-2xl rounded-none flex justify-center items-center flex-col md:space-y-9 space-y-5">
-      <div className="flex flex-col justify-center md:space-y-5 space-y-3 items-center">
+    <div className="c-md:w-[600px] c-md:h-[750px] w-full h-full backdrop:blur bg-white/10 c-md:rounded-2xl rounded-none flex justify-center items-center flex-col space-y-9">
+      <div className="flex flex-col justify-center c-md:space-y-5 space-y-3 items-center">
         <div className="flex justify-center items-center">
           <SpinShotlogo />
         </div>
@@ -93,15 +92,15 @@ const Signup: React.FC = () => {
       <div className="flex flex-col lg:space-y-0 space-y-5 justify-center items-center w-[100%] h-[50%]">
         <form
           autoComplete="off"
-          className="flex justify-start items-center space-y-8 flex-col"
+          className="flex justify-start items-center space-y-5 flex-col"
           style={{
             width: "100%",
             height: "100%",
           }}
         >
-          <div className="w-full flex justify-center items-center flex-col sm:space-y-5 space-y-2">
+          <div className="w-full flex justify-center items-center flex-col c-md:space-y-5 space-y-2">
             {SignupArray.map((SignUp) => (
-              <div key={SignUp.id} className="flex justify-center items-center lg:w-[67%] w-[70%] sm:h-[45px] h-[35px]">
+              <div key={SignUp.id} className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]">
                 <InputBorder
                   inputValue={SignUp.inputValue}
                   setinputValue={SignUp.setinputValue}
@@ -117,7 +116,7 @@ const Signup: React.FC = () => {
                 />
               </div>
             ))}
-              <div className="flex justify-center items-center lg:w-[67%] w-[70%] sm:h-[45px] h-[35px] ">
+              <div className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px] ">
                 <ConfirmationPassword
                   Password={Password}
                   inputValue={ConfirmPassword}
@@ -134,8 +133,9 @@ const Signup: React.FC = () => {
                   Reg={RegPassword}
                 />
               </div>
+              {isValid && !isMatch && <div className="text-[#FF000060] c-md:text-xl sm:text-md font-Poppins">Password do not match</div>}
           </div>
-          <div className="border border-red-500 rounded-full">
+          <div className="border w-full flex justify-center items-center rounded-full">
             <SimpleButton
               Type="submit"
               onclick={(e) => RedirectionFunction(e, "/Signin")}

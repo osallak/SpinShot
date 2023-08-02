@@ -4,7 +4,6 @@ import { InputsProps } from "@/types/InputsProps";
 import { ChangeEvent } from "react";
 import PasswordButton from "../Buttons/PasswordButton";
 import { FocusEvent } from "react";
-import { input } from "@material-tailwind/react";
 
 const InputBorder: React.FC<InputsProps> = ({
   inputValue,
@@ -51,7 +50,7 @@ const InputBorder: React.FC<InputsProps> = ({
 
   return (
     <div
-      className={`sm:rounded-2xl rounded-xl w-full h-full flex flex-row items-center bg-${Color} px-2 border-${BorderSize}`}
+      className={`c-md:rounded-2xl rounded-xl w-full h-full flex flex-row items-center bg-${Color} px-2 border-${BorderSize}`}
       style={{ borderColor: ValidReg ? Border : "#FF000060" }}
     >
       <div className="w-[100%] h-full flex">

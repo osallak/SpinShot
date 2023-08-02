@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ConfirmProps } from "@/types/InputsProps";
 import { FocusEvent, ChangeEvent } from "react";
 import PasswordButton from "../Buttons/PasswordButton";
@@ -21,7 +21,7 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
 }) => {
   const [ShowPassword, setShowPassword] = useState(false);
   const [ValidReg, setValidReg] = useState(true)
-
+  
   const HandleChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault()
     const value = event.target.value
@@ -34,8 +34,13 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
       setValidReg(true)
       setisValid(true)
     }
+    if (value !== Password) {
+      setisMatch(false)
+    } else {
+      setisMatch(true)
+    }
   }
-
+  
   const HandleBlur = (event: FocusEvent<HTMLInputElement>) => {
     event.preventDefault()
     const isReg = inputValue.match(Reg)
@@ -46,18 +51,11 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
       setValidReg(true)
       setisValid(true)
     }
-    if (inputValue !== Password) {
-      setisValid(false)
-      setisMatch(false)
-    } else {
-      setisMatch(true)
-      setisValid(true)
-    }
   }
 
   return (
     <div
-      className={`sm:rounded-2xl rounded-xl w-full h-full flex flex-row items-center bg-${Color} px-2 border-${BorderSize}`}
+      className={`c-md:rounded-2xl rounded-xl w-full h-full flex flex-row items-center bg-${Color} px-2 border-${BorderSize}`}
       style={{ borderColor: ValidReg ? Border : "#FF000060" }}
     >
       <div className="w-[100%] h-full flex">

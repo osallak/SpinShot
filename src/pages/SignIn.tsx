@@ -1,7 +1,8 @@
-import React from 'react'
-
-export default function SignIn() {
+import Signin from "@/Components/authentication/Card/signin/Signin"
+export default function SigninPage() {
   return (
-    <div>SignIn</div>
+    <>
+      <Signin />
+    </>
   )
 }

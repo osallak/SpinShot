@@ -13,7 +13,7 @@ const RegPassword = /^.{6,}$/;
 const RegEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const RegUsername = /^[a-zA-Z0-9_.]{3,16}$/;
 
-const Signup: React.FC = () => {
+const Signup = () => {
   const [Username, setUsername] = useState("");
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
@@ -66,10 +66,9 @@ const Signup: React.FC = () => {
     },
   ];
 
-  useEffect (() => {
-    if (!Username || !Email || !Password || !ConfirmPassword)
-      setisValid(false);
-  }, [isValid])
+  useEffect(() => {
+    if (!Username || !Email || !Password || !ConfirmPassword) setisValid(false);
+  }, [isValid]);
 
   const RedirectionFunction = (
     e: MouseEvent<HTMLButtonElement>,
@@ -78,7 +77,7 @@ const Signup: React.FC = () => {
     e.preventDefault();
     if (isValid && isMatch) Router.push(Path);
   };
-  
+
   return (
     <div className="c-md:w-[600px] c-md:h-[750px] w-full h-full backdrop:blur bg-white/10 c-md:rounded-2xl rounded-none flex justify-center items-center flex-col space-y-9">
       <div className="flex flex-col justify-center c-md:space-y-5 space-y-3 items-center">
@@ -100,7 +99,10 @@ const Signup: React.FC = () => {
         >
           <div className="w-full flex justify-center items-center flex-col c-md:space-y-5 space-y-2">
             {SignupArray.map((SignUp) => (
-              <div key={SignUp.id} className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]">
+              <div
+                key={SignUp.id}
+                className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]"
+              >
                 <InputBorder
                   inputValue={SignUp.inputValue}
                   setinputValue={SignUp.setinputValue}
@@ -116,26 +118,30 @@ const Signup: React.FC = () => {
                 />
               </div>
             ))}
-              <div className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px] ">
-                <ConfirmationPassword
-                  Password={Password}
-                  inputValue={ConfirmPassword}
-                  setinputValue={setConfirmPassword}
-                  value={ConfirmPassword}
-                  setisValid={setisValid}
-                  setisMatch={setisMatch}
-                  type="password"
-                  PlaceHolder="Confirm Password"
-                  icon={lock}
-                  Border="#FEECFC40"
-                  Color="transparent"
-                  BorderSize={2}
-                  Reg={RegPassword}
-                />
+            <div className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px] ">
+              <ConfirmationPassword
+                Password={Password}
+                inputValue={ConfirmPassword}
+                setinputValue={setConfirmPassword}
+                value={ConfirmPassword}
+                setisValid={setisValid}
+                setisMatch={setisMatch}
+                type="password"
+                PlaceHolder="Confirm Password"
+                icon={lock}
+                Border="#FEECFC40"
+                Color="transparent"
+                BorderSize={2}
+                Reg={RegPassword}
+              />
+            </div>
+            {isValid && !isMatch && (
+              <div className="text-[#FF000060] c-md:text-xl sm:text-md font-Poppins">
+                Password do not match
               </div>
-              {isValid && !isMatch && <div className="text-[#FF000060] c-md:text-xl sm:text-md font-Poppins">Password do not match</div>}
+            )}
           </div>
-          <div className="border w-full flex justify-center items-center rounded-full">
+          <div className="w-full flex justify-center items-center rounded-full">
             <SimpleButton
               Type="submit"
               onclick={(e) => RedirectionFunction(e, "/Signin")}

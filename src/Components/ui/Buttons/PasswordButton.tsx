@@ -1,7 +1,6 @@
 import Image from "next/image";
 import eye from "../../../../public/eye.svg";
 import eyeSlash from "../../../../public/eye-slash.svg";
-import { ChangeEvent } from "react";
 import { MouseEvent } from "react";
 const PasswordButton = ({
   ShowPassword,

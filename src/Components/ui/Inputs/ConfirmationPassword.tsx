@@ -1,7 +1,6 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { ConfirmProps } from "@/types/InputsProps";
-import { FocusEvent, ChangeEvent } from "react";
+import { FocusEvent, ChangeEvent, useState } from "react";
 import PasswordButton from "../Buttons/PasswordButton";
 
 const ConfirmationPassword: React.FC<ConfirmProps> = ({
@@ -27,12 +26,12 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
     const value = event.target.value
     setinputValue(value)
     const isReg = value.match(Reg)
+    console.log("value: |" + value + "| Password: |" + Password + "|")
     if (!isReg) {
       setValidReg(false)
       setisValid(false)
     } else {
       setValidReg(true)
-      setisValid(true)
     }
     if (value !== Password) {
       setisMatch(false)

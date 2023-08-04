@@ -1,15 +1,15 @@
 import Image from "next/image";
-import { useState } from "react";
 import { InputsProps} from "@/types/InputsProps";
-import { ChangeEvent } from "react";
+import { ChangeEvent, FocusEvent, useState } from "react";
 import PasswordButton from "../Buttons/PasswordButton";
-import { FocusEvent } from "react";
 
 const InputBorder: React.FC<InputsProps> = ({
   inputValue,
   setinputValue,
   value,
   setisValid,
+  setisMatch,
+  ConfirmPassword,
   type,
   PlaceHolder,
   icon,
@@ -33,8 +33,13 @@ const InputBorder: React.FC<InputsProps> = ({
           setisValid(false);
       } else {
         setValidReg(true);
-        if(setisValid !== undefined)
-          setisValid(true);
+      }
+    }
+    if (setisMatch !== undefined) {
+      if (ConfirmPassword!) {
+        if (ConfirmPassword !== value)
+          setisMatch(false)
+        else setisMatch(true)
       }
     }
   };

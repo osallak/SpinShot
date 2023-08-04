@@ -3,6 +3,8 @@ export type InputsProps = {
   setinputValue: Function;
   value: string;
   setisValid?: Function | undefined;
+  setisMatch?: Function | undefined;
+  ConfirmPassword?: string
   type: string;
   PlaceHolder: string;
   icon: string;

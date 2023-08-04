@@ -1,22 +1,23 @@
 import { useRouter } from "next/router";
 import lock from "../../../../../public/lock.svg";
 import email from "../../../../../public/email.svg";
-import SpinShotlogo from "../../../../theme/SpinShotlogo";
+import SpinShotlogo from "../../../../../public/SpinShotlogo.svg"
 import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import InputBorder from "@/Components/ui/Inputs/InputBorder";
 import { MouseEvent, useState, useEffect } from "react";
 import ContinueWithIntra from "@/Components/ui/Buttons/ContinueWithIntra";
 import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
+import Image from "next/image";
 
 const Signin = () => {
   const [Username, setUsername] = useState("");
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const [isValid, setisValid] = useState(true);
+  const [widthsc, setwidthsc] = useState<number | undefined>(undefined);
   const Router = useRouter();
   const SigninArray = [
     {
-      id: 0,
       inputValue: Username || Email,
       setinputValue: setUsername || setEmail,
       Value: Username || Email,
@@ -29,7 +30,6 @@ const Signin = () => {
       BorderSize: 2,
     },
     {
-      id: 1,
       inputValue: Password,
       setinputValue: setPassword,
       Value: Password,
@@ -56,7 +56,6 @@ const Signin = () => {
     Router.push("/Signup");
   };
 
-  const [widthsc, setwidthsc] = useState<number | undefined>(undefined);
   useEffect(() => {
     if (typeof window !== "undefined") {
       const handleResize = () => {
@@ -76,9 +75,9 @@ const Signin = () => {
         <div className="w-full flex items-center justify-center flex-col c-md:space-y-9 space-y-6">
           <div className="flex c-md:pb-14 flex-col justify-center c-md:space-y-5 space-y-3 items-center">
             <div className="flex justify-center items-center">
-              <SpinShotlogo />
+              <Image src={SpinShotlogo} alt="SpinShot logo" />
             </div>
-            <div className="font-Poppins font-black text-pearl c-md:text-2xl sm:text-lg mc:text-md text-xs text-opacity-40">
+            <div className="font-Poppins font-semibold text-pearl c-md:text-2xl sm:text-lg mc:text-md text-xs text-opacity-40">
               Welcome Back!
             </div>
           </div>
@@ -91,9 +90,9 @@ const Signin = () => {
               }}
             >
               <div className="flex justify-center items-center w-full h-full flex-col c-md:space-y-5 space-y-3">
-                {SigninArray.map((SignIn) => (
+                {SigninArray.map((SignIn, index) => (
                   <div
-                    key={SignIn.id}
+                    key={index}
                     className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]"
                   >
                     <InputBorder
@@ -148,7 +147,7 @@ const Signin = () => {
                 Don't have an account?
               </p>
               <EmptyButton
-                onclick={(e) => RedirectSignup(e)}
+                onclick={(e) => RedirectionFunction(e, "/Signup")}
                 content="Sign up"
               />
             </div>
@@ -160,7 +159,7 @@ const Signin = () => {
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
             Don't have an account?
           </p>
-          <EmptyButton onclick={(e) => RedirectSignup(e)} content="Sign up" />
+          <EmptyButton onclick={(e) => RedirectionFunction(e, "/Signup")} content="Sign up" />
         </div>
       )}
     </div>

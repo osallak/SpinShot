@@ -1,29 +1,26 @@
-import SpinShotlogo from "../../../../theme/SpinShotlogo";
 import InputBorder from "@/Components/ui/Inputs/InputBorder";
-import { useEffect, useState } from "react";
+import { useEffect, useState, MouseEvent } from "react";
+import Image from "next/image";
 import user from "../../../../../public/user.svg";
 import email from "../../../../../public/email.svg";
 import lock from "../../../../../public/lock.svg";
+import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
 import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import { useRouter } from "next/router";
-import { MouseEvent } from "react";
 import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
 import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
 
 const Signup = () => {
-  const RegPassword = /^.{6,}$/;
-  const RegEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const RegUsername = /^[a-zA-Z0-9_.]{3,16}$/;
   const [Username, setUsername] = useState("");
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
   const [isValid, setisValid] = useState(false);
   const [isMatch, setisMatch] = useState(true);
+  const [widthsc, setwidthsc] = useState<number | undefined>(undefined);
   const Router = useRouter();
   const SignupArray = [
     {
-      id: 0,
       inputValue: Username,
       setinputValue: setUsername,
       value: Username,
@@ -34,10 +31,9 @@ const Signup = () => {
       Border: "#FEECFC40",
       Color: "transparent",
       BorderSize: 2,
-      Reg: RegUsername,
+      Reg: /^[a-zA-Z0-9_.]{3,16}$/,
     },
     {
-      id: 1,
       inputValue: Email,
       setinputValue: setEmail,
       value: Email,
@@ -48,27 +44,24 @@ const Signup = () => {
       Border: "#FEECFC40",
       Color: "transparent",
       BorderSize: 2,
-      Reg: RegEmail,
+      Reg: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     },
     {
-      id: 2,
       inputValue: Password,
       setinputValue: setPassword,
       value: Password,
       setisValid: setisValid,
+      setisMatch: setisMatch,
+      ConfirmPassword: ConfirmPassword,
       type: "password",
       PlaceHolder: "Password",
       icon: lock,
       Border: "#FEECFC40",
       Color: "transparent",
       BorderSize: 2,
-      Reg: RegPassword,
+      Reg: /^.{6,}$/,
     },
   ];
-
-  useEffect(() => {
-    if (!Username || !Email || !Password || !ConfirmPassword) setisValid(false);
-  }, [isValid]);
 
   const RedirectionFunction = (
     e: MouseEvent<HTMLButtonElement>,
@@ -83,7 +76,6 @@ const Signup = () => {
     Router.push("/Signin");
   };
 
-  const [widthsc, setwidthsc] = useState<number | undefined>(undefined);
   useEffect(() => {
     if (typeof window !== "undefined") {
       const handleResize = () => {
@@ -97,15 +89,20 @@ const Signup = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!Username || !Email || !Password || !ConfirmPassword || !isMatch)
+      setisValid(false);
+  }, [isValid]);
+
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex flex-col justify-center items-center ">
       <div className="c-md:w-[600px] c-md:h-[750px] w-full h-full backdrop:blur bg-white/10 c-md:rounded-2xl rounded-none flex justify-center items-center flex-col space-y-9">
         <div className="w-full flex items-center justify-center flex-col c-md:space-y-9 space-y-6">
           <div className="flex flex-col justify-center c-md:space-y-5 space-y-3 items-center">
             <div className="flex justify-center items-center">
-              <SpinShotlogo />
+              <Image src={SpinShotlogo} alt="SpinShot logo" />
             </div>
-            <div className="font-Poppins font-black text-pearl c-md:text-2xl sm:text-lg text-md text-opacity-40">
+            <div className="font-Poppins font-semibold text-pearl c-md:text-2xl sm:text-lg text-md text-opacity-40">
               Welcome!
             </div>
           </div>
@@ -119,9 +116,9 @@ const Signup = () => {
               }}
             >
               <div className="w-full flex justify-center items-center flex-col c-md:space-y-5 space-y-3">
-                {SignupArray.map((SignUp) => (
+                {SignupArray.map((SignUp, index) => (
                   <div
-                    key={SignUp.id}
+                    key={index}
                     className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]"
                   >
                     <InputBorder
@@ -129,6 +126,8 @@ const Signup = () => {
                       setinputValue={SignUp.setinputValue}
                       value={SignUp.value}
                       setisValid={SignUp.setisValid}
+                      setisMatch={SignUp.setisMatch}
+                      ConfirmPassword={SignUp.ConfirmPassword}
                       type={SignUp.type}
                       PlaceHolder={SignUp.PlaceHolder}
                       icon={SignUp.icon}
@@ -153,10 +152,10 @@ const Signup = () => {
                     Border="#FEECFC40"
                     Color="transparent"
                     BorderSize={2}
-                    Reg={RegPassword}
+                    Reg={/^.{6,}$/}
                   />
                 </div>
-                {isValid && !isMatch && (
+                {ConfirmPassword && !isMatch && (
                   <div className="text-[#FF000060] c-md:text-xl sm:text-md font-Poppins">
                     Password do not match
                   </div>

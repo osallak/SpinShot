@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { InputsProps } from "@/types/InputsProps";
+import { useState } from "react";
+import { InputsProps} from "@/types/InputsProps";
 import { ChangeEvent } from "react";
 import PasswordButton from "../Buttons/PasswordButton";
 import { FocusEvent } from "react";
@@ -21,30 +21,37 @@ const InputBorder: React.FC<InputsProps> = ({
   const [ShowPassword, setShowPassword] = useState(false);
   const [ValidReg, setValidReg] = useState(true);
 
-
   const HandleChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const value = event.target.value;
     setinputValue(value);
-    const isReg = value.match(Reg);
-    if (!isReg) {
-      setValidReg(false);
-      setisValid(false);
-    } else {
-      setValidReg(true);
-      setisValid(true);
+    const isReg = value.match(Reg || "");
+    if (Reg) {
+      if (!isReg) {
+        setValidReg(false);
+        if (setisValid !== undefined)
+          setisValid(false);
+      } else {
+        setValidReg(true);
+        if(setisValid !== undefined)
+          setisValid(true);
+      }
     }
   };
 
   const HandleBlur = (event: FocusEvent<HTMLInputElement>) => {
     event.preventDefault();
-    const isReg = inputValue.match(Reg);
-    if (!isReg) {
-      setValidReg(false);
-      setisValid(false);
-    } else {
-      setValidReg(true);
-      setisValid(true);
+    const isReg = inputValue.match(Reg || "");
+    if (Reg) {
+      if (!isReg) {
+        setValidReg(false);
+        if (setisValid !== undefined)
+          setisValid(false);
+      } else {
+        setValidReg(true);
+        if (setisValid !== undefined)
+          setisValid(true);
+      }
     }
   };
 

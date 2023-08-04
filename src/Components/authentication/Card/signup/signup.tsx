@@ -8,12 +8,12 @@ import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import { useRouter } from "next/router";
 import { MouseEvent } from "react";
 import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
-
-const RegPassword = /^.{6,}$/;
-const RegEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const RegUsername = /^[a-zA-Z0-9_.]{3,16}$/;
+import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
 
 const Signup = () => {
+  const RegPassword = /^.{6,}$/;
+  const RegEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const RegUsername = /^[a-zA-Z0-9_.]{3,16}$/;
   const [Username, setUsername] = useState("");
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
@@ -78,78 +78,122 @@ const Signup = () => {
     if (isValid && isMatch) Router.push(Path);
   };
 
+  const RedirectSignin = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    Router.push("/Signin");
+  };
+
+  const [widthsc, setwidthsc] = useState<number | undefined>(undefined);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const handleResize = () => {
+        setwidthsc(window.innerWidth);
+      };
+      setwidthsc(window.innerWidth);
+      window.addEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
+  }, []);
+
   return (
-    <div className="c-md:w-[600px] c-md:h-[750px] w-full h-full backdrop:blur bg-white/10 c-md:rounded-2xl rounded-none flex justify-center items-center flex-col space-y-9">
-      <div className="flex flex-col justify-center c-md:space-y-5 space-y-3 items-center">
-        <div className="flex justify-center items-center">
-          <SpinShotlogo />
-        </div>
-        <div className="font-Poppins font-black text-pearl text-2xl text-opacity-40">
-          Welcome!
-        </div>
-      </div>
-      <div className="flex flex-col lg:space-y-0 space-y-5 justify-center items-center w-[100%] h-[50%]">
-        <form
-          autoComplete="off"
-          className="flex justify-start items-center space-y-5 flex-col"
-          style={{
-            width: "100%",
-            height: "100%",
-          }}
-        >
-          <div className="w-full flex justify-center items-center flex-col c-md:space-y-5 space-y-2">
-            {SignupArray.map((SignUp) => (
-              <div
-                key={SignUp.id}
-                className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]"
-              >
-                <InputBorder
-                  inputValue={SignUp.inputValue}
-                  setinputValue={SignUp.setinputValue}
-                  value={SignUp.value}
-                  setisValid={SignUp.setisValid}
-                  type={SignUp.type}
-                  PlaceHolder={SignUp.PlaceHolder}
-                  icon={SignUp.icon}
-                  Border={SignUp.Border}
-                  Color={SignUp.Color}
-                  BorderSize={2}
-                  Reg={SignUp.Reg}
+    <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex flex-col justify-center items-center ">
+      <div className="c-md:w-[600px] c-md:h-[750px] w-full h-full backdrop:blur bg-white/10 c-md:rounded-2xl rounded-none flex justify-center items-center flex-col space-y-9">
+        <div className="w-full flex items-center justify-center flex-col c-md:space-y-9 space-y-6">
+          <div className="flex flex-col justify-center c-md:space-y-5 space-y-3 items-center">
+            <div className="flex justify-center items-center">
+              <SpinShotlogo />
+            </div>
+            <div className="font-Poppins font-black text-pearl c-md:text-2xl sm:text-lg text-md text-opacity-40">
+              Welcome!
+            </div>
+          </div>
+          <div className="flex flex-col lg:space-y-0 space-y-5 justify-center items-center w-[100%] h-[50%]">
+            <form
+              autoComplete="off"
+              className="flex justify-start items-center space-y-5 flex-col"
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <div className="w-full flex justify-center items-center flex-col c-md:space-y-5 space-y-3">
+                {SignupArray.map((SignUp) => (
+                  <div
+                    key={SignUp.id}
+                    className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]"
+                  >
+                    <InputBorder
+                      inputValue={SignUp.inputValue}
+                      setinputValue={SignUp.setinputValue}
+                      value={SignUp.value}
+                      setisValid={SignUp.setisValid}
+                      type={SignUp.type}
+                      PlaceHolder={SignUp.PlaceHolder}
+                      icon={SignUp.icon}
+                      Border={SignUp.Border}
+                      Color={SignUp.Color}
+                      BorderSize={2}
+                      Reg={SignUp.Reg}
+                    />
+                  </div>
+                ))}
+                <div className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px] ">
+                  <ConfirmationPassword
+                    Password={Password}
+                    inputValue={ConfirmPassword}
+                    setinputValue={setConfirmPassword}
+                    value={ConfirmPassword}
+                    setisValid={setisValid}
+                    setisMatch={setisMatch}
+                    type="password"
+                    PlaceHolder="Confirm Password"
+                    icon={lock}
+                    Border="#FEECFC40"
+                    Color="transparent"
+                    BorderSize={2}
+                    Reg={RegPassword}
+                  />
+                </div>
+                {isValid && !isMatch && (
+                  <div className="text-[#FF000060] c-md:text-xl sm:text-md font-Poppins">
+                    Password do not match
+                  </div>
+                )}
+              </div>
+              <div className="w-full flex justify-center items-center rounded-full">
+                <SimpleButton
+                  Type="submit"
+                  onclick={(e) => RedirectionFunction(e, "/Signin")}
+                  content="Sign up"
                 />
               </div>
-            ))}
-            <div className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px] ">
-              <ConfirmationPassword
-                Password={Password}
-                inputValue={ConfirmPassword}
-                setinputValue={setConfirmPassword}
-                value={ConfirmPassword}
-                setisValid={setisValid}
-                setisMatch={setisMatch}
-                type="password"
-                PlaceHolder="Confirm Password"
-                icon={lock}
-                Border="#FEECFC40"
-                Color="transparent"
-                BorderSize={2}
-                Reg={RegPassword}
+            </form>
+          </div>
+        </div>
+        <div>
+          {widthsc && widthsc <= 650 && (
+            <div className="w-full  flex flex-row justify-center items-center space-x-1">
+              <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
+                Already have an account?
+              </p>
+              <EmptyButton
+                onclick={(e) => RedirectSignin(e)}
+                content="Sign in"
               />
             </div>
-            {isValid && !isMatch && (
-              <div className="text-[#FF000060] c-md:text-xl sm:text-md font-Poppins">
-                Password do not match
-              </div>
-            )}
-          </div>
-          <div className="w-full flex justify-center items-center rounded-full">
-            <SimpleButton
-              Type="submit"
-              onclick={(e) => RedirectionFunction(e, "/Signin")}
-              content="Sign up"
-            />
-          </div>
-        </form>
+          )}
+        </div>
       </div>
+      {widthsc && widthsc > 650 && (
+        <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center space-x-1">
+          <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
+            Already have an account?
+          </p>
+          <EmptyButton onclick={(e) => RedirectSignin(e)} content="Sign in" />
+        </div>
+      )}
     </div>
   );
 };

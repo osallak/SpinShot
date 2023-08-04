@@ -75,7 +75,7 @@ const Signin = () => {
         <div className="w-full flex items-center justify-center flex-col c-md:space-y-9 space-y-6">
           <div className="flex c-md:pb-14 flex-col justify-center c-md:space-y-5 space-y-3 items-center">
             <div className="flex justify-center items-center">
-              <Image src={SpinShotlogo} alt="SpinShot logo" />
+              <Image className="c-md:w-[75px] w-[60px] c-md:h-[120px] h-[105px]" src={SpinShotlogo} alt="SpinShot logo" />
             </div>
             <div className="font-Poppins font-semibold text-pearl c-md:text-2xl sm:text-lg mc:text-md text-xs text-opacity-40">
               Welcome Back!
@@ -155,11 +155,11 @@ const Signin = () => {
         </div>
       </div>
       {widthsc && widthsc > 650 && (
-        <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center space-x-1">
+        <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center">
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-            Don't have an account?
+            Don't have an account?&nbsp;
           </p>
-          <EmptyButton onclick={(e) => RedirectionFunction(e, "/Signup")} content="Sign up" />
+          <EmptyButton onclick={(e) => RedirectionFunction(e, "/Signup")} content="Sign Up" />
         </div>
       )}
     </div>

@@ -186,11 +186,11 @@ const Signup = () => {
         </div>
       </div>
       {widthsc && widthsc > 650 && (
-        <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center space-x-1">
+        <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center">
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-            Already have an account?
+            Already have an account?&nbsp;
           </p>
-          <EmptyButton onclick={(e) => RedirectSignin(e)} content="Sign in" />
+          <EmptyButton onclick={(e) => RedirectSignin(e)} content="Sign In" />
         </div>
       )}
     </div>

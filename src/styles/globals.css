@@ -43,14 +43,3 @@ select:-webkit-autofill:focus {
   -webkit-box-shadow: 0;
   transition: background-color 5000s ease-in-out 0s;
 }
-
-.mini {
-  width: 120px;
-  height: 120px;
-}
-@media (max-width: 650px) {
-  .mini{
-    width: 100px;
-    height: 100px;
-  }
-}

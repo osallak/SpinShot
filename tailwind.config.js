@@ -24,6 +24,11 @@ module.exports = withMT({
       fontFamily: {
         'Passion-One': ['Passion One'],
         'Poppins' : ['Poppins', 'sans-serif']
+      },
+      screens: {
+        'c-md': '650px',
+        'b-sm': '200px',
+        'mc': '172px'
       }
     },
   },

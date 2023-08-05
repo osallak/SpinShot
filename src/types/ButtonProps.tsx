@@ -1,16 +1,13 @@
+import { MouseEvent } from "react";
+
 export type ButtonProps = {
-  onclick: () => void;
+  onclick: (event: MouseEvent<HTMLButtonElement>) => void;
   content: string;
   icon: string;
 };
 
 export type OthersProps = {
-    onclick: () => void;
-    content: string;
+  Type?: "button" | "submit" | "reset" | undefined
+  onclick: (event: MouseEvent<HTMLButtonElement>) => void;
+  content: string;
 };
-
-export type PasswordProps = {
-  onclick: () => void;
-  icon: string;
-  isState: boolean;
-}

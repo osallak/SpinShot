@@ -4,7 +4,7 @@ import { OthersProps } from "../../../types/ButtonProps";
 const EmptyButton: React.FC<OthersProps> = ({ onclick, content }) => {
   return (
     <motion.button
-      className="font-Passion-One text-pearl md:text-xl h-5 text-sm flex justify-center border-b-2 border-pearl items-center"
+      className="font-Poppins font-semibold text-pearl text-opacity-70 c-md:text-lg sm:text-md text-xs h-5 flex justify-center items-center hover:text-opacity-100 hover:border-opacity-100"
       onClick={onclick}
       whileTap={{ scale: 0.9 }}
     >

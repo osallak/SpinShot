@@ -1,15 +1,15 @@
 import Image from "next/image";
-import { InputsProps} from "@/types/InputsProps";
-import { ChangeEvent, FocusEvent, useState } from "react";
+import { ConfirmProps } from "@/types/InputsProps";
+import { FocusEvent, ChangeEvent, useState } from "react";
 import PasswordButton from "../Buttons/PasswordButton";
 
-const InputBorder: React.FC<InputsProps> = ({
+const ConfirmationPassword: React.FC<ConfirmProps> = ({
+  Password,
   inputValue,
   setinputValue,
   value,
   setisValid,
   setisMatch,
-  ConfirmPassword,
   type,
   PlaceHolder,
   icon,
@@ -19,46 +19,38 @@ const InputBorder: React.FC<InputsProps> = ({
   Reg,
 }) => {
   const [ShowPassword, setShowPassword] = useState(false);
-  const [ValidReg, setValidReg] = useState(true);
-
+  const [ValidReg, setValidReg] = useState(true)
+  
   const HandleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    const value = event.target.value;
-    setinputValue(value);
-    const isReg = value.match(Reg || "");
-    if (Reg) {
-      if (!isReg) {
-        setValidReg(false);
-        if (setisValid !== undefined)
-          setisValid(false);
-      } else {
-        setValidReg(true);
-      }
+    event.preventDefault()
+    const value = event.target.value
+    setinputValue(value)
+    const isReg = value.match(Reg)
+    console.log("value: |" + value + "| Password: |" + Password + "|")
+    if (!isReg) {
+      setValidReg(false)
+      setisValid(false)
+    } else {
+      setValidReg(true)
     }
-    if (setisMatch !== undefined) {
-      if (ConfirmPassword!) {
-        if (ConfirmPassword !== value)
-          setisMatch(false)
-        else setisMatch(true)
-      }
+    if (value !== Password) {
+      setisMatch(false)
+    } else {
+      setisMatch(true)
     }
-  };
-
+  }
+  
   const HandleBlur = (event: FocusEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    const isReg = inputValue.match(Reg || "");
-    if (Reg) {
-      if (!isReg) {
-        setValidReg(false);
-        if (setisValid !== undefined)
-          setisValid(false);
-      } else {
-        setValidReg(true);
-        if (setisValid !== undefined)
-          setisValid(true);
-      }
+    event.preventDefault()
+    const isReg = inputValue.match(Reg)
+    if (!isReg) {
+      setValidReg(false)
+      setisValid(false)
+    } else {
+      setValidReg(true)
+      setisValid(true)
     }
-  };
+  }
 
   return (
     <div
@@ -78,16 +70,12 @@ const InputBorder: React.FC<InputsProps> = ({
           className={`w-full bg-transparent pl-3 h-full focus:outline-none placeholder:opacity-40 placeholder:font-Poppins, font-thin text-pearl focus:placeholder:opacity-0`}
         />
       </div>
-      {type === "password" ? (
         <PasswordButton
           ShowPassword={ShowPassword}
           setShowPassword={setShowPassword}
         />
-      ) : (
-        ""
-      )}
     </div>
   );
 };
 
-export default InputBorder;
+export default ConfirmationPassword;

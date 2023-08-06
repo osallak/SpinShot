@@ -22,6 +22,7 @@ model User {
   country              String?
   mailVerified         Boolean                @default(false) @map("mail_verified")
   twoFactorAuth        Boolean                @default(false) @map("two_factor_auth")
+  is42User             Boolean                @map("is_42_user")
   status               UserStatus
   logs                 Logs?
   Friendship           Friendship[]

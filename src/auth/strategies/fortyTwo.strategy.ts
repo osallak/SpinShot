@@ -1,23 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-42';
 import { FortyTwoProfile } from '../interfaces';
-
+import { UserService } from 'src/user/user.service';
+import { v4 as uuidv4 } from 'uuid';
+import { count } from 'console';
 @Injectable()
 export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly userService: UserService,
+  ) {
     super({
-      clientId: configService.get<string>('INTRA_CLIENT_ID'),
-      clientSecret: configService.get<string>('INTRA_APP_SECRET'),
-      callbackUrl: configService.get<string>('CALLBACK_URL'),
-      // profileFields: {
-      //     'username': 'login',
-      //     'name.familyName': 'last_name',
-      //     'name.givenName': 'first_name',
-      //     'emails.0.value': 'email',
-      //     'photos.0.value': ''
-      // }
+      clientID: configService.get('INTRA_CLIENT_ID'),
+      clientSecret: configService.get('INTRA_APP_SECRET'),
+      callbackURL: configService.get('INTRA_CALLBACK_URL'),
     });
   }
 
@@ -26,7 +24,42 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
     refreshToken: string,
     profile: any,
   ): Promise<any> {
-    //? here goes the logic for validating user
-    return true;
+    const {
+      username,
+      name: { familyName, givenName },
+      _json: { image },
+      emails: [{ value }],
+    } = profile as FortyTwoProfile;
+
+    const country: string = profile._json.campus[0].country;
+    const data = {
+      username: username,
+      email: value,
+      firstName: givenName,
+      lastName: familyName,
+      avatar: image.link,
+      country: country,
+    };
+
+    let user = await this.userService.findOneByEmail(value);
+    if (user && user.mailVerified && !user.is42User) {
+      return await this.userService.mergeAccounts(data);
+    } else if (user && user.is42User) {
+      return user;
+    } else if (user && !user.mailVerified) {
+      return await this.userService.mergeAccounts(data);
+    }
+
+    user = await this.userService.findOneByUsername(username);
+    if (user && !user.is42User) {
+      const newUsername = `${username}-${uuidv4()}`;
+      return await this.userService.create42User({
+        ...data,
+        username: newUsername,
+      });
+    } else if (user) {
+      return user;
+    }
+    return await this.userService.create42User(data);
   }
 }

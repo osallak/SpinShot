@@ -9,17 +9,16 @@ import { JWT_SECRET } from 'src/global/global.constants';
 import { LocalStrategy } from './strategies/local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.stategy';
-import { ConfigModule } from '@nestjs/config';
+import { FortyTwoStrategy } from './strategies/fortyTwo.strategy';
 
 @Module({
   imports: [
     UserModule,
     JwtModule.register({
-      secret: JWT_SECRET,//TODO: get from env & use different secret for verification token
-      signOptions: { expiresIn: '1d' }, //? expires in one day 
+      secret: JWT_SECRET,
+      signOptions: { expiresIn: '1d' },
     }),
     PassportModule,
-    ConfigModule,
   ],
   controllers: [AuthController],
   providers: [
@@ -27,6 +26,7 @@ import { ConfigModule } from '@nestjs/config';
     PrismaService,
     UserService,
     LocalStrategy,
+    FortyTwoStrategy,
     JwtStrategy,
   ],
   exports: [AuthService],

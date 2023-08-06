@@ -1,5 +1,3 @@
-import { CanActivate, ExecutionContext } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
-import { Observable } from "rxjs";
+import { AuthGuard } from '@nestjs/passport';
 
 export class LocalAuthGuard extends AuthGuard('local') {}

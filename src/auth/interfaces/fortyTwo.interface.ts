@@ -1,8 +1,9 @@
 export interface FortyTwoProfile {
-    username: String;
-    name: {
-        familyName: String;
-        givenName: String;
-    };
-    emails: {value: string}[];
+  username: string;
+  name: {
+    familyName: string;
+    givenName: string;
+  };
+  _json: { image: any };
+  emails: { value: string }[];
 }

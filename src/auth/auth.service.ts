@@ -11,6 +11,7 @@ import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthPayload } from './interfaces/jwt.interface';
 import { MailerService } from '@nestjs-modules/mailer';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,7 @@ export class AuthService {
     private userService: UserService,
     private readonly jwtService: JwtService,
     private readonly mailerService: MailerService,
+    private readonly configService: ConfigService,
   ) {}
 
   async createToken(user: any) {
@@ -29,12 +31,13 @@ export class AuthService {
       iss: 'Transcendence',
     };
 
-    return { token: await this.jwtService.signAsync(payload) };
+    return {
+      token: await this.jwtService.signAsync(payload),
+    };
   }
 
   async sendMailVerification(user: any) {
     const verificationToken = await this.jwtService.signAsync({
-      sub: user.id,
       email: user.email,
       iss: 'Transcendence',
     });
@@ -43,11 +46,12 @@ export class AuthService {
       throw new InternalServerErrorException('Could not create token');
     }
 
-    const url = `https://localhost:3000/auth/verify?token=${verificationToken}`; //TODO: change in production
+    console.log(verificationToken);
+    const url = `http://localhost:3000/auth/verify?token=${verificationToken}`; //TODO: change in production
     await this.mailerService.sendMail({
       to: user.email,
       subject: 'Verify your email',
-      text: url,
+      text: url, //TODO: change this to a template with a button and some welcome text
     });
   }
   async signUp(user: CreateUserDto) {
@@ -59,7 +63,9 @@ export class AuthService {
       await this.sendMailVerification(returnedUser);
     } catch (e) {
       this.logger.error(e.message ?? 'Could not send verification email');
-      throw new InternalServerErrorException('Could not send verification email');
+      throw new InternalServerErrorException(
+        'Could not send verification email',
+      );
     }
   }
 
@@ -72,11 +78,13 @@ export class AuthService {
     if (user.mailVerified === false) {
       try {
         await this.sendMailVerification(user);
-      } catch(e) {
+      } catch (e) {
         this.logger.error(e.message ?? 'Could not send verification email');
-        throw new InternalServerErrorException('Could not send verification email');
+        throw new InternalServerErrorException(
+          'Could not send verification email',
+        );
       }
-      throw new UnauthorizedException('Email not verified'); //TODO: to be discussed with frontend 
+      throw new UnauthorizedException('Email not verified'); //TODO: to be discussed with frontend
     }
 
     return await this.createToken(user);

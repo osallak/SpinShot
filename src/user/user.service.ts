@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -10,11 +9,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { DEFAULT_AVATAR } from 'src/global/global.constants';
 import { UserStatus } from '@prisma/client';
-import { log } from 'console';
 import { MailerService } from '@nestjs-modules/mailer';
-import { verify } from 'crypto';
 import { JwtService } from '@nestjs/jwt';
-
+import { hashPassword, initUserLogs } from './helpers';
+import { v4 as uuidv4 } from 'uuid';
 export type User = {
   id: string;
   firstName?: string;
@@ -31,18 +29,20 @@ export type User = {
 @Injectable()
 export class UserService {
   private readonly logger = new Logger('UserService');
-  constructor(private prisma: PrismaService,
+  constructor(
+    private prisma: PrismaService,
     private mailer: MailerService,
-    private jwtService: JwtService) {}
+    private jwtService: JwtService,
+  ) {}
 
   async findOneByEmail(email: string) {
     try {
       return await this.prisma.user.findUnique({
         where: { email },
       });
-    } catch (e) {
-      this.logger.error(e.message);
-      throw new InternalServerErrorException();
+    } catch (error) {
+      this.logger.error(error.message);
+      return null;
     }
   }
 
@@ -51,35 +51,43 @@ export class UserService {
       return await this.prisma.user.findUnique({
         where: { id },
       });
-    } catch (e) {
-      this.logger.error(e.message);
-      throw new InternalServerErrorException();
+    } catch (error) {
+      this.logger.error(error.message);
+      return null;
     }
   }
 
   async findOneByUsername(username: string) {
-
-    if (!username) throw new BadRequestException('Username is required');
-
     try {
       return await this.prisma.user.findUnique({
         where: { username },
       });
-    } catch (e) {
-      this.logger.error(e.message);
-      throw new InternalServerErrorException();
+    } catch (error) {
+      this.logger.error(error.message);
+      return null;
+    }
+  }
+
+  async findOneByEmailOrUsername(email: string, username: string) {
+    try {
+      return await this.prisma.user.findFirst({
+        where: {
+          OR: [{ email }, { username }],
+        },
+      });
+    } catch (error) {
+      this.logger.error(error.message);
+      return null;
     }
   }
 
   async signUp(data: CreateUserDto): Promise<any> {
-    let user: any = await this.findOneByUsername(data.username);
-    if (user) {
-      throw new ForbiddenException('Username already exists');
-    }
-    user = await this.findOneByEmail(data.email);
-    if (user) {
-      throw new ForbiddenException('Email already exists');
-    }
+    let user: any = await this.findOneByEmailOrUsername(
+      data.email,
+      data.username,
+    );
+
+    if (user) throw new BadRequestException('User already exists');
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(data.password, salt);
@@ -88,8 +96,12 @@ export class UserService {
         email: data.email,
         username: data.username,
         password: hashedPassword,
-        status: UserStatus.ONLINE, //? check if this is the best way to do this
+        status: UserStatus.OFFLINE,
         avatar: DEFAULT_AVATAR,
+        is42User: false,
+        logs: {
+          create: initUserLogs(),
+        },
       },
     });
 
@@ -102,7 +114,11 @@ export class UserService {
 
   async signIn(username: string, pass: string): Promise<any> {
     const user = await this.findOneByUsername(username);
-    if (!user || !user.password || !(await bcrypt.compare(pass, user.password))) {
+    if (
+      !user ||
+      !user.password ||
+      !(await bcrypt.compare(pass, user.password))
+    ) {
       throw new BadRequestException('Invalid credentials');
     }
 
@@ -129,4 +145,47 @@ export class UserService {
     return true;
   }
 
+  async create42User(data: any): Promise<any> {
+    const user = await this.findOneByUsername(data.username);
+    if (user) data.username = data.username + '_' + uuidv4().slice(0, 6);//todo: check this
+
+    return await this.prisma.user.create({
+      data: {
+        username: data.username,
+        email: data.email,
+        avatar: data.avatar,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        is42User: true,
+        status: UserStatus.OFFLINE,
+        country: data.country,
+        mailVerified: true,
+        logs: {
+          create: initUserLogs(),
+        },
+      },
+    });
+  }
+
+  async mergeAccounts(profile: any): Promise<any> {
+    const user = this.findOneByEmail(profile.email);
+    if (!user) throw new BadRequestException('Invalid email');
+
+    try {
+      return await this.prisma.user.update({
+        where: { email: profile.email },
+        data: {
+          is42User: true,
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          avatar: profile.avatar, 
+          status: UserStatus.ONLINE,
+          country: profile.country,
+        },
+      });
+    } catch (error) {
+      this.logger.error(error.message);
+      throw new InternalServerErrorException();
+    }
+  }
 }

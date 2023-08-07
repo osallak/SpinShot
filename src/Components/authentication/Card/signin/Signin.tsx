@@ -71,7 +71,7 @@ const Signin = () => {
 
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex flex-col justify-center items-center ">
-      <div className="c-md:w-[600px] c-md:h-[750px] w-full h-full backdrop:blur bg-white/10 c-md:rounded-2xl rounded-none flex justify-center items-center flex-col space-y-[2px]">
+      <div className="c-md:w-[600px] w-full h-full backdrop:blur bg-white/10 c-md:rounded-2xl rounded-none flex justify-center items-center flex-col space-y-[2px]">
         <div className="w-full flex items-center justify-center flex-col c-md:space-y-9 space-y-6">
           <div className="flex c-md:pb-14 flex-col justify-center c-md:space-y-5 space-y-3 items-center">
             <div className="flex justify-center items-center">

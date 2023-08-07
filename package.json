@@ -12,6 +12,8 @@
     "@material-tailwind/react": "^2.0.6",
     "@next/font": "^13.4.10",
     "@nextui-org/react": "^1.0.0-beta.13",
+    "@splinetool/react-spline": "^2.2.6",
+    "@splinetool/runtime": "^0.9.411",
     "@types/node": "20.4.2",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
@@ -22,11 +24,14 @@
     "next": "13.4.10",
     "postcss": "8.4.26",
     "react": "18.2.0",
+    "react-audio-player": "^0.17.0",
     "react-dom": "18.2.0",
     "tailwindcss": "3.3.3",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "use-sound": "^4.0.1"
   },
   "devDependencies": {
-    "@svgr/webpack": "^8.0.1"
+    "@svgr/webpack": "^8.0.1",
+    "file-loader": "^6.2.0"
   }
 }

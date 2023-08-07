@@ -1,6 +1,7 @@
 import Racket from "../../../public/racket.svg";
 import Image from "next/image";
 import SimpleButton from "../ui/Buttons/SimpleButton";
+import RacketThreeD from "./RacketThreeD";
 import { MouseEvent } from "react";
 import { useRouter } from "next/router";
 
@@ -14,23 +15,23 @@ const LandingPage = () => {
 
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex items-center">
-      <div className="c-md:w-1/2 w-full h-full flex justify-center items-center bg-very-dark-purple">
-        <div className="c-md:w-[600px] c-md:h-[750px] w-full h-full backdrop:blur bg-white/10 c-md:rounded-2xl rounded-none flex justify-center items-center font-Poppins flex-col">
-          <div className="w-[80%] h-full flex justify-center flex-col space-y-10">
+      <div className="fl:w-1/2 w-full h-full flex justify-center items-center d-sc:p-0 fl:pl-28 p-0">
+        <div className="d-sc:w-[65%] w-full h-full backdrop:blur bg-white/10 flex justify-center items-center font-Poppins flex-col">
+          <div className="w-[80%] h-full flex justify-center flex-col sm:space-y-10 b-sm:space-y-6 space-y-2">
             <div className="w-full flex flex-col space-y-3">
-              <div className="text-peridot c-md:text-7xl sm:text-xl font-bold w-full">
+              <div className="text-peridot i-sm:text-6xl s-sm:text-5xl b-sm:text-4xl text-3xl font-bold w-full">
                 SpinShot
               </div>
-              <div className="w-full flex flex-row space-x-4">
-                <Image src={Racket} alt="racket of ping pong" />
-                <p className="text-pearl text-opacity-40 font-semibold c-md:text-3xl sm:text-lg text-sm">
+              <div className="w-full flex flex-row i-sm:space-x-4 s-sm:space-x-2 b-sm:space-x-1 space-x-0">
+                <Image className="tx:w-[50px] i-sm:w-[40px] w-[30px] tx:h-[50px] i-sm:h-[40px] s-sm:h-[30px] b-sm:h-[20px] h-[10px] " src={Racket} alt="racket of ping pong" />
+                <p className="text-pearl flex justify-center items-center text-opacity-40 font-semibold tx:text-3xl i-sm:text-2xl s-sm:text-lg b-sm:text-md text-xs">
                   Ping-Pong
                 </p>
-                <Image src={Racket} alt="racket of ping pong" />
+                <Image className="tx:w-[50px] i-sm:w-[40px] w-[30px] tx:h-[50px] i-sm:h-[40px] s-sm:h-[30px] b-sm:h-[20px] h-[10px]" src={Racket} alt="racket of ping pong" />
               </div>
             </div>
             <div className="space-y-5">
-              <p className="font-light c-md:text-lg sm:text-md text-sm text-pearl text-opacity-40">
+              <p className="font-light c-md:text-lg sm:text-md i-sm:text-sm text-xs text-pearl text-opacity-40">
                 Welcome to SpinShot! Prepare for a thrilling virtual experience
                 of the classic ping pong arcade game that will test your
                 reflexes and hand-eye coordination. Immerse yourself in the
@@ -50,6 +51,9 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="fl:flex hidden justify-center items-center w-1/2 h-full ">
+        <RacketThreeD />
       </div>
     </div>
   );

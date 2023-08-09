@@ -11,7 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtAuthPayload } from './interfaces/jwt.interface';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
-import { Payload } from '@prisma/client/runtime/library';
+import { HOST, VERIFICATION_PATH, REJECTION_PATH} from 'src/global/global.constants';
 
 @Injectable()
 export class AuthService {
@@ -40,25 +40,24 @@ export class AuthService {
     //todo: sign the tokens with a different secrets
     //todo: user a template for the mail
 
-    const verificationToken = await this.jwtService.signAsync({
-      email: user.email,
-      iss: this.configService.get('JWT_ISSUER'),
-    });
-    const rejectionToken = await this.jwtService.signAsync({
+    const token = await this.jwtService.signAsync({
       email: user.email,
       iss: this.configService.get('JWT_ISSUER'),
     });
 
-    if (!verificationToken) {
+    if (!token) {
       throw new InternalServerErrorException('Could not create token');
     }
 
-    const host = this.configService.get('HOST');
-    const verificationPath = this.configService.get('VERIFICATION_PATH');
-    const rejectionPath = this.configService.get('REJECTION_PATH');
-    const verifyUrl = `${host}${verificationPath}${verificationToken}`;
-    const rejectUrl = `${host}${rejectionPath}${rejectionToken}`;
-    await this.mailerService.sendMail({
+    const verifyUrl = `${HOST}:${
+      this.configService.get('PORT') || 3000
+    }${VERIFICATION_PATH}${token}`;
+
+    const rejectUrl = `${HOST}:${
+      this.configService.get('PORT') || 3000
+    }${REJECTION_PATH}${token}`;
+
+    this.mailerService.sendMail({
       to: user.email,
       subject: 'Verify your email',
       text: `verify: ${verifyUrl}

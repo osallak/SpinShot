@@ -6,6 +6,7 @@ import {
   Body,
   UseGuards,
   Res,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/user/dto';
@@ -14,6 +15,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { Request } from 'express';
 import { FortyTwoAuthGuard } from './guards/42-auth.guard';
 import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -23,9 +25,9 @@ export class AuthController {
   ) {}
 
   @Post('/signup/local')
-  async signupLocal(@Body() userDto: CreateUserDto, @Res() res: any) {
+  async signupLocal(@Body() userDto: CreateUserDto, @Res() res: Response) {
     const ret = await this.authService.signUp(userDto);
-    res.status(201).send(ret);
+    res.status(HttpStatus.CREATED).send(ret);
     // return 'test success';
   }
 

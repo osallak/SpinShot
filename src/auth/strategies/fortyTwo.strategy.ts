@@ -6,6 +6,7 @@ import { FortyTwoProfile } from '../interfaces';
 import { UserService } from 'src/user/user.service';
 import { v4 as uuidv4 } from 'uuid';
 import { count } from 'console';
+import { HOST } from 'src/global/global.constants';
 @Injectable()
 export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
   constructor(
@@ -15,7 +16,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
     super({
       clientID: configService.get('INTRA_CLIENT_ID'),
       clientSecret: configService.get('INTRA_APP_SECRET'),
-      callbackURL: configService.get('INTRA_CALLBACK_URL'),
+      callbackURL: `${HOST}:${configService.get('PORT') || 3000}/auth/42/cb`,
     });
   }
 

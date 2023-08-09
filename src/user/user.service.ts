@@ -9,9 +9,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { DEFAULT_AVATAR } from 'src/global/global.constants';
 import { UserStatus } from '@prisma/client';
-import { MailerService } from '@nestjs-modules/mailer';
-import { JwtService } from '@nestjs/jwt';
-import { hashPassword, initUserLogs } from './helpers';
+import { initUserLogs } from './helpers';
 import { v4 as uuidv4 } from 'uuid';
 export type User = {
   id: string;
@@ -29,11 +27,7 @@ export type User = {
 @Injectable()
 export class UserService {
   private readonly logger = new Logger('UserService');
-  constructor(
-    private prisma: PrismaService,
-    private mailer: MailerService,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async findOneByEmail(email: string) {
     try {
@@ -124,30 +118,40 @@ export class UserService {
 
     await this.prisma.user.update({
       where: { username: user.username },
-      data: { status: UserStatus.ONLINE },
+      data: { status: UserStatus.ONLINE },//todo: to be discussed
     });
     return user;
   }
 
-  async verifyEmail(email: string): Promise<boolean> {
+  async deleteUser(user: any): Promise<any> {
+    return await this.prisma.user.delete({
+      where: {
+        id: user.id,//todo: remove onDelete Cascade from prisma schema 
+      },
+    });
+  }
+
+  async verifyEmail(email: string, reject: boolean): Promise<boolean> {
     const user = await this.findOneByEmail(email);
-    if (!user) {
-      throw new BadRequestException('Invalid email');
+    if (!user) throw new BadRequestException('Invalid email');
+
+    if (user.mailVerified)
+      throw new BadRequestException('Email already verified');
+
+    if (!reject) {
+      const retUser = await this.prisma.user.update({
+        where: { email: user.email },
+        data: { mailVerified: true },
+      });
+      return retUser ? true : false;
     }
 
-    if (user.mailVerified) {
-      throw new BadRequestException('Email already verified');
-    }
-    await this.prisma.user.update({
-      where: { email: user.email },
-      data: { mailVerified: true },
-    });
-    return true;
+    return await this.deleteUser(user);
   }
 
   async create42User(data: any): Promise<any> {
     const user = await this.findOneByUsername(data.username);
-    if (user) data.username = data.username + '_' + uuidv4().slice(0, 6);//todo: check this
+    if (user) data.username = data.username + '_' + uuidv4().slice(0, 6); //todo: check this
 
     return await this.prisma.user.create({
       data: {
@@ -178,7 +182,7 @@ export class UserService {
           is42User: true,
           firstName: profile.firstName,
           lastName: profile.lastName,
-          avatar: profile.avatar, 
+          avatar: profile.avatar,
           status: UserStatus.ONLINE,
           country: profile.country,
         },

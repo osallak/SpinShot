@@ -43,7 +43,7 @@ model Logs {
   defeats   Int
   level     Float
   rank      String
-  User      User   @relation(fields: [userId], references: [id])
+  User      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String @unique @map("user_id")
 
   @@map("logs")
@@ -63,8 +63,8 @@ model Friendship {
   friendId String           @map("friend_id")
   state    FriendshipStatus
 
-  user   User   @relation(fields: [userId], references: [id])
-  friend Friend @relation(fields: [friendId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  friend Friend @relation(fields: [friendId], references: [id], onDelete: Cascade)
 
   @@id([userId, friendId])
   @@map("friendship")
@@ -86,8 +86,8 @@ model Game {
   mode       Mode
   map        Map
 
-  opponent Opponent @relation(fields: [opponentId], references: [id])
-  user     User     @relation(fields: [userId], references: [id])
+  opponent Opponent @relation(fields: [opponentId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   History  History?
 
   @@map("game")
@@ -101,7 +101,7 @@ model History {
   userId        String  @map("user_id")
   opponentId    String  @map("opponent_id")
 
-  Game   Game   @relation(fields: [gameId], references: [id])
+  Game   Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
   gameId String @unique
 
   @@map("history")
@@ -122,8 +122,8 @@ model haveAchievement {
   userId        String      @map("user_id")
   achievementId String      @map("achievement_id")
   level         Float
-  User          User        @relation(fields: [userId], references: [id])
-  Achiement     Achievement @relation(fields: [achievementId], references: [id])
+  User          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Achiement     Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
 
   @@map("have_achievement")
 }
@@ -145,8 +145,8 @@ model RoomChatConversation {
   userStatus UserStatusGroup @map("user_status")
   userRole   UserRole
 
-  User     User      @relation(fields: [userId], references: [id])
-  RoomChat RoomChat  @relation(fields: [roomChatId], references: [id])
+  User     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  RoomChat RoomChat  @relation(fields: [roomChatId], references: [id], onDelete: Cascade)
   Message  Message[]
 
   @@map("room_chat_conversation")
@@ -157,9 +157,9 @@ model Message {
   message  String
   senderId String @map("sender_id")
 
-  RoomChatConversation   RoomChatConversation @relation(fields: [roomChatConversationId], references: [id])
+  RoomChatConversation   RoomChatConversation @relation(fields: [roomChatConversationId], references: [id], onDelete: Cascade)
   roomChatConversationId String               @map("room_chat_conversation_id")
-  Conversation           Conversation         @relation(fields: [conversationId], references: [id])
+  Conversation           Conversation         @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   conversationId         String               @map("conversation_id")
 
   @@map("message")

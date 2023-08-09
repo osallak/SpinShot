@@ -9,7 +9,7 @@ import { count } from 'console';
 @Injectable()
 export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
   constructor(
-    private readonly configService: ConfigService,
+    configService: ConfigService,
     private readonly userService: UserService,
   ) {
     super({

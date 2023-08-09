@@ -3,7 +3,6 @@ import {
   Injectable,
   Logger,
   UnauthorizedException,
-  Res,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/user/dto';
@@ -12,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtAuthPayload } from './interfaces/jwt.interface';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
+import { Payload } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +28,7 @@ export class AuthService {
     const payload: JwtAuthPayload = {
       username: user.username,
       sub: user.id,
-      iss: 'Transcendence',
+      iss: this.configService.get('JWT_ISSUER'),
     };
 
     return {
@@ -37,23 +37,35 @@ export class AuthService {
   }
 
   async sendMailVerification(user: any) {
+    //todo: sign the tokens with a different secrets
+    //todo: user a template for the mail
+
     const verificationToken = await this.jwtService.signAsync({
       email: user.email,
-      iss: 'Transcendence',
+      iss: this.configService.get('JWT_ISSUER'),
+    });
+    const rejectionToken = await this.jwtService.signAsync({
+      email: user.email,
+      iss: this.configService.get('JWT_ISSUER'),
     });
 
     if (!verificationToken) {
       throw new InternalServerErrorException('Could not create token');
     }
 
-    console.log(verificationToken);
-    const url = `http://localhost:3000/auth/verify?token=${verificationToken}`; //TODO: change in production
+    const host = this.configService.get('HOST');
+    const verificationPath = this.configService.get('VERIFICATION_PATH');
+    const rejectionPath = this.configService.get('REJECTION_PATH');
+    const verifyUrl = `${host}${verificationPath}${verificationToken}`;
+    const rejectUrl = `${host}${rejectionPath}${rejectionToken}`;
     await this.mailerService.sendMail({
       to: user.email,
       subject: 'Verify your email',
-      text: url, //TODO: change this to a template with a button and some welcome text
+      text: `verify: ${verifyUrl}
+      not you? ${rejectUrl}`, //TODO: change this to a template
     });
   }
+
   async signUp(user: CreateUserDto) {
     const returnedUser = await this.userService.signUp(user);
     if (!returnedUser) {
@@ -61,6 +73,7 @@ export class AuthService {
     }
     try {
       await this.sendMailVerification(returnedUser);
+      return returnedUser;
     } catch (e) {
       this.logger.error(e.message ?? 'Could not send verification email');
       throw new InternalServerErrorException(
@@ -84,30 +97,25 @@ export class AuthService {
           'Could not send verification email',
         );
       }
-      throw new UnauthorizedException('Email not verified'); //TODO: to be discussed with frontend
+      throw new UnauthorizedException('Email not verified'); //TODO: to be discussed with frontend team
     }
 
     return await this.createToken(user);
   }
 
-  async sendMail(user: any) {}
-
-  async verifyEmail(token: string, res: any) {
-    this.logger.verbose(token);
-    if (!token) {
-      throw new BadRequestException();
-    }
+  async verifyEmail(token: string, res: any, reject: boolean) {
+    if (!token) throw new BadRequestException();
     try {
       const decoded: any = await this.jwtService.verifyAsync(token);
-      if (!decoded) {
+      if (!decoded) throw new BadRequestException();
+
+      if (!(await this.userService.verifyEmail(decoded.email, reject))) {
         throw new BadRequestException();
       }
 
-      if (!(await this.userService.verifyEmail(decoded.email))) {
-        throw new BadRequestException();
-      }
-
-      res.redirect('https://youtube.com'); //TODO: change to frontend url
+      !reject
+        ? res.redirect(this.configService.get('SIGN_IN_URL'))
+        : res.send('account deleted');
     } catch (e) {
       this.logger.error(e.message);
       throw new BadRequestException();

@@ -5,6 +5,8 @@ import * as Joi from 'joi';
 import { PrismaService } from './prisma/prisma.service';
 import { AuthController } from './auth/auth.controller';
 import { MailerModule } from '@nestjs-modules/mailer';
+import configuration from './config/configuration';
+import { validationSchema } from './config/validation';
 
 @Module({
   imports: [

@@ -43,13 +43,11 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
     };
 
     let user = await this.userService.findOneByEmail(value);
-    if (user && user.mailVerified && !user.is42User) {
+    if (user && ((user.mailVerified && !user.is42User) || !user.mailVerified)) {
       return await this.userService.mergeAccounts(data);
     } else if (user && user.is42User) {
       return user;
-    } else if (user && !user.mailVerified) {
-      return await this.userService.mergeAccounts(data);
-    }
+    } 
 
     user = await this.userService.findOneByUsername(username);
     if (user && !user.is42User) {

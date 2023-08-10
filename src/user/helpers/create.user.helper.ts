@@ -12,6 +12,5 @@ export function initUserLogs(): any {
     victories: 0,
     defeats: 0,
     level: 0,
-    rank: 'bronz', //! dummy value
   };
 }

@@ -42,7 +42,7 @@ model Logs {
   victories Int
   defeats   Int
   level     Float
-  rank      String
+  rank      Rank   @default(VETERAN)
   User      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String @unique @map("user_id")
 
@@ -250,4 +250,14 @@ enum Map {
   HARD
 
   @@map("map")
+}
+
+enum Rank {
+  VETERAN
+  ELITE
+  PRO
+  MASTER
+  GRANDMASTER
+
+  @@map("rank")
 }

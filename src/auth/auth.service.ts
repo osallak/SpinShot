@@ -24,7 +24,7 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async createToken(user: any) {
+  async generateToken(user: any) {
     const payload: JwtAuthPayload = {
       username: user.username,
       sub: user.id,
@@ -99,7 +99,7 @@ export class AuthService {
       throw new UnauthorizedException('Email not verified'); //TODO: to be discussed with frontend team
     }
 
-    return await this.createToken(user);
+    return await this.generateToken(user);
   }
 
   async verifyEmail(token: string, res: any, reject: boolean) {

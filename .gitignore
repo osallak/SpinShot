@@ -7,3 +7,5 @@ data
 env/*
 !env/.gitkeep
 !env/development.example.env
+todo
+.gitignore

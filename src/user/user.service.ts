@@ -11,6 +11,7 @@ import { DEFAULT_AVATAR } from 'src/global/global.constants';
 import { UserStatus } from '@prisma/client';
 import { initUserLogs } from './helpers';
 import { v4 as uuidv4 } from 'uuid';
+import { achievements } from './constants';
 export type User = {
   id: string;
   firstName?: string;
@@ -75,6 +76,42 @@ export class UserService {
     }
   }
 
+  async initAcheivements(user: any): Promise<any> {
+    if (!user) throw new BadRequestException();
+
+    await this.prisma.achievement.createMany({
+      data: [
+        {
+          name: achievements[0].name,
+          description: achievements[0].description,
+        },
+        {
+          name: achievements[1].name,
+          description: achievements[1].description,
+        },
+        {
+          name: achievements[2].name,
+          description: achievements[2].description,
+        },
+        {
+          name: achievements[3].name,
+          description: achievements[3].description,
+        },
+      ],
+    });
+    const achievs = await this.prisma.achievement.findMany();
+    if (!achievs) throw new InternalServerErrorException();
+
+    return await this.prisma.haveAchievement.createMany({
+      data: [
+        { userId: user.id, achievementId: achievs[0].id, level: 0.0 },
+        { userId: user.id, achievementId: achievs[1].id, level: 0.0 },
+        { userId: user.id, achievementId: achievs[2].id, level: 0.0 },
+        { userId: user.id, achievementId: achievs[3].id, level: 0.0 },
+      ],
+    });
+  }
+
   async signUp(data: CreateUserDto): Promise<any> {
     let user: any = await this.findOneByEmailOrUsername(
       data.email,
@@ -99,9 +136,8 @@ export class UserService {
       },
     });
 
-    if (!user) {
-      throw new InternalServerErrorException();
-    }
+    const haveAchievement = await this.initAcheivements(user);
+    if (!user || !haveAchievement) throw new InternalServerErrorException();
     const { password, ...rest } = data;
     return rest;
   }
@@ -118,7 +154,7 @@ export class UserService {
 
     await this.prisma.user.update({
       where: { username: user.username },
-      data: { status: UserStatus.ONLINE },//todo: to be discussed
+      data: { status: UserStatus.ONLINE }, //todo: to be discussed
     });
     return user;
   }
@@ -126,7 +162,7 @@ export class UserService {
   async deleteUser(user: any): Promise<any> {
     return await this.prisma.user.delete({
       where: {
-        id: user.id,//todo: remove onDelete Cascade from prisma schema 
+        id: user.id, //todo: remove onDelete Cascade from prisma schema
       },
     });
   }
@@ -153,7 +189,7 @@ export class UserService {
     const user = await this.findOneByUsername(data.username);
     if (user) data.username = data.username + '_' + uuidv4().slice(0, 6); //todo: check this
 
-    return await this.prisma.user.create({
+    const createUser = await this.prisma.user.create({
       data: {
         username: data.username,
         email: data.email,
@@ -169,6 +205,10 @@ export class UserService {
         },
       },
     });
+    if (!createUser) throw new InternalServerErrorException();
+    const haveAchievement = await this.initAcheivements(createUser);
+    if (!haveAchievement) throw new InternalServerErrorException();
+    return createUser;
   }
 
   async mergeAccounts(profile: any): Promise<any> {

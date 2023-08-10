@@ -71,13 +71,13 @@ const Signin = () => {
 
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex flex-col justify-center items-center ">
-      <div className="c-md:w-[600px] w-full h-full backdrop:blur bg-white/10 c-md:rounded-2xl rounded-none flex justify-center items-center flex-col space-y-[2px]">
-        <div className="w-full flex items-center justify-center flex-col c-md:space-y-9 space-y-6">
-          <div className="flex c-md:pb-14 flex-col justify-center c-md:space-y-5 space-y-3 items-center">
+      <div className="fl:w-[600px] fl:h-[700px] w-full h-full backdrop:blur bg-white/10 fl:rounded-2xl rounded-none flex justify-center items-center flex-col space-y-[2px]">
+        <div className="w-full flex items-center justify-center flex-col fl:space-y-9 space-y-6">
+          <div className="flex fl:pb-14 flex-col justify-center fl:space-y-5 space-y-3 items-center">
             <div className="flex justify-center items-center">
               <Image className="c-md:w-[75px] w-[60px] c-md:h-[120px] h-[105px]" src={SpinShotlogo} alt="SpinShot logo" />
             </div>
-            <div className="font-Poppins font-semibold text-pearl c-md:text-2xl sm:text-lg mc:text-md text-xs text-opacity-40">
+            <div className="font-Poppins font-semibold text-pearl fl:text-2xl sm:text-lg mc:text-md text-xs text-opacity-40">
               Welcome Back!
             </div>
           </div>
@@ -121,11 +121,11 @@ const Signin = () => {
                 </div>
                 <div className="flex flex-col justify-center items-center c-md:space-y-10 space-y-3 w-full">
                   <div className="flex justify-center items-center pt-10 flex-row space-x-5 w-full">
-                    <div className="border w-[46%] border-pearl border-opacity-40"></div>
+                    <div className="border w-[50%] border-pearl border-opacity-40"></div>
                     <p className="font-Passion-One text-pearl text-opacity-40">
                       Or
                     </p>
-                    <div className="border w-[46%] border-pearl border-opacity-40"></div>
+                    <div className="border w-[50%] border-pearl border-opacity-40"></div>
                   </div>
                   <div className="w-full flex justify-center items-center">
                     <ContinueWithIntra
@@ -141,7 +141,7 @@ const Signin = () => {
           </div>
         </div>
         <div className="w-full flex flex-row justify-center items-center">
-          {widthsc && widthsc <= 650 && (
+          {widthsc && widthsc <= 1024 && (
             <div className="w-full flex flex-row justify-center items-center space-x-1">
               <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
                 Don't have an account?
@@ -154,7 +154,7 @@ const Signin = () => {
           )}
         </div>
       </div>
-      {widthsc && widthsc > 650 && (
+      {widthsc && widthsc > 1024 && (
         <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center">
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
             Don't have an account?&nbsp;

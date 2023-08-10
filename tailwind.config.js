@@ -26,6 +26,8 @@ module.exports = withMT({
         'Poppins' : ['Poppins', 'sans-serif']
       },
       screens: {
+        'x-pp': '1600px',
+        'n-pp': '1350px',
         'd-sc': '1800px',
         'c-md': '650px',
         'b-sm': '200px',
@@ -34,7 +36,7 @@ module.exports = withMT({
         'mc': '172px',
         'pa': '1340px',
         'tx': '500px',
-        'fl': '1025px'
+        'fl': '1025px',
       }
     },
   },

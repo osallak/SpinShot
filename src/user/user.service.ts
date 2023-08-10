@@ -181,7 +181,8 @@ export class UserService {
       });
       return retUser ? true : false;
     }
-
+    if (user.is42User) 
+      return null;
     return await this.deleteUser(user);
   }
 

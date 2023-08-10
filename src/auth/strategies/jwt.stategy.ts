@@ -1,7 +1,6 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { JWT_SECRET } from 'src/global/global.constants';
 import { UserService } from 'src/user/user.service';
 import { ConfigService } from '@nestjs/config';
 

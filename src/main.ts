@@ -12,6 +12,5 @@ async function bootstrap() {
   app.use(cookieParser());
 
   await app.listen(process.env.PORT);
-  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap().catch();

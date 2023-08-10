@@ -1,13 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn', 'log', 'debug', 'verbose'],
+    logger: ['error', 'warn', 'debug', 'log', 'verbose'],
+    cors: true,
   });
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+  app.use(cookieParser());
+
   await app.listen(process.env.PORT);
 }
-bootstrap();
-
-//? if you want to use the logger, just import LoggerService
-//? from @nestjs/common and use it in your class
+bootstrap().catch();

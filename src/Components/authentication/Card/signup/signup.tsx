@@ -65,32 +65,15 @@ const Signup = () => {
     },
   ];
 
-  // const RedirectionFunction = (
-  //   e: MouseEvent<HTMLButtonElement>,
-  //   Path: string
-  // ) => {
-  //   e.preventDefault();
-  //   console.log("DON'T GO");
-  // };
+  const Redirection = (
+    e: MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    Router.push("/Signin");
+  };
 
   const RedirectionFunction = async (e: MouseEvent<HTMLButtonElement>, Path: string) => {
     e.preventDefault();
-    
-    try {
-      const response = await axios.post('https://eolqr5o4vkp18ms.m.pipedream.net', {
-        Username,
-        Email,
-        Password,
-      });
-      console.log(response.data);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.log(error.status)
-        console.error(error.response);
-      } else {
-        console.error(error);
-      }
-    }
     if (isValid && isMatch) Router.push(Path);
   };
   
@@ -198,8 +181,8 @@ const Signup = () => {
                 Already have an account?
               </p>
               <EmptyButton
-                onclick={(e) => RedirectionFunction(e, "/Signin")}
-                content="Sign in"
+                onclick={(e) => Redirection(e)}
+                content="Sign In"
               />
             </div>
           )}
@@ -210,7 +193,7 @@ const Signup = () => {
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
             Already have an account?&nbsp;
           </p>
-          <EmptyButton onclick={(e) => RedirectionFunction(e, "/Signin")} content="Sign In" />
+          <EmptyButton onclick={(e) => Redirection(e)} content="Sign In" />
         </div>
       )}
     </div>

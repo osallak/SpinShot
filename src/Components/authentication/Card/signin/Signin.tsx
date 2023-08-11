@@ -51,11 +51,6 @@ const Signin = () => {
     Router.push(Path);
   };
 
-  const RedirectSignup = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    Router.push("/Signup");
-  };
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const handleResize = () => {
@@ -148,7 +143,7 @@ const Signin = () => {
               </p>
               <EmptyButton
                 onclick={(e) => RedirectionFunction(e, "/Signup")}
-                content="Sign up"
+                content="Sign Up"
               />
             </div>
           )}

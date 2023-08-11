@@ -25,14 +25,13 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
     event.preventDefault()
     const value = event.target.value
     setinputValue(value)
-    const isReg = value.match(Reg)
-    console.log("value: |" + value + "| Password: |" + Password + "|")
-    if (!isReg) {
-      setValidReg(false)
-      setisValid(false)
-    } else {
-      setValidReg(true)
-    }
+    // const isReg = value.match(Reg)
+    // if (!isReg) {
+    //   setValidReg(false)
+    //   setisValid(false)
+    // } else {
+    //   setValidReg(true)
+    // }
     if (value !== Password) {
       setisMatch(false)
     } else {

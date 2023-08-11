@@ -9,6 +9,7 @@ import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import { useRouter } from "next/router";
 import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
 import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
+import axios from 'axios'
 
 const Signup = () => {
   const [Username, setUsername] = useState("");
@@ -64,19 +65,35 @@ const Signup = () => {
     },
   ];
 
-  const RedirectionFunction = (
-    e: MouseEvent<HTMLButtonElement>,
-    Path: string
-  ) => {
+  // const RedirectionFunction = (
+  //   e: MouseEvent<HTMLButtonElement>,
+  //   Path: string
+  // ) => {
+  //   e.preventDefault();
+  //   console.log("DON'T GO");
+  // };
+
+  const RedirectionFunction = async (e: MouseEvent<HTMLButtonElement>, Path: string) => {
     e.preventDefault();
+    
+    try {
+      const response = await axios.post('https://eolqr5o4vkp18ms.m.pipedream.net', {
+        Username,
+        Email,
+        Password,
+      });
+      console.log(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log(error.status)
+        console.error(error.response);
+      } else {
+        console.error(error);
+      }
+    }
     if (isValid && isMatch) Router.push(Path);
   };
-
-  const RedirectSignin = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    Router.push("/Signin");
-  };
-
+  
   useEffect(() => {
     if (typeof window !== "undefined") {
       const handleResize = () => {
@@ -181,7 +198,7 @@ const Signup = () => {
                 Already have an account?
               </p>
               <EmptyButton
-                onclick={(e) => RedirectSignin(e)}
+                onclick={(e) => RedirectionFunction(e, "/Signin")}
                 content="Sign in"
               />
             </div>
@@ -193,7 +210,7 @@ const Signup = () => {
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
             Already have an account?&nbsp;
           </p>
-          <EmptyButton onclick={(e) => RedirectSignin(e)} content="Sign In" />
+          <EmptyButton onclick={(e) => RedirectionFunction(e, "/Signin")} content="Sign In" />
         </div>
       )}
     </div>

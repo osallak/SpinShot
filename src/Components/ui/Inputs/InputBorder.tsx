@@ -25,16 +25,16 @@ const InputBorder: React.FC<InputsProps> = ({
     event.preventDefault();
     const value = event.target.value;
     setinputValue(value);
-    const isReg = value.match(Reg || "");
-    if (Reg) {
-      if (!isReg) {
-        setValidReg(false);
-        if (setisValid !== undefined)
-          setisValid(false);
-      } else {
-        setValidReg(true);
-      }
-    }
+    // const isReg = value.match(Reg || "");
+    // if (Reg) {
+    //   if (!isReg) {
+    //     setValidReg(false);
+    //     if (setisValid !== undefined)
+    //       setisValid(false);
+    //   } else {
+    //     setValidReg(true);
+    //   }
+    // }
     if (setisMatch !== undefined) {
       if (ConfirmPassword!) {
         if (ConfirmPassword !== value)

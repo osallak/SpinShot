@@ -2,19 +2,19 @@ import InputBorder from "@/Components/ui/Inputs/InputBorder";
 import { useEffect, useState, MouseEvent } from "react";
 import Image from "next/image";
 import user from "../../../../../public/user.svg";
-import email from "../../../../../public/email.svg";
+import mail from "../../../../../public/email.svg";
 import lock from "../../../../../public/lock.svg";
 import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
 import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import { useRouter } from "next/router";
 import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
 import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
-import axios from 'axios'
+import axios from "axios";
 
 const Signup = () => {
-  const [Username, setUsername] = useState("");
-  const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
   const [isValid, setisValid] = useState(false);
   const [isMatch, setisMatch] = useState(true);
@@ -23,9 +23,9 @@ const Signup = () => {
   const Router = useRouter();
   const SignupArray = [
     {
-      inputValue: Username,
+      inputValue: username,
       setinputValue: setUsername,
-      value: Username,
+      value: username,
       setisValid: setisValid,
       type: "username",
       PlaceHolder: "Username",
@@ -36,22 +36,22 @@ const Signup = () => {
       Reg: /^[a-zA-Z0-9_.]{3,16}$/,
     },
     {
-      inputValue: Email,
+      inputValue: email,
       setinputValue: setEmail,
-      value: Email,
+      value: email,
       setisValid: setisValid,
       type: "email",
       PlaceHolder: "Email",
-      icon: email,
+      icon: mail,
       Border: "#FEECFC40",
       Color: "transparent",
       BorderSize: 2,
       Reg: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     },
     {
-      inputValue: Password,
+      inputValue: password,
       setinputValue: setPassword,
-      value: Password,
+      value: password,
       setisValid: setisValid,
       setisMatch: setisMatch,
       ConfirmPassword: ConfirmPassword,
@@ -65,18 +65,30 @@ const Signup = () => {
     },
   ];
 
-  const Redirection = (
-    e: MouseEvent<HTMLButtonElement>
-  ) => {
+  const redirection = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     Router.push("/Signin");
   };
 
-  const RedirectionFunction = async (e: MouseEvent<HTMLButtonElement>, Path: string) => {
+  const RedirectionFunction = async (
+    e: MouseEvent<HTMLButtonElement>,
+    Path: string
+  ) => {
     e.preventDefault();
-    if (isValid && isMatch) Router.push(Path);
+    if (isValid && isMatch) {
+      try {
+        await axios.post('http://e3r9p12.1337.ma:3000/auth/signup/local', {
+          email,
+          username,
+          password,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      // Router.push(Path);
+    }
   };
-  
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const handleResize = () => {
@@ -93,13 +105,15 @@ const Signup = () => {
   }, []);
 
   useEffect(() => {
-    if (!Username || !Email || !Password || !ConfirmPassword || !isMatch)
+    if (!username || !email || !password || !ConfirmPassword || !isMatch)
       setisValid(false);
   }, [isValid]);
 
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex flex-col justify-center items-center ">
-      <div className={`fl:w-[600px] fl:h-[700px] w-full h-full backdrop:blur bg-white/10 fl:rounded-2xl rounded-none flex justify-center items-center flex-col space-y-9`}>
+      <div
+        className={`fl:w-[600px] fl:h-[700px] w-full h-full backdrop:blur bg-white/10 fl:rounded-2xl rounded-none flex justify-center items-center flex-col space-y-9`}
+      >
         <div className="w-full flex items-center justify-center flex-col fl:space-y-5 space-y-6">
           <div className="flex fl:pb-16 flex-col justify-center fl:space-y-5 space-y-3 items-center">
             <div className="flex justify-center items-center">
@@ -143,7 +157,7 @@ const Signup = () => {
                 ))}
                 <div className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]">
                   <ConfirmationPassword
-                    Password={Password}
+                    Password={password}
                     inputValue={ConfirmPassword}
                     setinputValue={setConfirmPassword}
                     value={ConfirmPassword}
@@ -180,10 +194,7 @@ const Signup = () => {
               <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
                 Already have an account?
               </p>
-              <EmptyButton
-                onclick={(e) => Redirection(e)}
-                content="Sign In"
-              />
+              <EmptyButton onclick={(e) => redirection(e)} content="Sign In" />
             </div>
           )}
         </div>
@@ -193,7 +204,7 @@ const Signup = () => {
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
             Already have an account?&nbsp;
           </p>
-          <EmptyButton onclick={(e) => Redirection(e)} content="Sign In" />
+          <EmptyButton onclick={(e) => redirection(e)} content="Sign In" />
         </div>
       )}
     </div>

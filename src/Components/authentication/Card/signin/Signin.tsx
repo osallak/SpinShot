@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import lock from "../../../../../public/lock.svg";
-import email from "../../../../../public/email.svg";
+import mail from "../../../../../public/email.svg";
 import SpinShotlogo from "../../../../../public/SpinShotlogo.svg"
 import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import InputBorder from "@/Components/ui/Inputs/InputBorder";
@@ -8,31 +8,34 @@ import { MouseEvent, useState, useEffect } from "react";
 import ContinueWithIntra from "@/Components/ui/Buttons/ContinueWithIntra";
 import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
 import Image from "next/image";
+import axios from "axios";
+import { error } from "console";
 
 const Signin = () => {
-  const [Username, setUsername] = useState("");
-  const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isValid, setisValid] = useState(true);
   const [widthsc, setwidthsc] = useState<number | undefined>(undefined);
+  const [isEmail, setisEmail] = useState(true);
   const Router = useRouter();
   const SigninArray = [
     {
-      inputValue: Username || Email,
+      inputValue: username || email,
       setinputValue: setUsername || setEmail,
-      Value: Username || Email,
+      Value: username || email,
       setisValid: setisValid,
       type: "text",
       PlaceHolder: "Email or Username",
-      icon: email,
+      icon: mail,
       Border: "#FEECFC40",
       Color: "transparent",
       BorderSize: 2,
     },
     {
-      inputValue: Password,
+      inputValue: password,
       setinputValue: setPassword,
-      Value: Password,
+      Value: password,
       setisValid: setisValid,
       type: "password",
       PlaceHolder: "Password",
@@ -43,13 +46,38 @@ const Signin = () => {
     },
   ];
 
-  const RedirectionFunction = (
+  const RedirectionFunction = async (
     e: MouseEvent<HTMLButtonElement>,
     Path: string
   ) => {
     e.preventDefault();
-    Router.push(Path);
+    try {
+      console.log(username);
+      const res = await axios.post('http://e3r9p12.1337.ma:3000/auth/signin/local', {
+          username,
+          password,
+        })
+      console.log(res.data.token);
+      } catch (error) {
+        console.log(error)
+      }
+    // Router.push(Path);
   };
+
+  const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    try{
+      await axios.get('http://e3r9p12.1337.ma:3000/auth/42')
+      console.log("good");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const redirection = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    Router.push("/Signup");
+  }
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -125,7 +153,7 @@ const Signin = () => {
                   <div className="w-full flex justify-center items-center">
                     <ContinueWithIntra
                       onclick={(e) =>
-                        RedirectionFunction(e, "/PersonalInformation")
+                        ContinueIntra(e)
                       }
                       content="Continue With Intra"
                     />
@@ -142,7 +170,7 @@ const Signin = () => {
                 Don't have an account?
               </p>
               <EmptyButton
-                onclick={(e) => RedirectionFunction(e, "/Signup")}
+                onclick={(e) => redirection(e)}
                 content="Sign Up"
               />
             </div>
@@ -154,7 +182,7 @@ const Signin = () => {
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
             Don't have an account?&nbsp;
           </p>
-          <EmptyButton onclick={(e) => RedirectionFunction(e, "/Signup")} content="Sign Up" />
+          <EmptyButton onclick={(e) => redirection(e)} content="Sign Up" />
         </div>
       )}
     </div>

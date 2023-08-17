@@ -151,20 +151,25 @@ export class UserService {
   }
 
   async signIn(username: string, pass: string): Promise<any> {
-    const user = await this.findOneByUsername(username);
-
-    if (!user) throw new NotFoundException('User not found');
-    if (!user.mailVerified || !(await bcrypt.compare(pass, user.password)))
-      throw new BadRequestException('Email not verified');
-
-    await this.prisma.user.update({
-      where: { username: user.username },
-      data: { status: UserStatus.ONLINE }, //todo: to be discussed
-    });
-    return user;
+    
+    try {
+      const user = await this.prisma.user.update({
+        where: { username: username },
+        data: { status: UserStatus.ONLINE }, //todo: to be discussed
+      });
+      if (!user.mailVerified || !(await bcrypt.compare(pass, user.password)))
+        throw new BadRequestException('Email not verified');
+      return user;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new NotFoundException('User not found');
+      }
+      throw new InternalServerErrorException();
+    }
   }
 
   async deleteUser(user: any): Promise<any> {
+    //todo: delete user's achievements as well as his logs
     return await this.prisma.user.delete({
       where: {
         id: user.id,
@@ -185,7 +190,7 @@ export class UserService {
       });
       return retUser ? true : false;
     }
-    if (user.is42User) return null;
+    if (user.is42User) return false;
     return await this.deleteUser(user);
   }
 
@@ -216,9 +221,6 @@ export class UserService {
   }
 
   async mergeAccounts(profile: any): Promise<any> {
-    const user = this.findOneByEmail(profile.email);
-    if (!user) throw new BadRequestException('Invalid email');
-
     try {
       return await this.prisma.user.update({
         where: { email: profile.email },
@@ -232,7 +234,9 @@ export class UserService {
         },
       });
     } catch (error) {
-      this.logger.error(error.message);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new BadRequestException('Invalid credentials');
+      }
       throw new InternalServerErrorException();
     }
   }
@@ -262,18 +266,15 @@ export class UserService {
       return serializeUser(user);
     } catch (e) {
       this.logger.error(e.message);
-      throw e;
+      throw new InternalServerErrorException();
     }
   }
 
   async getUserGames(
-    username: string,
+    user: any,
     query: PaginationQueryDto,
   ): Promise<PaginationResponse<any>> {
     const { limit } = query;
-    const user = await this.findOneByUsername(username);
-    if (!user) throw new NotFoundException('User not found');
-
     try {
       const [games, totalCount] = await this.prisma.$transaction([
         this.prisma.game.findMany({
@@ -294,7 +295,9 @@ export class UserService {
       ]);
       return serializePaginationResponse(games, totalCount, limit);
     } catch (e) {
-      this.logger.error(e.message);
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new NotFoundException('User not found');
+      }
       throw new InternalServerErrorException();
     }
   }
@@ -326,7 +329,9 @@ export class UserService {
         data: { avatar: publicUrl },
       });
     } catch (error) {
-      this.logger.error(error.message);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new NotFoundException('User not found');
+      }
       throw new InternalServerErrorException();
     }
   }

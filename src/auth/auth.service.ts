@@ -104,7 +104,7 @@ export class AuthService {
 
       !reject
         ? res.redirect(this.configService.get('SIGN_IN_URL'))
-        : res.send('account deleted');
+        : res.send('account deleted');//todo: to be discussed
     } catch (e) {
       this.logger.error(e.message);
       throw new BadRequestException();

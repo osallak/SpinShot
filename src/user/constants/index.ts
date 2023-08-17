@@ -1,1 +1,1 @@
-export *  from "./achievements.costants";
+export * from './achievements.costants';

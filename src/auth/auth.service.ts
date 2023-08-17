@@ -11,7 +11,11 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtAuthPayload } from './interfaces/jwt.interface';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
-import { HOST, VERIFICATION_PATH, REJECTION_PATH} from 'src/global/global.constants';
+import {
+  HOST,
+  VERIFICATION_PATH,
+  REJECTION_PATH,
+} from 'src/global/constants/global.constants';
 
 @Injectable()
 export class AuthService {
@@ -66,7 +70,7 @@ export class AuthService {
   }
 
   async signUp(user: CreateUserDto) {
-    const returnedUser = await this.userService.signUp(user);
+    const returnedUser = await this.userService.createUser(user);
     if (!returnedUser) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -83,21 +87,7 @@ export class AuthService {
 
   async signIn(username: string, pass: string): Promise<any> {
     const user = await this.userService.signIn(username, pass);
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
-    if (user.mailVerified === false) {
-      try {
-        await this.sendMailVerification(user);
-      } catch (e) {
-        this.logger.error(e.message ?? 'Could not send verification email');
-        throw new InternalServerErrorException(
-          'Could not send verification email',
-        );
-      }
-      throw new UnauthorizedException('Email not verified'); //TODO: to be discussed with frontend team
-    }
+    if (!user) throw new BadRequestException('Invalid credentials');
 
     return await this.generateToken(user);
   }

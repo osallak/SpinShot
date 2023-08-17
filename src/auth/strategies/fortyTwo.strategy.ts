@@ -5,8 +5,7 @@ import { Strategy } from 'passport-42';
 import { FortyTwoProfile } from '../interfaces';
 import { UserService } from 'src/user/user.service';
 import { v4 as uuidv4 } from 'uuid';
-import { count } from 'console';
-import { HOST } from 'src/global/global.constants';
+import { HOST } from 'src/global/constants/global.constants';
 @Injectable()
 export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
   constructor(
@@ -47,7 +46,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
       return await this.userService.mergeAccounts(data);
     } else if (user && user.is42User) {
       return user;
-    } 
+    }
 
     user = await this.userService.findOneByUsername(username);
     if (user && !user.is42User) {
@@ -56,9 +55,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
         ...data,
         username: newUsername,
       });
-    } else if (user) {
-      return user;
-    }
-    return await this.userService.create42User(data);
+    } 
+    return user ??  await this.userService.create42User(data);
   }
 }

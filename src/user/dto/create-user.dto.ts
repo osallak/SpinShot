@@ -1,11 +1,5 @@
-import {
-  IsEmail,
-  IsNotEmpty,
-  Matches,
-  Min,
-  MinLength,
-  ValidationOptions,
-} from 'class-validator';
+import { Exclude } from 'class-transformer';
+import { IsDefined, IsEmail, Matches, MinLength } from 'class-validator';
 
 export class CreateUserDto {
   @Matches(/^[a-zA-Z0-9_-]{3,16}$/, {

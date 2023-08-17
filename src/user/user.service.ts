@@ -1,17 +1,25 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import { DEFAULT_AVATAR } from 'src/global/global.constants';
-import { UserStatus } from '@prisma/client';
+import { DEFAULT_AVATAR } from 'src/global/constants/global.constants';
+import { Prisma, UserStatus } from '@prisma/client';
 import { initUserLogs } from './helpers';
 import { v4 as uuidv4 } from 'uuid';
 import { achievements } from './constants';
+import { serializePaginationResponse, serializeUser } from './helpers';
+import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
+import { PaginationResponse } from 'src/global/interfaces/global.intefraces';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { MailerService } from '@nestjs-modules/mailer';
+
 export type User = {
   id: string;
   firstName?: string;
@@ -28,7 +36,7 @@ export type User = {
 @Injectable()
 export class UserService {
   private readonly logger = new Logger('UserService');
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, mailer: MailerService) {}
 
   async findOneByEmail(email: string) {
     try {
@@ -112,13 +120,13 @@ export class UserService {
     });
   }
 
-  async signUp(data: CreateUserDto): Promise<any> {
+  async createUser(data: CreateUserDto): Promise<any> {
     let user: any = await this.findOneByEmailOrUsername(
       data.email,
       data.username,
     );
 
-    if (user) throw new BadRequestException('User already exists');
+    if (user) throw new ConflictException('User already exists');
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(data.password, salt);
@@ -144,13 +152,10 @@ export class UserService {
 
   async signIn(username: string, pass: string): Promise<any> {
     const user = await this.findOneByUsername(username);
-    if (
-      !user ||
-      !user.password ||
-      !(await bcrypt.compare(pass, user.password))
-    ) {
-      throw new BadRequestException('Invalid credentials');
-    }
+
+    if (!user) throw new NotFoundException('User not found');
+    if (!user.mailVerified || !(await bcrypt.compare(pass, user.password)))
+      throw new BadRequestException('Email not verified');
 
     await this.prisma.user.update({
       where: { username: user.username },
@@ -162,7 +167,7 @@ export class UserService {
   async deleteUser(user: any): Promise<any> {
     return await this.prisma.user.delete({
       where: {
-        id: user.id, //todo: remove onDelete Cascade from prisma schema
+        id: user.id,
       },
     });
   }
@@ -171,8 +176,7 @@ export class UserService {
     const user = await this.findOneByEmail(email);
     if (!user) throw new BadRequestException('Invalid email');
 
-    if (user.mailVerified)
-      throw new BadRequestException('Email already verified');
+    if (user.mailVerified) throw new BadRequestException('Link already used');
 
     if (!reject) {
       const retUser = await this.prisma.user.update({
@@ -181,14 +185,13 @@ export class UserService {
       });
       return retUser ? true : false;
     }
-    if (user.is42User) 
-      return null;
+    if (user.is42User) return null;
     return await this.deleteUser(user);
   }
 
   async create42User(data: any): Promise<any> {
     const user = await this.findOneByUsername(data.username);
-    if (user) data.username = data.username + '_' + uuidv4().slice(0, 6); //todo: check this
+    if (user) data.username = 'user' + '_' + uuidv4().slice(0, 8); //todo: check this
 
     const createUser = await this.prisma.user.create({
       data: {
@@ -227,6 +230,100 @@ export class UserService {
           status: UserStatus.ONLINE,
           country: profile.country,
         },
+      });
+    } catch (error) {
+      this.logger.error(error.message);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async getUser(username: string): Promise<any> {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          username,
+        },
+        include: {
+          logs: true,
+          HaveAchievement: {
+            select: {
+              level: true,
+              Achiement: {
+                select: {
+                  name: true,
+                  description: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!user) throw new BadRequestException('Invalid username');
+      return serializeUser(user);
+    } catch (e) {
+      this.logger.error(e.message);
+      throw e;
+    }
+  }
+
+  async getUserGames(
+    username: string,
+    query: PaginationQueryDto,
+  ): Promise<PaginationResponse<any>> {
+    const { limit } = query;
+    const user = await this.findOneByUsername(username);
+    if (!user) throw new NotFoundException('User not found');
+
+    try {
+      const [games, totalCount] = await this.prisma.$transaction([
+        this.prisma.game.findMany({
+          skip: query.getSkip(),
+          take: limit,
+          where: {
+            OR: [
+              {
+                userId: user.id,
+              },
+              {
+                opponentId: user.id,
+              },
+            ],
+          },
+        }),
+        this.prisma.game.count(),
+      ]);
+      return serializePaginationResponse(games, totalCount, limit);
+    } catch (e) {
+      this.logger.error(e.message);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async update(username: string, data: UpdateUserDto): Promise<any> {
+    if (data.password) {
+      const salt = await bcrypt.genSalt(10);
+      data.password = await bcrypt.hash(data.password, salt);
+    }
+
+    try {
+      return await this.prisma.user.update({
+        where: { username },
+        data,
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new BadRequestException('Invalid data');
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
+  }
+
+  async updateAvatar(username: string, publicUrl: string): Promise<any> {
+    try {
+      return await this.prisma.user.update({
+        where: { username },
+        data: { avatar: publicUrl },
       });
     } catch (error) {
       this.logger.error(error.message);

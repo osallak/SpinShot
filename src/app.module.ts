@@ -5,8 +5,11 @@ import * as Joi from 'joi';
 import { PrismaService } from './prisma/prisma.service';
 import { AuthController } from './auth/auth.controller';
 import { MailerModule } from '@nestjs-modules/mailer';
-import configuration from './config/configuration';
-import { validationSchema } from './config/validation';
+import { UserController } from './user/controller/user.controller';
+import { UserModule } from './user/user.module';
+import { StorageModule } from './storage/storage.module';
+import { MediaModule } from './media/media.module';
+import { MediaController } from './media/media.controller';
 
 @Module({
   imports: [
@@ -30,10 +33,11 @@ import { validationSchema } from './config/validation';
       },
     }),
     AuthModule,
+    UserModule,
+    StorageModule,
+    MediaModule,
   ],
-  controllers: [AuthController],
-  providers: [
-    PrismaService
-  ],
+  controllers: [AuthController, UserController, MediaController],
+  providers: [PrismaService],
 })
 export class AppModule {}

@@ -8,7 +8,17 @@ async function bootstrap() {
     logger: ['error', 'warn', 'debug', 'log', 'verbose'],
     cors: true,
   });
-  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      skipMissingProperties: true,
+      stopAtFirstError: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
   app.use(cookieParser());
 
   await app.listen(process.env.PORT);

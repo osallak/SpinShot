@@ -6,7 +6,6 @@ export function hashPassword(password: string): string | null {
   return bcrypt.hashSync(password, salt);
 }
 
-
 export function initUserLogs(): any {
   return {
     victories: 0,

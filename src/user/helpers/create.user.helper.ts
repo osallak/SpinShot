@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt';
+import { CreateLogs } from 'src/types/common.types';
 
 export function hashPassword(password: string): string | null {
   if (!password) return null;
@@ -6,7 +7,7 @@ export function hashPassword(password: string): string | null {
   return bcrypt.hashSync(password, salt);
 }
 
-export function initUserLogs(): any {
+export function initUserLogs(): CreateLogs{
   return {
     victories: 0,
     defeats: 0,

@@ -1,7 +1,8 @@
 import { PaginationResponse } from 'src/global/interfaces/global.intefraces';
+import { SerialisedUser, User } from 'src/types';
 
 //todo: add user type
-export function serializeUser(user: any): any {
+export function serializeUser(user: User): SerialisedUser {
   return {
     username: user.username,
     email: user.email,
@@ -15,7 +16,8 @@ export function serializeUser(user: any): any {
       rank: user.logs.rank,
       level: user.logs.level,
     },
-    achievements: user.HaveAchievement,
+    logs: user.logs,//todo: remove extra fields
+    achievements: user.HaveAchievement,//todo: same as above
   };
 }
 

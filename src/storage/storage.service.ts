@@ -40,7 +40,7 @@ export class StorageService {
     }
   }
 
-  async delete(path: string) {
+  async delete(path: string): Promise<void> {
     try {
       await this.storage
         .bucket(this.bucket)
@@ -52,12 +52,12 @@ export class StorageService {
     }
   }
 
-  getPublicUrl(path: string) {
+  getPublicUrl(path: string): string {
     const file = this.storage.bucket(this.bucket).file(path);
     return file.publicUrl();
   }
 
-  async makePublic(path: string) {
+  async makePublic(path: string): Promise<void> {
     const file = this.storage.bucket(this.bucket).file(path);
     await file.makePublic();
   }

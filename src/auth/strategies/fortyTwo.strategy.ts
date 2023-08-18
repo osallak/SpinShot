@@ -6,6 +6,7 @@ import { FortyTwoProfile } from '../interfaces';
 import { UserService } from 'src/user/user.service';
 import { v4 as uuidv4 } from 'uuid';
 import { HOST } from 'src/global/constants/global.constants';
+import { User } from 'src/types';
 @Injectable()
 export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
   constructor(
@@ -23,7 +24,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
     accessToken: string,
     refreshToken: string,
     profile: any,
-  ): Promise<any> {
+  ): Promise<User> {
     const {
       username,
       name: { familyName, givenName },
@@ -41,7 +42,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
       country: country,
     };
 
-    let user = await this.userService.findOneByEmail(value);
+    let user: User = await this.userService.findOneByEmail(value);
     if (user && ((user.mailVerified && !user.is42User) || !user.mailVerified)) {
       return await this.userService.mergeAccounts(data);
     } else if (user && user.is42User) {

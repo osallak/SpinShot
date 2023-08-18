@@ -1,6 +1,5 @@
-import { ApiProperty, PartialType, PickType } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
-import { IsEmail, Matches, MinLength } from 'class-validator';
+import { ApiProperty} from '@nestjs/swagger';
+import { Allow, IsEmail, Matches, MinLength } from 'class-validator';
 
 export class CreateUserDto {
   @Matches(/^[a-zA-Z0-9_-]{3,16}$/, {
@@ -41,7 +40,9 @@ export class SignInUserDto {
     type: String,
     example: 'john_doe',
   })
+  @Allow()
   username: string;
 
+  @Allow()
   password: string;
 }

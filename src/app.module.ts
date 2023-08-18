@@ -10,7 +10,6 @@ import { UserModule } from './user/user.module';
 import { StorageModule } from './storage/storage.module';
 import { MediaModule } from './media/media.module';
 import { MediaController } from './media/media.controller';
-import { MessagesGateway } from './messages/messages.gateway';
 
 @Module({
   imports: [
@@ -39,6 +38,6 @@ import { MessagesGateway } from './messages/messages.gateway';
     MediaModule,
   ],
   controllers: [AuthController, UserController, MediaController],
-  providers: [PrismaService, MessagesGateway],
+  providers: [PrismaService],
 })
 export class AppModule {}

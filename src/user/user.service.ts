@@ -151,7 +151,6 @@ export class UserService {
   }
 
   async signIn(username: string, pass: string): Promise<any> {
-    
     try {
       const user = await this.prisma.user.update({
         where: { username: username },
@@ -163,6 +162,8 @@ export class UserService {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         throw new NotFoundException('User not found');
+      } else if (error instanceof BadRequestException) {
+        throw error;
       }
       throw new InternalServerErrorException();
     }
@@ -262,10 +263,9 @@ export class UserService {
           },
         },
       });
-      if (!user) throw new BadRequestException('Invalid username');
+      if (!user) throw new NotFoundException('Invalid username');
       return serializeUser(user);
     } catch (e) {
-      this.logger.error(e.message);
       throw new InternalServerErrorException();
     }
   }

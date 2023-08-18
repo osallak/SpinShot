@@ -11,6 +11,6 @@ export class PaginationQueryDto {
   readonly limit: number = 5;
 
   getSkip(): number {
-    return (this.page - 1) * this.limit; //page 1 * limit 10 = 0
+    return (this.page - 1) * this.limit;
   }
 }

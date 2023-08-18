@@ -13,16 +13,26 @@ import { UserService } from '../user.service';
 import { Request } from 'express';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('user')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiTags('user')
+  @ApiResponse({ status: 200, description: 'Get user by username' })
   @Get('/:username')
   async getUser(@Param('username') username: string) {
     return await this.userService.getUser(username);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiTags('user')
+  @ApiResponse({ status: 200, description: 'Get user games by username' })
   @Get('/:username/games')
   async getUserGames(
     @Param('username') username: string,
@@ -31,6 +41,21 @@ export class UserController {
     return await this.userService.getUserGames(username, query);
   }
 
+  @ApiTags('user')
+  @ApiResponse({
+    status: 200,
+    content: {
+      schema: {
+        example: {
+          username: 'john_doe',
+          email: 'valid@email.com',
+        },
+      },
+    },
+    description: 'Update user by username',
+    type: UpdateUserDto,
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Patch()
   async updateUser(
@@ -38,5 +63,6 @@ export class UserController {
     @Body() body: UpdateUserDto,
   ): Promise<UpdateUserDto> {
     return await this.userService.update((<any>req).user.username, body);
+    //todo: should i return a new jwt token? (make sure that it's signed with email instead of username)
   }
 }

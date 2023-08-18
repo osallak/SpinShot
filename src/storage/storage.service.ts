@@ -25,6 +25,8 @@ export class StorageService {
 
   save(path: string, media: Buffer): Response {
     try {
+      if (this.getPublicUrl(path)) {
+      }
       const file = this.storage.bucket(this.bucket).file(path);
       const stream = file.createWriteStream();
       stream.end(media);

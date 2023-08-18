@@ -78,7 +78,6 @@ export class AuthService {
       await this.sendMailVerification(returnedUser);
       return returnedUser;
     } catch (e) {
-      this.logger.error(e.message ?? 'Could not send verification email');
       throw new InternalServerErrorException(
         'Could not send verification email',
       );
@@ -92,7 +91,7 @@ export class AuthService {
     return await this.generateToken(user);
   }
 
-  async verifyEmail(token: string, res: any, reject: boolean) {
+  async verifyOrReject(token: string, res: any, reject: boolean) {
     if (!token) throw new BadRequestException();
     try {
       const decoded: any = await this.jwtService.verifyAsync(token);

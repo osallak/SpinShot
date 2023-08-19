@@ -9,11 +9,8 @@ import { PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
   private readonly logger = new Logger('Prisma');
-  // constructor() {
-  //   super({log: ["query"]});
-  // } //? for debug
 
-  async onModuleInit() {
+  async onModuleInit() : Promise<void>{
     try {
       await this.$connect();
     } catch (e) {
@@ -21,7 +18,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     }
   }
 
-  async enableShutdownHooks(app: INestApplication) {
+  async enableShutdownHooks(app: INestApplication): Promise<void> {
     this.$on('beforeExit' as never, async () => {
       try {
         await app.close();
@@ -29,5 +26,13 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         this.logger.error(e.message);
       }
     });
+  }
+
+  async onModuleDestroy(): Promise<void> {
+    try {
+      await this.$disconnect();
+    } catch (e) {
+      this.logger.error(e.message);
+    }
   }
 }

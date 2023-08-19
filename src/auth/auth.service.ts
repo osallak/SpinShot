@@ -11,8 +11,14 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtAuthPayload } from './interfaces/jwt.interface';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
-import { HOST, VERIFICATION_PATH, REJECTION_PATH} from 'src/global/global.constants';
-
+import { Response } from 'express';
+import {
+  HOST,
+  VERIFICATION_PATH,
+  REJECTION_PATH,
+} from 'src/global/constants/global.constants';
+import { JwtResponse } from 'src/types/common.types';
+import { User } from 'src/types';
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger('AuthService');
@@ -24,85 +30,87 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async generateToken(user: any) {
+  async generateToken(user: any): Promise<JwtResponse> {
     const payload: JwtAuthPayload = {
       username: user.username,
       sub: user.id,
       iss: this.configService.get('JWT_ISSUER'),
     };
 
-    return {
-      token: await this.jwtService.signAsync(payload),
-    };
+    try {
+      return {
+        token: await this.jwtService.signAsync(payload),
+      };
+    } catch (e) {
+      throw new InternalServerErrorException('Could not create token');
+    }
   }
 
-  async sendMailVerification(user: any) {
+  async sendMailVerification(user: User): Promise<void> {
     //todo: sign the tokens with a different secrets
     //todo: user a template for the mail
 
-    const token = await this.jwtService.signAsync({
-      email: user.email,
-      iss: this.configService.get('JWT_ISSUER'),
-    });
+    try {
+      const token: string = await this.jwtService.signAsync({
+        email: user.email,
+        iss: this.configService.get('JWT_ISSUER'),
+      });
 
-    if (!token) {
+      if (!token) {
+        throw new InternalServerErrorException('Could not create token');
+      }
+
+      const verifyUrl: string = `${HOST}:${
+        this.configService.get('PORT') || 3000
+      }${VERIFICATION_PATH}${token}`;
+
+      const rejectUrl: string = `${HOST}:${
+        this.configService.get('PORT') || 3000
+      }${REJECTION_PATH}${token}`;
+
+      this.mailerService.sendMail({
+        to: user.email,
+        subject: 'Verify your email',
+        text: `verify: ${verifyUrl}
+        not you? ${rejectUrl}`, //TODO: change this to a template
+      });
+    } catch (e) {
+      this.logger.error(e.message);
       throw new InternalServerErrorException('Could not create token');
     }
-
-    const verifyUrl = `${HOST}:${
-      this.configService.get('PORT') || 3000
-    }${VERIFICATION_PATH}${token}`;
-
-    const rejectUrl = `${HOST}:${
-      this.configService.get('PORT') || 3000
-    }${REJECTION_PATH}${token}`;
-
-    this.mailerService.sendMail({
-      to: user.email,
-      subject: 'Verify your email',
-      text: `verify: ${verifyUrl}
-      not you? ${rejectUrl}`, //TODO: change this to a template
-    });
   }
 
-  async signUp(user: CreateUserDto) {
-    const returnedUser = await this.userService.signUp(user);
-    if (!returnedUser) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+  async signUp(user: CreateUserDto): Promise<User> {
     try {
+      const returnedUser: User = await this.userService.createUser(user);
+      if (!returnedUser) {
+        throw new BadRequestException('something went wrong');
+      }
       await this.sendMailVerification(returnedUser);
       return returnedUser;
     } catch (e) {
-      this.logger.error(e.message ?? 'Could not send verification email');
+      if (e instanceof BadRequestException) throw e;
       throw new InternalServerErrorException(
         'Could not send verification email',
       );
     }
   }
 
-  async signIn(username: string, pass: string): Promise<any> {
-    const user = await this.userService.signIn(username, pass);
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+  async signIn(username: string, pass: string): Promise<JwtResponse> {
+    try {
+      const user: User = await this.userService.signIn(username, pass);
+      return await this.generateToken(user);
+    } catch (e) {
+      this.logger.error(e.message);
+      throw e;
     }
-
-    if (user.mailVerified === false) {
-      try {
-        await this.sendMailVerification(user);
-      } catch (e) {
-        this.logger.error(e.message ?? 'Could not send verification email');
-        throw new InternalServerErrorException(
-          'Could not send verification email',
-        );
-      }
-      throw new UnauthorizedException('Email not verified'); //TODO: to be discussed with frontend team
-    }
-
-    return await this.generateToken(user);
   }
 
-  async verifyEmail(token: string, res: any, reject: boolean) {
+  async verifyOrReject(
+    token: string,
+    res: Response,
+    reject: boolean,
+  ): Promise<void> {
     if (!token) throw new BadRequestException();
     try {
       const decoded: any = await this.jwtService.verifyAsync(token);
@@ -114,7 +122,7 @@ export class AuthService {
 
       !reject
         ? res.redirect(this.configService.get('SIGN_IN_URL'))
-        : res.send('account deleted');
+        : res.send('account deleted'); //todo: to be discussed
     } catch (e) {
       this.logger.error(e.message);
       throw new BadRequestException();

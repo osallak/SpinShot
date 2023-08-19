@@ -64,7 +64,7 @@ export class UserController {
     @Req() req: Request,
     @Body() body: UpdateUserDto,
   ): Promise<User> {
-    return await this.userService.update((<any>req).user.username, body);
+    return await this.userService.update((<any>req).user.id, body);
     //todo: should i return a new jwt token? (make sure that it's signed with email instead of username)
   }
 }

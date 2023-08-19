@@ -61,12 +61,12 @@ export class MediaController {
     file: Express.Multer.File,
     @Req() req: Request,
   ): Promise<Response> {
-    const path = `media/${(<any>req).user.username}.${
+    const path = `media/${(<any>req).user.id}.${
       file.mimetype.split('/')[1]
     }`;
     const ret: Response = this.storageService.save(path, file.buffer);
     this.userService.updateAvatar(
-      (<any>req).user.username,
+      (<any>req).user.id,
       this.storageService.getPublicUrl(path),
     );
     return ret;

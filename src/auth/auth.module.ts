@@ -16,7 +16,8 @@ import { FortyTwoStrategy } from './strategies/fortyTwo.strategy';
     UserModule,
     JwtModule.register({
       secret: JWT_SECRET,
-      signOptions: { expiresIn: '1d' },
+
+      signOptions: { expiresIn: '1d'},
     }),
     PassportModule,
   ],

@@ -303,16 +303,20 @@ export class UserService {
     }
   }
 
-  async update(username: string, data: UpdateUserDto): Promise<User> {
+  async update(id: string, data: UpdateUserDto): Promise<User> {
     try {
       if (data.password) {
         const salt: string = (await bcrypt.genSalt(10)) as string;
         data.password = (await bcrypt.hash(data.password, salt)) as string;
       }
-      return await this.prisma.user.update({
-        where: { username },
+      const user: User = await this.prisma.user.update({
+        where: { id },
         data,
       });
+      return {
+        username: user.username,
+        email: user.email,
+      } as User;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         throw new BadRequestException('Invalid data');
@@ -322,10 +326,10 @@ export class UserService {
     }
   }
 
-  async updateAvatar(username: string, publicUrl: string): Promise<User> {
+  async updateAvatar(id: string, publicUrl: string): Promise<User> {
     try {
       return await this.prisma.user.update({
-        where: { username },
+        where: { id },
         data: { avatar: publicUrl },
       });
     } catch (error) {

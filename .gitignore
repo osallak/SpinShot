@@ -1,0 +1,12 @@
+dist
+node_modules/
+.vscode/
+prisma/migration*
+data
+env/*
+!env/.gitkeep
+!env/development.example.env
+todo
+.gitignore
+gcs_keyfile.json
+.env

@@ -11,17 +11,12 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto, SignInUserDto } from 'src/user/dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { Request } from 'express';
 import { FortyTwoAuthGuard } from './guards/42-auth.guard';
 import { ConfigService } from '@nestjs/config';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import {
-  ApiBadGatewayResponse,
-  ApiBadRequestResponse,
   ApiExcludeEndpoint,
-  ApiProperty,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -63,9 +58,8 @@ export class AuthController {
   })
   @Post('/signin/local')
   @UseGuards(LocalAuthGuard)
-  async signinLocal(@Body() user: SignInUserDto): Promise<JwtResponse> {
-    const ret = await this.authService.signIn(user.username, user.password);
-    return ret;
+  async signinLocal(@Req() req: Request): Promise<JwtResponse> {
+    return (<any>req).user;
   }
 
   @ApiExcludeEndpoint()

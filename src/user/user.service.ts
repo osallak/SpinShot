@@ -248,7 +248,14 @@ export class UserService {
           username,
         },
         include: {
-          logs: true,
+          logs: {
+            select: {
+              victories: true,
+              defeats: true,
+              level: true,
+              rank: true,
+            }
+          },
           HaveAchievement: {
             select: {
               level: true,

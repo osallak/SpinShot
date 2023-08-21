@@ -11,7 +11,7 @@ import { emit } from 'process';
 export class PrismaService extends PrismaClient implements OnModuleInit {
   private readonly logger = new Logger('Prisma');
 
-  async onModuleInit() {
+  async onModuleInit() : Promise<void>{
     try {
       await this.$connect();
     } catch (e) {
@@ -19,7 +19,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     }
   }
 
-  async enableShutdownHooks(app: INestApplication) {
+  async enableShutdownHooks(app: INestApplication): Promise<void> {
     this.$on('beforeExit' as never, async () => {
       try {
         await app.close();
@@ -29,7 +29,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     });
   }
 
-  async onModuleDestroy() {
+  async onModuleDestroy(): Promise<void> {
     try {
       await this.$disconnect();
     } catch (e) {

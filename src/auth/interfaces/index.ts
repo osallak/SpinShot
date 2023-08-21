@@ -1,2 +1,2 @@
-export * from "./fortyTwo.interface"
-export * from "./jwt.interface"
+export * from './fortyTwo.interface';
+export * from './jwt.interface';

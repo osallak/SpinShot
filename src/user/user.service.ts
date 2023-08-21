@@ -1,36 +1,33 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import { DEFAULT_AVATAR } from 'src/global/global.constants';
-import { UserStatus } from '@prisma/client';
+import { DEFAULT_AVATAR } from 'src/global/constants/global.constants';
+import { Prisma, UserStatus, haveAchievement } from '@prisma/client';
 import { initUserLogs } from './helpers';
 import { v4 as uuidv4 } from 'uuid';
 import { achievements } from './constants';
-export type User = {
-  id: string;
-  firstName?: string;
-  lastName?: string;
-  email: string;
-  uesrname: string;
-  password: string;
-  avatar?: string;
-  country?: string;
-  twoFactorAuth: boolean;
-  status: UserStatus;
-};
+import { serializePaginationResponse, serializeUser } from './helpers';
+import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
+import { PaginationResponse } from 'src/global/interfaces/global.intefraces';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { MailerService } from '@nestjs-modules/mailer';
+import { SerialisedUser } from 'src/types';
+import { User } from 'src/types';
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger('UserService');
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, mailer: MailerService) {}
 
-  async findOneByEmail(email: string) {
+  async findOneByEmail(email: string): Promise<User> {
     try {
       return await this.prisma.user.findUnique({
         where: { email },
@@ -41,7 +38,7 @@ export class UserService {
     }
   }
 
-  async findOneById(id: string) {
+  async findOneById(id: string): Promise<User> {
     try {
       return await this.prisma.user.findUnique({
         where: { id },
@@ -52,7 +49,7 @@ export class UserService {
     }
   }
 
-  async findOneByUsername(username: string) {
+  async findOneByUsername(username: string): Promise<User> {
     try {
       return await this.prisma.user.findUnique({
         where: { username },
@@ -63,7 +60,10 @@ export class UserService {
     }
   }
 
-  async findOneByEmailOrUsername(email: string, username: string) {
+  async findOneByEmailOrUsername(
+    email: string,
+    username: string,
+  ): Promise<User> {
     try {
       return await this.prisma.user.findFirst({
         where: {
@@ -112,67 +112,75 @@ export class UserService {
     });
   }
 
-  async signUp(data: CreateUserDto): Promise<any> {
-    let user: any = await this.findOneByEmailOrUsername(
-      data.email,
-      data.username,
-    );
-
-    if (user) throw new BadRequestException('User already exists');
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(data.password, salt);
-    user = await this.prisma.user.create({
-      data: {
-        email: data.email,
-        username: data.username,
-        password: hashedPassword,
-        status: UserStatus.OFFLINE,
-        avatar: DEFAULT_AVATAR,
-        is42User: false,
-        logs: {
-          create: initUserLogs(),
+  async createUser(data: CreateUserDto): Promise<User> {
+    try {
+      const salt: string = await bcrypt.genSalt(10); //? does it return a string ?
+      const hashedPassword: string = await bcrypt.hash(data.password, salt);
+      const user: User = await this.prisma.user.create({
+        data: {
+          email: data.email,
+          username: data.username,
+          password: hashedPassword,
+          status: UserStatus.OFFLINE,
+          avatar: DEFAULT_AVATAR,
+          is42User: false,
+          logs: {
+            create: initUserLogs(),
+          },
         },
-      },
-    });
+      });
 
-    const haveAchievement = await this.initAcheivements(user);
-    if (!user || !haveAchievement) throw new InternalServerErrorException();
-    const { password, ...rest } = data;
-    return rest;
-  }
-
-  async signIn(username: string, pass: string): Promise<any> {
-    const user = await this.findOneByUsername(username);
-    if (
-      !user ||
-      !user.password ||
-      !(await bcrypt.compare(pass, user.password))
-    ) {
-      throw new BadRequestException('Invalid credentials');
+      const haveAchievement: haveAchievement = await this.initAcheivements(
+        user,
+      );
+      if (!user || !haveAchievement) throw new InternalServerErrorException();
+      const { password, ...rest } = data;
+      return rest;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError)
+        throw new BadRequestException('Invalid data');
+      if (error instanceof ConflictException)
+        throw new ConflictException('User already exists');
+      throw new InternalServerErrorException();
     }
-
-    await this.prisma.user.update({
-      where: { username: user.username },
-      data: { status: UserStatus.ONLINE }, //todo: to be discussed
-    });
-    return user;
   }
 
-  async deleteUser(user: any): Promise<any> {
-    return await this.prisma.user.delete({
+  async signIn(username: string, pass: string): Promise<User> {
+    try {
+      const user = await this.prisma.user.update({
+        where: { username: username },
+        data: { status: UserStatus.ONLINE }, //todo: to be discussed
+      });
+      if (!user.mailVerified)
+        throw new BadRequestException('Email not verified');
+      if (!(await bcrypt.compare(pass, user.password)))
+        throw new BadRequestException('Invalid credentials');
+      return user;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new NotFoundException('User not found');
+      } else if (error instanceof BadRequestException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
+  }
+
+  async deleteUser(user: any): Promise<void> {
+    //todo: delete user's achievements as well as his logs
+    await this.prisma.user.delete({
       where: {
-        id: user.id, //todo: remove onDelete Cascade from prisma schema
+        id: user.id,
       },
     });
   }
 
   async verifyEmail(email: string, reject: boolean): Promise<boolean> {
-    const user = await this.findOneByEmail(email);
+    const user: User = await this.findOneByEmail(email);
     if (!user) throw new BadRequestException('Invalid email');
 
-    if (user.mailVerified)
-      throw new BadRequestException('Email already verified');
+    if (user.mailVerified) throw new BadRequestException('Link already used');
 
     if (!reject) {
       const retUser = await this.prisma.user.update({
@@ -181,14 +189,14 @@ export class UserService {
       });
       return retUser ? true : false;
     }
-    if (user.is42User) 
-      return null;
-    return await this.deleteUser(user);
+    if (user.is42User) return false;
+    await this.deleteUser(user);
+    return true;
   }
 
-  async create42User(data: any): Promise<any> {
+  async create42User(data: any): Promise<User> {
     const user = await this.findOneByUsername(data.username);
-    if (user) data.username = data.username + '_' + uuidv4().slice(0, 6); //todo: check this
+    if (user) data.username = 'user' + '_' + uuidv4().slice(0, 8);
 
     const createUser = await this.prisma.user.create({
       data: {
@@ -212,10 +220,7 @@ export class UserService {
     return createUser;
   }
 
-  async mergeAccounts(profile: any): Promise<any> {
-    const user = this.findOneByEmail(profile.email);
-    if (!user) throw new BadRequestException('Invalid email');
-
+  async mergeAccounts(profile: any): Promise<User> {
     try {
       return await this.prisma.user.update({
         where: { email: profile.email },
@@ -229,7 +234,108 @@ export class UserService {
         },
       });
     } catch (error) {
-      this.logger.error(error.message);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new BadRequestException('Invalid credentials');
+      }
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async getUser(username: string): Promise<SerialisedUser> {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          username,
+        },
+        include: {
+          logs: true,
+          HaveAchievement: {
+            select: {
+              level: true,
+              Achiement: {
+                select: {
+                  name: true,
+                  description: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!user) throw new NotFoundException('Invalid username');
+      return serializeUser(user);
+    } catch (e) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async getUserGames(
+    username: string,
+    query: PaginationQueryDto,
+  ): Promise<PaginationResponse<any>> {
+    const { limit } = query;
+    try {
+      const user: User = await this.findOneByUsername(username);
+      if (!user) throw new NotFoundException();
+      const [games, totalCount] = await this.prisma.$transaction([
+        this.prisma.game.findMany({
+          skip: query.getSkip(),
+          take: limit,
+          where: {
+            OR: [
+              {
+                userId: user.id,
+              },
+              {
+                opponentId: user.id,
+              },
+            ],
+          },
+        }),
+        this.prisma.game.count(),
+      ]);
+      return serializePaginationResponse(games, totalCount, limit);
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new NotFoundException('User not found');
+      }
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async update(id: string, data: UpdateUserDto): Promise<User> {
+    try {
+      if (data.password) {
+        const salt: string = (await bcrypt.genSalt(10)) as string;
+        data.password = (await bcrypt.hash(data.password, salt)) as string;
+      }
+      const user: User = await this.prisma.user.update({
+        where: { id },
+        data,
+      });
+      return {
+        username: user.username,
+        email: user.email,
+      } as User;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new BadRequestException('Invalid data');
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
+  }
+
+  async updateAvatar(id: string, publicUrl: string): Promise<User> {
+    try {
+      return await this.prisma.user.update({
+        where: { id },
+        data: { avatar: publicUrl },
+      });
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException('User not found');
+      }
       throw new InternalServerErrorException();
     }
   }

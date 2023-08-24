@@ -1,15 +1,18 @@
 import { useRouter } from "next/router";
 import lock from "../../../../../public/lock.svg";
 import mail from "../../../../../public/email.svg";
-import SpinShotlogo from "../../../../../public/SpinShotlogo.svg"
+import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
 import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import InputBorder from "@/Components/ui/Inputs/InputBorder";
 import { MouseEvent, useState, useEffect } from "react";
 import ContinueWithIntra from "@/Components/ui/Buttons/ContinueWithIntra";
 import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
 import Image from "next/image";
-import axios from "axios";
-import { error } from "console";
+import axios, { AxiosError } from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/ReactToastify.min.css";
+import { log } from "console";
+import { errorMonitor } from "events";
 
 const Signin = () => {
   const [username, setUsername] = useState("");
@@ -18,6 +21,8 @@ const Signin = () => {
   const [isValid, setisValid] = useState(true);
   const [widthsc, setwidthsc] = useState<number | undefined>(undefined);
   const [isEmail, setisEmail] = useState(true);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const Router = useRouter();
   const SigninArray = [
     {
@@ -52,32 +57,36 @@ const Signin = () => {
   ) => {
     e.preventDefault();
     try {
-      console.log(username);
-      const res = await axios.post('http://e3r9p12.1337.ma:3000/auth/signin/local', {
+      const res = await axios.post(
+        "http://34.16.168.248:3001/auth/signin/local",
+        {
           username,
           password,
-        })
-      console.log(res.data.token);
-      } catch (error) {
-        console.log(error)
-      }
+        }
+      );
+      localStorage.setItem("localToken", res.data.token);
+      sessionStorage.setItem("sessionToken", res.data.token);
+    } catch (error: any) {
+      setErrorMessage(error.response.data.message);
+      setError(true);
+    }
     // Router.push(Path);
   };
 
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    try{
-      await axios.get('http://e3r9p12.1337.ma:3000/auth/42')
+    e.preventDefault();
+    try {
+      await axios.get("http://e3r9p12.1337.ma:3000/auth/42");
       console.log("good");
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const redirection = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     Router.push("/Signup");
-  }
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -94,11 +103,16 @@ const Signin = () => {
 
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex flex-col justify-center items-center ">
+      <ToastContainer />
       <div className="fl:w-[600px] fl:h-[700px] w-full h-full backdrop:blur bg-white/10 fl:rounded-2xl rounded-none flex justify-center items-center flex-col space-y-[2px]">
         <div className="w-full flex items-center justify-center flex-col fl:space-y-9 space-y-6">
           <div className="flex fl:pb-14 flex-col justify-center fl:space-y-5 space-y-3 items-center">
             <div className="flex justify-center items-center">
-              <Image className="c-md:w-[75px] w-[60px] c-md:h-[120px] h-[105px]" src={SpinShotlogo} alt="SpinShot logo" />
+              <Image
+                className="c-md:w-[75px] w-[60px] c-md:h-[120px] h-[105px]"
+                src={SpinShotlogo}
+                alt="SpinShot logo"
+              />
             </div>
             <div className="font-Poppins font-semibold text-pearl fl:text-2xl sm:text-lg mc:text-md text-xs text-opacity-40">
               Welcome Back!
@@ -112,6 +126,7 @@ const Signin = () => {
                 width: "100%",
               }}
             >
+              <div className=" flex justify-center items-center c-md:space-y-3 space-y-1 flex-col w-full h-full">
               <div className="flex justify-center items-center w-full h-full flex-col c-md:space-y-5 space-y-3">
                 {SigninArray.map((SignIn, index) => (
                   <div
@@ -131,6 +146,12 @@ const Signin = () => {
                     />
                   </div>
                 ))}
+              </div>
+              {error && (
+                <div className="text-red-900 h-[5px] font-Poppins text-sm">
+                  {errorMessage}
+                </div>
+              )}
               </div>
               <div className="w-full flex justify-center items-center flex-col sm:space-y-12 space-y-8">
                 <div className="w-full flex justify-center items-center rounded-full">
@@ -152,9 +173,7 @@ const Signin = () => {
                   </div>
                   <div className="w-full flex justify-center items-center">
                     <ContinueWithIntra
-                      onclick={(e) =>
-                        ContinueIntra(e)
-                      }
+                      onclick={(e) => ContinueIntra(e)}
                       content="Continue With Intra"
                     />
                   </div>
@@ -169,10 +188,7 @@ const Signin = () => {
               <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
                 Don't have an account?
               </p>
-              <EmptyButton
-                onclick={(e) => redirection(e)}
-                content="Sign Up"
-              />
+              <EmptyButton onclick={(e) => redirection(e)} content="Sign Up" />
             </div>
           )}
         </div>

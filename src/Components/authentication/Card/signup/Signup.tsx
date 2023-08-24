@@ -19,7 +19,8 @@ const Signup = () => {
   const [isValid, setisValid] = useState(false);
   const [isMatch, setisMatch] = useState(true);
   const [widthsc, setwidthsc] = useState<number | undefined>(undefined);
-  const [heightsc, setheightsc] = useState<number | undefined>(undefined);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const Router = useRouter();
   const SignupArray = [
     {
@@ -77,13 +78,14 @@ const Signup = () => {
     e.preventDefault();
     if (isValid && isMatch) {
       try {
-        await axios.post('http://e3r9p12.1337.ma:3000/auth/signup/local', {
+        await axios.post('http://34.16.168.248:3001/auth/signup/local', {
           email,
           username,
           password,
         });
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
+        setErrorMessage(error.response.data.message)
+        setError(true);
       }
       // Router.push(Path);
     }
@@ -93,10 +95,8 @@ const Signup = () => {
     if (typeof window !== "undefined") {
       const handleResize = () => {
         setwidthsc(window.innerWidth);
-        setheightsc(window.innerHeight);
       };
       setwidthsc(window.innerWidth);
-      setheightsc(window.innerHeight);
       window.addEventListener("resize", handleResize);
       return () => {
         window.removeEventListener("resize", handleResize);
@@ -173,10 +173,15 @@ const Signup = () => {
                   />
                 </div>
                 {ConfirmPassword && !isMatch && (
-                  <div className="text-[#FF000060] c-md:text-xl sm:text-md font-Poppins">
+                  <div className="text-red-900 h-[5px] text-sm font-Poppins">
                     Password do not match
                   </div>
                 )}
+                {error &&
+                  <div className="text-red-900 h-[5px] text-sm font-Poppins">
+                    {errorMessage}
+                  </div>
+                }
               </div>
               <div className="w-full flex justify-center items-center rounded-full">
                 <SimpleButton

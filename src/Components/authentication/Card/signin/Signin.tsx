@@ -75,12 +75,13 @@ const Signin = () => {
 
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    try {
-      await axios.get("http://e3r9p12.1337.ma:3000/auth/42");
-      console.log("good");
-    } catch (error) {
-      console.log(error);
-    }
+    Router.push("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Fgoogle.com&response_type=code");
+    // try {
+    //   await axios.get("http://e3r9p12.1337.ma:3000/auth/42");
+    //   console.log("good");
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const redirection = (e: MouseEvent<HTMLButtonElement>) => {

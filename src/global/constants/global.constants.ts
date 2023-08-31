@@ -5,5 +5,6 @@ export const HOST = `http://${os.hostname()}`;
 export const VERIFICATION_PATH = '/auth/verify/?token=';
 export const REJECTION_PATH = '/auth/reject/?token=';
 export const JWT_SECRET = process.env.JWT_SECRET;
-
+export const REDIS_PORT = 6379;
+export const ONLY_HOST = `${os.hostname()}`;
 // export

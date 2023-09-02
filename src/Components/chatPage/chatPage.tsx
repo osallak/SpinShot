@@ -7,6 +7,16 @@ import test1 from "../../../public/test1.svg";
 import test2 from "../../../public/test2.svg";
 import test3 from "../../../public/test3.svg";
 import { MouseEvent, useState } from "react";
+import SideBar from "@/Components/ui/sideBar/sideBar";
+import IconButton from "../ui/Buttons/IconButton";
+import CreateChannel from "../../../public/CreateChannel.svg";
+import ExportChannels from "../../../public/ExportChannels.svg";
+import friend from "../../../public/friend.svg";
+import notification from "../../../public/notification.svg";
+import search from "../../../public/search.svg";
+import message from "../../../public/message.svg";
+import profile from "../../../public/profile.svg";
+import game from "../../../public/game.svg";
 
 const Chat = () => {
   const [clicked, setClicked] = useState<number>();
@@ -58,6 +68,66 @@ const Chat = () => {
     },
     {
       icon: test1,
+      username: "MarOne",
+      message: "la na7tajo lmala",
+      readed: readed,
+    },
+    {
+      icon: test1,
+      username: "/API",
+      message: "oki by",
+      readed: readed,
+    },
+    {
+      icon: test1,
+      username: "/API",
+      message: "oki by",
+      readed: readed,
+    },
+    {
+      icon: test1,
+      username: "/API",
+      message: "oki by",
+      readed: readed,
+    },
+    {
+      icon: test1,
+      username: "/API",
+      message: "oki by",
+      readed: readed,
+    },
+    {
+      icon: test1,
+      username: "/API",
+      message: "oki by",
+      readed: readed,
+    },
+    {
+      icon: test1,
+      username: "/API",
+      message: "oki by",
+      readed: readed,
+    },
+    {
+      icon: test1,
+      username: "/API",
+      message: "oki by",
+      readed: readed,
+    },
+    {
+      icon: test1,
+      username: "/API",
+      message: "oki by",
+      readed: readed,
+    },
+    {
+      icon: test1,
+      username: "/API",
+      message: "oki by",
+      readed: readed,
+    },
+    {
+      icon: test1,
       username: "/API",
       message: "oki by",
       readed: readed,
@@ -94,33 +164,68 @@ const Chat = () => {
     },
   ];
 
+  const Icons = [
+    { icon: search, route: "/search" },
+    { icon: profile, route: "/profile" },
+    { icon: message, route: "/message" },
+    { icon: friend, route: "/friend" },
+    { icon: game, route: "/game" },
+    { icon: notification, route: "/notification" },
+  ];
+
   const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number) => {
     event.preventDefault();
     setClicked(index);
   };
 
+  const Channel = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    console.log("hello world from the other side");
+  };
+
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start p-3 items-center flex-row">
-      <div className="bg-white/10 h-full md:flex hidden rounded-2xl overflow-auto w-[140px]">
-        <div className="w-full h-[135px] flex justify-center space-y-4 items-center flex-col">
-          <Image
-            src={logoWhite}
-            alt="white logo"
-            className="xl:w-[50px] w-[45px]"
-          />
+      <div className="bg-white/10 rounded-2xl h-full md:flex flex-col hidden lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px]">
+        <div className="w-full h-[132px] min-h-[132px] flex justify-center items-center flex-col">
+          <div className="flex justify-center items-center h-full">
+            <Image src={logoWhite} alt="white logo" className="h-[120px]" />
+          </div>
           <div className="w-[80%] border border-pearl border-opacity-40"></div>
         </div>
+        <div className="w-full h-[1098px] py-5 min-h-[200px] overflow-hidden flex flex-col items-center">
+          {Icons.map((option, index) => (
+            <div
+              key={index}
+              className="w-full h-[60px] flex items-center justify-center opacity-40 hover:opacity-100 "
+            >
+              {option.route != "/search" && option.route != "/notification" ? (
+                <button>
+                  {" "}
+                  <Image src={option.icon} alt="" />{" "}
+                </button>
+              ) : (
+                <button>
+                  {" "}
+                  <Image src={option.icon} alt="" />{" "}
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="w-full h-[100px] py-2 flex justify-center items-center">
+          <Image src={test1} alt="test1" />
+        </div>
       </div>
-      <div className="bg-white/10 h-full md:flex flex-col hidden rounded-2xl w-[570px] min:w-[570px] space-y-8">
-        <div className="flex justify-center items-center flex-col w-full h-[10%] space-y-3">
-          <div className="w-full flex space-y-4 h-[135px] flex-col px-6">
-            <div className="w-full flex flex-row space-x-3 xl:h-[96px] h-[92px]">
+      <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl xl:w-[570px] lg:w-[400px] w-[300px] space-y-8">
+        <div className="flex justify-center items-center flex-col w-full h-[130px]">
+          <div className="w-full h-[130px] flex-col px-6">
+            <div className="w-full  pt-5 flex flex-row space-x-3 h-[130px]">
               <Image
                 src={messagesIcon}
                 alt="message icon"
                 className=" h-full xl:w-10 w-9"
               />
-              <h1 className="flex justify-center items-center font-Poppins text-pearl xl:text-4xl text-3xl font-bold h-full">
+              <h1 className="flex  justify-center items-center font-Poppins text-pearl xl:text-4xl text-3xl font-bold h-full">
                 Messages
               </h1>
             </div>
@@ -132,12 +237,12 @@ const Chat = () => {
             <SearchInput />
           </div>
         </div>
-        <div className="w-full xl:px-6 px-2 overflow-auto h-[800px]">
+        <div className="w-[99%] xl:px-6 px-2 hover:overflow-auto overflow-hidden h-[900px] min-h-[100px]">
           {data.map((data, index) => (
             <button
               onClick={(event) => clickChat(event, index)}
               key={index}
-              className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center flex-row rounded-2xl ${
+              className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
                 clicked == index ? "bg-very-dark-purple" : "bg-transparent"
               }`}
             >
@@ -157,8 +262,35 @@ const Chat = () => {
             </button>
           ))}
         </div>
+        <div className="flex justify-center items-end w-full py-5 h-[100px]">
+          <div className="w-1/2 h-10 pl-5 pr-2 flex justify-center items-center">
+            <IconButton
+              icon={CreateChannel}
+              content="Create channel"
+              onclick={Channel}
+            />
+          </div>
+          <div className="w-1/2 h-10 pr-5 pl-2 flex justify-center items-center">
+            <IconButton
+              icon={ExportChannels}
+              content="Export channel"
+              onclick={Channel}
+            />
+          </div>
+        </div>
       </div>
-      <div className="bg-white/10 h-full rounded-2xl w-full"></div>
+      <div className="bg-white/10 h-full rounded-2xl w-full">
+        <div className="w-full h-[132px] flex justify-center flex-col items-center">
+          <div className="h-full px-20 flex items-center space-x-3 w-full">
+            <Image src={test1} alt="test1" />
+            <div className="flex flex-col">
+              <p className="font-Poppins text-xl text-pearl font-semibold ">Navoos</p>
+              <p className="font-Poppins text-lg text-pearl text-opacity-40 font-thin ">Online</p>
+            </div>
+          </div>
+          <div className="w-[95%] border border-pearl border-opacity-40"></div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -6,8 +6,9 @@ import Image from "next/image"
 import React from 'react'
 
 const  Levle = () => {
-  return (
+    return (
     <div className=" rounded-[20px] backdrop:blur bg-white/10  w-full flex flex-col  ">
+        
         <div className="relative rounded-[20px]  w-full  h-[250px] c-gb:h-[70%]  flex flex-row justify-center ">
             <div className="absolute w-[120px] sm:w-[20%] c-gb:w-[10rem] c-10xl:w-[12rem] c-10xl:top-8  flex flex-col items-center justify-center  h-full top-10" >
                 <span className="text-5xl text-pearl ">PRO</span>

@@ -55,10 +55,10 @@ export const Icons = [
 ];
 
 export const buttons = [
-    {id: 1, text: "Personal Information", route: "/Personal Information"},
-    {id: 2, text: "Achievements", route: "/Achievements"},
-    {id: 3, text: "Match History", route: "/Match History"},
-    {id: 4, text: "Security", route: ""},
+    {id: 1, text: "Personal Information", route: "Personal_Information"},
+    {id: 2, text: "Achievements", route: "Achievements"},
+    {id: 3, text: "Match History", route: "Match_History"},
+    {id: 4, text: "Security", route: "Security"},
 ];
 
 export const SidbarIcon = [

@@ -12,6 +12,8 @@ import MatchHistory from "./MatchHistory";
 import Achievements from "./Achievements";
 import ResetPassword from "./ResetPassword";
 import { useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../redux_tool";
+import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
 
 interface objType {
   body: string;
@@ -23,9 +25,16 @@ interface objType {
 const Profile = () => {
   const [isopen, setMenu] = useState(false);
   const [content, setContent] = useState("Personal_Information");
-  const user = useSelector((state:any) => state.counter)
+  const user = useSelector((state:any) => state.Data)
   const [password, setPassword] = useState(false);
-  const user1 = useSelector((state:any) => state.counter)
+  const user1 = useSelector((state:any) => state.Data)
+
+  const dispatch = useAppDispatch();
+  const profile = useAppSelector((state) => state.Profile);
+
+  useEffect(() => {
+    dispatch(getProfile())
+  }, [dispatch])
   // const [response, setResponse] = useState<objType[]>([]);
   // const [loader, setLoader] = useState<boolean>(false);
   // const [height, setHeight] = useState<number | undefined>(undefined);
@@ -53,10 +62,11 @@ const Profile = () => {
   //   fetchaxios();
   // }, []);
   // console.log("here :", password);
+  console.log("profile in tsx == ", profile);
   return (
     <>
-      {/* <fitchData/> */}
       {/* {loader && ( */}
+      {/* {user1.username} */}
         <div className={`w-[100%] flex flex-row items-center `}>
           <div className={`w-full flex flex-row c-gb:space-x-2 p-1 c-gb:p-2 `}>
             <Sidebar />
@@ -96,7 +106,7 @@ const Profile = () => {
                   </button>
                   <div className=" flex justify-end items-center space-x-2">
                     <div className="flex flex-col justify-end items-end text-pearl text-opacity-40">
-                      <span>{user.username}</span>
+                      {/* <span>{user.username}</span> */}
                       <div className="hidden sm:block">
                         <span>ibenmain@gmail.com</span>
                       </div>
@@ -113,7 +123,7 @@ const Profile = () => {
                 <ImageProfile response={1} />
                 <Levle />
               </div>
-              <div className=" backdrop:blur bg-white/10 rounded-[20px] c-gb:w-full mt-2  w-full grow space-y-10 md:space-y-32 h-[960px]  c-11xl:h-[900px] ">
+              <div className=" backdrop:blur bg-white/10 rounded-[20px] c-gb:w-full mt-2  w-full grow space-y-10 md:space-y-32 h-[985px]  c-11xl:h-[900px] ">
                 { content == "Personal_Information" ? (
                       <PersonalInformation/>
                   ) : content == "Achievements" ? (

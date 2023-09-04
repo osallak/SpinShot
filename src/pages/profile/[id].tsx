@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RecoilRoot, atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { statUsername } from '../../../redux_tool/redusProfile/reduse';
+import { statUsername } from '../../../redux_tool/redusProfile/profileSlice';
 import Sidebar from '@/Components/ui/Sidebar/sidebar';
 
 // type objType = [

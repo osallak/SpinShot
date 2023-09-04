@@ -74,7 +74,7 @@ const Country = () => {
             </motion.div>
           </motion.div>
       </motion.div>
-      <motion.button className={` space-x-1  bg-very-dark-purple w-[100%] md:w-[100%] px-5 flex flex-row items-center absolute rounded-[20px] ${isOpen ? 'text-white text-xl' : ' placeholder:text-pearl placeholder:text-opacity-40'}  h-12   `} whileTap={{ scale: 0.99 }} onClick={() => setIsOpen(!isOpen)} >
+      <motion.button className={` space-x-1  bg-very-dark-purple w-[100%] md:w-[100%] px-5 flex flex-row items-center absolute rounded-[20px] ${isOpen ? 'text-white text-xl' : ' placeholder:text-pearl placeholder:text-opacity-40'}  h-14   `} whileTap={{ scale: 0.99 }} onClick={() => setIsOpen(!isOpen)} >
               <Twemoji options={{ className: 'twemoji ' }}>
                 <motion.div className=' w-[65%] '>
                   {isCountry.split(" ")[0]}

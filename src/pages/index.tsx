@@ -1,7 +1,10 @@
 import Profile from "./profile/profile";
+import GetDataFromServer from "./profile/getDataFromServer";
+
 const Home = () => {
   return (
-    <div>
+    <div >
+      <GetDataFromServer/>
       <Profile/>
     </div>
   )

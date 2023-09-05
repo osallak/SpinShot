@@ -12,6 +12,7 @@ import { MediaModule } from './media/media.module';
 import { MediaController } from './media/media.controller';
 import { RedisModule } from '@songkeys/nestjs-redis';
 import { ONLY_HOST, REDIS_PORT } from './global/constants/global.constants';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -38,12 +39,7 @@ import { ONLY_HOST, REDIS_PORT } from './global/constants/global.constants';
     UserModule,
     StorageModule,
     MediaModule,
-    RedisModule.forRoot({
-      config: {
-        host: ONLY_HOST,
-        port: REDIS_PORT
-      }
-    })
+    ChatModule,
   ],
   controllers: [AuthController, UserController, MediaController],
   providers: [PrismaService],

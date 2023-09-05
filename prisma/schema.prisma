@@ -154,20 +154,19 @@ model RoomChatConversation {
 }
 
 model Message {
-  id       String @id @default(uuid())
-  message  String
-  senderId String @map("sender_id")
+  id         String @id @default(uuid())
+  message    String
+  senderId   String @map("sender_id")
+  receiverId String @map("receiver_id")
+  roomChatConversationId String?               @map("room_chat_conversation_id")
 
-  RoomChatConversation   RoomChatConversation @relation(fields: [roomChatConversationId], references: [id])
-  roomChatConversationId String               @map("room_chat_conversation_id")
-  Conversation           Conversation         @relation(fields: [conversationId], references: [id])
-  conversationId         String               @map("conversation_id")
+  RoomChatConversation   RoomChatConversation? @relation(fields: [roomChatConversationId], references: [id])
+  Conversation           Conversation         @relation(fields: [senderId, receiverId], references: [senderId, receiverId])
 
   @@map("message")
 }
 
 model Conversation {
-  id         String @id @default(uuid())
   senderId   String @map("sender_id")
   receiverId String @map("reciever_id")
 
@@ -175,6 +174,7 @@ model Conversation {
   Receiver User      @relation("receiver", fields: [receiverId], references: [id])
   Messages Message[]
 
+  @@id([senderId, receiverId])
   @@map("conversation")
 }
 

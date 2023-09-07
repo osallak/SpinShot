@@ -5,3 +5,5 @@ export const OPTIONS = {
 		origin: "*"
 	}
 };
+
+export const PRIVATE_MESSAGE = "pm";

@@ -2,8 +2,8 @@
 
 import Chat from "../Components/chatPage/chatPage";
 
-const ChatPage = () => {
+const Message = () => {
   return <Chat />;
 };
 
-export default ChatPage
+export default Message

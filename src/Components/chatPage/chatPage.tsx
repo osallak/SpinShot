@@ -6,7 +6,7 @@ import SearchInput from "@/Components/ui/Inputs/searchInput";
 import test1 from "../../../public/test1.svg";
 import test2 from "../../../public/test2.svg";
 import test3 from "../../../public/test3.svg";
-import { MouseEvent, useState } from "react";
+import { ChangeEvent, MouseEvent, useState } from "react";
 import SideBar from "@/Components/ui/sideBar/sideBar";
 import IconButton from "../ui/Buttons/IconButton";
 import CreateChannel from "../../../public/CreateChannel.svg";
@@ -17,18 +17,23 @@ import search from "../../../public/search.svg";
 import message from "../../../public/message.svg";
 import profile from "../../../public/profile.svg";
 import game from "../../../public/game.svg";
+import sendMessage from "../../../public/sendMessage.svg";
+import { DropDown } from "../ui/dropDown/dropDown";
+import { useRouter } from "next/router";
 
 const Chat = () => {
   const [clicked, setClicked] = useState<number>();
+  const [messageContent, setMessageContent] = useState("");
   const [readed, setReaded] = useState(false);
   const [id, setId] = useState("");
+  const Router = useRouter();
   var divId = 0;
   const data = [
     {
       icon: test1,
       username: "Navoos",
       message: "You: hello!",
-      readed: readed,
+      readed,
       // me: true,
       id: JSON.stringify(divId),
     },
@@ -72,96 +77,6 @@ const Chat = () => {
       message: "la na7tajo lmala",
       readed: readed,
     },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
   ];
 
   const Icons = [
@@ -183,6 +98,17 @@ const Chat = () => {
     console.log("hello world from the other side");
   };
 
+  const handleMessage = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    console.log(event.target.value);
+    setMessageContent(event.target.value);
+  };
+
+  const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {
+    event.preventDefault();
+    Router.push(path);
+  };
+
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start p-3 items-center flex-row">
       <div className="bg-white/10 rounded-2xl h-full md:flex flex-col hidden lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px]">
@@ -199,7 +125,7 @@ const Chat = () => {
               className="w-full h-[60px] flex items-center justify-center opacity-40 hover:opacity-100 "
             >
               {option.route != "/search" && option.route != "/notification" ? (
-                <button>
+                <button onClick={(event) => changePage(event, option.route)}>
                   {" "}
                   <Image src={option.icon} alt="" />{" "}
                 </button>
@@ -279,16 +205,42 @@ const Chat = () => {
           </div>
         </div>
       </div>
-      <div className="bg-white/10 h-full rounded-2xl w-full">
-        <div className="w-full h-[132px] flex justify-center flex-col items-center">
-          <div className="h-full px-20 flex items-center space-x-3 w-full">
-            <Image src={test1} alt="test1" />
-            <div className="flex flex-col">
-              <p className="font-Poppins text-xl text-pearl font-semibold ">Navoos</p>
-              <p className="font-Poppins text-lg text-pearl text-opacity-40 font-thin ">Online</p>
+      <div className="bg-white/10 h-full rounded-2xl w-full border flex justify-between flex-col">
+        {/* <div className="h-[100px] w-full border bg-white/10 border-red-500"></div> */}
+        <div className="w-full md:h-[132px] h-[100px] flex justify-center flex-col items-center">
+          <div className="md:h-[132px] h-[100px] xl:px-20 md:px-10 sm:px-7 px-4 flex items-center justify-between space-x-3 w-full">
+            <div className="flex justify-center items-center space-x-2 flex-row">
+              <Image src={test1} alt="test1" className="md:w-[65px] w-[50px]" />
+              <div className="flex flex-col">
+                <p className="font-Poppins md:text-xl text-md text-pearl font-semibold">
+                  Navoos
+                </p>
+                <p className="font-Poppins md:text-lg text-sm text-pearl text-opacity-40 font-thin">
+                  Online
+                </p>
+              </div>
             </div>
+            <DropDown />
           </div>
-          <div className="w-[95%] border border-pearl border-opacity-40"></div>
+          <div className="w-[93%] border border-pearl border-opacity-40"></div>
+        </div>
+        <div className="border w-full xl:px-20 md:px-10 sm:px-7 px-4 h-[1070px] hover:overflow-hidden overflow-auto"></div>
+        <div className="w-full md:h-[132px] h-[100px] flex justify-start items-center flex-col space-y-8">
+          <div className="w-[93%] border border-pearl border-opacity-40"></div>
+          <div className="pr-5 pl-10 space-x-2 bg-very-dark-purple rounded-full w-[90%] h-14 flex justify-center items-center flex-row">
+            <div className="w-full h-14">
+              <input
+                placeholder="Type a message"
+                className="text-pearl w-full h-14 outline-none placeholder:text-pearl font-light placeholder:opacity-50 font-Poppins text-lg bg-transparent"
+                type="text"
+                value={messageContent}
+                onChange={(event) => handleMessage(event)}
+              />
+            </div>
+            <button>
+              <Image src={sendMessage} alt="search Input" className="w-10" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

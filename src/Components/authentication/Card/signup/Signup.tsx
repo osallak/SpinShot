@@ -87,7 +87,7 @@ const Signup = () => {
         setErrorMessage(error.response.data.message)
         setError(true);
       }
-      // Router.push(Path);
+      Router.push(Path);
     }
   };
 

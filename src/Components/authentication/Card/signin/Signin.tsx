@@ -62,13 +62,14 @@ const Signin = () => {
           password,
         }
       );
-      localStorage.setItem("localToken", res.data.token);
-      sessionStorage.setItem("sessionToken", res.data.token);
+      localStorage.setItem("token", res.data.token);
+      console.log("token: " + localStorage.getItem("token"));
     } catch (error: any) {
       setErrorMessage(error.response.data.message);
       setError(true);
     }
-    // Router.push(Path);
+    // if(!error)
+    //   Router.push(Path);
   };
 
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -156,7 +157,7 @@ const Signin = () => {
                   <SimpleButton
                     Type="submit"
                     onclick={(e) =>
-                      RedirectionFunction(e, "/PersonalInformation")
+                      RedirectionFunction(e, "Profile/PersonalInformation")
                     }
                     content="Sign in"
                   />

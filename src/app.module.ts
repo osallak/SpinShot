@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { StorageModule } from './storage/storage.module';
 import { MediaModule } from './media/media.module';
 import { MediaController } from './media/media.controller';
+import { FriendsModule } from './friends/friends.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { MediaController } from './media/media.controller';
     UserModule,
     StorageModule,
     MediaModule,
+    FriendsModule,
   ],
   controllers: [AuthController, UserController, MediaController],
   providers: [PrismaService],

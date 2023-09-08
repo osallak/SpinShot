@@ -10,17 +10,12 @@ import {
   Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto, SignInUserDto } from 'src/user/dto';
+import { CreateUserDto } from 'src/user/dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { FortyTwoAuthGuard } from './guards/42-auth.guard';
 import { ConfigService } from '@nestjs/config';
 import { Response, Request } from 'express';
-import {
-  ApiExcludeEndpoint,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Sign } from 'crypto';
+import { ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtResponse } from 'src/types';
 
 @Controller('auth')

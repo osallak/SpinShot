@@ -10,12 +10,14 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { UserService } from '../user.service';
-import { Request } from 'express';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SerialisedUser, User } from 'src/types';
 import { PaginationResponse } from 'src/global/interfaces';
+import { UserDecorator } from 'src/global/decorators/global.decorators';
+import { JwtPayload } from 'jsonwebtoken';
+import { SearchDto } from '../dto/search.dto';
 
 @ApiTags('user')
 @Controller('users')
@@ -24,18 +26,26 @@ export class UserController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @ApiTags('user')
+  @Get('search')
+  async search(
+    @Query() query: SearchDto,
+    @UserDecorator() user: User,
+  ): Promise<PaginationResponse<User[]>> {
+    return await this.userService.search(user, query);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Get user by username' })
-  @Get('/:username')
+  @Get('/profile/:username')
   async getUser(@Param('username') username: string): Promise<SerialisedUser> {
     return await this.userService.getUser(username);
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  @ApiTags('user')
   @ApiResponse({ status: 200, description: 'Get user games by username' })
-  @Get('/:username/games')
+  @UseGuards(JwtAuthGuard)
+  @Get('/games/:username')
   async getUserGames(
     @Param('username') username: string,
     @Query() query: PaginationQueryDto,
@@ -43,7 +53,6 @@ export class UserController {
     return await this.userService.getUserGames(username, query);
   }
 
-  @ApiTags('user')
   @ApiResponse({
     status: 200,
     content: {
@@ -61,10 +70,10 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Patch()
   async updateUser(
-    @Req() req: Request,
+    @UserDecorator() user: JwtPayload,
     @Body() body: UpdateUserDto,
   ): Promise<User> {
-    return await this.userService.update((<any>req).user.id, body);
+    return await this.userService.update(user.sub, body);
     //todo: should i return a new jwt token? (make sure that it's signed with email instead of username)
   }
 }

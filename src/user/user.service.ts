@@ -21,6 +21,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import { SerialisedUser } from 'src/types';
 import { User } from 'src/types';
+import { serializeService } from 'src/global/services';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { SearchDto } from './dto/search.dto';
 
 @Injectable()
 export class UserService {
@@ -198,7 +201,7 @@ export class UserService {
     const user = await this.findOneByUsername(data.username);
     if (user) data.username = 'user' + '_' + uuidv4().slice(0, 8);
 
-    const createUser = await this.prisma.user.create({
+    const createUser: User = await this.prisma.user.create({
       data: {
         username: data.username,
         email: data.email,
@@ -229,7 +232,7 @@ export class UserService {
           firstName: profile.firstName,
           lastName: profile.lastName,
           avatar: profile.avatar,
-          status: UserStatus.ONLINE,
+          status: UserStatus.ONLINE, //todo: check this
           country: profile.country,
         },
       });
@@ -243,7 +246,7 @@ export class UserService {
 
   async getUser(username: string): Promise<SerialisedUser> {
     try {
-      const user = await this.prisma.user.findUnique({
+      const user: User = await this.prisma.user.findUnique({
         where: {
           username,
         },
@@ -254,7 +257,7 @@ export class UserService {
               defeats: true,
               level: true,
               rank: true,
-            }
+            },
           },
           HaveAchievement: {
             select: {
@@ -271,7 +274,11 @@ export class UserService {
       });
       if (!user) throw new NotFoundException('Invalid username');
       return serializeUser(user);
-    } catch (e) {
+    } catch (error) {
+      if (error instanceof NotFoundException)
+        throw new NotFoundException('user not found');
+      if (error instanceof PrismaClientKnownRequestError)
+        throw new BadRequestException();
       throw new InternalServerErrorException();
     }
   }
@@ -344,6 +351,50 @@ export class UserService {
         throw new NotFoundException('User not found');
       }
       throw new InternalServerErrorException();
+    }
+  }
+
+  async search(
+    user: User,
+    query: SearchDto,
+  ): Promise<PaginationResponse<User[]>> {
+    const where = {
+      OR: [
+        { username: { contains: query.keyword } },
+        { firstName: { contains: query.keyword } },
+        { lastName: { contains: query.keyword } },
+      ],
+    };
+    try {
+      const [users, totalCount] = await this.prisma.$transaction([
+        this.prisma.user.findMany({
+          where,
+          select: {
+            id: true,
+            username: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            avatar: true,
+          },
+          orderBy: {
+            username: query.orderBy,
+          },
+          skip: query.getSkip(),
+          take: query.limit,
+        }),
+        this.prisma.user.count({ where }),
+      ]);
+      return serializeService.serializePaginationResponse(
+        users,
+        totalCount,
+        query.limit,
+      );
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError)
+        throw new BadRequestException();
+      this.logger.error(error);
+      throw new InternalServerErrorException('search failed');
     }
   }
 }

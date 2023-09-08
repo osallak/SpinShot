@@ -30,13 +30,8 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async generateToken(user: any): Promise<JwtResponse> {
-    const payload: JwtAuthPayload = {
-      username: user.username,
-      sub: user.id,
-      iss: this.configService.get('JWT_ISSUER'),
-    };
-
+  async generateToken(payload: JwtAuthPayload): Promise<JwtResponse> {
+    payload['iss'] = this.configService.get('JWT_ISSUER');
     try {
       return {
         token: await this.jwtService.signAsync(payload),
@@ -99,7 +94,10 @@ export class AuthService {
   async signIn(username: string, pass: string): Promise<JwtResponse> {
     try {
       const user: User = await this.userService.signIn(username, pass);
-      return await this.generateToken(user);
+      return await this.generateToken({
+        username: user.username,
+        sub: user.id,
+      } as JwtAuthPayload);
     } catch (e) {
       this.logger.error(e.message);
       throw e;
@@ -115,10 +113,8 @@ export class AuthService {
     try {
       const decoded: any = await this.jwtService.verifyAsync(token);
       if (!decoded) throw new BadRequestException();
-
-      if (!(await this.userService.verifyEmail(decoded.email, reject))) {
+      if (!(await this.userService.verifyEmail(decoded.email, reject)))
         throw new BadRequestException();
-      }
 
       !reject
         ? res.redirect(this.configService.get('SIGN_IN_URL'))

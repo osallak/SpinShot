@@ -18,6 +18,7 @@ export type User = {
 };
 
 export type SerialisedUser = {
+    id?: string,
     username: string;
     email: string;
     profile: {

@@ -22,6 +22,8 @@ import {
   ApiConsumes,
   ApiBody,
 } from '@nestjs/swagger';
+import { UserDecorator } from 'src/global/decorators/global.decorators';
+import { JwtPayload } from 'jsonwebtoken';
 
 @Controller('media')
 export class MediaController {
@@ -33,7 +35,6 @@ export class MediaController {
   @ApiBearerAuth()
   @ApiTags('user')
   @ApiResponse({ status: 200, description: 'File uploaded successfully' })
-  @ApiResponse({ status: 500, description: 'Failed to upload file' })
   @ApiBadRequestResponse({
     description:
       'File size should not exceed 5m and should be of type jpeg or png',
@@ -59,14 +60,14 @@ export class MediaController {
         }),
     )
     file: Express.Multer.File,
-    @Req() req: Request,
+    @UserDecorator() user: JwtPayload,
   ): Promise<Response> {
-    const path = `media/${(<any>req).user.id}.${
+    const path = `media/${user.id}.${
       file.mimetype.split('/')[1]
     }`;
     const ret: Response = this.storageService.save(path, file.buffer);
     this.userService.updateAvatar(
-      (<any>req).user.id,
+      user.sub,
       this.storageService.getPublicUrl(path),
     );
     return ret;

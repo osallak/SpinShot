@@ -1,6 +1,7 @@
 import { WsException } from '@nestjs/websockets';
 import { BaseWsExceptionFilter } from '@nestjs/websockets';
 import { Catch, ArgumentsHost } from '@nestjs/common';
+import { WsExceptionType } from '../types/exceptions.type';
 
 @Catch()
 export class WsExceptionFilter extends BaseWsExceptionFilter {
@@ -9,7 +10,6 @@ export class WsExceptionFilter extends BaseWsExceptionFilter {
   }
 }
 
-type WsExceptionType = 'BadRequest' | 'Unauthorized' | 'Unknown';
 
 export class WsTypeException extends WsException {
   readonly type: WsExceptionType;

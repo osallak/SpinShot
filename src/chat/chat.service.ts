@@ -55,4 +55,9 @@ export class ChatService {
       );
     }
   }
+
+	getSocketsAssociatedWithUser(user: string) {
+		const sockets = this.World.get(user);
+		return sockets;
+	}
 }

@@ -7,3 +7,4 @@ export const OPTIONS = {
 };
 
 export const PRIVATE_MESSAGE = "pm";
+export const EXCEPTION = "exception"

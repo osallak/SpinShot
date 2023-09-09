@@ -79,15 +79,6 @@ const Chat = () => {
     },
   ];
 
-  const Icons = [
-    { icon: search, route: "/search" },
-    { icon: profile, route: "/profile" },
-    { icon: message, route: "/message" },
-    { icon: friend, route: "/friend" },
-    { icon: game, route: "/game" },
-    { icon: notification, route: "/notification" },
-  ];
-
   const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number) => {
     event.preventDefault();
     setClicked(index);
@@ -104,44 +95,9 @@ const Chat = () => {
     setMessageContent(event.target.value);
   };
 
-  const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {
-    event.preventDefault();
-    Router.push(path);
-  };
-
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start p-3 items-center flex-row">
-      <div className="bg-white/10 rounded-2xl h-full md:flex flex-col hidden lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px]">
-        <div className="w-full h-[132px] min-h-[132px] flex justify-center items-center flex-col">
-          <div className="flex justify-center items-center h-full">
-            <Image src={logoWhite} alt="white logo" className="h-[120px]" />
-          </div>
-          <div className="w-[80%] border border-pearl border-opacity-40"></div>
-        </div>
-        <div className="w-full h-[1098px] py-5 min-h-[200px] overflow-hidden flex flex-col items-center">
-          {Icons.map((option, index) => (
-            <div
-              key={index}
-              className="w-full h-[60px] flex items-center justify-center opacity-40 hover:opacity-100 "
-            >
-              {option.route != "/search" && option.route != "/notification" ? (
-                <button onClick={(event) => changePage(event, option.route)}>
-                  {" "}
-                  <Image src={option.icon} alt="" />{" "}
-                </button>
-              ) : (
-                <button>
-                  {" "}
-                  <Image src={option.icon} alt="" />{" "}
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-        <div className="w-full h-[100px] py-2 flex justify-center items-center">
-          <Image src={test1} alt="test1" />
-        </div>
-      </div>
+      <SideBar />
       <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl xl:w-[570px] lg:w-[400px] w-[300px] space-y-8">
         <div className="flex justify-center items-center flex-col w-full h-[130px]">
           <div className="w-full h-[130px] flex-col px-6">

@@ -1,10 +1,15 @@
 export const PORT = 8001;
 
 export const OPTIONS = {
-	cors: {
-		origin: "*"
-	}
+  cors: {
+    origin: '*',
+  },
 };
 
-export const PRIVATE_MESSAGE = "pm";
-export const EXCEPTION = "exception"
+export const PRIVATE_MESSAGE = 'pm';
+export const EXCEPTION = 'exception';
+export const INTERNAL_SERVER_ERROR_MESSAGE = 'Internal Server Error';
+export const USER_BLOCKED_MESSAGE = 'User Is Blocked';
+export const USER_SOCKETS_MESSAGE = 'User Does Not Have Sockets';
+export const INVALID_DATA_MESSAGE = 'Invalid Data';
+export const USER_DOESNT_EXIST_MESSAGE = 'User Does Not Exist';

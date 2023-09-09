@@ -4,10 +4,10 @@ import GetDataFromServer from "./profile/getDataFromServer";
 const Home = () => {
   return (
     <div >
-      <GetDataFromServer/>
-      <Profile/>
+      {/* <GetDataFromServer /> */}
+      <Profile />
     </div>
-  )
+  );
 };
 
 export default Home;

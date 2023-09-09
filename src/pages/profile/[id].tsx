@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RecoilRoot, atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { statUsername } from '../../../redux_tool/redusProfile/profileSlice';
+// import { statUsername } from '../../../redux_tool/redusProfile/profileSlice';
 import Sidebar from '@/Components/ui/Sidebar/sidebar';
+import { data } from 'autoprefixer';
 
 // type objType = [
 //   body : string,
@@ -40,20 +41,20 @@ export default function Page({re}: any) {
   // const router = useRouter();
   const user = useSelector((state:any) => state.counter)
   const dispatch = useDispatch();
-  const hendel = () => {
-    console.log(re)
-    dispatch(statUsername(re.username))
+  // const hendel = () => {
+  //   console.log(re)
+  //   dispatch(statUsername(re.username))
 
-  }
+  // }
   // const { id } = router.query;
-  console.log("userdata:", re);
+  console.log("Mydata:  ", re.response.loggedUser.userName);
   return (
     <div className='text-white flex justify-center items-center flex-col'>
-      <h1>  {re.username}</h1>
-      <h1> {re.email} </h1>
-      <h1> {re.profile.name.givenName} </h1>
-      <h1>user : {user.username}</h1>
-      <button onClick={hendel} className='bg-white'> my_button </button>
+      {/* <h1>  {re.username}</h1> */}
+      {/* <h1> {re.email} </h1> */}
+      {/* <h1> {re.profile.name.givenName} </h1> */}
+      {/* <h1>user : {user.username}</h1> */}
+      {/* <button onClick={hendel} className='bg-white'> my_button </button> */}
 
     </div>
   )
@@ -72,11 +73,10 @@ export default function Page({re}: any) {
 // }
 
 export const getServerSideProps = async (context:any) => {
-
   try{
-    const repo = await axios.get(`http://34.16.168.248:3001/users/${context.query.id}`, {
+    const repo = await axios.get(`http://e3r10p16.1337.ma:3001/api/v1/users/profile/${context.query.id}`, {
       headers: {
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZyZXgiLCJzdWIiOiIxMmY5Mzg1MS1lNjM4LTQyMDUtOGRhOS1kMThhZWNmN2E0MGMiLCJpc3MiOiJzcGluc2hvdCIsImlhdCI6MTY5MzY3Nzg3NSwiZXhwIjoxNjkzNzY0Mjc1fQ.Vz5JRoGFKMac5i-8xW9EEZuQOsHOhKfzMJZrPXYep_0',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRlZTc0NjRmLWNiNGEtNDE5YS05MjI5LTFlYjA4NjI0YjdmMSIsImVtYWlsIjoiaWJlbm1haW5AZ21haWwuY29tIiwidXNlciI6ImliZW5tYWluIiwiaWF0IjoxNjk0MTgwMzIwLCJleHAiOjE2OTUwNDQzMjB9.izG5Om77OBtyUCR-m5wtj5Hy8i6FnMXqn1vlSS-Xqss',
       }
     },)
     console.log(repo.data)

@@ -17,18 +17,17 @@ const SubSidebar = (props: { setContent: Function; setPassword: Function }) => {
   const router = useRouter();
   const [isClick, setClick] = useState(false);
   const [background, setBackground] = useState(false);
-  const [subbackground, setSubBackground] = useState<number>();
+  const [subbackground, setSubBackground] = useState<number>(1);
   const handle = (id: number, route: string) => {
     setSubBackground(id);
-    console.log(route);
-    props.setContent(route);
+     props.setContent(route) 
   };
   const handlePasswd = (id: boolean, route: string) => {
     setBackground(true);
-    props.setPassword(id);
+    props.setPassword(true)
   };
   return (
-    <div className="  ml-[150px]  backdrop:blur bg-white/10 space-y-10 w-[30%] h-[1335px] hidden c-gb:block rounded-[20px]  ">
+    <div className="  ml-[150px]  backdrop:blur  bg-white/10 space-y-10 w-[30%] h-[100vh] hidden c-gb:block rounded-[20px]  ">
       <div className="w-full flex flex-col  h-[100px]">
         <div className="flex justify-center  w-full h-full items-center text-[35px] font-Poppins font-extrabold text-pearl">
           <div className="w-[80%]">
@@ -56,14 +55,13 @@ const SubSidebar = (props: { setContent: Function; setPassword: Function }) => {
                 {button.text === "Security" ? (
                   <div
                     className={`flex justify-end items-center rounded-2xl h-20 w-[100%]`}
+                    onClick={() => setClick(!isClick)}
                   >
-                    {" "}
-                    <div className="" onClick={() => setClick(!isClick)}>
-                      {" "}
+                    <div className="">
                       {isClick ? (
-                        <Image src={securityIcon2} alt="" />
+                        <Image className={``} src={securityIcon2} alt="" />
                       ) : (
-                        <Image src={securityIcon} alt="" />
+                        <Image className={``} src={securityIcon} alt=""/>
                       )}
                     </div>
                   </div>

@@ -21,7 +21,8 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: #260323
+  background: #260323;
+  height: 100vh;
   
     /* rgb(var(--background-start-rgb)); */
 }

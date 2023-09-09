@@ -34,6 +34,7 @@ module.exports = withMT({
         'c-9xl': '2100px',
         'c-10xl': '1975px',
         'c-11xl': '1976px',
+        'c-12xl': '2230px',
       },
       colors: {
         'very-dark-purple': '#260323',

@@ -6,7 +6,7 @@ import { get } from 'http'
 import { getProfile } from './profileThunk'
 
 export interface ProfileState {
-  profile: {},
+  profile: any,
   isLoading: boolean
 }
 
@@ -19,7 +19,7 @@ export const ProfileSlice = createSlice({
   name: 'Profile',
   initialState,
   reducers: {
-    setProfile: (state, action:PayloadAction<{}>) => {
+    setProfile: (state, action:PayloadAction<any>) => {
       state.profile = action.payload
     },
   },

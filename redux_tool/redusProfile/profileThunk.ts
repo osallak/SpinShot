@@ -5,13 +5,12 @@ export const getProfile = createAsyncThunk(
     "profile",
     async () => {
         try {
-                const respo = await axios.get(`https://jsonplaceholder.typicode.com/posts`, {
+                const respo = await axios.get(`http://e3r10p16.1337.ma:3001/api/v1/users/profile/ibenmain`, {
                   headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZyZXgiLCJzdWIiOiIxMmY5Mzg1MS1lNjM4LTQyMDUtOGRhOS1kMThhZWNmN2E0MGMiLCJpc3MiOiJzcGluc2hvdCIsImlhdCI6MTY5Mzc2ODY5MCwiZXhwIjoxNjkzODU1MDkwfQ.zw2T5gKme6PUurS9MqqOoDdQFw2lqn3Zv1sjbilPN7g`,
+                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRlZTc0NjRmLWNiNGEtNDE5YS05MjI5LTFlYjA4NjI0YjdmMSIsImVtYWlsIjoiaWJlbm1haW5AZ21haWwuY29tIiwidXNlciI6ImliZW5tYWluIiwiaWF0IjoxNjk0MTgwMzIwLCJleHAiOjE2OTUwNDQzMjB9.izG5Om77OBtyUCR-m5wtj5Hy8i6FnMXqn1vlSS-Xqss`,
                   }
-                },
-                )
-                console.log("respo ===", JSON.stringify(respo));
+                },)
+                console.log("respo ===", respo.data);
                 return respo.data;
         } catch (error) {
             

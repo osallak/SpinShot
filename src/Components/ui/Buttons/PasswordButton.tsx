@@ -1,7 +1,7 @@
 import Image from "next/image";
 import eye from "../../../../public/eye.svg";
 import eyeSlash from "../../../../public/eye-slash.svg";
-
+import { MouseEvent } from "react";
 const PasswordButton = ({
   ShowPassword,
   setShowPassword,
@@ -9,13 +9,14 @@ const PasswordButton = ({
   ShowPassword: boolean;
   setShowPassword: Function;
 }) => {
-  const ShowHidePassword = () => {
+  const ShowHidePassword = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     setShowPassword(!ShowPassword);
   };
   return (
     <button
-      className="right-1 md:w-9 md:h-9 w-5 h-5 flex justify-center items-center"
-      onClick={ShowHidePassword}
+      className="right-1 w-9 h-9 flex justify-center items-center"
+      onClick={(event) => ShowHidePassword(event)}
     >
       {ShowPassword ? (
         <Image src={eye} alt="hide and show password" />

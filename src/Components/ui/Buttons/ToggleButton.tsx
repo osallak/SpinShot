@@ -10,9 +10,9 @@ const ToggleButton = () => {
     setisActive((isActive) => !isActive);
   };
   return (
-    <div className="h-full w-full">
+    <div className="bg-red md:h-6 md:w-10 h-4 w-7">
       <motion.button
-        className={`h-full w-full bg-light-grey bg-opacity-20 rounded-full flex items-center`}
+        className={`md:h-8 md:w-14 h-6 w-9 bg-light-grey bg-opacity-20 rounded-full px-1 flex items-center`}
         style={{ justifyContent: isActive ? "flex-end" : "flex-start" }}
         onClick={Switch}
       >
@@ -22,13 +22,13 @@ const ToggleButton = () => {
         >
           {isActive ? (
             <Image
-              className=""
+              className="w-full h-full"
               src={active}
               alt="unactive button"
             />
           ) : (
             <Image
-              className=""
+              className="w-full h-full"
               src={unactive}
               alt="active button"
             />

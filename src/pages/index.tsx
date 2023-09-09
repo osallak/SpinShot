@@ -1,12 +1,10 @@
-import Profile from "./profile/profile";
-import GetDataFromServer from "./profile/getDataFromServer";
+"use client";
+
+import LandingPage from "@/Components/LandingPage/LandingPage";
 
 const Home = () => {
   return (
-    <div >
-      {/* <GetDataFromServer /> */}
-      <Profile />
-    </div>
+    <LandingPage />
   );
 };
 

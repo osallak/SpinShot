@@ -54,7 +54,6 @@ export class AuthController {
   @Post('/signin/local')
   @UseGuards(LocalAuthGuard)
   async signinLocal(@Req() req: Request): Promise<JwtResponse> {
-    console.log((<any>req).user);
     return (<any>req).user;
   }
 

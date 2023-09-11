@@ -22,7 +22,6 @@ export class PrismaExceptionFilter extends PrismaClientExceptionFilter {
         break;
       }
       case 'P2025': {
-        console.log('not found');
         response.status(HttpStatus.NOT_FOUND).json({
           statusCode: HttpStatus.NOT_FOUND,
           message: 'Record not found',

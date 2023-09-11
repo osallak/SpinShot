@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -53,7 +53,7 @@ model Logs {
 model Friendship {
   leftUserId  String           @map("left")
   rightUserId String           @map("right")
-  state       FriendshipStatus
+  status      FriendshipStatus
   sender      String
   blocker     String?
 
@@ -227,6 +227,7 @@ enum FriendshipStatus {
   PENDING
   ACCEPTED
   BLOCKED
+  NOT_FOUND
 
   @@map("friendship_status")
 }

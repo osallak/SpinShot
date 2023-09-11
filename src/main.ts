@@ -1,8 +1,9 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
+import { PrismaExceptionFilter } from 'src/prisma-client-exception/prisma-client-exception.filter';
 
 async function bootstrap(): Promise<void> {
   const app: INestApplication<any> = await NestFactory.create(AppModule, {
@@ -19,7 +20,6 @@ async function bootstrap(): Promise<void> {
     new ValidationPipe({
       transform: true,
       whitelist: true,
-      skipMissingProperties: true,
       stopAtFirstError: true,
       transformOptions: {
         enableImplicitConversion: true,
@@ -28,6 +28,8 @@ async function bootstrap(): Promise<void> {
   );
   app.use(cookieParser());
 
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new PrismaExceptionFilter(httpAdapter));
   const config: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()
     .setTitle('SpinShot API')
     .setDescription('SpinShot API description')

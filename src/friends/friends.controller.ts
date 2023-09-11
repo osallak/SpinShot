@@ -99,4 +99,20 @@ export class FriendsController {
   ): Promise<Response> {
     return this.friendsService.unblock(user.id, id);
   }
+
+  @ApiBearerAuth()
+  @ApiResponse({
+    schema: {
+      example: {
+        status: 201,
+        message: 'friend removed successfully',
+      },
+    },
+  })
+  @UseGuards(JwtAuthGuard)
+  @Post('/unfriend/:id')
+  async unfriend(@Param('id') id: string, @UserDecorator() user: User): Promise<Response> {
+    return this.friendsService.unfriend(user.id, id);
+    
+  }
 }

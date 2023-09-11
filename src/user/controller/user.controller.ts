@@ -7,6 +7,7 @@ import {
   Query,
   Patch,
   Body,
+  ConsoleLogger,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { UserService } from '../user.service';
@@ -31,7 +32,7 @@ export class UserController {
     @Query() query: SearchDto,
     @UserDecorator() user: User,
   ): Promise<PaginationResponse<User[]>> {
-    return await this.userService.search(user, query);
+    return await this.userService.search(query);
   }
 
   @ApiBearerAuth()
@@ -70,10 +71,9 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Patch()
   async updateUser(
-    @UserDecorator() user: JwtPayload,
+    @UserDecorator() user: User,
     @Body() body: UpdateUserDto,
   ): Promise<User> {
-    return await this.userService.update(user.sub, body);
-    //todo: should i return a new jwt token? (make sure that it's signed with email instead of username)
+    return await this.userService.update(user.id, body);
   }
 }

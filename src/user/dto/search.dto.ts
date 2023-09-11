@@ -1,14 +1,5 @@
-import { All } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  Allow,
-  IsEnum,
-  IsOptional,
-  IsString,
-  Matches,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { Allow, IsEnum, IsOptional, MaxLength } from 'class-validator';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 
 export enum SortOrder {
@@ -18,13 +9,17 @@ export enum SortOrder {
 
 export class SearchDto extends PaginationQueryDto {
   @MaxLength(50) //? check this
-  @Allow()
-  @ApiProperty()
+  @ApiProperty({
+    description: 'filter users by username & firstName & lastName',
+    example:
+      "keyword=sa, this will return all users with 'sa' in their name and/or username, default value '': this will return all users",
+  })
+  @IsOptional()
   readonly keyword: string = '';
 
   @ApiProperty({
     type: String,
-    description: "SortOrder accept two values: asc or desc"
+    description: 'SortOrder accept two values: asc or desc',
   })
   @IsOptional()
   @IsEnum(SortOrder)

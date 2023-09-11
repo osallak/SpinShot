@@ -37,6 +37,7 @@ export class AuthService {
         token: await this.jwtService.signAsync(payload),
       };
     } catch (e) {
+      this.logger.error(e.message);
       throw new InternalServerErrorException('Could not create token');
     }
   }
@@ -78,22 +79,17 @@ export class AuthService {
   async signUp(user: CreateUserDto): Promise<User> {
     try {
       const returnedUser: User = await this.userService.createUser(user);
-      if (!returnedUser) {
-        throw new BadRequestException('something went wrong');
-      }
       await this.sendMailVerification(returnedUser);
       return returnedUser;
     } catch (e) {
-      if (e instanceof BadRequestException) throw e;
-      throw new InternalServerErrorException(
-        'Could not send verification email',
-      );
+      this.logger.error(e.message);
+      throw e;
     }
   }
 
   async signIn(username: string, pass: string): Promise<JwtResponse> {
+    const user: User = await this.userService.signIn(username, pass);
     try {
-      const user: User = await this.userService.signIn(username, pass);
       return await this.generateToken({
         username: user.username,
         sub: user.id,
@@ -119,9 +115,9 @@ export class AuthService {
       !reject
         ? res.redirect(this.configService.get('SIGN_IN_URL'))
         : res.send('account deleted'); //todo: to be discussed
-    } catch (e) {
-      this.logger.error(e.message);
-      throw new BadRequestException();
+    } catch (error) {
+      this.logger.error(error.message);
+      throw error;
     }
   }
 }

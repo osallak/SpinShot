@@ -1,4 +1,4 @@
-import SideBar from "../ui/sideBar/sideBar";
+import SideBar from "../ui/Sidebar/SideBar";
 import Image from "next/image";
 import game from "../../../public/game.svg"
 

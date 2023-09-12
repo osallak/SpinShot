@@ -27,14 +27,14 @@ const SubSidebar = (props: { setContent: Function; setPassword: Function }) => {
     props.setPassword(true)
   };
   return (
-    <div className="  ml-[150px]  backdrop:blur  bg-white/10 space-y-10 w-[30%] h-[100vh] hidden c-gb:block rounded-[20px]  ">
-      <div className="w-full flex flex-col  h-[100px]">
+    <div className="  ml-[150px]  backdrop:blur  bg-white/10 space-y-10 w-[30%] hidden c-gb:block rounded-[20px]  ">
+      <div className="w-full flex flex-col h-[132px]">
         <div className="flex justify-center  w-full h-full items-center text-[35px] font-Poppins font-extrabold text-pearl">
           <div className="w-[80%]">
             <h1>Profile</h1>
           </div>
         </div>
-        <div className="w-full flex justify-center items-center">
+        <div className="w-full flex justify-center  items-center">
           <div className=" bg-pearl w-[80%] opacity-40 border"></div>
         </div>
       </div>
@@ -42,10 +42,10 @@ const SubSidebar = (props: { setContent: Function; setPassword: Function }) => {
         {buttons.map((button) => (
           <div
             key={button.id}
-            className={`flex justify-center items-center rounded-2xl  w-full h-20`}
+            className={`flex justify-center items-center rounded-2xl w-full h-20   `}
           >
             <button
-              className={` w-[90%] h-full rounded-2xl flex justify-center items-center ${
+              className={` w-[90%] h-full  rounded-2xl flex justify-center items-center  ${
                 subbackground === button.id ? " bg-very-dark-purple" : ""
               }`}
               onClick={() => handle(button.id, button.route)}

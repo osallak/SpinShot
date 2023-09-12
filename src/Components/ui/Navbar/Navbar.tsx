@@ -10,7 +10,7 @@ const  Navbar = () => {
 
     return (
      <div>
-        <div className="block c-gb:hidden  backdrop:blur bg-white/10 rounded-[20px] h-16 ">
+        <div className="block c-gb:hidden backdrop:blur bg-white/10 rounded-[20px] h-16 ">
             <div className="flex flex-row justify-between">
                 <button className=" block c-gb:hidden " onClick={() => setMenu(!isopen)}>
                     <Image src={menu} alt="" />

@@ -6,7 +6,7 @@ import add from "../../../../public/add.svg";
 import Image from "next/image";
 import { useState, MouseEvent } from "react";
 
-export function DropDown() {
+export default function DropDown() {
   const [isOpen, setOpen] = useState(false);
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();

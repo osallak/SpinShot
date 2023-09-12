@@ -45,16 +45,16 @@ const LandingPage = () => {
             <div className="w-full flex justify-center items-center">
               <SimpleButton
                 Type="button"
-                onclick={(e) => redirect(e)}
+                onclick={(e:any) => redirect(e)}
                 content="Get Started"
               />
             </div>
           </div>
         </div>
       </div>
-      <div className="fl:flex hidden justify-center items-center w-1/2 h-full ">
+      {/* <div className="fl:flex hidden justify-center items-center w-1/2 h-full ">
         <RacketThreeD />
-      </div>
+      </div> */}
     </div>
   );
 };

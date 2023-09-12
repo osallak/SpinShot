@@ -1,64 +1,56 @@
-import logoWhite from "../../../../public/logoWhite.svg";
 import Image from "next/image";
-import search from "../../../../public/search.svg";
-import friend from "../../../../public/friend.svg";
-import message from "../../../../public/message.svg";
-import profile from "../../../../public/profile.svg";
-import game from "../../../../public/game.svg";
-import notification from "../../../../public/notification.svg";
-import test1 from "../../../../public/test1.svg";
-import { MouseEvent } from "react";
 import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
+import logo from "./../../../../public/logo.svg";
+import ibenmain from "./../../../../public/ibenmain.jpeg";
+import { Icons } from "@/Components/ui/DropDown/ArrayIcon";
 
-const SideBar = () => {
-  const Router = useRouter()
-  const Icons = [
-    { icon: search, route: "/search" },
-    { icon: profile, route: "/profile" },
-    { icon: message, route: "/message" },
-    { icon: friend, route: "/friend" },
-    { icon: game, route: "/game" },
-    { icon: notification, route: "/notification" },
-  ];
-
-  const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {
-    event.preventDefault();
-    Router.push(path);
+const Sidebar = () => {
+  const router = useRouter();
+  const a = () => {
+    console.log("error");
+  };
+  const handle = (route: string) => {
+    router.push(route);
   };
 
   return (
-    <div className="bg-white/10 rounded-2xl h-full md:flex flex-col hidden lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px]">
-      <div className="w-full h-[132px] min-h-[132px] flex justify-center items-center flex-col">
-        <div className="flex justify-center items-center h-full">
-          <Image src={logoWhite} alt="white logo" className="h-[120px]" />
+    <div
+      className={`  hidden c-gb:block w-[150px] h-[1335px] bg-white   backdrop:blur  bg-white/10 rounded-[20px]`}
+    >
+      <div className="flex items-center flex-col space-y-10 ">
+        <div className="opacity-40 mt-4">
+          <Image src={logo} alt="" />
         </div>
-        <div className="w-[80%] border border-pearl border-opacity-40"></div>
-      </div>
-      <div className="w-full h-[1098px] py-5 min-h-[200px] overflow-hidden flex flex-col items-center">
-        {Icons.map((option, index) => (
-          <div
-            key={index}
-            className="w-full h-[60px] flex items-center justify-center opacity-40 hover:opacity-100 "
-          >
-            {option.route != "/search" && option.route != "/notification" ? (
-              <button onClick={(event) => changePage(event, option.route)}>
-                {" "}
-                <Image src={option.icon} alt="" />{" "}
-              </button>
-            ) : (
-              <button>
-                {" "}
-                <Image src={option.icon} alt="" />{" "}
-              </button>
-            )}
+        <div className="  border-pearl w-[80px] opacity-40 border"></div>
+        <div className=" ">
+          <div className="  flex justify-between flex-col items-center space-y-10">
+            {Icons.map((option, index) => (
+              <div key={index} className=" opacity-40 hover:opacity-100 ">
+                {option.route != "/search" &&
+                option.route != "/notification" ? (
+                  <button onClick={() => handle(option.route)}>
+                    {" "}
+                    <Image src={option.icon} alt="" />{" "}
+                  </button>
+                ) : (
+                  <button onClick={a}>
+                    {" "}
+                    <Image src={option.icon} alt="" />{" "}
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="w-full h-[100px] py-2 flex justify-center items-center">
-        <Image src={test1} alt="test1" />
+        </div>
+        <div className=" w-12  flex items-end h-[700px] ">
+          <div>
+            <Image className="rounded-[15px]" src={ibenmain} alt="" />
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default SideBar;
+export default Sidebar;

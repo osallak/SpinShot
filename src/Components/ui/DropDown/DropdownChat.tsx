@@ -44,7 +44,7 @@ const DropdownChat = () => {
             <div>
                     {isOpenChild && (
                         <div className=" py-[120px] px-[250px]">
-                            <div className="bg-very-dark-purple pt-[6px] pb-[6px] w-[230px] rounded-r-[20px] rounded-b-[20px]"> {ArrayMute.map((option, index) => (
+                            <div className="bg-very-dark-purple pt-[6px] pb-[6px] w-[230px]=====\\\\\\\\\\rounded-r-[20px] rounded-b-[20px]"> {ArrayMute.map((option, index) => (
                                 <div key={index} className="px-[40px] py-1 pr-[13] opacity-40 text-pearl hover:opacity-100 ">
                                     <button className="">
                                         {option.name}

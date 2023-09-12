@@ -4,12 +4,12 @@ import Image from "next/image";
 const MatchHistory = () => {
   return (
     <div className="h-full">
-      <div className=' text-pearl text-xl sm:text-2xl sm:text-2x h-[18%] c-gb:h-[25%] flex items-center c-10xl:px-24 px-16"'>
+      <div className=' text-pearl text-[15px] sm:text-2xl h-[14%] ms:h-[18%] c-gb:h-[20%] flex items-center c-10xl:px-24 px-16'>
         <h1>Match History</h1>
       </div>
-      <div className="  flex justify-between flex-col c-gb:flex-row h-[75%] text-pearl text-xl sm:text-2xl sm:text-2x">
-        <div className=" w-full flex justify-center items-center">
-          <div className=" w-[70%] h-[50%] rounded-[20px] bg-very-dark-purple flex flex-col items-center">
+      <div className="  flex justify-between flex-col c-gb:flex-row h-[80%] md:h-[75%] text-pearl c-3xl:text-2xl c-lg:text-xl  space-y-[4%] p-1">
+        <div className=" w-full flex justify-center items-center  h-[100%]">
+          <div className=" w-[50%] h-[100%] c-gb:w-[80%] c-gb:h-[40%] c-lg:w-[70%] c-lg:h-[50%] rounded-[20px] bg-very-dark-purple flex flex-col items-center">
             <div className="flex justify-center items-center flex-col h-[50%]">
               <h1>Games</h1>
               <h1 className="opacity-40">160</h1>
@@ -28,8 +28,11 @@ const MatchHistory = () => {
             </div>
           </div>
         </div>
-        <div className=" w-full space-y-20 flex justify-center items-start flex-col ">
-          <div className=" flex flex-row justify-center items-center space-x-20 ">
+        <div className=" w-[100%] c-gb:w-0  flex justify-center items-center opacity-40">
+        <div className="border w-[40%] c-gb:hidden block"></div>
+        </div>
+        <div className=" w-full c-gb:space-y-20 sm:space-y-10 space-y-4 flex justify-center c-gb:items-start flex-col  ">
+          <div className=" flex flex-row justify-center items-center c-3xl:space-x-20  md:space-x-48 m-0 sm:m-5 md:m-10 c-gb:p-0 c-gb:space-x-8 sm:space-x-32 space-x-4 ">
             <div className="w-[60px]">
               <Image src={imagePlayer} alt="" />
             </div>
@@ -48,7 +51,7 @@ const MatchHistory = () => {
               <h1>3</h1>
             </div>
           </div>
-          <div className=" flex flex-row justify-center items-center space-x-20">
+          <div className=" flex flex-row justify-center items-center c-3xl:space-x-20 md:space-x-48 m-0 sm:m-5 md:m-10 c-gb:p-0 c-gb:space-x-8 sm:space-x-32 space-x-4">
             <div className="w-[60px]">
               <Image src={imagePlayer} alt="" />
             </div>
@@ -67,7 +70,7 @@ const MatchHistory = () => {
               <h1>3</h1>
             </div>
           </div>
-          <div className=" flex flex-row justify-center items-center space-x-20">
+          <div className=" flex flex-row justify-center items-center c-3xl:space-x-20 md:space-x-48 m-0 sm:m-5 md:m-10 c-gb:p-0 c-gb:space-x-8 sm:space-x-32 space-x-4 ">
             <div className="w-[60px]">
               <Image src={imagePlayer} alt="" />
             </div>
@@ -86,7 +89,7 @@ const MatchHistory = () => {
               <h1>3</h1>
             </div>
           </div>
-          <div className=" flex flex-row justify-center items-center space-x-20">
+          <div className=" flex flex-row justify-center items-center c-3xl:space-x-20 md:space-x-48 m-0 sm:m-5 md:m-10 c-gb:p-0 c-gb:space-x-8 sm:space-x-32 space-x-4">
             <div className="w-[60px]">
               <Image src={imagePlayer} alt="" />
             </div>
@@ -106,7 +109,10 @@ const MatchHistory = () => {
             </div>
           </div>
         </div>
-        <div className=" w-full space-y-28 flex justify-center  flex-col">
+        <div className=" w-[100%] c-gb:w-0  flex justify-center items-center opacity-40">
+        <div className="border w-[40%] c-gb:hidden block"></div>
+        </div>
+        <div className=" w-full space-y-8 sm:space-y-16 c-gb:space-y-28 flex justify-center  flex-col ">
           <div className="flex flex-row justify-around">
             <h1>July 8, 2023</h1>
             <h1 className="text-peridot">VECTORY</h1>

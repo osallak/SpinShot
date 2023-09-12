@@ -7,7 +7,7 @@ import test1 from "../../../public/test1.svg";
 import test2 from "../../../public/test2.svg";
 import test3 from "../../../public/test3.svg";
 import { ChangeEvent, MouseEvent, useState } from "react";
-import SideBar from "@/Components/ui/sideBar/sideBar";
+import SideBar from "@/Components/ui/Sidebar/SideBar";
 import IconButton from "../ui/Buttons/IconButton";
 import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";

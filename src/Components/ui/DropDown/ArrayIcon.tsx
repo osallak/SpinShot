@@ -60,12 +60,12 @@ export const buttons = [
 export const SidbarIcon = [
   { icon: logo },
   { icon: line },
-  { icon: search },
-  { icon: profile },
-  { icon: message },
-  { icon: friend },
-  { icon: play },
-  { icon: notification },
+  { icon: search, route: "/search" },
+  { icon: profile, route: "/profile/profile" },
+  { icon: message, route: "message" },
+  { icon: friend, route: "friend" },
+  { icon: play, route: "/game/game" },
+  { icon: notification, route: "/notification"},
 ];
 
 export const resetPassword = [

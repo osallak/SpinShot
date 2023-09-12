@@ -1,4 +1,4 @@
-import Sidebar from "@/Components/ui/Sidebar/sidebar";
+import Sidebar from "@/Components/ui/Sidebar/SideBar";
 import SubSidebar from "@/Components/ui/Subsidebar/SubSidebar";
 import React from "react";
 

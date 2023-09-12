@@ -32,7 +32,7 @@ const Country = () => {
 
   console.log(getCode('Nowhere-to-be-found-land')); 
   return (
-    <motion.div initial={false} animate={isOpen ? "open" : "closed"} className='text-pearl text-opacity-40 relative  h-[20%] '>
+    <motion.div initial={false} animate={isOpen ? "open" : "closed"} className='text-pearl text-opacity-40 relative  h-[20%] text- '>
 
       <motion.div
         variants={{
@@ -55,11 +55,11 @@ const Country = () => {
             }
           }
         }}
-        className='absolute  w-[100%]  text-black bg-peridot pt-14 p-2 pl-6 rounded-[20px]  h-[250px] scrollbar  scrollbar-thumb-gray-900  overflow-auto'
+        className='absolute  w-[100%]   text-black bg-peridot pt-14 p-2 pl-6 rounded-[20px]  h-[250px] scrollbar  scrollbar-thumb-gray-900  overflow-auto'
         > 
         <motion.div className=''>
             <motion.div className=' ' >
-            {countries.map((countent, index) => (
+            {countries.map((countent:any, index:any) => (
               <motion.div variants={itemVariants}  className='' key={index}>
                 <motion.button className='flex flex-row  items-center text-[150%]' variants={itemVariants} value="" onClick={() => setIsCountry(getFlagEmoji(countent.code) + " " + countent.name)}>
                   <Twemoji options={{ className: 'twemoji ' }}>
@@ -67,7 +67,7 @@ const Country = () => {
                       {getFlagEmoji(countent.code)}
                     </motion.div>
                   </Twemoji>
-                  <motion.span>{countent.name}</motion.span>
+                  <motion.span className=' '>{countent.name}</motion.span>
                 </motion.button>
               </motion.div>
               ))}
@@ -76,11 +76,10 @@ const Country = () => {
       </motion.div>
       <motion.button className={` space-x-1  bg-very-dark-purple w-[100%] md:w-[100%] px-5 flex flex-row items-center absolute rounded-[20px] ${isOpen ? 'text-white text-xl' : ' placeholder:text-pearl placeholder:text-opacity-40'}  h-14   `} whileTap={{ scale: 0.99 }} onClick={() => setIsOpen(!isOpen)} >
               <Twemoji options={{ className: 'twemoji ' }}>
-                <motion.div className=' w-[65%] '>
-                  {isCountry.split(" ")[0]}
+                <motion.div className=' flex flex-row space-x-20 items-center h-10 w-[100%] '>
+                  {isCountry}
                 </motion.div>
               </Twemoji>
-              <motion.span  >{isCountry.split(" ")[1]}</motion.span>
       </motion.button>
     </motion.div>
   );

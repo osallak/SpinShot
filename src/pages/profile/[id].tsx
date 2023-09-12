@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { RecoilRoot, atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 // import { statUsername } from '../../../redux_tool/redusProfile/profileSlice';
-import Sidebar from '@/Components/ui/Sidebar/sidebar';
 import { data } from 'autoprefixer';
 
 // type objType = [
@@ -47,7 +45,7 @@ export default function Page({re}: any) {
 
   // }
   // const { id } = router.query;
-  console.log("Mydata:  ", re.response.loggedUser.userName);
+  // console.log("Mydata:  ", re.response.loggedUser.userName);
   return (
     <div className='text-white flex justify-center items-center flex-col'>
       {/* <h1>  {re.username}</h1> */}

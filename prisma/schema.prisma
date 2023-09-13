@@ -25,7 +25,8 @@ model User {
   is42User             Boolean                @map("is_42_user")
   status               UserStatus
   logs                 Logs?
-  Friendship           Friendship[]
+  LeftFriendship       Friendship[]           @relation("left")
+  RightFriendship      Friendship[]           @relation("right")
   Game                 Game[]
   HaveAchievement      haveAchievement[]
   RoomChatConversation RoomChatConversation[]
@@ -49,24 +50,17 @@ model Logs {
   @@map("logs")
 }
 
-//Friendship
-model Friend {
-  id         String       @id @default(uuid())
-  username   String       @unique
-  Friendship Friendship[]
-
-  @@map("friend")
-}
-
 model Friendship {
-  userId   String           @map("user_id")
-  friendId String           @map("friend_id")
-  state    FriendshipStatus
+  leftUserId  String           @map("left")
+  rightUserId String           @map("right")
+  status      FriendshipStatus
+  sender      String
+  blocker     String?
 
-  user   User   @relation(fields: [userId], references: [id])
-  friend Friend @relation(fields: [friendId], references: [id])
+  leftUser  User @relation("left", fields: [leftUserId], references: [id])
+  rightUser User @relation("right", fields: [rightUserId], references: [id])
 
-  @@id([userId, friendId])
+  @@id([leftUserId, rightUserId])
   @@map("friendship")
 }
 
@@ -232,8 +226,8 @@ enum NotifType {
 enum FriendshipStatus {
   PENDING
   ACCEPTED
-  REFUSED
   BLOCKED
+  NOT_FOUND
 
   @@map("friendship_status")
 }
@@ -261,4 +255,11 @@ enum Rank {
   GRANDMASTER
 
   @@map("rank")
+}
+
+enum Sender {
+  LEFT_USER
+  RIGHT_USER
+
+  @@map("sender")
 }

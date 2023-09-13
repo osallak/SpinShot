@@ -10,18 +10,13 @@ import {
   Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto, SignInUserDto } from 'src/user/dto';
+import { CreateUserDto } from 'src/user/dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { FortyTwoAuthGuard } from './guards/42-auth.guard';
 import { ConfigService } from '@nestjs/config';
 import { Response, Request } from 'express';
-import {
-  ApiExcludeEndpoint,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Sign } from 'crypto';
-import { JwtResponse } from 'src/types';
+import { ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtResponse, User } from 'src/types';
 
 @Controller('auth')
 export class AuthController {
@@ -40,8 +35,8 @@ export class AuthController {
     @Body() userDto: CreateUserDto,
     @Res() res: Response,
   ): Promise<void> {
-    const ret = await this.authService.signUp(userDto);
-    res.status(HttpStatus.CREATED).send(ret);
+    const user: User = await this.authService.signUp(userDto);
+    res.json(user).send();
   }
 
   @ApiTags('local auth')

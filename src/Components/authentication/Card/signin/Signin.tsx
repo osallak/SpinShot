@@ -68,8 +68,8 @@ const Signin = () => {
       setErrorMessage(error.response.data.message);
       setError(true);
     }
-    // if(!error)
-    //   Router.push(Path);
+    if(!error)
+      Router.push(Path);
   };
 
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {

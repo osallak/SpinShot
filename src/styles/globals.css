@@ -66,3 +66,28 @@ input[type="search"]::-webkit-search-results-decoration {
   background: #260323;
   border-radius: 10px
 }
+
+.chatProfileRight {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-direction: row-reverse;
+    margin-bottom: 5px;
+  }
+  .chatProfileLeft {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+  .chatProfileSpan {
+    background-color: rgb(213, 213, 182);
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+    border: 1px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+  }

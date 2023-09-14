@@ -15,7 +15,7 @@ const SideBar = () => {
   const Icons = [
     { icon: search, route: "/search" },
     { icon: profile, route: "/profile" },
-    { icon: message, route: "/message" },
+    { icon: message, route: "/messages" },
     { icon: friend, route: "/friend" },
     { icon: game, route: "/game" },
     { icon: notification, route: "/notification" },

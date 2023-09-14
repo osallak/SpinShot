@@ -5,7 +5,15 @@ import SearchInput from "@/Components/ui/Inputs/searchInput";
 import test1 from "../../../public/test1.svg";
 import test2 from "../../../public/test2.svg";
 import test3 from "../../../public/test3.svg";
-import { ChangeEvent, MouseEvent, useEffect, useState, useRef } from "react";
+import {
+  ChangeEvent,
+  MouseEvent,
+  useEffect,
+  useState,
+  useRef,
+  KeyboardEvent,
+  useCallback,
+} from "react";
 import SideBar from "@/Components/ui/sideBar/sideBar";
 import IconButton from "../ui/Buttons/IconButton";
 import CreateChannel from "../../../public/CreateChannel.svg";
@@ -22,6 +30,7 @@ interface IMsgDataTypes {
 }
 
 const Chat = () => {
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const [clicked, setClicked] = useState<number>();
   const [messageContent, setMessageContent] = useState("");
   const [currentMessage, setCurrentMessage] = useState("");
@@ -83,7 +92,7 @@ const Chat = () => {
     },
   ];
 
-  const handleSendMessage = () => (event: MouseEvent<HTMLButtonElement>) => {
+  const handleSendMessage = (event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (message.trim() !== "") {
       setChatHistory([...chatHistory, message]);
@@ -105,6 +114,44 @@ const Chat = () => {
     event.preventDefault();
     setCurrentMessage(event.target.value);
   };
+
+  function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Enter") {
+      console.log("hello world!")
+      handleSendMessage(event);
+    }
+  }
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    const conversationDiv : any = chatContainerRef.current;
+    if (conversationDiv) {
+      conversationDiv.scrollTop = conversationDiv.scrollHeight;
+    }
+  }, [chatHistory.length]);
+
+  useEffect(() => {
+    const handleKeyPress = (event: any) => {
+      event.preventDefault(); // Prevent the "/" key from being typed into the input
+      if (event.key === '/') {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', event => handleKeyPress);
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []);
+
+
+  const emailInput = useCallback((inputElement: any) => {
+    if (inputElement) {
+      inputElement.focus();
+    }
+  }, []);
 
   // const sendMessage = (event: MouseEvent<HTMLButtonElement>) => {
   //   event.preventDefault();
@@ -141,7 +188,7 @@ const Chat = () => {
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start p-3 items-center flex-row">
       <SideBar />
-      <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl xl:w-[570px] lg:w-[400px] w-[300px] space-y-8">
+      <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl xl:w-[570px] w-[350px] space-y-8">
         <div className="flex justify-center items-center flex-col w-full h-[130px]">
           <div className="w-full h-[130px] flex-col px-6">
             <div className="w-full  pt-5 flex flex-row space-x-3 h-[130px]">
@@ -204,7 +251,7 @@ const Chat = () => {
           </div>
         </div>
       </div>
-      <div className="bg-white/10 h-full rounded-2xl w-full flex justify-between flex-col">
+      <div className="bg-white/10 h-full rounded-2xl w-full flex justify-between items-center flex-col">
         {/* <div className="h-[100px] w-full border bg-white/10 border-red-500"></div> */}
         <div className="w-full md:h-[132px] h-[100px] flex justify-center flex-col items-center">
           <div className="md:h-[132px] h-[100px] xl:px-20 md:px-10 sm:px-7 px-4 flex items-center justify-between space-x-3 w-full">
@@ -223,19 +270,14 @@ const Chat = () => {
           </div>
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
         </div>
-        <div className="border bg-gray-500 w-full h-full flex justify-end items-end flex-col space-y-1 overflow-auto">  3
+        <div ref={chatContainerRef} className="w-[99%] p-16 chat chat-end flex flex-col scroll-smooth bg-black h-full min-h-[100px] space-y-1 hover:overflow-auto overflow-hidden scroll-absolute">
           {chatHistory.map((msg, index) => (
-            <div
-              key={index}
-              className="w-[700px] bg-green-500 flex justify-center items-start space-x-5 flex-row"
-            >
-              <div className="bg-orange-500 w-[500px] flex justify-center items-end flex-col">
-              <div>
-                {user}
-              </div>
-              <div className="bg-yellow-500 rounded-l-2xl rounded-br-2xl pl-5 p-3">
-                {msg}
-              </div>
+            <div key={index} className="w-[700px] bg-red-400 flex flex-row space-x-2 justify-end">
+              <div className="bg-transparent w-[500px] flex justify-center items-end flex-col">
+                <div>{user}</div>
+                <div className="bg-very-dark-purple rounded-l-2xl rounded-br-2xl pl-5 p-3 font-Sarabun text-pearl">
+                  {msg}
+                </div>
               </div>
               <div>
                 <Image src={test1} alt="test1" />
@@ -243,19 +285,21 @@ const Chat = () => {
             </div>
           ))}
         </div>
-        <div className="w-full md:h-[132px] h-[100px] flex justify-start items-center flex-col space-y-8">
+        <div className="w-full md:h-[132px] h-[100px] flex justify-start items-center flex-col space-y-7">
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
-          <div className="pr-5 pl-10 space-x-2 bg-very-dark-purple rounded-full w-[90%] h-14 flex justify-center items-center flex-row">
+          <div className="pr-5 pl-10 space-x-2 bg-very-dark-purple rounded-full w-[90%] lg:h-14 md:h-10 h-8 flex justify-center items-center flex-row">
             <div className="w-full h-14">
               <input
+                ref={emailInput}
                 placeholder="Type a message"
-                className="text-pearl w-full h-14 outline-none placeholder:text-pearl font-light placeholder:opacity-50 font-Poppins text-lg bg-transparent"
+                className="text-pearl caret-peridot w-full h-14 outline-none placeholder:text-pearl font-light placeholder:opacity-50 font-Poppins text-lg bg-transparent"
                 type="text"
+                onKeyDown={handleKeyPress}
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
               />
             </div>
-            <button onClick={handleSendMessage()}>
+            <button onClick={event => handleSendMessage(event)}>
               <Image
                 src={sendMessageIcon}
                 alt="send Message Input"

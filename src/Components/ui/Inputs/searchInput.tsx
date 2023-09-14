@@ -1,6 +1,6 @@
 import Image from "next/image"
 import searchInput from "../../../../public/searchInput.svg"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useState, useEffect, useRef } from "react"
 
 const SearchInput = () => {
 

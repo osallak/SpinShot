@@ -23,7 +23,8 @@ module.exports = withMT({
       },
       fontFamily: {
         'Passion-One': ['Passion One'],
-        'Poppins' : ['Poppins', 'sans-serif']
+        'Poppins' : ['Poppins', 'sans-serif'],
+        'Sarabun': ['Sarabun', 'sans-serif']
       },
       screens: {
         'x-pp': '1600px',
@@ -40,4 +41,5 @@ module.exports = withMT({
       }
     },
   },
+  plugins: [require("daisyui")],
 });

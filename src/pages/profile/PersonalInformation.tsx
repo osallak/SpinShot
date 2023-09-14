@@ -3,6 +3,7 @@ import Country from "@/Components/ui/Buttons/Country";
 import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
 import React, { useContext, useEffect, useState } from "react";
 import { useAppDispatch } from "../../../redux_tool";
+import { Information } from "@/Components/ui/DropDown/ArrayIcon";
 import axios from "axios";
 import { types } from "util";
 import myData from "./myData";
@@ -15,101 +16,66 @@ type MyType = {
 };
 const PersonalInformation = (props: any) => {
   const dispatch = useAppDispatch();
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    userName: "",
-    email: "",
-  });
+  const [myinput, setInput] = useState("");
+
   /* */
 
-  const patchProfile = async (data: any) => {
+  const hendleUpdata = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const my_data = new FormData();
+    my_data.append("firstName", myinput);
 
-        // console.log("data :", data.get('name'));
     try {
       const response = await axios.patch(
-        "http://e3r10p16.1337.ma:3001/api/v1/users/settings",
-        data,
+        "http://34.173.232.127/api/v1/users/settings",
+        my_data,
         {
           headers: {
             Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRlZTc0NjRmLWNiNGEtNDE5YS05MjI5LTFlYjA4NjI0YjdmMSIsImVtYWlsIjoiaWJlbm1haW5AZ21haWwuY29tIiwidXNlciI6ImliZW5tYWluIiwiaWF0IjoxNjk0MTgwMzIwLCJleHAiOjE2OTUwNDQzMjB9.izG5Om77OBtyUCR-m5wtj5Hy8i6FnMXqn1vlSS-Xqss",
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImY0N2UwYzQ5LTFmODctNDhlYy1hZmM5LTM5ZjcyYTI3YTBmZCIsImVtYWlsIjoiaWJlbm1haW5AZ21haWwuY29tIiwidXNlciI6ImliZW5tYWluIiwiaWF0IjoxNjk0NTE1NDIwLCJleHAiOjE2OTUzNzk0MjB9.Xjyys9uePoq40e_yJG32r0FxyBajRBCWo1YbmmgxUCg",
           },
         }
       );
-      console.log("send");
+      console.log("data :", response.data);
     } catch (error) {
       console.error(error);
     }
   };
 
   /* */
-  const my_data = new FormData();
-  const handleChange = (e: any) => {
-    my_data.append(e.target.name, e.target.value);
-  };
 
-  const hendleUpdata = () => {
-    patchProfile(my_data);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
   };
 
   return (
-    <div className="space-y-52 md:space-y-10">
+    <div className="space-y-52 md:space-y-10 h-[940px]  ">
       <div className="  ">
         <div className="text-pearl text-[15px] sm:text-2xl md:h-60 h-32 flex items-center c-10xl:px-24 px-14">
           <span>Personal information</span>
         </div>
         <div className="flex flex-row justify-center px-4 sm:px-14 c-10xl:px-32 ">
           <div className="flex flex-col  text-pearl  w-full c-10xl:w-[80%] space-y-5 md:space-y-14  c-10xl:px-20 px-6 ">
-            <div className="   c-10xl:space-x-[15%] w-full  ">
-              <div className=" flex flex-col space-y-5 md:space-y-0 md:flex-row md:space-x-5 w-full c-10xl:w-full">
-                <input
-                  name="First_name"
-                  className="bg-very-dark-purple w-full c-10xl:w-full  rounded-[20px] px-5 h-14 placeholder:text-pearl placeholder:text-opacity-40"
-                  onChange={handleChange}
-                  type=""
-                  required
-                  placeholder="First name"
-                />
-                <input
-                  name="Last_name"
-                  className="bg-very-dark-purple w-full c-10xl:w-full  rounded-[20px] px-5 h-14 placeholder:text-pearl placeholder:text-opacity-40"
-                  onChange={handleChange}
-                  type=""
-                  required
-                  placeholder="Last name"
-                />
+            {Information.map((option) => (
+              <div key={option.id}>
+                {option.text == "country" ? (
+                  <div className={`${"w-[100%] md:w-[49%]"} `}>
+                    {" "}
+                    <Country />
+                  </div>
+                ) : option.text != "country" && option.text != "avatar" ? (
+                  <input
+                    name={option.text}
+                    className={`bg-very-dark-purple  ${
+                      option.text != "Email" ? "w-[100%] md:w-[49%]" : "w-full"
+                    }  rounded-[20px] px-5 h-14 placeholder:text-pearl placeholder:text-opacity-40`}
+                    onChange={handleChange}
+                    type=""
+                    required
+                    placeholder={option.text}
+                  />
+                ) : null}
               </div>
-            </div>
-            <div className="flex flex-col space-y-10 md:space-y-0 md:flex-row  c-10xl:space-x-[10%] items-center">
-              <div className=" w-full">
-                <input
-                  name="Username"
-                  className="bg-very-dark-purple w-[100%] md:w-[49%]  rounded-[20px] px-5 h-14 placeholder:text-pearl placeholder:text-opacity-40"
-                  onChange={handleChange}
-                  type=""
-                  required
-                  placeholder="Username"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col space-y-8 md:space-y-0 md:flex-row   c-10xl:space-x-[15%] items-center">
-              <div className=" w-full">
-                <input
-                  name="Email"
-                  className="bg-very-dark-purple w-full  rounded-[20px] px-5 h-14 placeholder:text-pearl placeholder:text-opacity-40"
-                  onChange={handleChange}
-                  type=""
-                  required
-                  placeholder="Email"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col space-y-10 md:space-y-0 md:flex-row  c-10xl:space-x-[10%] items-center">
-              <div className=" bg-very-dark-purple w-[100%] md:w-[49%]  rounded-[20px] h-14 placeholder:text-pearl placeholder:text-opacity-40">
-                <Country />
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

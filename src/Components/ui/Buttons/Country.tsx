@@ -55,7 +55,7 @@ const Country = () => {
             }
           }
         }}
-        className='absolute  w-[100%]   text-black bg-peridot pt-14 p-2 pl-6 rounded-[20px]  h-[250px] scrollbar  scrollbar-thumb-gray-900  overflow-auto'
+        className='absolute  w-[100%]   text-black bg-peridot pt-14 p-2 pl-6 rounded-[20px]   h-[250px] scrollbar  scrollbar-thumb-gray-900  overflow-auto'
         > 
         <motion.div className=''>
             <motion.div className=' ' >

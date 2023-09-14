@@ -74,4 +74,13 @@ export const resetPassword = [
   { text: "Confirm New Password" },
 ];
 
+export const Information = [
+  {id: 1, text: "First name"},
+  {id: 2, text: "Last name"},
+  {id: 3, text: "Username"},
+  {id: 4, text: "Email"},
+  {id: 5, text: "country"},
+  {id: 6, text: "avatar"},
+];
+
 export const SignOut = [{ icon: signout, name: "Sign out" }];

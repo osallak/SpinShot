@@ -3,13 +3,13 @@ import imagePlayer from "../../../public/imagePlayer.svg";
 import Image from "next/image";
 const MatchHistory = () => {
   return (
-    <div className="h-full">
-      <div className=' text-pearl text-[15px] sm:text-2xl h-[14%] ms:h-[18%] c-gb:h-[20%] flex items-center c-10xl:px-24 px-16'>
+    <div className="  h-[1100px] c-gb:h-full">
+      <div className=' text-pearl text-[15px] sm:text-2xl h-[18%]  flex items-center c-10xl:px-24 px-16 '>
         <h1>Match History</h1>
       </div>
-      <div className="  flex justify-between flex-col c-gb:flex-row h-[80%] md:h-[75%] text-pearl c-3xl:text-2xl c-lg:text-xl  space-y-[4%] p-1">
-        <div className=" w-full flex justify-center items-center  h-[100%]">
-          <div className=" w-[50%] h-[100%] c-gb:w-[80%] c-gb:h-[40%] c-lg:w-[70%] c-lg:h-[50%] rounded-[20px] bg-very-dark-purple flex flex-col items-center">
+      <div className="  flex justify-between flex-col c-gb:flex-row h-[80%] md:h-[75%] text-pearl c-3xl:text-2xl c-lg:text-xl   ">
+        <div className=" w-full flex justify-center items-center h-[100%]">
+          <div className=" w-[50%] h-[100%] c-gb:w-[80%] c-gb:h-[40%] c-lg:w-[70%] c-lg:h-[50%] rounded-[20px] bg-very-dark-purple flex flex-col items-center ">
             <div className="flex justify-center items-center flex-col h-[50%]">
               <h1>Games</h1>
               <h1 className="opacity-40">160</h1>

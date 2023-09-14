@@ -10,7 +10,7 @@ const  Levle = (props:any) => {
     return (
     <div className={`rounded-[20px] ${opned ? "opacity-10   backdrop:blur bg-white/10 " : "backdrop:blur bg-white/10 " }  w-full flex flex-col`}>
         
-        <div className="relative rounded-[20px]  w-full  h-[250px] c-gb:h-[70%]  flex flex-row justify-center ">
+        <div className="relative rounded-[20px]  w-full  h-[250px] c-gb:h-[70%]  flex flex-row justify-center  ">
             <div className="absolute w-[120px] sm:w-[20%] c-gb:w-[10rem] c-10xl:w-[12rem] c-10xl:top-8  flex flex-col items-center justify-center  h-full top-10 space-y-4" >
                 <span className="text-xl md:text-3xl c-gb:text-5xl text-pearl ">PRO</span>
                 <Image src={proLogo} alt="" />

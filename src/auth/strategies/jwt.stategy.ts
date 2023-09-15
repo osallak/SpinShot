@@ -18,16 +18,16 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<any> {
-    const { iat, expt } = payload;
-    const timeDiff = expt - iat;
-    if (timeDiff <= 0) throw new UnauthorizedException();
-    const user = await this.userService.findOneById(payload.sub);
-    if (!user) throw new UnauthorizedException();
-    return {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-    };
+		async validate(payload: JwtPayload): Promise<any> {
+			const { iat, expt } = payload;
+			const timeDiff = expt - iat;
+			if (timeDiff <= 0) throw new UnauthorizedException();
+			const user = await this.userService.findOneById(payload.sub);
+			if (!user) throw new UnauthorizedException();
+			return {
+				id: user.id,
+				username: user.username,
+				email: user.email,
+			};
   }
 }

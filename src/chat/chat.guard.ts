@@ -1,9 +1,9 @@
 import { CanActivate, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Observable } from 'rxjs';
 import * as jwt from 'jsonwebtoken';
 import { UserService } from 'src/user/user.service';
 import { WsUnauthorizedException } from './exceptions/ws-exceptions';
+import { ANONYMOUS_USER_MESSAGE } from './chat.configuration';
 @Injectable()
 export class WsGuard implements CanActivate {
   constructor(
@@ -11,9 +11,7 @@ export class WsGuard implements CanActivate {
     private readonly userService: UserService,
   ) {}
 
-  canActivate(
-    context: any,
-  ): boolean | any | Promise<boolean | any> | Observable<boolean | any> {
+  canActivate(context: any): boolean | any | Promise<boolean | any> {
     const bearerToken =
       context.args[0].handshake.headers?.authorization?.split(' ')[1];
     try {
@@ -21,26 +19,19 @@ export class WsGuard implements CanActivate {
         bearerToken,
         this.configService.get('JWT_SECRET'),
       ) as any;
-      console.log(decoded);
       return new Promise((resolve, reject) => {
         return this.userService
           .findOneByUsername(decoded.username)
           .then((user) => {
             if (user) {
-              const { iat, expt } = decoded;
-              const timeDiff = expt - iat;
-              if (timeDiff <= 0) {
-                reject(new WsUnauthorizedException('Token Expired'));
-              } else {
-                resolve(user);
-              }
+              resolve(user);
             } else {
-              reject(new WsUnauthorizedException('Invalid User'));
+              reject(new WsUnauthorizedException(ANONYMOUS_USER_MESSAGE));
             }
           });
       });
     } catch (ex) {
-      return false;
+      throw new WsUnauthorizedException(ANONYMOUS_USER_MESSAGE);
     }
   }
 }

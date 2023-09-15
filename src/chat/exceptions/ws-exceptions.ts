@@ -2,14 +2,14 @@ import { WsException } from '@nestjs/websockets';
 import { BaseWsExceptionFilter } from '@nestjs/websockets';
 import { Catch, ArgumentsHost } from '@nestjs/common';
 import { WsExceptionType } from '../types/exceptions.type';
+import { BaseExceptionFilter } from '@nestjs/core';
 
 @Catch()
-export class WsExceptionFilter extends BaseWsExceptionFilter {
+export class WsExceptionFilter extends BaseExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     super.catch(exception, host);
   }
 }
-
 
 export class WsTypeException extends WsException {
   readonly type: WsExceptionType;

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseFilters } from '@nestjs/common';
 import { Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FriendshipStatus } from '@prisma/client';
@@ -7,20 +7,27 @@ import {
   EXCEPTION,
   INTERNAL_SERVER_ERROR_MESSAGE,
   PRIVATE_MESSAGE,
-  USER_BLOCKED_MESSAGE,
-  USER_SOCKETS_MESSAGE,
 } from './chat.configuration';
 
 import { eventType } from './types/event.type';
-import { SendMessageDto } from './dtos/SendMessageDto.dto';
+import { SendMessageDto } from './dtos/send-message.dto';
+import { ConfigService } from '@nestjs/config';
+import * as jwt from 'jsonwebtoken';
+import { JwtAuthPayload } from 'src/auth/interfaces';
+import { ChatUser } from './entities/user.entity';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class ChatService {
-  private World: Map<string, Socket[]> = new Map<string, Socket[]>();
+  private World: Map<string, ChatUser> = new Map<string, ChatUser>();
 
   private logger: Logger = new Logger('Chat');
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly configService: ConfigService,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   private getUserFromUrl(url: string) {
     if (!url) {
@@ -41,28 +48,27 @@ export class ChatService {
   }
 
   addUserToWorld(socket: Socket) {
-    const sender = this.getUserFromUrl(socket.request?.url);
-    if (!sender) {
-      return;
+    const payload: JwtAuthPayload | undefined = this.extractJwtToken(socket);
+    if (!payload) {
+      return false;
     }
-    let user = this.World.get(sender);
+    let user = this.World.get((payload as JwtAuthPayload).sub);
     if (!user) {
-      this.logger.debug(`user addedd ${sender}`);
-      const sockets: Socket[] = [];
-      sockets.push(socket);
-      this.World.set(sender, sockets);
+      let citizen: ChatUser = new ChatUser();
+      citizen.setUsername((payload as JwtAuthPayload).sub);
+      citizen.addSocket(socket);
+      this.World.set(citizen.getUsername(), citizen);
     } else {
-      user.push(socket);
-      this.logger.debug(`update existing client ${sender}`);
+      user.addSocket(socket);
     }
   }
 
   deleteUserFromWorld(socket: Socket) {
-    const sender = this.getUserFromUrl(socket.request?.url);
-    const user = this.World.get(sender);
+    const payload = this.extractJwtToken(socket) as JwtAuthPayload;
+    if (!payload) return;
+    const user = this.World.get((payload as JwtAuthPayload).sub);
     if (user) {
-      this.logger.debug(`client ${sender} is out`);
-      this.World.delete(sender);
+      this.World.delete(user.getUsername());
     } else {
       this.logger.error(
         'Could not disconnect client because client does not exist',
@@ -70,36 +76,23 @@ export class ChatService {
     }
   }
 
-  getSocketsAssociatedWithUser(user: string) {
-    const sockets = this.World.get(user);
+  getSocketsAssociatedWithUser(user: string = '') {
+    const sockets = this.World.get(user)?.getSockets();
+    if (!sockets || sockets.length === 0) {
+      return undefined;
+    }
     return sockets;
   }
 
-  private async isBlocked(to: string, from: string) {
+  private async isFriend(to: string, from: string) {
     let res: Array<object> = undefined;
+    const toFrom: Array<string> = [to, from].sort();
     try {
       res = await this.prismaService.friendship.findMany({
         where: {
-          OR: [
-            {
-              user: {
-                username: from,
-              },
-              state: FriendshipStatus.BLOCKED,
-              friend: {
-                username: to,
-              },
-            },
-            {
-              user: {
-                username: to,
-              },
-              state: FriendshipStatus.BLOCKED,
-              friend: {
-                username: from,
-              },
-            },
-          ],
+          leftUserId: toFrom[0],
+          rightUserId: toFrom[1],
+          status: FriendshipStatus.ACCEPTED,
         },
       });
     } catch {
@@ -117,26 +110,77 @@ export class ChatService {
     }
   }
 
+  getLastMessageSent(client: Socket): string {
+    const payload = this.extractJwtToken(client);
+
+    if (!payload) {
+      return '';
+    }
+
+    const user = this.World.get((payload as JwtAuthPayload).sub);
+
+    return user.getLastMessageSent();
+  }
+
+  async saveMessageInDatabase(body: SendMessageDto) {
+    return this.prismaService.conversation.create({
+      data: {
+        message: body.content,
+        senderId: body.from,
+        receiverId: body.to,
+      },
+    });
+  }
+
   async sendPrivateMessage(body: SendMessageDto) {
     let event: eventType = {
       event: PRIVATE_MESSAGE,
-      content: body.content,
+      content: body,
     };
-    // user is blocked
-    let isBlocked: boolean = undefined;
-    isBlocked = await this.isBlocked(body.to, body.from);
-    const receiver = this.getSocketsAssociatedWithUser(body.to);
-    if (!receiver) {
-			return ;
-		}
-    if (isBlocked === true) {
-      event = {
-        event: EXCEPTION,
-        content: USER_BLOCKED_MESSAGE,
-      };
+    let isFriend: boolean = false;
+    isFriend = await this.isFriend(body.to, body.from);
+    if (isFriend) {
+      const receiver = this.getSocketsAssociatedWithUser(body.to);
+      if (!receiver || receiver.length === 0) {
+        // TODO: push to notification
+        return;
+      }
+      for (let i = 0; i < receiver.length; ++i) {
+        receiver[i].emit(event.event, JSON.stringify(event.content));
+      }
+      let user: ChatUser = this.World.get(body.from);
+      user.setLastMessageSent(body.content);
+      try {
+        await this.saveMessageInDatabase(body);
+      } catch (e) {
+        const sender: Array<Socket> = this.getSocketsAssociatedWithUser(
+          body.from,
+        );
+        if (!sender || sender.length === 0) return;
+        event.event = EXCEPTION;
+        event.content = INTERNAL_SERVER_ERROR_MESSAGE;
+        for (let i = 0; i < sender.length; ++i) {
+          sender[i].emit(event.event, JSON.stringify(event.content));
+        }
+      }
     }
-    for (let i = 0; i < receiver.length; ++i) {
-      receiver[i].emit(event.event, event.content);
+  }
+
+  extractJwtToken(client: Socket): JwtAuthPayload | undefined {
+    const bearerToken = client.handshake.headers?.authorization?.split(' ')[1];
+    if (!bearerToken) {
+      client.disconnect();
+      return undefined;
+    }
+    try {
+      const decoded = jwt.verify(
+        bearerToken,
+        this.configService.get('JWT_SECRET'),
+      );
+      return decoded as JwtAuthPayload;
+    } catch {
+      client.disconnect();
+      return undefined;
     }
   }
 }

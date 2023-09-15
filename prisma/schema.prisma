@@ -25,7 +25,8 @@ model User {
   is42User             Boolean                @map("is_42_user")
   status               UserStatus
   logs                 Logs?
-  Friendship           Friendship[]
+  LeftFriendship       Friendship[]           @relation("left")
+  RightFriendship      Friendship[]           @relation("right")
   Game                 Game[]
   HaveAchievement      haveAchievement[]
   RoomChatConversation RoomChatConversation[]
@@ -49,24 +50,17 @@ model Logs {
   @@map("logs")
 }
 
-//Friendship
-model Friend {
-  id         String       @id @default(uuid())
-  username   String       @unique
-  Friendship Friendship[]
-
-  @@map("friend")
-}
-
 model Friendship {
-  userId   String           @map("user_id")
-  friendId String           @map("friend_id")
-  state    FriendshipStatus
+  leftUserId  String           @map("left")
+  rightUserId String           @map("right")
+  status      FriendshipStatus
+  sender      String
+  blocker     String?
 
-  user   User   @relation(fields: [userId], references: [id])
-  friend Friend @relation(fields: [friendId], references: [id])
+  leftUser  User @relation("left", fields: [leftUserId], references: [id])
+  rightUser User @relation("right", fields: [rightUserId], references: [id])
 
-  @@id([userId, friendId])
+  @@id([leftUserId, rightUserId])
   @@map("friendship")
 }
 
@@ -131,7 +125,7 @@ model haveAchievement {
 
 //Chat
 model RoomChat {
-  id                   String                 @id @default(uuid())
+  id                   String                 @id
   type                 RoomType
   password             String?
   RoomChatConversation RoomChatConversation[]
@@ -154,27 +148,25 @@ model RoomChatConversation {
 }
 
 model Message {
-  id         String @id @default(uuid())
-  message    String
-  senderId   String @map("sender_id")
-  receiverId String @map("receiver_id")
-  roomChatConversationId String?               @map("room_chat_conversation_id")
+  id       String @id @default(uuid())
+  message  String
+  senderId String @map("sender_id")
 
-  RoomChatConversation   RoomChatConversation? @relation(fields: [roomChatConversationId], references: [id])
-  Conversation           Conversation         @relation(fields: [senderId, receiverId], references: [senderId, receiverId])
+  RoomChatConversation   RoomChatConversation @relation(fields: [roomChatConversationId], references: [id])
+  roomChatConversationId String               @map("room_chat_conversation_id")
 
   @@map("message")
 }
 
 model Conversation {
+  id         String @id @default(uuid())
   senderId   String @map("sender_id")
   receiverId String @map("reciever_id")
 
-  Sender   User      @relation("sender", fields: [senderId], references: [id])
-  Receiver User      @relation("receiver", fields: [receiverId], references: [id])
-  Messages Message[]
+  Sender   User   @relation("sender", fields: [senderId], references: [id])
+  Receiver User   @relation("receiver", fields: [receiverId], references: [id])
+  message  String
 
-  @@id([senderId, receiverId])
   @@map("conversation")
 }
 
@@ -232,8 +224,8 @@ enum NotifType {
 enum FriendshipStatus {
   PENDING
   ACCEPTED
-  REFUSED
   BLOCKED
+  NOT_FOUND
 
   @@map("friendship_status")
 }
@@ -261,4 +253,11 @@ enum Rank {
   GRANDMASTER
 
   @@map("rank")
+}
+
+enum Sender {
+  LEFT_USER
+  RIGHT_USER
+
+  @@map("sender")
 }

@@ -1,10 +1,6 @@
 "use client";
 import Image from "next/image";
-import messagesIcon from "../../../public/messagesIcon.svg";
-import SearchInput from "@/Components/ui/Inputs/searchInput";
 import test1 from "../../../public/test1.svg";
-import test2 from "../../../public/test2.svg";
-import test3 from "../../../public/test3.svg";
 import {
   ChangeEvent,
   MouseEvent,
@@ -15,84 +11,77 @@ import {
   useCallback,
 } from "react";
 import SideBar from "@/Components/ui/sideBar/sideBar";
-import IconButton from "../ui/Buttons/IconButton";
-import CreateChannel from "../../../public/CreateChannel.svg";
-import ExportChannels from "../../../public/ExportChannels.svg";
 import sendMessageIcon from "../../../public/sendMessage.svg";
 import { DropDown } from "../ui/dropDown/dropDown";
 import { useRouter } from "next/router";
 import io from "Socket.IO-client";
-
-interface IMsgDataTypes {
-  user: string;
-  msg: string;
-  time: string;
-}
+import SubSideBar from "./subSideBar";
 
 const Chat = () => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const [clicked, setClicked] = useState<number>();
-  const [messageContent, setMessageContent] = useState("");
   const [currentMessage, setCurrentMessage] = useState("");
-  const [readed, setReaded] = useState(false);
-  const [id, setId] = useState("");
   const Router = useRouter();
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState<string[]>([]);
-  var divId = 0;
   const user = "You";
-  const data = [
+  const msg = [
     {
-      icon: test1,
-      username: "Navoos",
-      message: "You: hello!",
-      readed,
-      // me: true,
-      id: JSON.stringify(divId),
+      message: "hey",
+      sender: "owner"
     },
     {
-      icon: test2,
-      username: "Ael-jack",
-      message: "you are a great man",
-      readed: readed,
-      // me: false,
-      id: JSON.stringify(divId),
+      message: "what's up impmport sendMessageIcogeIcon from import sendMessageIcon ort sendMessageIcon from ",
+      sender: "receiver"
     },
     {
-      icon: test3,
-      username: "Zoulikha",
-      message: "can you help me please",
-      readed: readed,
-      // me: false,
-      id: JSON.stringify(divId),
+      message: "what do you doing",
+      sender: "owner"
     },
     {
-      icon: test1,
-      username: "FRAG33R",
-      message: "anaaa ghadi ldar",
-      readed: readed,
+      message: "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
+      sender: "receiver"
     },
     {
-      icon: test1,
-      username: "sknahs",
-      message: "time to paint the tape",
-      readed: readed,
+      message: "what do you doing",
+      sender: "owner"
     },
     {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
+      message: "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
+      sender: "receiver"
     },
     {
-      icon: test1,
-      username: "MarOne",
-      message: "la na7tajo lmala",
-      readed: readed,
+      message: "what do you doing",
+      sender: "owner"
     },
-  ];
+    {
+      message: "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
+      sender: "receiver"
+    },
+    {
+      message: "what do you doing",
+      sender: "owner"
+    },
+    {
+      message: "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
+      sender: "receiver"
+    },
+    {
+      message: "what do you doing",
+      sender: "owner"
+    },
+    {
+      message: "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
+      sender: "receiver"
+    },
+    {
+      message: "what do you doing",
+      sender: "owner"
+    },
+  ]
 
-  const handleSendMessage = (event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>) => {
+  const handleSendMessage = (
+    event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
+  ) => {
     event.preventDefault();
     if (message.trim() !== "") {
       setChatHistory([...chatHistory, message]);
@@ -100,31 +89,21 @@ const Chat = () => {
     }
   };
 
-  const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number) => {
-    event.preventDefault();
-    setClicked(index);
-  };
-
-  const Channel = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    console.log("hello world from the other side");
-  };
-
-  const handleMessage = (event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    setCurrentMessage(event.target.value);
-  };
+  // const handleMessage = (event: ChangeEvent<HTMLInputElement>) => {
+  //   event.preventDefault();
+  //   setCurrentMessage(event.target.value);
+  // };
 
   function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
-      console.log("hello world!")
+      console.log("hello world!");
       handleSendMessage(event);
     }
   }
 
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
-    const conversationDiv : any = chatContainerRef.current;
+    const conversationDiv: any = chatContainerRef.current;
     if (conversationDiv) {
       conversationDiv.scrollTop = conversationDiv.scrollHeight;
     }
@@ -133,19 +112,18 @@ const Chat = () => {
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       event.preventDefault(); // Prevent the "/" key from being typed into the input
-      if (event.key === '/') {
+      if (event.key === "/") {
         if (inputRef.current) {
           inputRef.current.focus();
         }
       }
     };
 
-    document.addEventListener('keydown', event => handleKeyPress);
+    document.addEventListener("keydown", (event) => handleKeyPress);
     return () => {
-      document.removeEventListener('keydown', handleKeyPress);
+      document.removeEventListener("keydown", handleKeyPress);
     };
   }, []);
-
 
   const emailInput = useCallback((inputElement: any) => {
     if (inputElement) {
@@ -156,31 +134,29 @@ const Chat = () => {
   // const sendMessage = (event: MouseEvent<HTMLButtonElement>) => {
   //   event.preventDefault();
   //   setMessageContent(currentMessage);
-  //   console.log("Message Content : " + messageContent);
+  //   console.log("Message Content : ", messageContent);
   // }
 
-  // const socket = io("e3r10p14.1337.ma:8001");
-
-  // const sendData = async (e: MouseEvent<HTMLButtonElement>) => {
-  //   e.preventDefault();
-  //   if (currentMsg !== "") {
+  // const socketInitializer = () => {
+  //   const socket = io("e3r10p14.1337.ma:8001", {
+  //     extraHeaders: {
+  //       Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5hdm9vcyIsInN1YiI6IjQ4YTRkNDI2LWZiMjEtNDE5NC04ZWQ2LTZiZjRhY2Y0M2I1NSIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk0ODA4OTM1LCJleHAiOjE2OTQ4OTUzMzV9.zsDFfyE2t1gLbQ9DDAJr92X88pegk7fOCt93rM2BH9A`,
+  //     },
+  //   });
+  //   console.log("socket: ", socket);
+  //   socket.on("connect", () => {
   //     const msgData: IMsgDataTypes = {
   //       user: "ataji",
-  //       msg: currentMsg,
+  //       msg: "hello",
   //       time:
   //         new Date(Date.now()).getHours() +
   //         ":" +
   //         new Date(Date.now()).getMinutes(),
   //     };
-  //     await socket.emit("send_msg", msgData);
-  //     setCurrentMsg("");
-  //   }
-  // };
-
-  // const socketInitializer = () => {
-  //   socket.on("receive_msg", () => {
   //     console.log("socket connected");
+  //     socket.emit("hello", msgData);
   //   });
+  //   socket.on("hello", (data) => console.log("here: ", data));
   // };
 
   // useEffect(() => socketInitializer(), []);
@@ -188,71 +164,8 @@ const Chat = () => {
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start p-3 items-center flex-row">
       <SideBar />
-      <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl xl:w-[570px] w-[350px] space-y-8">
-        <div className="flex justify-center items-center flex-col w-full h-[130px]">
-          <div className="w-full h-[130px] flex-col px-6">
-            <div className="w-full  pt-5 flex flex-row space-x-3 h-[130px]">
-              <Image
-                src={messagesIcon}
-                alt="message icon"
-                className=" h-full xl:w-10 w-9"
-              />
-              <h1 className="flex  justify-center items-center font-Poppins text-pearl xl:text-4xl text-3xl font-bold h-full">
-                Messages
-              </h1>
-            </div>
-            <div className="w-full border border-pearl border-opacity-40"></div>
-          </div>
-        </div>
-        <div className="w-full flex justify-center items-center">
-          <div className="w-[90%] h-[45px] rounded-full">
-            <SearchInput />
-          </div>
-        </div>
-        <div className="w-[99%] xl:px-6 px-2 hover:overflow-auto overflow-hidden h-[900px] min-h-[100px]">
-          {data.map((data, index) => (
-            <button
-              onClick={(event) => clickChat(event, index)}
-              key={index}
-              className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
-                clicked == index ? "bg-very-dark-purple" : "bg-transparent"
-              }`}
-            >
-              <Image src={data.icon} alt="test" />
-              <div className="flex justify-start items-start space-y-1 flex-col">
-                <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
-                  {data.username}
-                </p>
-                <p
-                  className={`font-poopins text-pearl flex justify-start text-sm font-medium ${
-                    !data.readed ? "opacity-40" : "opacity-100"
-                  }`}
-                >
-                  {data.message}
-                </p>
-              </div>
-            </button>
-          ))}
-        </div>
-        <div className="flex justify-center items-end w-full py-5 h-[100px]">
-          <div className="w-1/2 h-10 pl-5 pr-2 flex justify-center items-center">
-            <IconButton
-              icon={CreateChannel}
-              content="Create channel"
-              onclick={Channel}
-            />
-          </div>
-          <div className="w-1/2 h-10 pr-5 pl-2 flex justify-center items-center">
-            <IconButton
-              icon={ExportChannels}
-              content="Export channel"
-              onclick={Channel}
-            />
-          </div>
-        </div>
-      </div>
+      <SubSideBar />
       <div className="bg-white/10 h-full rounded-2xl w-full flex justify-between items-center flex-col">
-        {/* <div className="h-[100px] w-full border bg-white/10 border-red-500"></div> */}
         <div className="w-full md:h-[132px] h-[100px] flex justify-center flex-col items-center">
           <div className="md:h-[132px] h-[100px] xl:px-20 md:px-10 sm:px-7 px-4 flex items-center justify-between space-x-3 w-full">
             <div className="flex justify-center items-center space-x-2 flex-row">
@@ -270,17 +183,23 @@ const Chat = () => {
           </div>
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
         </div>
-        <div ref={chatContainerRef} className="w-[99%] p-16 chat chat-end flex flex-col scroll-smooth bg-black h-full min-h-[100px] space-y-1 hover:overflow-auto overflow-hidden scroll-absolute">
-          {chatHistory.map((msg, index) => (
-            <div key={index} className="w-[700px] bg-red-400 flex flex-row space-x-2 justify-end">
-              <div className="bg-transparent w-[500px] flex justify-center items-end flex-col">
-                <div>{user}</div>
-                <div className="bg-very-dark-purple rounded-l-2xl rounded-br-2xl pl-5 p-3 font-Sarabun text-pearl">
-                  {msg}
+        <div
+          ref={chatContainerRef}
+          className={`w-[99%] 2xl:px-16 xl:px-14 lg:px-12 md:px-5 px-2 py-8 flex flex-col scroll-smooth h-full min-h-[100px] space-y-1 hover:overflow-auto overflow-hidden scroll-absolute`}
+        >
+          {msg.map((msg, index) => (
+            <div
+              key={index}
+              className={`flex ${msg.sender == "receiver" ? "flex-row-reverse space-x-reverse space-x-5" : "flex-row md:space-x-5 sm:space-x-3 space-x-1"} justify-end`}
+            >
+              <div className={`bg-transparent 2xl:w-[700px] xl:w-[600px] lg:w-[500px] md:w-[400px] w-[80%] flex ${msg.sender == "receiver" ? "items-start" : "items-end"} flex-col space-y-1`}>
+                <div className="font-Poppins text-pearl">{user}</div>
+                <div className={`${msg.sender == "receiver" ? "rounded-r-2xl rounded-bl-2xl bg-peridot text-very-dark-purple" : "rounded-l-2xl rounded-br-2xl bg-very-dark-purple text-pearl"} md:p-2 p-1 px-3 font-Sarabun lg:text-xl md:text-lg sm:text-md text-sm flex justify-center items-center`}>
+                  {msg.message}
                 </div>
               </div>
               <div>
-                <Image src={test1} alt="test1" />
+                <Image src={test1} alt="test1" className="lg:w-16 md:w-14 sm:w-12 w-10" />
               </div>
             </div>
           ))}
@@ -299,7 +218,7 @@ const Chat = () => {
                 onChange={(event) => setMessage(event.target.value)}
               />
             </div>
-            <button onClick={event => handleSendMessage(event)}>
+            <button onClick={(event) => handleSendMessage(event)}>
               <Image
                 src={sendMessageIcon}
                 alt="send Message Input"

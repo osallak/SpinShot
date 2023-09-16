@@ -12,7 +12,7 @@ const InputBorder: React.FC<InputsProps> = ({
   ConfirmPassword,
   type,
   PlaceHolder,
-  icon,
+  icon, 
   Border,
   Color,
   BorderSize,

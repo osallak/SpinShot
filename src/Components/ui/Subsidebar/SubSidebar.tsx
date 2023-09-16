@@ -4,7 +4,7 @@ import securityIcon from "./../../../../public/securityIcon.svg";
 import securityIcon2 from "./../../../../public/securityIcon2.svg";
 import { buttons } from "@/Components/ui/DropDown/ArrayIcon";
 import { useRouter } from "next/router";
-import changPasswd from "../upDatePasswd/changPasswd";
+import ChangPasswd from "../upDatePasswd/ChangPasswd";
 
 const SubSidebar = (props : {setContent: Function, setPassword: Function}) => {
   const router = useRouter();
@@ -13,11 +13,11 @@ const SubSidebar = (props : {setContent: Function, setPassword: Function}) => {
   const [subbackground, setSubBackground] = useState<number>(1);
   const handle = (id: number, route: string) => {
     setSubBackground(id);
-     props.setContent(route) 
-  };
-  const handlePasswd = (id: boolean, route: string) => {
-    setBackground(true);
-    props.setPassword(true)
+     props.setContent(route);
+     props.setPassword(true);
+    };
+    const handlePasswd = (id: boolean, route: string) => {
+      setBackground(true);
   };
   return (
     <div className=" backdrop:blur  bg-white/10 space-y-10 w-[30%] hidden c-gb:block rounded-[20px]  ">
@@ -66,7 +66,7 @@ const SubSidebar = (props : {setContent: Function, setPassword: Function}) => {
           </div>
         ))}
           {isClick && (
-          <changPasswd handlePasswd={handlePasswd} background={background}/>
+          <ChangPasswd handlePasswd={handlePasswd} background={true}/>
         )}
       </div>
     </div>

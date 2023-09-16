@@ -13,13 +13,8 @@ import SideBar from "@/Components/ui/Sidebar/SideBar";
 import SubsidebarSecond from "../../Components/ui/Subsidebar/SubsidebarSecond";
 import SidebarM from "@/Components/ui/Sidebar/SidebarMobile";
 import NavbarMobile from "@/Components/ui/Navbar/NavbarMobile";
+import { IdDeviceBreakpointsByWidth } from "@/Components/ui/DropDown/ArrayIcon";
 
-interface objType {
-  body: string;
-  id: number;
-  title: string;
-  userId: number;
-}
 
 const Profile = () => {
   const [isopen, setMenu] = useState(false);
@@ -48,6 +43,7 @@ const Profile = () => {
     setMenu(!isopen);
   };
 
+  console.log(IdDeviceBreakpointsByWidth.max)
   return (
     <div className={"bg-very-dark-purple w-full h-full"}>
       <div className={` flex flex-row c-gb:space-x-2 p-2 w-screen h-screen`}>
@@ -75,7 +71,7 @@ const Profile = () => {
             </div>
             <div
               className={` ${
-                opened
+                (opened && IdDeviceBreakpointsByWidth.max )
                   ? "backdrop:blur  bg-white/10 opacity-10"
                   : "backdrop:blur  bg-white/10"
               } flex flex-auto flex-col rounded-[20px] w-full mt-2  h-[1200px]  c-gb:h-[960px] `}
@@ -101,4 +97,5 @@ const Profile = () => {
     </div>
   );
 };
+
 export default Profile;

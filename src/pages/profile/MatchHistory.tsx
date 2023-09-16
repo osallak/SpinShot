@@ -3,7 +3,7 @@ import imagePlayer from "../../../public/imagePlayer.svg";
 import Image from "next/image";
 const MatchHistory = () => {
   return (
-    <div className="  h-[1100px] c-gb:h-full">
+    <div className="  h-[1100px] c-gb:h-[900px] ">
       <div className=' text-pearl text-[15px] sm:text-2xl h-[18%]  flex items-center c-10xl:px-24 px-16 '>
         <h1>Match History</h1>
       </div>

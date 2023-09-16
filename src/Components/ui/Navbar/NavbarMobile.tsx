@@ -30,7 +30,7 @@ const NavbarMobile = (props: {setMenu: Function, handleMenu: Function, isopen: b
                   <span>ibenmaina@gmail.com</span>
                 </div>
               </div>
-              <Image className=" rounded-full w-[50px]" src={ibenmain} alt="" />
+              <Image className=" rounded-[20px] w-[50px]" src={ibenmain} alt="" />
             </div>
           </div>
         </div>

@@ -1,26 +1,28 @@
 import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
-import React from "react";
+import React, { useState } from "react";
 import { resetPassword } from "../../Components/ui/DropDown/ArrayIcon";
-import ToggleButton from "@/Components/ui/Buttons/ToggleButton";
+import PasswordButton from "@/Components/ui/Buttons/PasswordButton";
 
 const ResetPassword = () => {
+  const [password, setPassword] = useState(false);
   return (
-    <div className=" space-y-20 md:space-y-36  h-[940px] ">
+    <div className=" space-y-20 md:space-y-36  h-[910px] ">
       <div className=" text-pearl text-[15px] sm:text-2xl  h-[14%] md:h-[18%] c-gb:h-[25%] flex items-center c-10xl:px-24 px-16">
         <h1 className="">Reset Password</h1>
       </div>
       <div className=" text-pearl h-[18%] c-gb:h-[25%] space-y-10 justify-center flex c-10xl:px-24 px-16 flex-col">
         {resetPassword.map((option, index) => (
-          <div key={index} className=" flex flex-row justify-center">
+          <div key={index} className=" flex flex-row justify-center ">
             {/* <div className="flex items-center w-[20%] text-xl sm:text-2xl sm:text-2x  ">
               {option.text}
             </div> */}
-            <div className="   bg-very-dark-purple w-[100%] md:w-[550px] rounded-[20px]">
+            <div className=" bg-very-dark-purple w-[100%] md:w-[550px] rounded-[20px] flex flex-row justify-center items-center">
               <input
                 className=" bg-very-dark-purple w-[100%] rounded-[20px] px-7 h-14 opacity-40"
-                type="text"
+                type={ password ? "text" : "password"}        
                 placeholder={option.text}
               />
+              <PasswordButton ShowPassword={password} setShowPassword={setPassword}/>
             </div>
           </div>
         ))}

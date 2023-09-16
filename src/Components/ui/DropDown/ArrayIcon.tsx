@@ -69,18 +69,28 @@ export const SidbarIcon = [
 ];
 
 export const resetPassword = [
-  { text: "Password" },
-  { text: "New Password" },
-  { text: "Confirm New Password" },
+  { index: 0, text: "Password" },
+  { index: 1, text: "New Password" },
+  { index: 2, text: "Confirm New Password" },
 ];
 
 export const Information = [
-  {id: 1, text: "First name"},
-  {id: 2, text: "Last name"},
-  {id: 3, text: "Username"},
-  {id: 4, text: "Email"},
-  {id: 5, text: "country"},
-  {id: 6, text: "avatar"},
+  {number: 1, text: "Username"},
+  {number: 2, text: "Email"},
+  {number: 3, text: "country"},
+  {number: 4, text: "avatar"},
 ];
+
+
+export const IdDeviceBreakpointsByWidth = {
+  max : 1024,
+  laptop_max : 1440,
+  laptop_min : 992,
+  tablet_min : 768,
+  tablet_max : 991,
+  mobile_max : 767,
+  default_min : 768 // Unrecognized device
+}
+
 
 export const SignOut = [{ icon: signout, name: "Sign out" }];

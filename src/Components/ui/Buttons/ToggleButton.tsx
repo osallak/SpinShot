@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import active from "../../../../public/active.svg";
 import unactive from "../../../../public/unactive.svg";
+import TowFactor from "../TowFactorauth/TowFactor";
 
 const ToggleButton = () => {
   const [isActive, setisActive] = useState(false);
@@ -35,6 +36,10 @@ const ToggleButton = () => {
           )}
         </motion.div>
       </motion.button>
+      {isActive &&
+      <div className="h-full">
+        <TowFactor isActive={isActive} Switch={Switch}/>
+      </div>}
     </div>
   );
 };

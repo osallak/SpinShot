@@ -4,7 +4,7 @@ import ToggleButton from "../Buttons/ToggleButton";
 import linechoose from "../../../../public/linechoose.svg";
 import linechoose2 from "../../../../public/linechoose2.svg";
 
-const changPasswd = (props: { handlePasswd: Function; background: number }) => {
+const ChangPasswd = (props: { handlePasswd: Function; background: boolean }) => {
   return (
     <div>
       <div className=" ">
@@ -17,7 +17,7 @@ const changPasswd = (props: { handlePasswd: Function; background: number }) => {
           }`}
           onClick={() => props.handlePasswd(true, "ResetPassword")}
         >
-          <button className="left-[10%] relative">
+          <button className="left-[10%] relative h-10">
             <button>Reset Password</button>
           </button>
         </div>
@@ -37,4 +37,4 @@ const changPasswd = (props: { handlePasswd: Function; background: number }) => {
   );
 };
 
-export default changPasswd;
+export default ChangPasswd;

@@ -7,7 +7,7 @@ import Image from "next/image";
 
 const Achievements = () => {
   return (
-    <div className=" flex flex-col h-[1200px] c-gb:h-[940px]">
+    <div className=" flex flex-col h-[1200px] c-gb:h-[910px]">
       <div className="text-pearl text-[15px] sm:text-2xl md:h-40 h-32 flex items-center c-10xl:px-24 px-14 ">
         <h1>Achievements</h1>
       </div>

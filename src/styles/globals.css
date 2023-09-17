@@ -23,6 +23,17 @@ body {
   background: #260323;
 }
 
+.pincode-input-container {
+  background: red;
+
+}
+
+@media screen and (width: 1024px) {
+  .pincode-input-container{
+    background: #260323;
+  }  
+}
+
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 

@@ -25,18 +25,18 @@ const TowFactor = (props: { isActive: boolean; Switch: Function }) => {
         open={props.isActive}
         handler={handleOpen}
         size="xs"
-        className="bg-pearl border border-black"
+        className="bg-pearl border border-black "
       >
         <DialogHeader className="flex flex-col items-center justify-center space-y-5">
           <Image src={scanne} alt="" />
-          <span className="text-sm md:text-3xl text-very-dark-purple">
+          <span className="text-sm md:text-3xl text-very-dark-purple ">
             Authenticate your account
           </span>
         </DialogHeader>
-        <DialogBody className="h-[35rem] overflow-scroll flex flex-col items-center justify-center ">
+        <DialogBody className="h-[35rem] overflow-scroll  flex flex-col items-center justify-center ">
           <Typography className="font-normal flex flex-col items-center justify-center space-y-10">
             <div className="border-[15px] border-white rounded-2xl">
-              <QRCode value={"45382"} />
+              <QRCode value={"45382"}/>
             </div>
             <div className="flex flex-row border space-x-5 px-5">
               {/* {data.map((index)=>(
@@ -52,14 +52,17 @@ const TowFactor = (props: { isActive: boolean; Switch: Function }) => {
                 onChange={(value, index) => {}}
                 type="numeric"
                 inputMode="number"
-                style={{ padding: "10px" }}
+                style={{ 
+                  padding: "10px",
+                  display: "flex",
+                  justifyContent: "center",
+               }}
                 inputStyle={{ 
-                  borderColor: "red",
+                  border:"4px solid",
+                  borderColor: "black",
                   borderRadius:"20px",
                   width:"15%",
                   height:"80px",
-                  flexDirection:'row',
-                  justifyContent: "space-around",
                 }}
                 inputFocusStyle={{ borderColor: "blue" }}
                 onComplete={(value, index) => {}}

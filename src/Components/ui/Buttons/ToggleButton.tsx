@@ -37,7 +37,7 @@ const ToggleButton = () => {
         </motion.div>
       </motion.button>
       {isActive &&
-      <div className="h-full">
+      <div className=" ">
         <TowFactor isActive={isActive} Switch={Switch}/>
       </div>}
     </div>

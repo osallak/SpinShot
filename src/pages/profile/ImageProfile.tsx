@@ -3,10 +3,12 @@ import email from "./../../../public/Email.svg";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useAppSelector } from "../../../redux_tool";
+import UploadImage from "../../Components/ui/UploadImage/UploadImage"
 
 const ImageProfile = (props: any) => {
   const response = props.opne;
   const [handelMous, setImage] = useState(false);
+  const [open, setOpenDialog] = useState(false);
   const [upload, setUpload] = useState(false);
   const [myImage, setMyImage] = useState<File | null>(null);
   const data = useAppSelector((state) => state.Profile);
@@ -27,6 +29,10 @@ const ImageProfile = (props: any) => {
     }
   };
 
+  const Open = () => {
+    setOpenDialog(true);
+  }
+
   return (
     <div
       className={` ${
@@ -43,8 +49,9 @@ const ImageProfile = (props: any) => {
         onMouseLeave={handleMouseLeave}
         className=" rounded-3xl w-[120px]  c-gb:w-[10rem] c-10xl:w-[15rem]  relative transition-all duration-300 bg-white hover:opacity-40"
       >
-        <input type="file" className="hidden" onChange={uploadToClient} />
+        <input type="" className="hidden" onClick={Open} />
         <div className=" flex justify-center items-center ">
+          {open ? <UploadImage upload={open} Switch={setOpenDialog}/> : null}
           {upload ? (
             <img
               className={` rounded-[20px]`}

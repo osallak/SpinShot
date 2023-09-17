@@ -16,6 +16,7 @@ import logo from "./../../../../public/logo.svg";
 import line from "./../../../../public/line.svg";
 import search from "./../../../../public/searchIcon.svg";
 import signout from "./../../../../public/signOut.svg";
+import test1 from "../../../../public/test1.svg";
 
 export const Array = [
   { icon: AddIcon, name: "Add" },
@@ -90,7 +91,40 @@ export const IdDeviceBreakpointsByWidth = {
   tablet_max : 991,
   mobile_max : 767,
   default_min : 768 // Unrecognized device
-}
+};
 
+
+export const ArrayAvatar = [
+  {id: 1, icon: test1},
+  {id: 2, icon: test1},
+  {id: 3, icon: test1},
+  {id: 4, icon: test1},
+  {id: 5, icon: test1},
+  {id: 6, icon: test1},
+  {id: 7, icon: test1},
+  {id: 8, icon: test1},
+  {id: 9, icon: test1},
+  {id: 10, icon: test1},
+  {id: 11, icon: test1},
+  {id: 12, icon: test1},
+  {id: 13, icon: test1},
+  {id: 14, icon: test1},
+  {id: 15, icon: test1},
+  {id: 16, icon: test1},
+  {id: 17, icon: test1},
+  {id: 18, icon: test1},
+  {id: 19, icon: test1},
+  {id: 20, icon: test1},
+  {id: 21, icon: test1},
+  {id: 22, icon: test1},
+  {id: 23, icon: test1},
+  {id: 24, icon: test1},
+  {id: 25, icon: test1},
+  {id: 26, icon: test1},
+  {id: 27, icon: test1},
+  {id: 28, icon: test1},
+  {id: 29, icon: test1},
+  {id: 30, icon: test1},
+];
 
 export const SignOut = [{ icon: signout, name: "Sign out" }];

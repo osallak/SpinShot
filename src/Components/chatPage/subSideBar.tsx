@@ -83,7 +83,7 @@ function SubSideBar() {
   };
 
   return (
-    <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl xl:w-[570px] w-[350px] space-y-8">
+    <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl xl:w-[570px] w-[400px] xl:min-w-[500px] min-w-[400px] space-y-8">
       <div className="flex justify-center items-center flex-col w-full h-[130px]">
         <div className="w-full h-[130px] flex-col px-6">
           <div className="w-full  pt-5 flex flex-row space-x-3 h-[130px]">
@@ -129,15 +129,15 @@ function SubSideBar() {
           </button>
         ))}
       </div>
-      <div className="flex justify-center items-end w-full py-5 h-[100px]">
-        <div className="w-1/2 h-10 pl-5 pr-2 flex justify-center items-center">
+      <div className="flex justify-around items-center w-full border border-red-500 h-[100px]">
+        <div className="w-[45%] h-10 flex justify-center items-center">
           <IconButton
             icon={CreateChannel}
             content="Create channel"
             onclick={Channel}
           />
         </div>
-        <div className="w-1/2 h-10 pr-5 pl-2 flex justify-center items-center">
+        <div className="w-[45%] h-10 flex justify-center items-center">
           <IconButton
             icon={ExportChannels}
             content="Export channel"

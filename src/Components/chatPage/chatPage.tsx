@@ -27,57 +27,63 @@ const Chat = () => {
   const msg = [
     {
       message: "hey",
-      sender: "owner"
+      sender: "owner",
     },
     {
-      message: "what's up impmport sendMessageIcogeIcon from import sendMessageIcon ort sendMessageIcon from ",
-      sender: "receiver"
-    },
-    {
-      message: "what do you doing",
-      sender: "owner"
-    },
-    {
-      message: "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-      sender: "receiver"
+      message:
+        "what's up impmport sendMessageIcogeIcon from import sendMessageIcon ort sendMessageIcon from ",
+      sender: "receiver",
     },
     {
       message: "what do you doing",
-      sender: "owner"
+      sender: "owner",
     },
     {
-      message: "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-      sender: "receiver"
-    },
-    {
-      message: "what do you doing",
-      sender: "owner"
-    },
-    {
-      message: "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-      sender: "receiver"
+      message:
+        "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
+      sender: "receiver",
     },
     {
       message: "what do you doing",
-      sender: "owner"
+      sender: "owner",
     },
     {
-      message: "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-      sender: "receiver"
-    },
-    {
-      message: "what do you doing",
-      sender: "owner"
-    },
-    {
-      message: "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-      sender: "receiver"
+      message:
+        "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
+      sender: "receiver",
     },
     {
       message: "what do you doing",
-      sender: "owner"
+      sender: "owner",
     },
-  ]
+    {
+      message:
+        "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
+      sender: "receiver",
+    },
+    {
+      message: "what do you doing",
+      sender: "owner",
+    },
+    {
+      message:
+        "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
+      sender: "receiver",
+    },
+    {
+      message: "what do you doing",
+      sender: "owner",
+    },
+    {
+      message:
+        "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
+      sender: "receiver",
+    },
+    {
+      message: "what do you doing",
+      sender: "owner",
+    },
+  ];
 
   const handleSendMessage = (
     event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
@@ -166,15 +172,15 @@ const Chat = () => {
       <SideBar />
       <SubSideBar />
       <div className="bg-white/10 h-full rounded-2xl w-full flex justify-between items-center flex-col">
-        <div className="w-full md:h-[132px] h-[100px] flex justify-center flex-col items-center">
+        <div className="w-full md:h-[132px] h-[80px] flex justify-center flex-col items-center">
           <div className="md:h-[132px] h-[100px] xl:px-20 md:px-10 sm:px-7 px-4 flex items-center justify-between space-x-3 w-full">
             <div className="flex justify-center items-center space-x-2 flex-row">
-              <Image src={test1} alt="test1" className="md:w-[65px] w-[50px]" />
+              <Image src={test1} alt="test1" className="lg:w-16 md:w-14 sm:w-12 w-10" />
               <div className="flex flex-col">
-                <p className="font-Poppins md:text-xl text-md text-pearl font-semibold">
+                <p className="font-Poppins md:text-xl sm:text-md text-sm text-pearl font-semibold">
                   Navoos
                 </p>
-                <p className="font-Poppins md:text-lg text-sm text-pearl text-opacity-40 font-thin">
+                <p className="font-Poppins md:text-lg sm:text-sm text-xs text-pearl text-opacity-40 font-thin">
                   Online
                 </p>
               </div>
@@ -185,46 +191,66 @@ const Chat = () => {
         </div>
         <div
           ref={chatContainerRef}
-          className={`w-[99%] 2xl:px-16 xl:px-14 lg:px-12 md:px-5 px-2 py-8 flex flex-col scroll-smooth h-full min-h-[100px] space-y-1 hover:overflow-auto overflow-hidden scroll-absolute`}
+          className={`w-[99%] 2xl:px-16 xl:px-14 lg:px-8 md:px-5 px-2 py-8 flex flex-col scroll-smooth h-full min-h-[100px] space-y-1 hover:overflow-auto overflow-hidden scroll-absolute`}
         >
           {msg.map((msg, index) => (
             <div
               key={index}
-              className={`flex ${msg.sender == "receiver" ? "flex-row-reverse space-x-reverse space-x-5" : "flex-row md:space-x-5 sm:space-x-3 space-x-1"} justify-end`}
+              className={`flex ${
+                msg.sender == "receiver"
+                  ? "flex-row-reverse space-x-reverse space-x-5"
+                  : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
+              } justify-end`}
             >
-              <div className={`bg-transparent 2xl:w-[700px] xl:w-[600px] lg:w-[500px] md:w-[400px] w-[80%] flex ${msg.sender == "receiver" ? "items-start" : "items-end"} flex-col space-y-1`}>
-                <div className="font-Poppins text-pearl">{user}</div>
-                <div className={`${msg.sender == "receiver" ? "rounded-r-2xl rounded-bl-2xl bg-peridot text-very-dark-purple" : "rounded-l-2xl rounded-br-2xl bg-very-dark-purple text-pearl"} md:p-2 p-1 px-3 font-Sarabun lg:text-xl md:text-lg sm:text-md text-sm flex justify-center items-center`}>
+              <div
+                className={`bg-transparent w-[90%] flex ${
+                  msg.sender == "receiver" ? "items-start" : "items-end"
+                } flex-col space-y-1`}
+              >
+                <div className="font-Poppins text-pearl md:text-md sm:text-sm text-xs">{user}</div>
+                <div
+                  className={`${
+                    msg.sender == "receiver"
+                      ? "rounded-r-2xl rounded-bl-2xl bg-peridot text-very-dark-purple"
+                      : "rounded-l-2xl rounded-br-2xl bg-very-dark-purple text-pearl"
+                  } md:p-2 p-1 px-3 font-Sarabun lg:text-xl md:text-lg sm:text-md text-sm flex justify-center items-center`}
+                >
                   {msg.message}
                 </div>
               </div>
               <div>
-                <Image src={test1} alt="test1" className="lg:w-16 md:w-14 sm:w-12 w-10" />
+                <Image
+                  src={test1}
+                  alt="test1"
+                  className="lg:w-16 md:w-14 sm:w-12 w-8"
+                />
               </div>
             </div>
           ))}
         </div>
-        <div className="w-full md:h-[132px] h-[100px] flex justify-start items-center flex-col space-y-7">
+        <div className="w-full md:h-[132px] h-[80px] flex justify-center items-center flex-col">
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
-          <div className="pr-5 pl-10 space-x-2 bg-very-dark-purple rounded-full w-[90%] lg:h-14 md:h-10 h-8 flex justify-center items-center flex-row">
-            <div className="w-full h-14">
-              <input
-                ref={emailInput}
-                placeholder="Type a message"
-                className="text-pearl caret-peridot w-full h-14 outline-none placeholder:text-pearl font-light placeholder:opacity-50 font-Poppins text-lg bg-transparent"
-                type="text"
-                onKeyDown={handleKeyPress}
-                value={message}
-                onChange={(event) => setMessage(event.target.value)}
-              />
+          <div className="w-[90%] h-full flex justify-center items-center flex-row">
+            <div className="w-full md:h-14 sm:h-10 h-8 flex justify-center items-center pr-5 md:pl-10 sm:pl-8 pl-6 space-x-2 bg-very-dark-purple rounded-full">
+              <div className="w-full h-full flex justify-center items-center">
+                <input
+                  ref={emailInput}
+                  placeholder="Type a message"
+                  className="text-pearl caret-peridot w-full h-full outline-none placeholder:text-pearl font-light placeholder:opacity-50 font-Poppins md:text-lg sm:text-md text-sm bg-transparent"
+                  type="text"
+                  onKeyDown={handleKeyPress}
+                  value={message}
+                  onChange={(event) => setMessage(event.target.value)}
+                />
+              </div>
+              <button onClick={(event) => handleSendMessage(event)}>
+                <Image
+                  src={sendMessageIcon}
+                  alt="send Message Input"
+                  className="md:w-10 sm:w-8 w-6"
+                />
+              </button>
             </div>
-            <button onClick={(event) => handleSendMessage(event)}>
-              <Image
-                src={sendMessageIcon}
-                alt="send Message Input"
-                className="w-10"
-              />
-            </button>
           </div>
         </div>
       </div>

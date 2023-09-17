@@ -191,8 +191,9 @@ const Chat = () => {
         </div>
         <div
           ref={chatContainerRef}
-          className={`w-[99%] 2xl:px-16 xl:px-14 lg:px-8 md:px-5 px-2 py-8 flex flex-col scroll-smooth h-full min-h-[100px] space-y-1 hover:overflow-auto overflow-hidden scroll-absolute`}
+          className={`border w-[99.5%] py-8 flex flex-col items-center scroll-smooth h-full min-h-[100px] space-y-1 hover:overflow-auto overflow-hidden `}
         >
+          <div className="border w-[94%]">
           {msg.map((msg, index) => (
             <div
               key={index}
@@ -227,6 +228,7 @@ const Chat = () => {
               </div>
             </div>
           ))}
+          </div>
         </div>
         <div className="w-full md:h-[132px] h-[80px] flex justify-center items-center flex-col">
           <div className="w-[93%] border border-pearl border-opacity-40"></div>

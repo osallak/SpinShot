@@ -83,8 +83,8 @@ function SubSideBar() {
   };
 
   return (
-    <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl xl:w-[570px] w-[400px] xl:min-w-[500px] min-w-[400px] space-y-8">
-      <div className="flex justify-center items-center flex-col w-full h-[130px]">
+    <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl w-[25%] min-w-[350px] space-y-8">
+      <div className="flex justify-center items-center flex-col w-full h-[130px] border">
         <div className="w-full h-[130px] flex-col px-6">
           <div className="w-full  pt-5 flex flex-row space-x-3 h-[130px]">
             <Image
@@ -99,12 +99,12 @@ function SubSideBar() {
           <div className="w-full border border-pearl border-opacity-40"></div>
         </div>
       </div>
-      <div className="w-full flex justify-center items-center">
+      <div className="w-full flex justify-center border items-center">
         <div className="w-[90%] h-[45px] rounded-full">
           <SearchInput />
         </div>
       </div>
-      <div className="w-[99%] xl:px-6 px-2 hover:overflow-auto overflow-hidden h-[900px] min-h-[100px]">
+      <div className="w-[99%] xl:px-6 px-2 hover:overflow-auto overflow-hidden h-full min-h-[100px] border">
         {data.map((data, index) => (
           <button
             onClick={(event) => clickChat(event, index)}
@@ -129,7 +129,7 @@ function SubSideBar() {
           </button>
         ))}
       </div>
-      <div className="flex justify-around items-center w-full border border-red-500 h-[100px]">
+      <div className="flex justify-around items-center w-full border border-red-500 h-[200px]">
         <div className="w-[45%] h-10 flex justify-center items-center">
           <IconButton
             icon={CreateChannel}

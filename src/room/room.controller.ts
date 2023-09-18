@@ -17,6 +17,7 @@ import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
 import { Response } from 'src/global/interfaces';
 import { Response as ExpressResponse, response } from 'express';
 
+//TODO: extract the userId from the token
 @ApiTags('room')
 @Controller('room')
 export class RoomController {

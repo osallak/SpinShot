@@ -24,7 +24,7 @@ import {
 
 import { WsGuard } from './chat.guard';
 
-@WebSocketGateway(CHAT_PORT, OPTIONS)
+@WebSocketGateway(CHAT_PORT + 10, OPTIONS)
 @UsePipes(
   new ValidationPipe({
     exceptionFactory: (errors: ValidationError[]) => {
@@ -53,6 +53,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleConnection(client: Socket) {
+		this.logger.debug("new client: ", client.id);
     this.chatService.addUserToWorld(client);
   }
 
@@ -67,5 +68,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() socket: Socket,
   ) {
 		// return this.chatService.sendGroupMessage(body);
+	}
+
+	// TODO: remove this is for testing purposes
+	@SubscribeMessage('hello')
+	async test(@MessageBody() body: string, @ConnectedSocket() socket: Socket) {
+		console.log(body);
+		console.log(socket.id);
+		socket.emit("hello", "sir t7wa");
 	}
 }

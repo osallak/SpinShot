@@ -134,16 +134,17 @@ model RoomChat {
 }
 
 model RoomChatConversation {
-  id         String          @id @default(uuid())
-  roomChatId String          @map("room_chat_id")
-  userId     String          @map("user_id")
-  userStatus UserStatusGroup @map("user_status")
+  id         String           @id @default(uuid())
+  roomChatId String           @map("room_chat_id")
+  userId     String           @map("user_id")
+  userStatus UserStatusGroup? @map("user_status")
   userRole   UserRole
 
   User     User      @relation(fields: [userId], references: [id])
   RoomChat RoomChat  @relation(fields: [roomChatId], references: [id])
   Message  Message[]
 
+  @@unique([roomChatId, userId])
   @@map("room_chat_conversation")
 }
 
@@ -194,6 +195,7 @@ enum UserStatus {
 enum UserStatusGroup {
   MUTED
   BANNED
+  INVITED
 
   @@map("user_status_group")
 }

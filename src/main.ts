@@ -13,7 +13,6 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       whitelist: true,
-      skipMissingProperties: true,
       stopAtFirstError: true,
       transformOptions: {
         enableImplicitConversion: true,

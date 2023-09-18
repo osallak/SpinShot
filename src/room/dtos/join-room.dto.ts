@@ -1,7 +1,7 @@
 import { RoomType } from '@prisma/client';
 import { IsEnum, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 
-export class CreateRoomDto {
+export class JoinRoomDto {
   @IsNotEmpty()
   userId: string;
 
@@ -12,6 +12,5 @@ export class CreateRoomDto {
   name: string;
 
   @IsOptional()
-  @MinLength(6)
   password?: string;
 }

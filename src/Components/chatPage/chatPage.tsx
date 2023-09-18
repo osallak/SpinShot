@@ -17,6 +17,10 @@ import { useRouter } from "next/router";
 import io from "Socket.IO-client";
 import SubSideBar from "./subSideBar";
 
+interface chat {
+  msg: string;
+}
+
 const Chat = () => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [currentMessage, setCurrentMessage] = useState("");
@@ -191,9 +195,9 @@ const Chat = () => {
         </div>
         <div
           ref={chatContainerRef}
-          className={`border w-[99.5%] py-8 flex flex-col items-center scroll-smooth h-full min-h-[100px] space-y-1 hover:overflow-auto overflow-hidden `}
+          className={`w-[99.5%] py-8 flex flex-col items-center scroll-smooth h-full min-h-[100px] space-y-1 hover:overflow-auto overflow-hidden `}
         >
-          <div className="border w-[94%]">
+          <div className="w-[94%] space-y-1">
           {msg.map((msg, index) => (
             <div
               key={index}
@@ -204,17 +208,17 @@ const Chat = () => {
               } justify-end`}
             >
               <div
-                className={`bg-transparent w-[90%] flex ${
+                className={`bg-transparent x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] flex ${
                   msg.sender == "receiver" ? "items-start" : "items-end"
-                } flex-col space-y-1`}
+                } flex-col md:space-y-1 space-y-0`}
               >
-                <div className="font-Poppins text-pearl md:text-md sm:text-sm text-xs">{user}</div>
+                <div className="font-Poppins text-pearl md:text-base sm:text-sm text-xs sm:h-5 h-4">{user}</div>
                 <div
                   className={`${
                     msg.sender == "receiver"
                       ? "rounded-r-2xl rounded-bl-2xl bg-peridot text-very-dark-purple"
                       : "rounded-l-2xl rounded-br-2xl bg-very-dark-purple text-pearl"
-                  } md:p-2 p-1 px-3 font-Sarabun lg:text-xl md:text-lg sm:text-md text-sm flex justify-center items-center`}
+                  } md:p-2 p-1 px-3 font-Sarabun md:text-base sm:text-sm text-xs flex justify-center items-center`}
                 >
                   {msg.message}
                 </div>

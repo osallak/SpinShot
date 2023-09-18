@@ -16,6 +16,7 @@ import { DropDown } from "../ui/dropDown/dropDown";
 import { useRouter } from "next/router";
 import io from "Socket.IO-client";
 import SubSideBar from "./subSideBar";
+import NavBar from "../ui/navBar/navBar";
 
 interface chat {
   msg: string;
@@ -172,10 +173,11 @@ const Chat = () => {
   // useEffect(() => socketInitializer(), []);
 
   return (
-    <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start p-3 items-center flex-row">
+    <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 md:space-y-0 space-y-3 flex justify-start px-3 pb-3 md:pt-3 pt-0 items-center md:flex-row flex-col">
       <SideBar />
       <SubSideBar />
-      <div className="bg-white/10 h-full rounded-2xl w-full flex justify-between items-center flex-col">
+      <NavBar />
+      <div className="bg-white/10 md:h-full h-[93%] rounded-2xl w-full flex justify-between items-center flex-col">
         <div className="w-full md:h-[132px] h-[80px] flex justify-center flex-col items-center">
           <div className="md:h-[132px] h-[100px] xl:px-20 md:px-10 sm:px-7 px-4 flex items-center justify-between space-x-3 w-full">
             <div className="flex justify-center items-center space-x-2 flex-row">

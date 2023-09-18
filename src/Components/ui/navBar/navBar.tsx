@@ -4,7 +4,7 @@ import Image from "next/image"
 
 const NavBar = () => {
   return (
-    <div className='w-full h-[7%] min-h-[70px] pl-5 pr-3 md:hidden flex justify-between items-center bg-white/10 rounded-2xl'>
+    <div className='w-full h-[10%] pl-5 pr-3 md:hidden flex justify-between items-center bg-white/10 rounded-2xl'>
       <button className="flex justify-center items-center w-10">
         <Image src={threeLines} alt="three lines" className="w-full h-full"/>
       </button>

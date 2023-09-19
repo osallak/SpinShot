@@ -24,14 +24,7 @@ import {
 
 import { WsGuard } from './chat.guard';
 
-@WebSocketGateway(CHAT_PORT + 10, OPTIONS)
-@UsePipes(
-  new ValidationPipe({
-    exceptionFactory: (errors: ValidationError[]) => {
-      return new WsBadRequestException(INVALID_DATA_MESSAGE);
-    },
-  }),
-)
+@WebSocketGateway(CHAT_PORT, OPTIONS)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   private readonly server: Server;
@@ -64,7 +57,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(WsGuard)
   @SubscribeMessage(GROUP_MESSAGE)
   async handleGroupMessage(
-    @MessageBody() body: SendMessageDto,
+    @MessageBody(new ValidationPipe({
+    exceptionFactory: (errors: ValidationError[]) => {
+      return new WsBadRequestException(INVALID_DATA_MESSAGE);
+    },
+  })) body: SendMessageDto,
     @ConnectedSocket() socket: Socket,
   ) {
 		// return this.chatService.sendGroupMessage(body);

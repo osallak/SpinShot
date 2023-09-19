@@ -16,6 +16,9 @@ import * as jwt from 'jsonwebtoken';
 import { JwtAuthPayload } from 'src/auth/interfaces';
 import { ChatUser } from './entities/user.entity';
 import { NotificationService } from 'src/notification/notification.service';
+import { UserService } from 'src/user/user.service';
+import { serializePaginationResponse } from 'src/user/helpers';
+import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 
 @Injectable()
 export class ChatService {
@@ -27,6 +30,7 @@ export class ChatService {
     private readonly prismaService: PrismaService,
     private readonly configService: ConfigService,
     private readonly notificationService: NotificationService,
+    private readonly userService: UserService,
   ) {}
 
   private getUserFromUrl(url: string) {
@@ -123,11 +127,14 @@ export class ChatService {
   }
 
   async saveMessageInDatabase(body: SendMessageDto) {
+    const toFrom = [body.to, body.from].sort();
     return this.prismaService.conversation.create({
       data: {
         message: body.content,
-        senderId: body.from,
-        receiverId: body.to,
+        senderId: toFrom[0],
+        receiverId: toFrom[1],
+        sentAt: body.timestamp,
+        sender: body.from,
       },
     });
   }
@@ -149,7 +156,6 @@ export class ChatService {
         receiver[i].emit(event.event, JSON.stringify(event.content));
       }
       let user: ChatUser = this.World.get(body.from);
-      user.setLastMessageSent(body.content);
       try {
         await this.saveMessageInDatabase(body);
       } catch (e) {
@@ -182,5 +188,115 @@ export class ChatService {
       client.disconnect();
       return undefined;
     }
+  }
+
+  async getAllLatestMessages(userId: string) {
+    try {
+      const user = await this.userService.findOneById(userId);
+      if (!user) {
+        return {
+          status: 404,
+          content: 'User was not found',
+        };
+      }
+      const message = await this.prismaService.conversation.findMany({
+        where: {
+          OR: [
+            {
+              Sender: {
+                id: userId,
+              },
+            },
+            {
+              Receiver: {
+                id: userId,
+              },
+            },
+          ],
+        },
+        orderBy: {
+          sentAt: 'desc',
+        },
+        distinct: ['receiverId', 'senderId'],
+        select: {
+          sender: true,
+          sentAt: true,
+          message: true,
+        },
+      });
+      return {
+        status: 200,
+        content: message,
+      };
+    } catch {
+      return {
+        status: 500,
+        content: 'Failed to get latest messages',
+      };
+    }
+  }
+
+  async getIndividualMessages(
+    userId: string,
+    query: PaginationQueryDto,
+		receiverId: string,
+  ) {
+    // try {
+    const users = await this.prismaService.user.findMany({
+      where: {
+        OR: [
+          {
+            id: userId,
+          },
+          {
+            id: receiverId,
+          },
+        ],
+      },
+    });
+
+    if (!users || !receiverId || (users && (await users).length != 2)) {
+      return {
+        status: 404,
+        content: 'Users were not found',
+      };
+    }
+    const toFrom = [userId, receiverId].sort();
+    const content = await this.prismaService.conversation.findMany({
+      skip: query.getSkip(),
+      take: query.limit,
+      orderBy: {
+        sentAt: 'asc',
+      },
+      where: {
+        AND: [
+          {
+            senderId: toFrom[0],
+          },
+          {
+            receiverId: toFrom[1],
+          },
+        ],
+      },
+      select: {
+        sentAt: true,
+        sender: true,
+        message: true,
+      },
+    });
+    return {
+      status: 200,
+      content: serializePaginationResponse(
+        content,
+        content.length,
+        query.limit,
+      ),
+    };
+    // } catch {
+    //   return {
+    //     status: 500,
+    //     content: 'Cannot get individual messages',
+    //   };
+    // }
   }
 }

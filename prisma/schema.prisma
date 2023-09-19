@@ -166,7 +166,9 @@ model Conversation {
 
   Sender   User   @relation("sender", fields: [senderId], references: [id])
   Receiver User   @relation("receiver", fields: [receiverId], references: [id])
+  sentAt   BigInt
   message  String
+  sender   String
 
   @@map("conversation")
 }

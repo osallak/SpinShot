@@ -13,7 +13,6 @@ import { Response } from 'src/global/interfaces';
 import { Room } from './dtos/find-room.dto';
 import { UserService } from 'src/user/user.service';
 import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
-import { ChatService } from 'src/chat/chat.service';
 @Injectable()
 export class RoomService {
   private readonly logger: Logger = new Logger('room');

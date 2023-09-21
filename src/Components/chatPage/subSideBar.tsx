@@ -16,61 +16,22 @@ import {
 import IconButton from "../ui/Buttons/IconButton";
 import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";
+import axios from "axios";
+
+
+interface data {
+  id: string,
+  avatar: string,
+  username: string
+}
+
+interface otherdata {
+  Receiver: data,
+}
 
 function SubSideBar() {
   const [readed, setReaded] = useState(false);
   const [clicked, setClicked] = useState<number>();
-  var divId = 0;
-  const data = [
-    {
-      icon: test1,
-      username: "Navoos",
-      message: "You: hello!",
-      readed,
-      // me: true,
-      id: JSON.stringify(divId),
-    },
-    {
-      icon: test2,
-      username: "Ael-jack",
-      message: "you are a great man",
-      readed: readed,
-      // me: false,
-      id: JSON.stringify(divId),
-    },
-    {
-      icon: test3,
-      username: "Zoulikha",
-      message: "can you help me please",
-      readed: readed,
-      // me: false,
-      id: JSON.stringify(divId),
-    },
-    {
-      icon: test1,
-      username: "FRAG33R",
-      message: "anaaa ghadi ldar",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "sknahs",
-      message: "time to paint the tape",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "MarOne",
-      message: "la na7tajo lmala",
-      readed: readed,
-    },
-  ];
 
   const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number) => {
     event.preventDefault();
@@ -81,6 +42,50 @@ function SubSideBar() {
     event.preventDefault();
     console.log("hello world from the other side");
   };
+
+  const [respo, setRespo] = useState<otherdata[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const ayoubToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5b3ViIiwic3ViIjoiMTE4NTc5ZTctZGE3Yy00MGExLWI4ZmYtNGVkMjE5MDhkYTE0IiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTUyNTE2MTYsImV4cCI6MTY5NTMzODAxNn0.DN5AXkCuE6Sh-ZpubfdY66V-uS-upKFHHG2yioFZoOo";
+      function parseJwt(token: string) {
+        var base64Url = token.split(".")[1];
+        var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        var jsonPayload = decodeURIComponent(
+          window
+            .atob(base64)
+            .split("")
+            .map(function (c) {
+              return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join("")
+        );
+
+        return JSON.parse(jsonPayload);
+      }
+      const jwtToken = parseJwt(ayoubToken);
+      try {
+        const res = await axios.get(
+          `http://e3r10p14.1337.ma:3000/chat/all`,
+          {
+            headers: {
+              Authorization: `Bearer ${ayoubToken}`,
+            },
+            params: {
+              id: jwtToken.sub,
+            },
+          }
+        );
+        setRespo(res.data);
+        // console.log("message : ", respo);
+        // console.log("response data: ", res.data[0].Receiver);
+      } catch (error) {
+        console.log("error of fetching data: ", error);
+      }
+    };
+    fetchData();
+  });
 
   return (
     <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl w-[25%] min-w-[350px] space-y-8">
@@ -105,7 +110,7 @@ function SubSideBar() {
         </div>
       </div>
       <div className="w-[99%] xl:px-6 px-2 hover:overflow-auto overflow-hidden h-full min-h-[100px]">
-        {data.map((data, index) => (
+        {respo.map((data, index) => (
           <button
             onClick={(event) => clickChat(event, index)}
             key={index}
@@ -113,17 +118,16 @@ function SubSideBar() {
               clicked == index ? "bg-very-dark-purple" : "bg-transparent"
             }`}
           >
-            <Image src={data.icon} alt="test" />
+            <Image src={test1} alt="test" />
             <div className="flex justify-start items-start space-y-1 flex-col">
               <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
-                {data.username}
+                {data.Receiver.username}
               </p>
               <p
-                className={`font-poopins text-pearl flex justify-start text-sm font-medium ${
-                  !data.readed ? "opacity-40" : "opacity-100"
+                className={`font-poopins text-pearl flex justify-start text-sm font-medium ${"opacity-40"
                 }`}
               >
-                {data.message}
+                {data.Receiver.id}
               </p>
             </div>
           </button>

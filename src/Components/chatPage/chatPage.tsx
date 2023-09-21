@@ -155,17 +155,17 @@ const Chat = () => {
   // const handleSendMessage = (
   //   event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
   //   ) => {
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5hdm9vcyIsInN1YiI6IjQ4YTRkNDI2LWZiMjEtNDE5NC04ZWQ2LTZiZjRhY2Y0M2I1NSIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk0ODA4OTM1LCJleHAiOjE2OTQ4OTUzMzV9.zsDFfyE2t1gLbQ9DDAJr92X88pegk7fOCt93rM2BH9A'
-  const socket = io("e3r10p14.1337.ma:8001", {
-    extraHeaders: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  socket.on("connect", () => {
-    console.log(parseJwt(token));
-    socket.on("pm", (data) => {console.log(data)});
-    socket.on("exception", (data) => {console.log(data)})
-  });
+  // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5hdm9vcyIsInN1YiI6IjQ4YTRkNDI2LWZiMjEtNDE5NC04ZWQ2LTZiZjRhY2Y0M2I1NSIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk0ODA4OTM1LCJleHAiOjE2OTQ4OTUzMzV9.zsDFfyE2t1gLbQ9DDAJr92X88pegk7fOCt93rM2BH9A'
+  // const socket = io("e3r10p14.1337.ma:8001", {
+  //   extraHeaders: {
+  //     Authorization: `Bearer ${token}`,
+  //   },
+  // });
+  // socket.on("connect", () => {
+  //   console.log(parseJwt(token));
+  //   socket.on("pm", (data) => {console.log(data)});
+  //   socket.on("exception", (data) => {console.log(data)})
+  // });
   //     event.preventDefault();
   //     if (message.trim() !== "") {
   //       socket.on("connect", () => {
@@ -214,7 +214,7 @@ const Chat = () => {
       <SideBar />
       <SubSideBar />
       <NavBar />
-      <Conversation socket={socket} />
+      <Conversation />
     </div>
   );
 };

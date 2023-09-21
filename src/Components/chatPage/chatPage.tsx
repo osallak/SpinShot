@@ -30,6 +30,8 @@ function parseJwt (token: string) {
   return JSON.parse(jsonPayload);
 }
 const Chat = () => {
+  const Router = useRouter();
+  const [storedToken, setToken] = useState("");
   // const chatContainerRef = useRef<HTMLDivElement>(null);
   // const [currentMsg, setCurrentMsg] = useState("");
   // const Router = useRouter();
@@ -208,6 +210,22 @@ const Chat = () => {
   // }, [socket]);
 
   // useEffect(() => socketInitializer(), []);
+
+  useEffect(() => {
+    // Get the token from localStorage
+    const storedToken = localStorage.getItem('token');
+
+    // Redirect to the Signin page if token is not available
+    if (!storedToken) {
+      Router.push('/signin');
+      return;
+    }
+
+    // Set the token state
+    setToken(storedToken);
+  }, []);
+
+  console.log("======> token: ", storedToken);
 
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 md:space-y-0 space-y-3 flex justify-start px-3 pb-3 md:pt-3 pt-0 items-center md:flex-row flex-col">

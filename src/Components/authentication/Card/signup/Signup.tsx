@@ -78,7 +78,7 @@ const Signup = () => {
     e.preventDefault();
     if (isValid && isMatch) {
       try {
-        await axios.post('http://34.16.168.248:3001/auth/signup/local', {
+        await axios.post('http://e3r10p17.1337.ma:3000/auth/signup/local', {
           email,
           username,
           password,

@@ -56,7 +56,7 @@ const Signin = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://34.16.168.248:3001/auth/signin/local",
+        "http://e3r10p17.1337.ma:3000/auth/signin/local",
         {
           username,
           password,
@@ -65,11 +65,13 @@ const Signin = () => {
       localStorage.setItem("token", res.data.token);
       console.log("token: " + localStorage.getItem("token"));
     } catch (error: any) {
-      setErrorMessage(error.response.data.message);
+      // setErrorMessage(error.response.data.message);
       setError(true);
     }
-    if(!error)
-      Router.push(Path);
+    if(!error) {
+      console.log("here");
+      // Router.push(Path);
+    }
   };
 
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {

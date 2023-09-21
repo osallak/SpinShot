@@ -17,7 +17,12 @@ import {
 const TowFactor = (props: { isActive: boolean; Switch: Function }) => {
   const handleOpen = () => props.Switch(!open);
   const data = [1, 2, 3, 4, 5, 6];
-  const a = useState("123456");
+  function generateRandomCode() {
+    const min = 100000;
+    const max = 999999;
+    const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+    return randomNumber.toString();
+  }
 
   return (
     <>
@@ -25,7 +30,7 @@ const TowFactor = (props: { isActive: boolean; Switch: Function }) => {
         open={props.isActive}
         handler={handleOpen}
         size="xs"
-        className="bg-pearl border border-black "
+        className="bg-pearl"
       >
         <DialogHeader className="flex flex-col items-center justify-center space-y-5">
           <Image src={scanne} alt="" />
@@ -36,7 +41,7 @@ const TowFactor = (props: { isActive: boolean; Switch: Function }) => {
         <DialogBody className="h-[35rem] overflow-scroll  flex flex-col items-center justify-center ">
           <Typography className="font-normal flex flex-col items-center justify-center space-y-10">
             <div className="border-[15px] border-white rounded-2xl">
-              <QRCode value={"45382"}/>
+              <QRCode value={generateRandomCode()}/>
             </div>
             <div className="flex flex-row border space-x-5 px-5">
               {/* {data.map((index)=>(

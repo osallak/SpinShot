@@ -1,7 +1,7 @@
 import "tailwind-scrollbar";
 import Twemoji from "react-twemoji";
-import React, { useState } from "react";
 import country from "country-list";
+import React, { useState } from "react";
 import { motion, Variants } from "framer-motion";
 
 const itemVariants: Variants = {
@@ -13,7 +13,7 @@ const itemVariants: Variants = {
   closed: { opacity: 0, y: 20, transition: { duration: 0.2 } },
 };
 
-const Country = () => {
+const Country = (props:{setCountry:Function}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isFlag, setIsFlag] = useState("");
   const [isCountry, setIsCountry] = useState("Your Country");
@@ -31,6 +31,7 @@ const Country = () => {
 
   const sethandle = (flag: string, country:string) => {
     setIsCountry(country);
+    props.setCountry(country);
     setIsFlag(flag);
   }
 
@@ -63,8 +64,9 @@ const Country = () => {
             },
           },
         }}
-        className="absolute  w-[100%]   text-black bg-peridot pt-14 p-2 pl-6 rounded-[20px]   h-[250px] scrollbar  scrollbar-thumb-gray-900  overflow-auto"
+        className="absolute  w-[100%]   text-black bg-peridot pt-14 p-2 pl-6 rounded-[20px] scrollbar  scrollbar-thumb-gray-900  overflow-auto h-[250px]"
       >
+        {/* <div className="border border-red-500 scrollbar  scrollbar-thumb-gray-900  overflow-auto"> */}
         <motion.div className="">
           <motion.div className=" ">
             {countries.map((countent: any, index: any) => (
@@ -77,17 +79,18 @@ const Country = () => {
                     sethandle(getFlagEmoji(countent.code), countent.name)
                   }
                 >
-                  <Twemoji options={{ className: "twemoji " }}>
-                    <motion.div className="w-[60%] ">
+                  <Twemoji options={{}}>
+                    <motion.div className="w-[60%]">
                       {getFlagEmoji(countent.code)}
                     </motion.div>
                   </Twemoji>
-                  <motion.span className=" ">{countent.name}</motion.span>
+                  <motion.span className=" ">{countent.name.length > 30 ? countent.name.slice(0,20) + '...' : countent.name}</motion.span>
                 </motion.button>
               </motion.div>
             ))}
           </motion.div>
         </motion.div>
+        {/* </div> */}
       </motion.div>
       <motion.button
         className={` space-x-1 bg-very-dark-purple w-[100%] md:w-[100%] px-5 flex flex-row items-center absolute rounded-[20px] ${
@@ -98,9 +101,9 @@ const Country = () => {
         whileTap={{ scale: 0.99 }}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <Twemoji options={{ className: "twemoji " }}>
+        <Twemoji options={{ className: "twemoji"}}>
           <motion.div className="  flex flex-row space-x-6 items-center  ">
-              { isFlag && <h1 className="">{isFlag}</h1>}
+              { isFlag && <h1>{isFlag}</h1>}
               <h1> {isCountry.length > 30 ? isCountry.slice(0, 20) + '...' : isCountry}</h1>
           </motion.div>
         </Twemoji>

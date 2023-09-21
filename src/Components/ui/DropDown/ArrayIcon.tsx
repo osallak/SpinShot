@@ -71,8 +71,8 @@ export const SidbarIcon = [
 
 export const resetPassword = [
   { index: 0, text: "Password" },
-  { index: 1, text: "New Password" },
-  { index: 2, text: "Confirm New Password" },
+  { index: 0, text: "New Password" },
+  { index: 0, text: "Confirm New Password" },
 ];
 
 export const Information = [

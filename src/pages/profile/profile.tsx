@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import SubSidebar from "../../Components/ui/Subsidebar/SubSidebar";
 import ImageProfile from "./ImageProfile";
 import Levle from "./Levle";
@@ -14,7 +14,7 @@ import SubsidebarSecond from "../../Components/ui/Subsidebar/SubsidebarSecond";
 import SidebarM from "@/Components/ui/Sidebar/SidebarMobile";
 import NavbarMobile from "@/Components/ui/Navbar/NavbarMobile";
 import { IdDeviceBreakpointsByWidth } from "@/Components/ui/DropDown/ArrayIcon";
-
+import TowFactor from "@/Components/ui/TowFactorauth/TowFactor";
 
 const Profile = () => {
   const [isopen, setMenu] = useState(false);
@@ -26,6 +26,8 @@ const Profile = () => {
   const user1 = useSelector((state: any) => state.Data);
   const dispatch = useAppDispatch();
   const profile_data = useAppSelector((state) => state.Profile);
+  const [isActive, setisActive] = useState(false);
+
 
   useEffect(() => {
     dispatch(getProfile());
@@ -43,7 +45,6 @@ const Profile = () => {
     setMenu(!isopen);
   };
 
-  console.log(IdDeviceBreakpointsByWidth.max)
   return (
     <div className={"bg-very-dark-purple w-full h-full"}>
       <div className={` flex flex-row c-gb:space-x-2 p-2 w-screen h-screen`}>
@@ -57,7 +58,7 @@ const Profile = () => {
           />
         )}
         <div
-          className={` ${isopen ? "ml-[83px] " : ""} w-full  rounded-[20px] `}
+          className={`${(isopen && !isActive) ? "ml-[83px]" : ""} w-full  rounded-[20px]  `}
         >
           <NavbarMobile
             setMenu={setMenu}
@@ -71,10 +72,10 @@ const Profile = () => {
             </div>
             <div
               className={` ${
-                (opened && IdDeviceBreakpointsByWidth.max )
+                opened
                   ? "backdrop:blur  bg-white/10 opacity-10"
                   : "backdrop:blur  bg-white/10"
-              } flex flex-auto flex-col rounded-[20px] w-full mt-2  h-[1200px]  c-gb:h-[960px] `}
+              } flex flex-auto flex-col rounded-[20px] w-full mt-2  h-[1200px]  c-gb:h-[960px]`}
             >
               {content == "Personal_Information" ? (
                 <PersonalInformation />
@@ -91,8 +92,12 @@ const Profile = () => {
           </div>
         </div>
         {opened && pages == "/profile/profile" && (
-          <SubsidebarSecond setContent={setContent} setPassword={setPassword} />
+          <SubsidebarSecond isActive={isActive} setisActive={setisActive} setContent={setContent} setPassword={setPassword} />
         )}
+        {isActive &&
+          <div className="z-50">
+            <TowFactor isActive={isActive} Switch={setisActive}/>
+          </div>}
       </div>
     </div>
   );

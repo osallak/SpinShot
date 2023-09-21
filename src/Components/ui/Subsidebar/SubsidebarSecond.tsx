@@ -13,7 +13,7 @@ import { useContext } from "react";
 import { createContext } from "react";
 import ContentProfile from "@/pages/profile/PersonalInformation";
 
-const SubsidebarSecond = (props: { setContent: Function; setPassword: Function }) => {
+const SubsidebarSecond = (props: {isActive:boolean, setisActive:Function, setContent: Function; setPassword: Function }) => {
     const router = useRouter();
   const [isClick, setClick] = useState(false);
   const [background, setBackground] = useState(false);
@@ -89,7 +89,7 @@ const SubsidebarSecond = (props: { setContent: Function; setPassword: Function }
             >
               <button>Tow Factory</button>
               <div className="relative flex justify-end w-12 h-6 c-gb:w-9 c-xs:w-10">
-                <ToggleButton />
+                <ToggleButton isActive={props.isActive} setisActive={props.setisActive}/>
               </div>
             </div>
           </div>

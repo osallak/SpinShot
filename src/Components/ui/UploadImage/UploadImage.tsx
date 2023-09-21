@@ -12,21 +12,24 @@ import {
   Typography,
   Option,
 } from "@material-tailwind/react";
-import test from "node:test";
 
-const TowFactor = (props: { upload: boolean; Switch: Function }) => {
-  const handleOpen = () => props.Switch(!open);
+
+const UploadImage = (props: {upload:boolean, setUpload:Function, open: boolean, Switch: Function, uploadToClient:any }) => {
+  const handleOpen = () => {
+    props.Switch(!open);
+    props.setUpload(!props.upload);
+  };
   const data = [1, 2, 3, 4, 5, 6];
-  const a = useState("123456");
-  console.log("open: ", props.upload);
-
+  const handleImage = () => {
+    console.log("click");
+  }
   return (
-    <>
+    <div className="">
       <Dialog
-        open={props.upload}
+        open={props.open}
         handler={handleOpen}
         size="xs"
-        className="bg-pearl border border-black "
+        className="bg-pearl"
       >
         <DialogHeader className="flex flex-col  items-center justify-center ">
           <Image src={camera} alt="" />
@@ -35,23 +38,23 @@ const TowFactor = (props: { upload: boolean; Switch: Function }) => {
         <DialogBody className="text-very-dark-purple h-[30rem]  flex flex-col">
           <Typography className="font-normal flex flex-col items-start space-y-5 ">
             <span>Chose your picture</span>
-            <div className="flex items-center justify-center w-full">
-              <button
-                className=" bg-peridot rounded-full w-28 h-9"
-                // onClick={}
-              >
-                <span className=" font-Passion-One text-lg">
+            <label className="flex items-center justify-center w-full">
+              <input type="file" className="  w-full h-9  hidden" onChange={props.uploadToClient}/>
+                <span className=" font-Passion-One text-lg bg-peridot rounded-full flex items-center justify-center w-28 h-9  ">
                   Upload
                 </span>
-              </button>
-            </div>
+            </label>
             <span>Use avatar</span>
-            <div className=" overflow-y-auto h-52 w-[95%] bg-very-dark-purple  flex flex-wrap space-x-5 space-y-5 rounded-[20px] ">
+            <div className="  overflow-y-auto h-52 w-[100%]  rounded-[20px] ">
+              <div className="flex  flex-wrap  bg-very-dark-purple items-center px-2">
+
               {ArrayAvatar.map((option: any) => (
-                <div key={option.id} className="">
-                  <Image src={option.icon} alt="" />
-                </div>
+                <label key={option.id} className="py-2 px-1 relative flex items-center justify-center">
+                  <input type="image" className="border w-full h-full absolute hidden " onClick={handleImage}/>
+                  <Image src={option.icon} alt="" className=""/>
+                </label>
               ))}
+              </div>
             </div>
           </Typography>
         </DialogBody>
@@ -66,8 +69,8 @@ const TowFactor = (props: { upload: boolean; Switch: Function }) => {
           </button>
         </DialogFooter>
       </Dialog>
-    </>
+    </div>
   );
 };
 
-export default TowFactor;
+export default UploadImage;

@@ -6,7 +6,7 @@ const FormInput = (props: { handleChange(e: React.ChangeEvent<HTMLInputElement>)
         <input
           name={props.name}
           onChange={props.handleChange}
-          className=" bg-very-dark-purple w-full rounded-[20px] px-5 h-14 placeholder:text-pearl placeholder:text-opacity-40"
+          className=" bg-very-dark-purple w-full rounded-[20px] px-5 h-14 placeholder:text-pearl placeholder:text-opacity-40 outline-none"
           type=""
           required
           placeholder={props.placehold}

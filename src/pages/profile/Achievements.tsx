@@ -14,7 +14,7 @@ const Achievements = () => {
       <div className="flex flex-col  space-y-8  ">
         <div className=" flex flex-col c-gb:flex-row c-gb:px-[8%] justify-center items-center  c-gb:space-x-11 space-y-8 c-gb:space-y-0">
           <div className=" bg-very-dark-purple h-[200px] c-gb:h-[300px] rounded-[20px] w-[85%] c-gb:w-full  flex flex-row justify-between">
-            <div className="p-10 space-y-[12%]">
+            <div className="p-10 space-y-[20%]">
               <h1 className="text-pearl text-sm sm:text-2xl">
                 SPINSHOT ROOKIE
               </h1>
@@ -22,12 +22,12 @@ const Achievements = () => {
                 Win your first Match
               </h1>
             </div>
-            <div className="flex justify-center items-center ">
+            <div className="flex justify-center items-center  ">
               <Image className="" src={achievement1} alt="" />
             </div>
           </div>
           <div className=" bg-very-dark-purple h-[200px] c-gb:h-[300px] rounded-[20px] w-[85%] c-gb:w-full flex flex-row justify-between">
-            <div className="p-8 c-gb:p-10 md:space-y-4 c-gb:space-y-[12%] w-[80%] ">
+            <div className="p-8 c-gb:p-10 md:space-y-4 c-gb:space-y-[16%] w-[80%] ">
               <h1 className="text-pearl text-sm sm:text-2xl">
                 SPINSHOT MARATHON
               </h1>
@@ -41,31 +41,31 @@ const Achievements = () => {
                 </div>
               </div>
             </div>
-            <div className="flex justify-center items-center ">
+            <div className="flex justify-center items-center  ">
               <Image className="" src={achievement2} alt="" />
             </div>
           </div>
         </div>
         <div className="flex flex-col c-gb:flex-row c-gb:px-[8%] justify-center items-center c-gb:space-x-11 space-y-8 c-gb:space-y-0">
           <div className=" bg-very-dark-purple h-[200px] c-gb:h-[300px] rounded-[20px] w-[85%] c-gb:w-full  flex flex-row  justify-between">
-            <div className="p-10 space-y-[12%]">
+            <div className="p-10 space-y-[20%]">
               <h1 className="text-pearl text-sm sm:text-2xl">UNTOUCHABLE</h1>
               <h1 className="text-pearl text-xs sm:text-md">
                 Win a match without your opponent scoring a single point
               </h1>
             </div>
-            <div className="flex justify-center items-center  ">
+            <div className="flex justify-center items-center   ">
               <Image className="" src={achievement3} alt="" />
             </div>
           </div>
           <div className=" bg-very-dark-purple h-[200px] c-gb:h-[300px]  rounded-[20px] w-[85%] c-gb:w-full flex flex-row  justify-between">
-            <div className="p-10 space-y-[12%]">
+            <div className="p-10 space-y-[20%]">
               <h1 className="text-pearl text-sm sm:text-2xl">AMBASSADOR</h1>
               <h1 className="text-pearl text-xs sm:text-md">
                 Play the First match with your friend
               </h1>
             </div>
-            <div className="flex justify-center items-center  w-[500px] md:w-[40%]">
+            <div className="flex justify-center items-center  md:w-[40%]  ">
               <Image className="" src={achievement4} alt="" />
             </div>
           </div>

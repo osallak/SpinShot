@@ -24,7 +24,7 @@ body {
 }
 
 .pincode-input-container {
-  background: red;
+  /* background: red; */
 
 }
 
@@ -32,6 +32,10 @@ body {
   .pincode-input-container{
     background: #260323;
   }  
+}
+
+.twemoji {
+  height: 50px;
 }
 
 

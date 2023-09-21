@@ -67,7 +67,7 @@ export class RoomController {
     @Body() room: MuteUserInRoomDto,
     @Res({ passthrough: true }) response: ExpressResponse,
   ) {
-    const res = await this.roomService.joinRoom(room);
+    const res = await this.roomService.muteUsersInRoom(room);
     response.status(res.status).json(res);
   }
 }

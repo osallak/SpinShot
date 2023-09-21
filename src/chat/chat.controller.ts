@@ -1,5 +1,13 @@
-import { Controller, Get, Param, Query, Res, UseGuards } from '@nestjs/common';
-import { Response as ExpressResponse } from 'express';
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { Response as ExpressResponse, Request } from 'express';
 import { ChatService } from './chat.service';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -33,14 +41,16 @@ export class ChatController {
     status: 500,
     description: 'Failed to retrieve messages from database',
   })
-	@ApiTags('chat')
+  @ApiTags('chat')
   @UseGuards(JwtAuthGuard)
-  @Get('all/:id')
+  @Get('all')
   async getAll(
-    @Param('id') param: string,
+    @Req() req: Request,
     @Res({ passthrough: true }) expressResponse: ExpressResponse,
   ) {
-    const response = await this.chatService.getAllLatestMessages(param);
+    const response = await this.chatService.getAllLatestMessages(
+      (req as any)?.user?.id,
+    );
     const { status, content } = response;
     expressResponse.status(status).send(this.toObject.call(content));
   }
@@ -51,24 +61,25 @@ export class ChatController {
   })
   @ApiResponse({
     status: 404,
-    description: 'Either the logged in user does not exist or the other user does not exist',
+    description:
+      'Either the logged in user does not exist or the other user does not exist',
   })
   @ApiResponse({
     status: 500,
     description: 'Failed to retrieve messages from database',
   })
-	@ApiTags()
+  @ApiTags('chat')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @Get('individual/:id')
+  @Get('individual')
   async getIndividualMessagesWithAUser(
-    @Param('id') userId: string,
+    @Req() req: Request,
     @Query() query: PaginationQueryDto,
     @Query('user') receiverId: string,
     @Res({ passthrough: true }) response: ExpressResponse,
   ) {
     const res = await this.chatService.getIndividualMessages(
-      userId,
+      (req as any)?.user?.id,
       query,
       receiverId,
     );

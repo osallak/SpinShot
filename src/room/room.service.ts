@@ -21,6 +21,7 @@ export class RoomService {
     private readonly userService: UserService,
   ) {}
 
+	// TODO: use the userId in the request
   async findRoomByName(
     body: JoinRoomDto | CreateRoomDto | MuteUserInRoomDto,
   ): Promise<Room | null> {
@@ -306,6 +307,15 @@ export class RoomService {
           message: 'User must be admin',
         };
       }
+      await this.prismaService.roomChatConversation.updateMany({
+        where: {
+          roomChatId: room.name,
+          userId: room.wannaBeMuted?.userId,
+        },
+        data: {
+          userStatus: UserStatusGroup.MUTED,
+        },
+      });
     } catch {
       this.logger.error('muteUsersInRoom failed');
       return {

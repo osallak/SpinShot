@@ -1,5 +1,6 @@
 import { IsDateString, IsNotEmpty, IsNumber } from 'class-validator';
 
+
 export class SendMessageDto {
   @IsNotEmpty()
   from: string;

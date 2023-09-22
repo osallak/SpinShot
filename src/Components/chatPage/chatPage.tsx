@@ -19,6 +19,7 @@ import SubSideBar from "./subSideBar";
 import NavBar from "../ui/navBar/navBar";
 import Conversation from "./conversation";
 import { Socket } from "socket.io";
+import ExportChannels from "./exportChannels";
 
 function parseJwt (token: string) {
   var base64Url = token.split('.')[1];
@@ -32,6 +33,7 @@ function parseJwt (token: string) {
 const Chat = () => {
   const Router = useRouter();
   const [storedToken, setToken] = useState("");
+  const [open, setOpen] = useState(false);
   // const chatContainerRef = useRef<HTMLDivElement>(null);
   // const [currentMsg, setCurrentMsg] = useState("");
   // const Router = useRouter();
@@ -230,7 +232,8 @@ const Chat = () => {
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 md:space-y-0 space-y-3 flex justify-start px-3 pb-3 md:pt-3 pt-0 items-center md:flex-row flex-col">
       <SideBar />
-      <SubSideBar />
+      <SubSideBar open={open} setOpen={setOpen} />
+      <ExportChannels open={open} setOpen={setOpen} />
       <NavBar />
       <Conversation />
     </div>

@@ -1,8 +1,13 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
+  InternalServerErrorException,
+  Param,
   Post,
+  Query,
+  Req,
   Res,
   UseGuards,
   UsePipes,
@@ -15,13 +20,16 @@ import { RoomService } from './room.service';
 import { JoinRoomDto } from './dtos/join-room.dto';
 import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
 import { Response } from 'src/global/interfaces';
-import { Response as ExpressResponse, response } from 'express';
+import { Response as ExpressResponse, query, response } from 'express';
+import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
+import { QueueScheduler } from 'rxjs/internal/scheduler/QueueScheduler';
 
 //TODO: extract the userId from the token
 @ApiTags('room')
 @Controller('room')
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
+  // TODO check if the user exists
   @ApiResponse({
     status: 201,
     schema: {
@@ -32,14 +40,21 @@ export class RoomController {
     },
   })
   @ApiBearerAuth()
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('add')
   async createRoom(
+    @Req() request: Request,
     @Body() room: CreateRoomDto,
-    @Res({ passthrough: true }) response: ExpressResponse,
+    @Res() response: ExpressResponse,
   ) {
-    const res = await this.roomService.createRoom(room);
-    response.status(res.status).json(res);
+    const res = await this.roomService.createRoom(
+      (request as any)?.user?.id,
+      room,
+    );
+    if (res) return response.status(res.status).json(res);
+    else {
+      return response.status(500).send('Error Fatal');
+    }
   }
 
   @ApiResponse({
@@ -51,23 +66,66 @@ export class RoomController {
       },
     },
   })
-  // @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Post('join')
   async joinRoom(
+    @Req() request: Request,
     @Body() room: JoinRoomDto,
     @Res({ passthrough: true }) response: ExpressResponse,
   ) {
-    const res = await this.roomService.joinRoom(room);
-    response.status(res.status).json(res);
+    const res = await this.roomService.joinRoom(
+      (request as any)?.user?.id,
+      room,
+    );
+    if (res) return response.status(res.status).json(res.message);
+    else {
+      return response.status(500).send('Error Fatal');
+    }
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Post('mute')
   async muteUsersInRoom(
+    @Req() request: Request,
     @Body() room: MuteUserInRoomDto,
-    @Res({ passthrough: true }) response: ExpressResponse,
+    @Res() response: ExpressResponse,
   ) {
-    const res = await this.roomService.muteUsersInRoom(room);
-    response.status(res.status).json(res);
+    const res = await this.roomService.muteUserInRoom(
+      (request as any)?.user?.id,
+      room,
+    );
+    if (res) return response.status(res.status).json(res);
+    else {
+      return response.status(500).send('Error Fatal');
+    }
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('all')
+  async getAllRooms(@Req() request: Request, @Res() response: ExpressResponse) {
+    const res = await this.roomService.getAllRooms((request as any)?.user?.id);
+    if (res) return response.status(res.status).json(res?.data);
+    else {
+      return response.status(500).send('Error Fatal');
+    }
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('individual/:id')
+  async getSpecificRoom(
+    @Param(':id') room: string,
+    @Req() request: Request,
+    @Res() response: ExpressResponse,
+    @Query() query: PaginationQueryDto,
+  ) {
+    const res = await this.roomService.getSpecificRoom(query, room);
+    if (res) return response.status(res.status).json(res.content);
+    else {
+      return response.status(500).send('Error Fatal');
+    }
   }
 }

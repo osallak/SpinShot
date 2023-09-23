@@ -172,6 +172,19 @@ export class ChatService {
     }
   }
 
+  private formatResponseBasedOnUser(message, userId) {
+    // TODO
+    console.log('before', message);
+    let output = [];
+    for (let i = 0; i < message.length; ++i) {
+      let { Sender, Receiver, hi } = message[i];
+      console.log(hi);
+      output.push(Sender.id === userId ? { Receiver, hi } : { Sender, hi });
+    }
+    console.log(output);
+    return output;
+  }
+
   extractJwtToken(client: Socket): JwtAuthPayload | undefined {
     const bearerToken = client.handshake.headers?.authorization?.split(' ')[1];
     if (!bearerToken) {
@@ -222,11 +235,25 @@ export class ChatService {
           sender: true,
           sentAt: true,
           message: true,
+          Receiver: {
+            select: {
+              id: true,
+              avatar: true,
+              username: true,
+            },
+          },
+          Sender: {
+            select: {
+              id: true,
+              avatar: true,
+              username: true,
+            },
+          },
         },
       });
       return {
         status: 200,
-        content: message,
+        content: this.formatResponseBasedOnUser(message, userId),
       };
     } catch {
       return {
@@ -239,64 +266,70 @@ export class ChatService {
   async getIndividualMessages(
     userId: string,
     query: PaginationQueryDto,
-		receiverId: string,
+    receiverId: string,
   ) {
-    // try {
-    const users = await this.prismaService.user.findMany({
-      where: {
-        OR: [
-          {
-            id: userId,
-          },
-          {
-            id: receiverId,
-          },
-        ],
-      },
-    });
+    try {
+      const users = await this.prismaService.user.findMany({
+        where: {
+          OR: [
+            {
+              id: userId,
+            },
+            {
+              id: receiverId,
+            },
+          ],
+        },
+      });
 
-    if (!users || !receiverId || (users && (await users).length != 2)) {
+      if (!users || !receiverId || (users && (await users).length != 2)) {
+        return {
+          status: 404,
+          content: 'Users were not found',
+        };
+      }
+      const toFrom = [userId, receiverId].sort();
+      const content = await this.prismaService.conversation.findMany({
+        skip: query.getSkip(),
+        take: query.limit,
+        orderBy: {
+          sentAt: 'asc',
+        },
+        where: {
+          AND: [
+            {
+              senderId: toFrom[0],
+            },
+            {
+              receiverId: toFrom[1],
+            },
+          ],
+        },
+        select: {
+          sentAt: true,
+          sender: true,
+          message: true,
+        },
+      });
       return {
-        status: 404,
-        content: 'Users were not found',
+        status: 200,
+        content: serializePaginationResponse(
+          content,
+          content.length,
+          query.limit,
+        ),
+      };
+      // } catch {
+      //   return {
+      //     status: 500,
+      //     content: 'Cannot get individual messages',
+      //   };
+      // }
+    } catch {
+      return {
+        status: 500,
+        content: 'Failed to retrieve messages',
       };
     }
-    const toFrom = [userId, receiverId].sort();
-    const content = await this.prismaService.conversation.findMany({
-      skip: query.getSkip(),
-      take: query.limit,
-      orderBy: {
-        sentAt: 'asc',
-      },
-      where: {
-        AND: [
-          {
-            senderId: toFrom[0],
-          },
-          {
-            receiverId: toFrom[1],
-          },
-        ],
-      },
-      select: {
-        sentAt: true,
-        sender: true,
-        message: true,
-      },
-    });
-    return {
-      status: 200,
-      content: serializePaginationResponse(
-        content,
-        content.length,
-        query.limit,
-      ),
-    };
-    // } catch {
-    //   return {
-    //     status: 500,
-    //     content: 'Cannot get individual messages',
-    //   };
-    // }
   }
 }

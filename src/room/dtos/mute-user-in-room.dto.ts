@@ -1,12 +1,25 @@
-import { RoomType } from '@prisma/client';
-import { IsEnum, IsNotEmpty, IsNotEmptyObject } from 'class-validator';
+import { MuteDurations, RoomType } from '@prisma/client';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNotEmptyObject,
+  IsNumber,
+  ValidateNested,
+  isNotEmpty,
+  isNumber,
+} from 'class-validator';
 
 class userToBeMuted {
+  @IsNotEmpty()
   userId: string;
-  time: Date;
+  @IsEnum(MuteDurations)
+  time: MuteDurations; 
+  @IsNumber()
+  mutedAt: bigint;
 }
 
 export class MuteUserInRoomDto {
+  @ValidateNested()
   @IsNotEmptyObject()
   wannaBeMuted: userToBeMuted;
 
@@ -16,6 +29,4 @@ export class MuteUserInRoomDto {
   @IsEnum(RoomType)
   type: RoomType;
 
-  @IsNotEmpty()
-  userId: string;
 }

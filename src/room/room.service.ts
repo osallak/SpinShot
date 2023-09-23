@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRoomDto } from './dtos/create-room.dto';
 import { JoinRoomDto } from './dtos/join-room.dto';
 import {
+  MuteDurations,
   RoomType,
   UserRole,
   UserStatus,
@@ -13,6 +14,8 @@ import { Response } from 'src/global/interfaces';
 import { Room } from './dtos/find-room.dto';
 import { UserService } from 'src/user/user.service';
 import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
+import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
+import { serializePaginationResponse } from 'src/user/helpers';
 @Injectable()
 export class RoomService {
   private readonly logger: Logger = new Logger('room');
@@ -21,7 +24,7 @@ export class RoomService {
     private readonly userService: UserService,
   ) {}
 
-	// TODO: use the userId in the request
+  // TODO: use the userId in the request
   async findRoomByName(
     body: JoinRoomDto | CreateRoomDto | MuteUserInRoomDto,
   ): Promise<Room | null> {
@@ -59,20 +62,14 @@ export class RoomService {
     }
   }
 
-  async createRoom(room: CreateRoomDto): Promise<Response> {
+  async createRoom(userId: string, room: CreateRoomDto): Promise<Response> {
     // TODO: the user who created the room is by default the admin, DONE!
     try {
-      if (!(await this.userService.findOneById(room.userId))) {
-        return {
-          status: 403,
-          message: 'User does not exist',
-        };
-      }
       const pRoom = await this.findRoomByName(room);
       if (pRoom) {
         return {
           status: 400,
-          message: 'Room exists',
+          message: 'Room Exists',
         };
       }
       let passwordToBeSaved = null;
@@ -80,7 +77,7 @@ export class RoomService {
         if (!room?.password || room.password === '') {
           return {
             status: 400,
-            message: 'Password must not be empty',
+            message: 'Password Must Not Be Empty',
           };
         }
         const salt = await bcrypt.genSalt(10);
@@ -94,7 +91,7 @@ export class RoomService {
           password: passwordToBeSaved,
         },
       });
-      await this.createNewMember(room.userId, room.name, UserRole.ADMIN);
+      await this.createNewMember(userId, room.name, UserRole.ADMIN);
       return {
         status: 201,
         message: 'Room created successfully',
@@ -120,7 +117,7 @@ export class RoomService {
         },
       },
     });
-    if (res) {
+    if (res && (res.userStatus === UserStatusGroup.MUTED || !res.userStatus)) {
       return true;
     } else {
       return false;
@@ -165,7 +162,7 @@ export class RoomService {
         userStatus: true,
       },
     });
-    if (user?.userStatus) {
+    if (user && user?.userStatus) {
       return user.userStatus;
     } else {
       return null;
@@ -190,64 +187,67 @@ export class RoomService {
     });
   }
 
-  async joinRoom(room: JoinRoomDto): Promise<Response> {
-    try {
-      if (!(await this.userService.findOneById(room.userId))) {
-        return {
-          status: 403,
-          message: 'User does not exist',
-        };
-      }
-      const pRoom = await this.findRoomByName(room);
-      if (!pRoom) {
-        return {
-          status: 404,
-          message: 'Room was not found',
-        };
-      }
-      if (await this.isUserAMember(room.userId, room.name)) {
-        return {
-          status: 400,
-          message: 'User is already a member',
-        };
-      }
-
-      if (pRoom.type === RoomType.PROTECTED) {
-        if (
-          !room?.password ||
-          !(await bcrypt.compare(room?.password ?? '', pRoom.password))
-        ) {
-          return {
-            status: 401,
-            message: 'Invalid credentials',
-          };
-        }
-      } else if (pRoom.type === RoomType.PRIVATE) {
-        const userStatusInGroup = await this.getUserRoomStatus(
-          room.userId,
-          room.name,
-        );
-        if (userStatusInGroup != UserStatusGroup.INVITED) {
-          return {
-            status: 403,
-            message: 'Invalid invitation',
-          };
-        }
-        // TODO should I reset the groupStatus, yes
-        await this.updateUserStatusInGroup(room.userId, room.name, null);
-      }
-      await this.createNewMember(room.userId, room.name, UserRole.BASIC);
+  async joinRoom(userId: string, room: JoinRoomDto): Promise<Response> {
+    const pRoom = await this.findRoomByName(room);
+    if (!pRoom) {
       return {
-        status: 200,
-        message: 'Room has new member',
-      };
-    } catch (e) {
-      this.logger.error('joinRoom failed');
-      return {
-        status: 500,
-        message: 'Room panicked',
+        status: 400,
+        message: 'Room Does Not Exist',
       };
     }
+
+    const isUserAMember = await this.isUserAMember(userId, room.name);
+    if (isUserAMember) {
+      return {
+        status: 400,
+        message: 'User Is Already A Member',
+      };
+    }
+    if (pRoom.type === RoomType.PRIVATE) {
+      const user = await this.prismaService.roomChatConversation.findUnique({
+        where: {
+          roomChatId_userId: {
+            roomChatId: room.name,
+            userId: userId,
+          },
+        },
+        select: {
+          userStatus: true,
+        },
+      });
+      if (user && user.userStatus === UserStatusGroup.INVITED) {
+        await this.prismaService.roomChatConversation.update({
+          where: {
+            roomChatId_userId: {
+              roomChatId: room.name,
+              userId: userId,
+            },
+          },
+          data: {
+            userStatus: null,
+          },
+        });
+      } else {
+        return {
+          status: 403,
+          message: 'User Is Not Invited',
+        };
+      }
+    } else {
+      if (pRoom.type === RoomType.PROTECTED) {
+        if (!(await bcrypt.compare(room?.password ?? '', pRoom.password))) {
+          return {
+            status: 403,
+            message: 'Invalid Credentials',
+          };
+        }
+      }
+      await this.createNewMember(userId, room.name, UserRole.BASIC);
+    }
+    return {
+      status: 200,
+      message: 'User Is Now A Member',
+    };
   }
 
   private async isUserAdmin(userId: string, roomName: string) {
@@ -285,42 +285,159 @@ export class RoomService {
     return res?.userRole ?? null;
   }
 
-  async muteUsersInRoom(room: MuteUserInRoomDto): Promise<Response> {
+  async muteUserInRoom(
+    userId: string,
+    room: MuteUserInRoomDto,
+  ): Promise<Response> {
     try {
       const pRoom = await this.findRoomByName(room);
-      if (!(await this.userService.findOneById(room.userId))) {
-        return {
-          status: 403,
-          message: 'User does not exist',
-        };
-      }
       if (!pRoom) {
         return {
           status: 404,
           message: 'Room was not found',
         };
       }
-      const userRole = await this.getUserRole(room.userId, room.name);
+      const userRole = await this.getUserRole(userId, room.name);
       if (userRole != UserRole.ADMIN) {
         return {
           status: 403,
           message: 'User must be admin',
         };
       }
-      await this.prismaService.roomChatConversation.updateMany({
+      const isUserAlreadyMuted =
+        await this.prismaService.roomChatConversation.findUnique({
+          where: {
+            roomChatId_userId: {
+              roomChatId: room.name,
+              userId: room.wannaBeMuted.userId,
+            },
+          },
+          select: {
+            userStatus: true,
+          },
+        });
+      if (isUserAlreadyMuted) {
+        if (isUserAlreadyMuted.userStatus === UserStatusGroup.MUTED) {
+          return {
+            status: 400,
+            message: 'User already muted',
+          };
+        }
+      } else {
+        return {
+          status: 400,
+          message: 'User Does Not Exist',
+        };
+      }
+      await this.prismaService.roomChatConversation.update({
         where: {
-          roomChatId: room.name,
-          userId: room.wannaBeMuted?.userId,
+          roomChatId_userId: {
+            roomChatId: pRoom.name,
+            userId: room.wannaBeMuted.userId,
+          },
         },
         data: {
           userStatus: UserStatusGroup.MUTED,
+          muteDuration: room.wannaBeMuted.time as MuteDurations,
         },
       });
-    } catch {
+      return {
+        status: 200,
+        message: 'User Was Muted',
+      };
+    } catch (e) {
+      this.logger.error(e.message);
       this.logger.error('muteUsersInRoom failed');
       return {
         status: 500,
         message: 'Operation mute is impossible',
+      };
+    }
+  }
+
+  async getAllRooms(userId: string): Promise<Response> {
+    try {
+      const res = await this.prismaService.roomChatConversation.findMany({
+        where: {
+          userId: userId,
+        },
+        select: {
+          Message: {
+            orderBy: {
+              sentAt: 'desc',
+            },
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                },
+              },
+            },
+            take: 1,
+          },
+          roomChatId: true,
+          RoomChat: {
+            select: {
+              type: true,
+            },
+          },
+        },
+      });
+      return {
+        status: 200,
+        message: 'Loading successful',
+        data: res ?? [],
+      };
+    } catch {
+      return {
+        status: 500,
+        message: 'Could not load messages from database',
+      };
+    }
+  }
+
+  async getSpecificRoom(query: PaginationQueryDto, roomId: string) {
+    try {
+      const content = await this.prismaService.message.findMany({
+        where: {
+          RoomChatConversation: {
+            roomChatId: roomId,
+          },
+        },
+        orderBy: {
+          sentAt: 'desc',
+        },
+        skip: query.getSkip(),
+        take: query.limit,
+        select: {
+          message: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+        },
+      });
+      return {
+        status: 200,
+        content: serializePaginationResponse(
+          content,
+          content.length,
+          query.limit,
+        ),
+      };
+      // } catch {
+      //   return {
+      //     status: 500,
+      //     content: 'Cannot get individual messages',
+      //   };
+      // }
+    } catch {
+      return {
+        status: 500,
+        content: 'Failed to retrieve messages',
       };
     }
   }

@@ -34,6 +34,7 @@ model User {
   Received             Conversation[]         @relation("receiver")
   SentNotif            Notification[]         @relation("sent")
   ReceivedNotif        Notification[]         @relation("received")
+  messages             Message[]              @relation("messages")
 
   @@map("user")
 }
@@ -134,11 +135,13 @@ model RoomChat {
 }
 
 model RoomChatConversation {
-  id         String           @id @default(uuid())
-  roomChatId String           @map("room_chat_id")
-  userId     String           @map("user_id")
-  userStatus UserStatusGroup? @map("user_status")
-  userRole   UserRole
+  id           String           @id @default(uuid())
+  roomChatId   String           @map("room_chat_id")
+  userId       String           @map("user_id")
+  userStatus   UserStatusGroup? @map("user_status")
+  muteDuration MuteDurations?
+  mutedAt      BigInt?
+  userRole     UserRole
 
   User     User      @relation(fields: [userId], references: [id])
   RoomChat RoomChat  @relation(fields: [roomChatId], references: [id])
@@ -154,7 +157,9 @@ model Message {
   senderId String @map("sender_id")
 
   RoomChatConversation   RoomChatConversation @relation(fields: [roomChatConversationId], references: [id])
+  user                   User                 @relation("messages", fields: [senderId], references: [id])
   roomChatConversationId String               @map("room_chat_conversation_id")
+  sentAt                 BigInt
 
   @@map("message")
 }
@@ -223,6 +228,12 @@ enum NotifType {
   FRIEND_REQUEST
 
   @@map("notif_type")
+}
+
+enum MuteDurations {
+  EIGHT_HOURS
+  ONE_WEEK
+  ALWAYS
 }
 
 enum FriendshipStatus {

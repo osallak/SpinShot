@@ -12,20 +12,11 @@ import { ChatService } from './chat.service';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards';
+import { toObject } from 'src/global/interfaces';
 
 @ApiTags('chat')
 @Controller('chat')
 export class ChatController {
-  // this is for bigInt because it cannot be serialized
-  private toObject() {
-    return JSON.parse(
-      JSON.stringify(
-        this,
-        (_, value) => (typeof value === 'bigint' ? value.toString() : value), // return everything else unchanged
-      ),
-    );
-  }
-
   constructor(private readonly chatService: ChatService) {}
 
   @ApiBearerAuth()
@@ -52,7 +43,7 @@ export class ChatController {
       (req as any)?.user?.id,
     );
     const { status, content } = response;
-    expressResponse.status(status).send(this.toObject.call(content));
+    return expressResponse.status(status).json(toObject.call(content));
   }
 
   @ApiResponse({
@@ -83,7 +74,7 @@ export class ChatController {
       query,
       receiverId,
     );
-    const { status, content } = res;
-    response.status(status).send(this.toObject.call(content));
+    if (res)
+      return response.status(res.status).json(toObject.call(res.content));
   }
 }

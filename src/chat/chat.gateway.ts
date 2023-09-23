@@ -67,11 +67,4 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		// return this.chatService.sendGroupMessage(body);
 	}
 
-	// TODO: remove this is for testing purposes
-	@SubscribeMessage('hello')
-	async test(@MessageBody() body: string, @ConnectedSocket() socket: Socket) {
-		console.log(body);
-		console.log(socket.id);
-		socket.emit("hello", "sir t7wa");
-	}
 }

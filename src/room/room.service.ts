@@ -24,7 +24,6 @@ export class RoomService {
     private readonly userService: UserService,
   ) {}
 
-  // TODO: use the userId in the request
   async findRoomByName(
     body: JoinRoomDto | CreateRoomDto | MuteUserInRoomDto,
   ): Promise<Room | null> {
@@ -63,8 +62,13 @@ export class RoomService {
   }
 
   async createRoom(userId: string, room: CreateRoomDto): Promise<Response> {
-    // TODO: the user who created the room is by default the admin, DONE!
     try {
+      if (!userId) {
+        return {
+          status: 404,
+          message: 'User Was Not Found',
+        };
+      }
       const pRoom = await this.findRoomByName(room);
       if (pRoom) {
         return {
@@ -188,6 +192,12 @@ export class RoomService {
   }
 
   async joinRoom(userId: string, room: JoinRoomDto): Promise<Response> {
+    if (!userId) {
+      return {
+        status: 404,
+        message: 'User Was Not Found',
+      };
+    }
     const pRoom = await this.findRoomByName(room);
     if (!pRoom) {
       return {
@@ -290,6 +300,12 @@ export class RoomService {
     room: MuteUserInRoomDto,
   ): Promise<Response> {
     try {
+      if (!userId) {
+        return {
+          status: 404,
+          message: 'User Was Not Found',
+        };
+      }
       const pRoom = await this.findRoomByName(room);
       if (!pRoom) {
         return {
@@ -357,6 +373,12 @@ export class RoomService {
 
   async getAllRooms(userId: string): Promise<Response> {
     try {
+      if (!userId) {
+        return {
+          status: 404,
+          message: 'User Was Not Found',
+        };
+      }
       const res = await this.prismaService.roomChatConversation.findMany({
         where: {
           userId: userId,
@@ -399,6 +421,12 @@ export class RoomService {
 
   async getSpecificRoom(query: PaginationQueryDto, roomId: string) {
     try {
+			if (!roomId) {
+				return {
+					status: 404,
+					content: "Room Was Not Found",
+				}
+			}
       const content = await this.prismaService.message.findMany({
         where: {
           RoomChatConversation: {
@@ -418,6 +446,7 @@ export class RoomService {
               username: true,
             },
           },
+          sentAt: true,
         },
       });
       return {

@@ -19,17 +19,15 @@ import { CreateRoomDto } from './dtos/create-room.dto';
 import { RoomService } from './room.service';
 import { JoinRoomDto } from './dtos/join-room.dto';
 import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
-import { Response } from 'src/global/interfaces';
+import { Response, toObject } from 'src/global/interfaces';
 import { Response as ExpressResponse, query, response } from 'express';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import { QueueScheduler } from 'rxjs/internal/scheduler/QueueScheduler';
 
-//TODO: extract the userId from the token
 @ApiTags('room')
 @Controller('room')
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
-  // TODO check if the user exists
   @ApiResponse({
     status: 201,
     schema: {
@@ -123,7 +121,8 @@ export class RoomController {
     @Query() query: PaginationQueryDto,
   ) {
     const res = await this.roomService.getSpecificRoom(query, room);
-    if (res) return response.status(res.status).json(res.content);
+    if (res)
+      return response.status(res.status).json(toObject.call(res.content));
     else {
       return response.status(500).send('Error Fatal');
     }

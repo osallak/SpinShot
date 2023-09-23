@@ -19,7 +19,6 @@ import { NotificationService } from 'src/notification/notification.service';
 import { UserService } from 'src/user/user.service';
 import { serializePaginationResponse } from 'src/user/helpers';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
-
 @Injectable()
 export class ChatService {
   private World: Map<string, ChatUser> = new Map<string, ChatUser>();
@@ -176,12 +175,9 @@ export class ChatService {
     // TODO
     console.log('before', message);
     let output = [];
-    for (let i = 0; i < message.length; ++i) {
-      let { Sender, Receiver, hi } = message[i];
-      console.log(hi);
-      output.push(Sender.id === userId ? { Receiver, hi } : { Sender, hi });
-    }
-    console.log(output);
+    message.array.forEach((element) => {
+      output.push(element);
+    });
     return output;
   }
 
@@ -205,6 +201,12 @@ export class ChatService {
 
   async getAllLatestMessages(userId: string) {
     try {
+      if (!userId) {
+        return {
+          status: 404,
+          message: 'User Was Not Found',
+        };
+      }
       const user = await this.userService.findOneById(userId);
       if (!user) {
         return {
@@ -282,7 +284,7 @@ export class ChatService {
         },
       });
 
-      if (!users || !receiverId || (users && (await users).length != 2)) {
+      if (!users || !receiverId || (users && users.length != 2)) {
         return {
           status: 404,
           content: 'Users were not found',
@@ -311,6 +313,7 @@ export class ChatService {
           message: true,
         },
       });
+			console.log(content);
       return {
         status: 200,
         content: serializePaginationResponse(
@@ -319,12 +322,6 @@ export class ChatService {
           query.limit,
         ),
       };
-      // } catch {
-      //   return {
-      //     status: 500,
-      //     content: 'Cannot get individual messages',
-      //   };
-      // }
     } catch {
       return {
         status: 500,

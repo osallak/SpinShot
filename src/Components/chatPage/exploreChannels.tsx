@@ -9,9 +9,10 @@ import Image from "next/image";
 import exportChannelsIcon from "../../../public/ExportChannels.svg";
 import { Dialog, Transition } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Fragment } from "react";
+import { Fragment, MouseEvent, useState } from "react";
 import SimpleButton from "../ui/Buttons/SimpleButton";
 import pearlLock from "../../../public/pearlLock.svg";
+import ProtectedModal from "./channelsStatus/protectedModal";
 
 const ExportChannels = (props: { open: boolean; setOpen: any }) => {
   const content = [
@@ -171,6 +172,8 @@ const ExportChannels = (props: { open: boolean; setOpen: any }) => {
       status: "protected",
     },
   ];
+  const [subOpen, setSubOpen] = useState(false);
+  const [status, setStatus] = useState("");
 
   const sp = (name: string) => {
     const res = name.split(" ");
@@ -178,14 +181,19 @@ const ExportChannels = (props: { open: boolean; setOpen: any }) => {
     return res;
   };
 
-  function closeModal() {
+  const closeModal = () => {
+    // event.preventDefault()
     props.setOpen(false);
   }
 
-  const joinChannel = () => {
-    console.log("hello world from the other side");
+  const joinChannel = (status: string) => (event:MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setSubOpen(true);
+    setStatus(status);
   };
   return (
+    <>
+    {subOpen && <ProtectedModal open={subOpen} setOpen={setSubOpen}  status={status} />}
     <Transition appear show={props.open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={closeModal}>
         <Transition.Child
@@ -269,7 +277,7 @@ const ExportChannels = (props: { open: boolean; setOpen: any }) => {
                                 className="md:w-16 sm:w-12 w-10 h-5 rounded-full flex justify-center items-center bg-peridot"
                               >
                                 <button
-                                  onClick={joinChannel}
+                                  onClick={joinChannel(content.status)}
                                   className={`"bg-peridot" rounded-full text-lg sm:text-xl w-full h-full font-Passion-One text-very-dark-purple`}
                                 >
                                   <p className="font-Passion-One text-very-dark-purple text-sm">
@@ -290,6 +298,7 @@ const ExportChannels = (props: { open: boolean; setOpen: any }) => {
         </div>
       </Dialog>
     </Transition>
+    </>
   );
 };
 

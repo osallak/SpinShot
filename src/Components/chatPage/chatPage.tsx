@@ -19,7 +19,7 @@ import SubSideBar from "./subSideBar";
 import NavBar from "../ui/navBar/navBar";
 import Conversation from "./conversation";
 import { Socket } from "socket.io";
-import ExportChannels from "./exportChannels";
+import ExportChannels from "./exploreChannels";
 
 function parseJwt (token: string) {
   var base64Url = token.split('.')[1];

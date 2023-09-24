@@ -6,7 +6,7 @@ const IconButton: React.FC<ButtonProps> = ({ icon, content, onclick }) => {
   return (
     <motion.div
       whileTap={{ scale: 0.9 }}
-      className="rounded-full flex justify-center items-center bg-peridot py-1.5 w-full h-full"
+      className="rounded-full flex justify-center items-center bg-peridot w-full h-full "
     >
       <button
         onClick={onclick}

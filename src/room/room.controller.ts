@@ -1,17 +1,15 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
-  HttpStatus,
-  InternalServerErrorException,
   Param,
+  Patch,
   Post,
   Query,
   Req,
   Res,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards';
@@ -20,9 +18,9 @@ import { RoomService } from './room.service';
 import { JoinRoomDto } from './dtos/join-room.dto';
 import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
 import { Response, toObject } from 'src/global/interfaces';
-import { Response as ExpressResponse, query, response } from 'express';
+import { Response as ExpressResponse } from 'express';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
-import { QueueScheduler } from 'rxjs/internal/scheduler/QueueScheduler';
+import { Response as CustomResponse } from 'src/global/interfaces';
 
 @ApiTags('room')
 @Controller('room')
@@ -37,6 +35,8 @@ export class RoomController {
       },
     },
   })
+
+  // TODO: there are three roles channel owner, administrator and basic
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post('add')
@@ -70,7 +70,7 @@ export class RoomController {
   async joinRoom(
     @Req() request: Request,
     @Body() room: JoinRoomDto,
-    @Res({ passthrough: true }) response: ExpressResponse,
+    @Res() response: ExpressResponse,
   ) {
     const res = await this.roomService.joinRoom(
       (request as any)?.user?.id,
@@ -111,6 +111,7 @@ export class RoomController {
     }
   }
 
+  //TODO: when getting the list of users also check for the blocked when because they should be hidden in the frontend
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('individual/:id')
@@ -125,6 +126,53 @@ export class RoomController {
       return response.status(res.status).json(toObject.call(res.content));
     else {
       return response.status(500).send('Error Fatal');
+    }
+  }
+  // TODO: kick ban, invite, makeAdmin
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Delete('kick')
+  async kickUserFromRoom(
+    @Query('room') room: string,
+    @Query('user') userToBeKicked: string,
+    @Req() request: Request,
+    @Res() response: ExpressResponse,
+  ) {
+    try {
+      const res = await this.roomService.kickUserFromRoom(
+        (request as any)?.user?.id,
+        room,
+        userToBeKicked,
+      );
+      if (res) return response.status(res.status).json(res.message);
+    } catch (e) {
+      return response
+        .status(e?.status ?? 500)
+        .json(e?.message ?? 'Internal Server Error');
+    }
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Patch('ban')
+  async banUserFromRoom(
+    @Query('room') room: string,
+    @Query('user') userToBeBanned: string,
+    @Req() request: Request,
+    @Res() response: ExpressResponse,
+  ) {
+    try {
+      const res = await this.roomService.banUserFromRoom(
+        (request as any)?.user?.id,
+        room,
+        userToBeBanned,
+      );
+      if (res) return response.status(res.status).json(res.message);
+    } catch (e) {
+      return response
+        .status(e?.status ?? 500)
+        .json(e?.message ?? 'Internal Server Error');
     }
   }
 }

@@ -313,7 +313,6 @@ export class ChatService {
           message: true,
         },
       });
-			console.log(content);
       return {
         status: 200,
         content: serializePaginationResponse(

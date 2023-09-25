@@ -37,7 +37,7 @@ export class ChatController {
   @Get('all')
   async getAll(
     @Req() req: Request,
-    @Res({ passthrough: true }) expressResponse: ExpressResponse,
+    @Res() expressResponse: ExpressResponse,
   ) {
     const response = await this.chatService.getAllLatestMessages(
       (req as any)?.user?.id,
@@ -67,14 +67,15 @@ export class ChatController {
     @Req() req: Request,
     @Query() query: PaginationQueryDto,
     @Query('user') receiverId: string,
-    @Res({ passthrough: true }) response: ExpressResponse,
+    @Res() response: ExpressResponse,
   ) {
     const res = await this.chatService.getIndividualMessages(
       (req as any)?.user?.id,
       query,
       receiverId,
     );
-    if (res)
-      return response.status(res.status).json(toObject.call(res.content));
+		if (res) {
+			return response.status(res.status).json(res.content);
+		}
   }
 }

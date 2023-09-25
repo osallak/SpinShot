@@ -218,6 +218,7 @@ enum RoomType {
 enum UserRole {
   BASIC
   ADMIN
+	OWNER
 
   @@map("user_role")
 }

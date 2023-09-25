@@ -95,7 +95,7 @@ export class RoomService {
           password: passwordToBeSaved,
         },
       });
-      await this.createNewMember(userId, room.name, UserRole.ADMIN);
+      await this.createNewMember(userId, room.name, UserRole.OWNER);
       return {
         status: 201,
         message: 'Room created successfully',
@@ -314,7 +314,7 @@ export class RoomService {
         };
       }
       const userRole = await this.getUserRole(userId, room.name);
-      if (userRole != UserRole.ADMIN) {
+      if (!(userRole == UserRole.ADMIN || userRole === UserRole.OWNER)) {
         return {
           status: 403,
           message: 'User must be admin',
@@ -330,6 +330,7 @@ export class RoomService {
           },
           select: {
             userStatus: true,
+            userRole: true,
           },
         });
       if (isUserAlreadyMuted) {
@@ -337,6 +338,12 @@ export class RoomService {
           return {
             status: 400,
             message: 'User already muted',
+          };
+        }
+        if (isUserAlreadyMuted.userRole === UserRole.OWNER) {
+          return {
+            status: 403,
+            message: 'Owner Cannot Be Muted',
           };
         }
       } else {
@@ -362,7 +369,6 @@ export class RoomService {
         message: 'User Was Muted',
       };
     } catch (e) {
-      this.logger.error(e.message);
       this.logger.error('muteUsersInRoom failed');
       return {
         status: 500,
@@ -421,12 +427,12 @@ export class RoomService {
 
   async getSpecificRoom(query: PaginationQueryDto, roomId: string) {
     try {
-			if (!roomId) {
-				return {
-					status: 404,
-					content: "Room Was Not Found",
-				}
-			}
+      if (!roomId) {
+        return {
+          status: 404,
+          content: 'Room Was Not Found',
+        };
+      }
       const content = await this.prismaService.message.findMany({
         where: {
           RoomChatConversation: {
@@ -457,17 +463,117 @@ export class RoomService {
           query.limit,
         ),
       };
-      // } catch {
-      //   return {
-      //     status: 500,
-      //     content: 'Cannot get individual messages',
-      //   };
-      // }
     } catch {
       return {
         status: 500,
         content: 'Failed to retrieve messages',
       };
     }
+  }
+
+  async kickUser(room: string, user: string): Promise<any> {
+    return this.prismaService.roomChatConversation.delete({
+      where: {
+        roomChatId_userId: {
+          roomChatId: room,
+          userId: user,
+        },
+      },
+    });
+  }
+
+  async operateInRoom(
+    admin: string,
+    room: string,
+    user: string,
+    operation: Function,
+  ): Promise<Response> {
+    if (!admin || !room || !user) {
+      return {
+        status: 400,
+        message: 'Missing parameters',
+      };
+    }
+
+    return new Promise(async (resolve, reject) => {
+      const userStatus =
+        await this.prismaService.roomChatConversation.findUnique({
+          where: {
+            roomChatId_userId: {
+              roomChatId: room,
+              userId: admin,
+            },
+          },
+          select: {
+            userRole: true,
+          },
+        });
+      if (!userStatus) {
+        reject({
+          status: 404,
+          message: 'User Or Channel Does Not Exist',
+        });
+      } else {
+        if (
+          userStatus.userRole === UserRole.ADMIN ||
+          userStatus.userRole === UserRole.OWNER
+        ) {
+          const other =
+            await this.prismaService.roomChatConversation.findUnique({
+              where: {
+                roomChatId_userId: {
+                  roomChatId: room,
+                  userId: user,
+                },
+              },
+            });
+          if (!other) {
+            reject({
+              status: 404,
+              message: 'User Was Not Found',
+            });
+          } else {
+            if (other.userRole === UserRole.OWNER) {
+              reject({
+                status: 403,
+                message: 'Owner Cannot Be Kicked',
+              });
+            } else {
+              const res = await operation(room, user);
+              resolve({
+                status: res.status,
+                message: res.message,
+              });
+            }
+          }
+        } else {
+          reject({
+            status: 403,
+            message: 'Unprivileged User Trying To Make Privileged Operation',
+          });
+        }
+      }
+    });
+  }
+
+  async kickUserFromRoom(
+    admin: string,
+    room: string,
+    userToBeKicked: string,
+  ): Promise<Response> {
+    return this.operateInRoom(admin, room, userToBeKicked, this.kickUser);
+  }
+  async banUserFromRoom(
+    admin: string,
+    room: string,
+    userToBanned: string,
+  ): Promise<Response> {
+    if (!admin || !room || !userToBanned) {
+      return {
+        status: 400,
+        message: 'Missing parameters',
+      };
+    }
+    return new Promise(async (resolve, reject) => {});
   }
 }

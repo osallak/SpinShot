@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Tabs, TabsHeader, Tab } from "@material-tailwind/react";
+import { Tabs, TabsHeader, Tab, TabsBody, TabPanel } from "@material-tailwind/react";
 
 const SwitchButton = () => {
   const [activeTab, setActiveTab] = useState("public");
@@ -12,30 +12,28 @@ const SwitchButton = () => {
       label: "Private",
       value: "private",
     },
+    {
+      label: "Protected",
+      value: "Protected",
+    },
   ];
+
   return (
-    <Tabs value={activeTab}>
-      <TabsHeader
-        className="bg-very-dark-purple rounded-full md:w-48 md:h-10 h-7 w-40"
-        indicatorProps={{
-          className: "bg-peridot rounded-full",
-        }}
-      >
+    <Tabs value="html">
+      <TabsHeader>
         {data.map(({ label, value }) => (
-          <Tab
-            key={value}
-            value={value}
-            onClick={() => setActiveTab(value)}
-            className={
-              activeTab === value
-                ? "text-very-dark-purple text-sm md:text-xl font-Passion-One"
-                : "text-pearl text-sm md:text-xl font-Passion-One"
-            }
-          >
+          <Tab key={value} value={value}>
             {label}
           </Tab>
         ))}
       </TabsHeader>
+      <TabsBody>
+        {data.map(({ value, desc }) => (
+          <TabPanel key={value} value={value}>
+            {desc}
+          </TabPanel>
+        ))}
+      </TabsBody>
     </Tabs>
   );
 };

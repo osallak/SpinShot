@@ -218,13 +218,13 @@ const Chat = () => {
     const storedToken = localStorage.getItem('token');
 
     // Redirect to the Signin page if token is not available
-    if (!storedToken) {
-      Router.push('/signin');
-      return;
-    }
+    // if (!storedToken) {
+    //   Router.push('/signin');
+    //   return;
+    // }
 
     // Set the token state
-    setToken(storedToken);
+    // setToken(storedToken);
   }, []);
 
   console.log("======> token: ", storedToken);

@@ -18,7 +18,7 @@ import message from "../../../public/message.svg";
 import profile from "../../../public/profile.svg";
 import game from "../../../public/game.svg";
 import sendMessage from "../../../public/sendMessage.svg";
-import { DropDown } from "../ui/dropDown/dropDown";
+import { DropDown } from "../ui/DropDown/DropDown";
 import { useRouter } from "next/router";
 
 const Chat = () => {

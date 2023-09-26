@@ -6,11 +6,10 @@ import { useAppSelector } from "../../../redux_tool";
 import UploadImage from "../../Components/ui/UploadImage/UploadImage";
 
 const ImageProfile = (props: any) => {
-  const response = props.opne;
+
   const [handelMous, setImage] = useState(false);
-  const [open, setOpenDialog] = useState(false);
+  // const [open, setOpenDialog] = useState(false);
   const [upload, setUpload] = useState(false);
-  const [myImage, setMyImage] = useState<File | null>();
   const data = useAppSelector((state) => state.Profile);
 
   const handleMouseEnter = () => {
@@ -20,27 +19,17 @@ const ImageProfile = (props: any) => {
   const handleMouseLeave = () => {
     setImage(false);
   };
-  // w-[250px] h-[250px]
-  const uploadToClient = (event: any) => {
-    if (event.target.files && event.target.files[0]) {
-      const img = event.target.files[0];
-      // setUpload(true);
-      setMyImage(event.target.files[0]);
-    }
-  };
 
   const Open = () => {
     // setUpload(false);
-    setOpenDialog(!open);
+    props.setOpenDialog(!props.open);
   };
 
-  console.log("open :", myImage);
-  console.log("upload", upload);
 
   return (
     <div
       className={` ${
-        response ? "opacity-10" : ""
+        (props.opne && props.width < 1024) ? "opacity-10" : ""
       }  rounded-[20px] flex flex-col items-center justify-center text-pearl text-opacity-40 w-full p-20 c-gb:w-[30%]  relative`}
     >
       {handelMous && (
@@ -55,24 +44,13 @@ const ImageProfile = (props: any) => {
       >
         <input type="" className="hidden" onClick={Open} />
         <div className=" flex justify-center items-center ">
-          {open ? (
-
-            <UploadImage
-              upload={upload}
-              setUpload={setUpload}
-              open={open}
-              Switch={setOpenDialog}
-              uploadToClient={uploadToClient}
-              />
-          ) : null}
           {upload ? (
             <picture>
               <img
                 className={` rounded-[20px]`}
-                src={URL?.createObjectURL(myImage!)}
+                src={URL.createObjectURL(props.myImage!)}
                 alt=""
                 />
-                
             </picture>
           ) : (
             <Image className={` rounded-[20px]`} src={ibenmain} alt="" />

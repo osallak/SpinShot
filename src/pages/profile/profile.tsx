@@ -13,8 +13,8 @@ import SideBar from "@/Components/ui/Sidebar/SideBar";
 import SubsidebarSecond from "../../Components/ui/Subsidebar/SubsidebarSecond";
 import SidebarM from "@/Components/ui/Sidebar/SidebarMobile";
 import NavbarMobile from "@/Components/ui/Navbar/NavbarMobile";
-import { IdDeviceBreakpointsByWidth } from "@/Components/ui/DropDown/ArrayIcon";
 import TowFactor from "@/Components/ui/TowFactorauth/TowFactor";
+import UploadImage from "@/Components/ui/UploadImage/UploadImage";
 
 const Profile = () => {
   const [isopen, setMenu] = useState(false);
@@ -27,10 +27,21 @@ const Profile = () => {
   const dispatch = useAppDispatch();
   const profile_data = useAppSelector((state) => state.Profile);
   const [isActive, setisActive] = useState(false);
+  const [open, setOpenDialog] = useState(false);
+  const [upload, setUpload] = useState(false);
+  const [myImage, setMyImage] = useState<File | null>();
+  const [width, setWidth] = useState<number>();
 
 
   useEffect(() => {
     dispatch(getProfile());
+    handleResize();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
   }, [dispatch]);
 
   const handleClick = (a: boolean, route: string | undefined) => {
@@ -45,11 +56,26 @@ const Profile = () => {
     setMenu(!isopen);
   };
 
+  // useEffect(() => {
+  //   handleResize();
+  //   if (typeof window !== 'undefined') {
+  //     window.addEventListener('resize', handleResize);
+  //     return () => {
+  //       window.removeEventListener('resize', handleResize);
+  //     };
+  //   }
+
+  // }, []);
+
+  const handleResize = () => {
+    setWidth(window.innerWidth);
+  };
+
   return (
     <div className={"bg-very-dark-purple w-full h-full"}>
       <div className={` flex flex-row c-gb:space-x-2 p-2 w-screen h-screen`}>
         <SideBar />
-        <SubSidebar setContent={setContent} setPassword={setPassword} />
+        <SubSidebar setContent={setContent} setPassword={setPassword} isActive={isActive} setisActive={setisActive} />
         {isopen && (
           <SidebarM
             handleClick={handleClick}
@@ -58,21 +84,30 @@ const Profile = () => {
           />
         )}
         <div
-          className={`${(isopen && !isActive) ? "ml-[83px]" : ""} w-full  rounded-[20px]  `}
+          className={`${((isopen && !isActive && !open) || (isopen && !open && !isActive )) ? "ml-[83px]" : ""} w-full  rounded-[20px] `}
         >
           <NavbarMobile
             setMenu={setMenu}
             handleMenu={handleMenu}
             isopen={isopen}
-          />
+            />
           <div className="flex flex-col  c-gb:h-full   overflow-auto ">
             <div className="rounded-[20px] c-gb:flex c-gb:flex-row  ">
-              <ImageProfile opne={opened} />
-              <Levle opne={opened} />
+              <ImageProfile opne={opened} setOpenDialog={setOpenDialog} myImage={myImage} width={width}/>
+                {open ? (
+                  <UploadImage
+                    upload={upload}
+                    setUpload={setUpload}
+                    open={open}
+                    setMyImage={setMyImage}
+                    Switch={setOpenDialog}
+                    />
+                  ) : null}
+              <Levle opne={opened} width={width} />
             </div>
             <div
               className={` ${
-                opened
+                (opened && width! < 1024)
                   ? "backdrop:blur  bg-white/10 opacity-10"
                   : "backdrop:blur  bg-white/10"
               } flex flex-auto flex-col rounded-[20px] w-full mt-2  h-[1200px]  c-gb:h-[960px]`}
@@ -91,13 +126,14 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        {opened && pages == "/profile/profile" && (
+        {(opened ) && pages == "/profile/profile" && (
           <SubsidebarSecond isActive={isActive} setisActive={setisActive} setContent={setContent} setPassword={setPassword} />
         )}
         {isActive &&
           <div className="z-50">
-            <TowFactor isActive={isActive} Switch={setisActive}/>
+            <TowFactor isActive={isActive} Switch={setisActive} />
           </div>}
+
       </div>
     </div>
   );

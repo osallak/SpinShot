@@ -22,17 +22,16 @@ body {
   color: rgb(var(--foreground-rgb));
   background: #260323;
 }
-
+/* 
 .pincode-input-container {
-  /* background: red; */
 
-}
+} */
 
-@media screen and (width: 1024px) {
+/* @media screen and (max-width: 540px) {
   .pincode-input-container{
-    background: #260323;
+
   }  
-}
+} */
 
 .twemoji {
   height: 50px;

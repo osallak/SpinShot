@@ -22,10 +22,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/profile/profile": [
+    "/game/game": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/profile/profile.js"
+      "static/chunks/pages/game/game.js"
     ]
   },
   "ampFirstPages": []

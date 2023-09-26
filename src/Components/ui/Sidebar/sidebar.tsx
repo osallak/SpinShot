@@ -18,10 +18,10 @@ const SideBar = () => {
   const Router = useRouter()
   const Icons = [
     { icon: search, route: "/search" },
-    { icon: profile, route: "/profile" },
+    { icon: profile, route: "/profile/profile" },
     { icon: message, route: "/messages" },
     { icon: friend, route: "/friend" },
-    { icon: game, route: "/game" },
+    { icon: game, route: "/game/game" },
     { icon: notification, route: "/notification" },
   ];
 

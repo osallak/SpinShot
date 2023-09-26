@@ -69,7 +69,7 @@ const ResetPassword = () => {
           />
         </div>
       </div>
-      <div className="  flex items-end md:items-center md:justify-end md:right-0 mt-36 h-[10%]  justify-center px-28 ">
+      <div className="  flex items-end md:items-center md:justify-end md:right-0 mt-36 h-[10%]  justify-center px-10 sm:px-28 ">
         <SimpleButton content="Save" onclick={() => ""} />
       </div>
     </div>

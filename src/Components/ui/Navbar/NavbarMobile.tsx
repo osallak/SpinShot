@@ -5,8 +5,8 @@ import React from "react";
 
 const NavbarMobile = (props: {setMenu: Function, handleMenu: Function, isopen: boolean}) => {
   return (
-    <div>
-      <div className="bg-very-dark-purple block c-gb:hidden w-[99%] h-20   fixed z-50 top-0  justify-center items-center">
+
+      <div className=" bg-very-dark-purple block c-gb:hidden w-[99%] h-20   fixed z-50 top-0  justify-center items-center">
         <div
           className={`w-full  block c-gb:hidden fixed backdrop:blur  bg-white/10 top-2 rounded-[20px] h-16`}
         >
@@ -35,7 +35,7 @@ const NavbarMobile = (props: {setMenu: Function, handleMenu: Function, isopen: b
           </div>
         </div>
       </div>
-    </div>
+
   );
 };
 

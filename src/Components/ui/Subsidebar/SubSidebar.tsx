@@ -6,7 +6,7 @@ import { buttons } from "@/Components/ui/DropDown/ArrayIcon";
 import { useRouter } from "next/router";
 import ChangPasswd from "../upDatePasswd/ChangPasswd";
 
-const SubSidebar = (props : {setContent: Function, setPassword: Function}) => {
+const SubSidebar = (props:any) => {
   const router = useRouter();
   const [isClick, setClick] = useState(false);
   const [background, setBackground] = useState(false);
@@ -66,7 +66,7 @@ const SubSidebar = (props : {setContent: Function, setPassword: Function}) => {
           </div>
         ))}
           {isClick && (
-          <ChangPasswd handlePasswd={handlePasswd} background={true}/>
+          <ChangPasswd handlePasswd={handlePasswd} background={true} isActive={props.isActive} setisActive={props.setisActive}/>
         )}
       </div>
     </div>

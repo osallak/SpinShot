@@ -2,6 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/game/game": "pages/game/game.js",
-  "/profile/profile": "pages/profile/profile.js"
+  "/profile/profile": "pages/profile/profile.js",
+  "/game/game": "pages/game/game.js"
 }

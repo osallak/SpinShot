@@ -4,10 +4,10 @@ import Image from "next/image";
 
 const NavGame = () => {
   return (
-    <div className="  w-[96%] c-gb:w-[80%]  bg-very-dark-purple rounded-xl sm:rounded-3xl flex justify-between flex-row items-center px-[2%] absolute top-12 c-gb:top-5 ">
+    <div className="  w-[96%] c-gb:w-[80%]  bg-very-dark-purple rounded-xl sm:rounded-3xl flex justify-between flex-row items-center px-[2%] absolute top-10 c-gb:top-2 ">
       <div className="flex  flex-row items-center justify-between w-[50%] ">
         <div className="flex  sm:space-x-5  ">
-          <Image className="p-1 w-[40%] sm:w-[60%]" src={test1} alt="" />
+          <Image className="p-1 w-[50%] sm:w-[60%]" src={test1} alt="" />
           <div className="p-1">
             <h1 className=" text-xs sm:text-lg c-3xl:text-3xl text-pearl">
               Navoos
@@ -52,7 +52,7 @@ const NavGame = () => {
               PRO
             </h1>
           </div>
-          <Image className=" p-1 w-[40%] sm:w-[60%]" src={test1} alt="" />
+          <Image className=" p-1 w-[50%] sm:w-[60%]" src={test1} alt="" />
         </div>
       </div>
     </div>

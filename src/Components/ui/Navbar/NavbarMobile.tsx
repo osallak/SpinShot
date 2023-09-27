@@ -6,9 +6,9 @@ import React from "react";
 const NavbarMobile = (props: {setMenu: Function, handleMenu: Function, isopen: boolean}) => {
   return (
 
-      <div className=" bg-very-dark-purple block c-gb:hidden w-[99%] h-20   fixed z-50 top-0  justify-center items-center">
+      <div className=" bg-very-dark-purple block c-gb:hidden w-[99%] h-20   fixed z-50 top-0  justify-center items-center ">
         <div
-          className={`w-full  block c-gb:hidden fixed backdrop:blur  bg-white/10 top-2 rounded-[20px] h-16`}
+          className={`w-full  fixed backdrop:blur  bg-white/10 top-2 rounded-[20px] h-16`}
         >
           <div className="flex flex-row justify-between">
             <button
@@ -30,7 +30,7 @@ const NavbarMobile = (props: {setMenu: Function, handleMenu: Function, isopen: b
                   <span>ibenmaina@gmail.com</span>
                 </div>
               </div>
-              <Image className=" rounded-[20px] w-[50px]" src={ibenmain} alt="" />
+              <Image className=" rounded-xl sm:rounded-2xl w-[40px] sm:w-[50px]" src={ibenmain} alt="" />
             </div>
           </div>
         </div>

@@ -32,7 +32,7 @@ const SideBar = () => {
 
   return (
     <div className=" c-gb:block hidden ">
-    <div className="bg-white/10 rounded-2xl h-full md:flex flex-col lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px] ">
+    <div className="bg-white/10 rounded-2xl h-full md:flex flex-col lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px]  ">
       <div className="w-full h-[132px] min-h-[132px] flex justify-center items-center flex-col">
         <div className="flex justify-center items-center h-full">
           <Image src={logoWhite} alt="white logo" className="h-[120px]" />
@@ -59,7 +59,7 @@ const SideBar = () => {
           </div>
         ))}
       </div>
-      <div className="w-full h-[100px] py-2 flex justify-center items-center">
+      <div className="w-full  h-[100px] py-2 flex justify-center items-center">
         <Image src={test1} alt="test1" />
       </div>
     </div>

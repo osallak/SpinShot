@@ -84,7 +84,7 @@ const Profile = () => {
           />
         )}
         <div
-          className={`${((isopen && !isActive && !open) || (isopen && !open && !isActive )) ? "ml-[83px]" : ""} w-full  rounded-[20px] `}
+          className={`${((isopen && !isActive && !open) || (isopen && !open && !isActive )) ? "ml-[75px]" : ""} w-full  rounded-[20px] `}
         >
           <NavbarMobile
             setMenu={setMenu}

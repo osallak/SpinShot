@@ -27,7 +27,7 @@ const SubsidebarSecond = (props: {isActive:boolean, setisActive:Function, setCon
     props.setPassword(true)
   };
   return (
-    <div className=" fixed top-[74px] ml-[83px] w-[70%] z-50  h-full c-gb:h-full  backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] mr-1">
+    <div className=" fixed top-[74px] ml-[75px] w-[70%] z-50  h-full c-gb:h-full  backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] mr-1">
         <div className=" text-[10px] sm:text-[20px] md:text-[35px] font-Poppins font-extrabold text-pearl p-6 space-y-3">
             <h1>Profile</h1>
             <div className=" w-[70%] opacity-40"> <div className="border"></div> </div>

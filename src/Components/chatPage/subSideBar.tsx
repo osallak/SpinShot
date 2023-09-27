@@ -29,7 +29,7 @@ interface otherdata {
   Receiver: data,
 }
 
-function SubSideBar(props: {open: boolean, setOpen: Function}) {
+function SubSideBar(props: {open: boolean, setOpen: Function, setFlag: Function}) {
   const [readed, setReaded] = useState(false);
   const [clicked, setClicked] = useState<number>();
 
@@ -38,11 +38,17 @@ function SubSideBar(props: {open: boolean, setOpen: Function}) {
     setClicked(index);
   };
 
-  const Channels = (event: MouseEvent<HTMLButtonElement>) => {
+  const exploreChannels = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    props.setFlag("ExploreChannels");
     props.setOpen(!props.open);
-    console.log("hello world from the other side");
   };
+
+  const createChannels = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    props.setFlag("CreateChannels");
+    props.setOpen(!props.open);
+  }
 
   const [respo, setRespo] = useState<otherdata[]>([]);
 
@@ -139,14 +145,14 @@ function SubSideBar(props: {open: boolean, setOpen: Function}) {
           <IconButton
             icon={CreateChannel}
             content="Create channel"
-            onclick={Channels}
+            onclick={createChannels}
           />
         </div>
         <div className="w-[45%] h-10 flex justify-center items-center">
           <IconButton
             icon={ExportChannels}
             content="Export channels"
-            onclick={Channels}
+            onclick={exploreChannels}
           />
         </div>
       </div>

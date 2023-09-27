@@ -14,7 +14,7 @@ import SimpleButton from "../ui/Buttons/SimpleButton";
 import pearlLock from "../../../public/pearlLock.svg";
 import SubModal from "./channelsStatus/subModal";
 
-const ExportChannels = (props: { open: boolean; setOpen: any }) => {
+const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
   const content = [
     {
       name: "spinshot Game",
@@ -331,4 +331,4 @@ const ExportChannels = (props: { open: boolean; setOpen: any }) => {
   );
 };
 
-export default ExportChannels;
+export default ExploreChannels;

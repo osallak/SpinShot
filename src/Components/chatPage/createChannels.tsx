@@ -94,7 +94,7 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel className="transform overflow-hidden rounded-2xl bg-pearl lg:p-6 p-1 shadow-xl transition-all lg:w-[900px] md:w-[700px] sm:w-[90%] w-[80%] flex flex-col justify-center items-center">
-                <div className="w-full h-[400px] md:space-y-5 sm:space-y-3 space-y-0">
+                <div className="w-full h-[300px] md:space-y-5 sm:space-y-3 space-y-0">
                   <div className="text-lg font-medium leading-6 text-gray-900 flex justify-center items-center flex-col md:h-[120px] sm:h-[100px] h-[80px]">
                     <Image
                       src={CreateChannelIcon}
@@ -105,7 +105,7 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
                       Create Channel
                     </p>
                   </div>
-                  <div className="h-[85%] border border-red-500 overflow-auto flex items-start justify-center sm:flex-row flex-col py-3">
+                  <div className="h-[85%] overflow-auto flex items-start justify-center sm:flex-row flex-col py-3">
 										<SwitchButton />
 									</div>
                 </div>

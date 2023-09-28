@@ -1,4 +1,7 @@
-import { useState } from "react";
+
+import Image from 'next/image';
+import { useState } from 'react';
+import lock from "../../../../public/lock.svg"
 // import { Tabs, TabsHeader, Tab, TabsBody, TabPanel } from "@material-tailwind/react";
 import { Tab } from '@headlessui/react'
 
@@ -27,9 +30,9 @@ const SwitchButton = () => {
   }
 
   return (
-    <div className="w-full max-w-md px-2 py-16 sm:px-0 border border-red-500">
+    <div className="w-full max-w-md px-2 py-16 sm:px-0">
       <Tab.Group>
-        <Tab.List className="flex space-x-1 rounded-full bg-very-dark-purple p-1 border border-green-500">
+        <Tab.List className="flex space-x-1 rounded-full bg-very-dark-purple p-1">
           {Object.keys(categories).map((category) => (
             <Tab
               key={category}
@@ -57,10 +60,24 @@ const SwitchButton = () => {
               )}
             >
                 {posts.map((post) => (
-                  <div className="border border-red-500 w-full h-10">
+                  <div className="w-full h-10">
                     {post.flag === "Private" && 
                       <div className="w-full h-full">
-                        <input type="text" className="w-full h-full bg-very-dark-purple" placeholder="Name of channel" />
+                        <input type="text" className="w-full h-full bg-very-dark-purple rounded-full p-5 placeholder:text-pearl placeholder:text-opacity-40 font-Poppins" placeholder="Name of channel" />
+                      </div>
+                    }
+                    {post.flag === "Public" && 
+                      <div className="w-full h-full">
+                        <input type="text" className="w-full h-full bg-very-dark-purple rounded-full p-5 placeholder:text-pearl placeholder:text-opacity-40 font-Poppins" placeholder="Name of channel" />
+                      </div>
+                    }
+                    {post.flag === "Protected" && 
+                      <div className="w-full h-full space-y-2">
+                        <input type="text" className="w-full h-full bg-very-dark-purple rounded-full p-5 placeholder:text-pearl placeholder:text-opacity-40 font-Poppins" placeholder="Name of channel" />
+                        <div className="w-full h-full bg-very-dark-purple rounded-full flex px-3">
+                        <Image src={lock} alt="lock icon" className='w-7' />
+                        <input type="text" className="w-full h-full bg-very-dark-purple rounded-full pl-2 placeholder:text-pearl placeholder:text-opacity-40 font-Poppins" placeholder="Password of channel" />
+                        </div>
                       </div>
                     }
                   </div>

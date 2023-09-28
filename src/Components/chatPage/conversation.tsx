@@ -84,6 +84,37 @@ const Conversation = () => {
       message: "what do you doing",
       sender: "owner",
     },
+    {
+      message: "hey",
+      sender: "owner",
+    },
+    {
+      message:
+        "what's up impmport sendMessageIcogeIcon from import sendMessageIcon ort sendMessageIcon from ",
+      sender: "receiver",
+    },
+    {
+      message: "what do you doing",
+      sender: "owner",
+    },
+    {
+      message:
+        "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
+      sender: "receiver",
+    },
+    {
+      message: "what do you doing",
+      sender: "owner",
+    },
+    {
+      message:
+        "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
+      sender: "receiver",
+    },
+    {
+      message: "what do you doing",
+      sender: "owner",
+    },
   ];
 
   // const handleMessage = (event: ChangeEvent<HTMLInputElement>) => {
@@ -267,7 +298,7 @@ const Conversation = () => {
       </div>
       <div
         ref={chatContainerRef}
-        className={`w-[99.5%] py-8 flex flex-col items-center scroll-smooth h-full min-h-[100px] space-y-1 hover:overflow-auto overflow-hidden `}
+        className={`w-[99.5%] py-8 flex flex-col items-center h-full min-h-[100px] space-y-1 hover:overflow-auto overflow-hidden `}
       >
         <div className="w-[94%] space-y-1">
           {msg.map((msg, index) => (

@@ -13,12 +13,11 @@ import { useRouter } from "next/router";
 const SideBar = () => {
   const Router = useRouter()
   const Icons = [
-    { icon: search, route: "/search" },
-    { icon: profile, route: "/profile" },
-    { icon: message, route: "/messages" },
-    { icon: friend, route: "/friends" },
-    { icon: game, route: "/game" },
-    { icon: notification, route: "/notification" },
+    { icon: search, route: "/Search" },
+    { icon: profile, route: "/Profile" },
+    { icon: message, route: "/Messages" },
+    { icon: friend, route: "/Friends" },
+    { icon: game, route: "/Game" },
   ];
 
   const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {

@@ -1,31 +1,40 @@
 import React, { useState } from "react";
-import linechoose from "../../../../public/linechoose.svg";
-import linechoose2 from "../../../../public/linechoose2.svg";
-import time from "../../../../public/time.svg";
-import defi from "../../../../public/defi.svg";
-import Image from "next/image";
 import SimpleButton from "../Buttons/SimpleButton";
+import Mode from "./Mode";
+import Maps from "./Maps";
 
-const SubSidebarGame = () => {
+const SubSidebarGame = (props: any) => {
   const hendleUpdata = () => {};
-  const [backgroundColors, setBackgroundColors] = useState({
-    element1: "",
-    element2: "",
-    element3: "",
-    element4: "",
-    element5: "",
+  const [backgroundmode, setBackgroundmode] = useState({
+    mode1: "",
+    mode2: "",
   });
 
-  const changeBackgroundColor = (elementId: any, newColor: any) => {
-    const updatedBackgroundColors = {
-      element1: "",
-      element2: "",
-      element3: "",
-      element4: "",
-      element5: "",
+  const changeBackgroundmode = (modeId: string, newColor: string) => {
+    const updatedBackgroundmode = {
+      mode1: "",
+      mode2: "",
     };
-    updatedBackgroundColors[elementId] = newColor;
-    setBackgroundColors(updatedBackgroundColors);
+    props.setMode(modeId);
+    updatedBackgroundmode[modeId] = newColor;
+    setBackgroundmode(updatedBackgroundmode);
+  };
+
+  const [backgroundmap, setBackgroundmap] = useState({
+    map1: "",
+    map2: "",
+    map3: "",
+  });
+
+  const changeBackgroundmap = (mapId: string, newColor: string) => {
+    const updatedBackgroundmap = {
+      map1: "",
+      map2: "",
+      map3: "",
+    };
+    props.setMap(mapId);
+    updatedBackgroundmap[mapId] = newColor;
+    setBackgroundmap(updatedBackgroundmap);
   };
 
   return (
@@ -42,73 +51,16 @@ const SubSidebarGame = () => {
             <div className=" text-3xl">Options</div>
             <div className="space-y-36">
               <div className="px-4 ">
-                <div className="relative text-3xl">
-                  Mode
-                  <Image className="absolute left-5" src={linechoose} alt="" />
-                  <button
-                    onClick={() =>
-                      changeBackgroundColor("element1", "very-dark-purple")
-                    }
-                    className={`bg-${backgroundColors.element1} absolute left-[12%] top-12 text-2xl flex flex-row justify-between  w-[70%] rounded-2xl p-2 px-4`}
-                  >
-                    Time
-                    <Image src={time} alt="" />
-                  </button>
-                  <Image
-                    className="absolute left-5 top-14"
-                    src={linechoose2}
-                    alt=""
-                  />
-                  <button
-                    onClick={() =>
-                      changeBackgroundColor("element2", "very-dark-purple")
-                    }
-                    className={`bg-${backgroundColors.element2} absolute left-[12%] top-28 text-2xl  flex flex-row justify-between   w-[70%] rounded-2xl p-2 px-4`}
-                  >
-                    Defi
-                    <Image src={defi} alt="" />
-                  </button>
-                </div>
+                <Mode
+                  changeBackgroundmode={changeBackgroundmode}
+                  backgroundmode={backgroundmode}
+                />
               </div>
               <div className="px-4 ">
-                <div className="relative text-3xl">
-                  maps
-                  <Image className="absolute left-5" src={linechoose} alt="" />
-                  <button
-                    onClick={() =>
-                      changeBackgroundColor("element3", "very-dark-purple")
-                    }
-                    className={`bg-${backgroundColors.element3} absolute left-[12%] top-12 text-2xl  w-[70%] flex justify-start rounded-2xl p-2 px-4`}
-                  >
-                    Normal
-                  </button>
-                  <Image
-                    className="absolute left-5 top-14"
-                    src={linechoose2}
-                    alt=""
-                  />
-                  <button
-                    onClick={() =>
-                      changeBackgroundColor("element4", "very-dark-purple")
-                    }
-                    className={`bg-${backgroundColors.element4} absolute left-[12%] top-28 text-2xl  w-[70%] flex justify-start rounded-2xl p-2 px-4 `}
-                  >
-                    Hard
-                  </button>
-                  <Image
-                    className="absolute left-5 top-32 "
-                    src={linechoose2}
-                    alt=""
-                  />
-                  <button
-                    onClick={() =>
-                      changeBackgroundColor("element5", "very-dark-purple")
-                    }
-                    className={`bg-${backgroundColors.element5} absolute left-[12%] top-44 text-2xl  w-[70%] flex justify-start rounded-2xl p-2 px-4`}
-                  >
-                    Expert
-                  </button>
-                </div>
+                <Maps
+                  changeBackgroundmap={changeBackgroundmap}
+                  backgroundmap={backgroundmap}
+                />
               </div>
             </div>
           </div>

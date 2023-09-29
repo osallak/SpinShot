@@ -23,7 +23,7 @@ const Achievements = () => {
               </h1>
             </div>
             <div className="flex justify-center items-center  ">
-              <Image className="" src={achievement1} alt="" />
+              <Image className="       " src={achievement1} alt="" />
             </div>
           </div>
           <div className=" bg-very-dark-purple h-[150px] sm:h-[200px] c-gb:h-[300px] rounded-[20px] w-[85%] c-gb:w-full flex flex-row justify-between">
@@ -42,7 +42,7 @@ const Achievements = () => {
               </div>
             </div>
             <div className="flex justify-center items-center  ">
-              <Image className="" src={achievement2} alt="" />
+              <Image className="       " src={achievement2} alt="" />
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@ const Achievements = () => {
               </h1>
             </div>
             <div className="flex justify-center items-center   ">
-              <Image className=" " src={achievement3} alt="" />
+              <Image className="        " src={achievement3} alt="" />
             </div>
           </div>
           <div className=" bg-very-dark-purple h-[150px] sm:h-[200px] c-gb:h-[300px]  rounded-[20px] w-[85%] c-gb:w-full flex flex-row  justify-between">
@@ -66,7 +66,7 @@ const Achievements = () => {
               </h1>
             </div>
             <div className="flex justify-center items-center  md:w-[40%]  ">
-              <Image className=" w-[70%] sm:w-24 c-gb:w-[60%]" src={achievement4} alt="" />
+              <Image className="        w-[70%] sm:w-24 c-gb:w-[60%]" src={achievement4} alt="" />
             </div>
           </div>
         </div>

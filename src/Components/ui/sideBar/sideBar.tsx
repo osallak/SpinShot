@@ -27,13 +27,13 @@ const SideBar = () => {
 
   return (
     <div className="bg-white/10 rounded-2xl h-full md:flex flex-col hidden lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px]">
-      <div className="w-full h-[132px] min-h-[132px] flex justify-center items-center flex-col">
+      <div className="w-full h-[10%] min-h-[100px] flex justify-center items-center flex-col">
         <div className="flex justify-center items-center h-full">
           <Image src={logoWhite} alt="white logo" className="h-[120px]" />
         </div>
         <div className="w-[80%] border border-pearl border-opacity-40"></div>
       </div>
-      <div className="w-full h-[1098px] py-5 min-h-[200px] overflow-hidden flex flex-col items-center">
+      <div className="w-full h-[82%] min-h-[200px] py-5  overflow-hidden flex flex-col items-center">
         {Icons.map((option, index) => (
           <div
             key={index}
@@ -53,7 +53,7 @@ const SideBar = () => {
           </div>
         ))}
       </div>
-      <div className="w-full h-[100px] py-2 flex justify-center items-center">
+      <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center">
         <Image src={test1} alt="test1" />
       </div>
     </div>

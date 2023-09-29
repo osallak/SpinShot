@@ -274,15 +274,15 @@ const Conversation = () => {
   });
   //   useEffect(() => socketInitializer(), []);
   return (
-    <div className="bg-white/10 sm:h-full h-[85%] rounded-2xl w-full flex justify-between items-center flex-col">
-      <div className="w-full md:h-[132px] h-[80px] flex justify-center flex-col items-center">
-        <div className="md:h-[132px] h-[100px] xl:px-20 md:px-10 sm:px-7 px-4 flex items-center justify-between space-x-3 w-full">
+    <div className="bg-white/10 md:h-full h-[92%] rounded-2xl w-full flex justify-center items-center flex-col">
+      <div className="w-full md:h-[10%] md:min-h-[100px] h-[8%] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
+        <div className="md:h-full xl:px-20 md:px-10 sm:px-7 px-4 flex items-center justify-between space-x-3 w-full">
           <div className="flex justify-center items-center space-x-2 flex-row">
-            <Image
-              src={test1}
-              alt="test1"
-              className="lg:w-16 md:w-14 sm:w-12 w-10"
-            />
+              <Image
+                src={test1}
+                alt="test1"
+                className="lg:w-16 md:w-14 sm:w-12 w-10"
+              />
             <div className="flex flex-col">
               <p className="font-Poppins md:text-xl sm:text-md text-sm text-pearl font-semibold">
                 Navoos
@@ -298,7 +298,7 @@ const Conversation = () => {
       </div>
       <div
         ref={chatContainerRef}
-        className={`w-[99.5%] py-8 flex flex-col items-center h-full min-h-[100px] space-y-1 hover:overflow-auto overflow-hidden `}
+        className={`w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden `}
       >
         <div className="w-[94%] space-y-1">
           {msg.map((msg, index) => (
@@ -340,7 +340,7 @@ const Conversation = () => {
           ))}
         </div>
       </div>
-      <div className="w-full md:h-[132px] h-[80px] flex justify-center items-center flex-col">
+      <div className="w-full h-[10%] min-h-[100px] flex justify-center items-center flex-col">
         <div className="w-[93%] border border-pearl border-opacity-40"></div>
         <div className="w-[90%] h-full flex justify-center items-center flex-row">
           <div className="w-full md:h-14 sm:h-10 h-8 flex justify-center items-center pr-5 md:pl-10 sm:pl-8 pl-6 space-x-2 bg-very-dark-purple rounded-full">

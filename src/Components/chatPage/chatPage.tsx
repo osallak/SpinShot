@@ -234,12 +234,12 @@ const Chat = () => {
   const [open, setOpen] = useState(false);
   const [flag, setFlag] = useState("");
   return (
-    <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 md:space-y-0 space-y-3 flex justify-start px-3 pb-3 md:pt-3 pt-0 items-center md:flex-row flex-col">
+    <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 pl-0 py-0 pr-0 items-center md:flex-row flex-col">
+      <NavBar />
       <SideBar />
       <SubSideBar open={open} setOpen={setOpen} setFlag={setFlag} />
       {flag === "ExploreChannels" && <ExploreChannels open={open} setOpen={setOpen} />}
       {flag === "CreateChannels" && <CreateChannels open={open} setOpen={setOpen} />}
-      <NavBar />
       <Conversation />
     </div>
   );

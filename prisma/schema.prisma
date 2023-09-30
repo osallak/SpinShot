@@ -45,7 +45,7 @@ model Logs {
   defeats   Int
   level     Float
   rank      Rank   @default(VETERAN)
-  User      User   @relation(fields: [userId], references: [id])
+  User      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String @unique @map("user_id")
 
   @@map("logs")
@@ -58,8 +58,8 @@ model Friendship {
   sender      String
   blocker     String?
 
-  leftUser  User @relation("left", fields: [leftUserId], references: [id])
-  rightUser User @relation("right", fields: [rightUserId], references: [id])
+  leftUser  User @relation("left", fields: [leftUserId], references: [id], onDelete: Cascade)
+  rightUser User @relation("right", fields: [rightUserId], references: [id], onDelete: Cascade)
 
   @@id([leftUserId, rightUserId])
   @@map("friendship")
@@ -82,8 +82,8 @@ model Game {
   map        Map
   startedAt  DateTime @default(now()) @map("started_at")
 
-  opponent Opponent @relation(fields: [opponentId], references: [id])
-  user     User     @relation(fields: [userId], references: [id])
+  opponent Opponent @relation(fields: [opponentId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   History  History?
   accepted Boolean
 
@@ -97,7 +97,7 @@ model History {
   userId        String @map("user_id")
   opponentId    String @map("opponent_id")
 
-  Game   Game   @relation(fields: [gameId], references: [id])
+  Game   Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
   gameId String @unique
 
   @@map("history")
@@ -118,8 +118,8 @@ model haveAchievement {
   userId        String      @map("user_id")
   achievementId String      @map("achievement_id")
   level         Float
-  User          User        @relation(fields: [userId], references: [id])
-  Achiement     Achievement @relation(fields: [achievementId], references: [id])
+  User          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Achiement     Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
 
   @@map("have_achievement")
 }
@@ -130,6 +130,7 @@ model RoomChat {
   type                 RoomType
   password             String?
   RoomChatConversation RoomChatConversation[]
+  messages             Message[]
 
   @@map("room_chat")
 }
@@ -143,8 +144,8 @@ model RoomChatConversation {
   mutedAt      BigInt?
   userRole     UserRole
 
-  User     User      @relation(fields: [userId], references: [id])
-  RoomChat RoomChat  @relation(fields: [roomChatId], references: [id])
+  User     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  RoomChat RoomChat  @relation(fields: [roomChatId], references: [id], onDelete: Cascade)
   Message  Message[]
 
   @@unique([roomChatId, userId])
@@ -156,10 +157,12 @@ model Message {
   message  String
   senderId String @map("sender_id")
 
-  RoomChatConversation   RoomChatConversation @relation(fields: [roomChatConversationId], references: [id])
-  user                   User                 @relation("messages", fields: [senderId], references: [id])
+  RoomChatConversation   RoomChatConversation @relation(fields: [roomChatConversationId], references: [id], onDelete: Cascade)
+  user                   User                 @relation("messages", fields: [senderId], references: [id], onDelete: Cascade)
   roomChatConversationId String               @map("room_chat_conversation_id")
   sentAt                 BigInt
+  RoomChat               RoomChat?            @relation(fields: [roomChatId], references: [id], onDelete: Cascade)
+  roomChatId             String?
 
   @@map("message")
 }
@@ -169,8 +172,8 @@ model Conversation {
   senderId   String @map("sender_id")
   receiverId String @map("reciever_id")
 
-  Sender   User   @relation("sender", fields: [senderId], references: [id])
-  Receiver User   @relation("receiver", fields: [receiverId], references: [id])
+  Sender   User   @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+  Receiver User   @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
   sentAt   BigInt
   message  String
   sender   String
@@ -183,8 +186,8 @@ model Conversation {
 model Notification {
   id        String    @id @default(uuid())
   notifType NotifType
-  sender    User      @relation("sent", fields: [senderId], references: [id])
-  receiver  User      @relation("received", fields: [receiverId], references: [id])
+  sender    User      @relation("sent", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver  User      @relation("received", fields: [receiverId], references: [id], onDelete: Cascade)
 
   senderId   String @map("sender_id")
   receiverId String @map("receiver_id")
@@ -218,7 +221,7 @@ enum RoomType {
 enum UserRole {
   BASIC
   ADMIN
-	OWNER
+  OWNER
 
   @@map("user_role")
 }

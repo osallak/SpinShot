@@ -198,7 +198,7 @@ export class ChatService {
       return undefined;
     }
   }
-
+				
   async getAllLatestMessages(userId: string) {
     try {
       if (!userId) {

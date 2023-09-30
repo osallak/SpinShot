@@ -1,6 +1,7 @@
 import SideBar from "../ui/sideBar/sideBar";
 import FriendsRequest from "./friendRequest";
 import CurrentFriends from "./currentFriends";
+import MobileFriends from "./mobileFriends";
 
 const FriendsPage = () => {
   return (
@@ -8,6 +9,7 @@ const FriendsPage = () => {
       <SideBar />
       <CurrentFriends />
       <FriendsRequest />
+      <MobileFriends />
     </div>
   );
 };

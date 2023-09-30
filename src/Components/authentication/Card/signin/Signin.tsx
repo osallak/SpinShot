@@ -189,7 +189,7 @@ const Signin = () => {
               <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
                 Don't have an account?
               </p>
-              <EmptyButton onclick={(e) => redirection(e)} content="Sign Up" />
+              <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign Up" />
             </div>
           )}
         </div>
@@ -199,7 +199,7 @@ const Signin = () => {
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
             Don't have an account?&nbsp;
           </p>
-          <EmptyButton onclick={(e) => redirection(e)} content="Sign Up" />
+          <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign Up" />
         </div>
       )}
     </div>

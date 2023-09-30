@@ -33,11 +33,11 @@ const SideBar = () => {
         </div>
         <div className="w-[80%] border border-pearl border-opacity-40"></div>
       </div>
-      <div className="w-full h-[82%] min-h-[200px] py-5  overflow-hidden flex flex-col items-center">
+      <div className="w-full h-[82%] min-h-[150px] py-5  overflow-hidden flex flex-col items-center">
         {Icons.map((option, index) => (
           <div
             key={index}
-            className="w-full h-[60px] flex items-center justify-center opacity-40 hover:opacity-100 "
+            className="w-full h-[60px] flex items-center justify-center opacity-40 hover:opacity-100"
           >
             {option.route != "/search" && option.route != "/notification" ? (
               <button onClick={(event) => changePage(event, option.route)}>

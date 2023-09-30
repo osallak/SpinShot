@@ -199,7 +199,7 @@ const Signup = () => {
               <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
                 Already have an account?
               </p>
-              <EmptyButton onclick={(e) => redirection(e)} content="Sign In" />
+              <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign In" />
             </div>
           )}
         </div>
@@ -209,7 +209,7 @@ const Signup = () => {
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
             Already have an account?&nbsp;
           </p>
-          <EmptyButton onclick={(e) => redirection(e)} content="Sign In" />
+          <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign In" />
         </div>
       )}
     </div>

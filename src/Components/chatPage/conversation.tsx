@@ -275,8 +275,8 @@ const Conversation = () => {
   //   useEffect(() => socketInitializer(), []);
   return (
     <div className="bg-white/10 md:h-full h-[92%] rounded-2xl w-full flex justify-center items-center flex-col">
-      <div className="w-full md:h-[10%] md:min-h-[100px] h-[8%] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
-        <div className="md:h-full xl:px-20 md:px-10 sm:px-7 px-4 flex items-center justify-between space-x-3 w-full">
+      <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
+        <div className="md:h-full flex items-center justify-between border w-[90%]">
           <div className="flex justify-center items-center space-x-2 flex-row">
               <Image
                 src={test1}

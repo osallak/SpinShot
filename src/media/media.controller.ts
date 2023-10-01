@@ -4,7 +4,6 @@ import {
   HttpStatus,
   ParseFilePipeBuilder,
   Post,
-  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -14,16 +13,9 @@ import { StorageService } from 'src/storage/storage.service';
 import { UserService } from 'src/user/user.service';
 import { Response } from 'src/global/interfaces';
 import { JwtAuthGuard } from 'src/auth/guards';
-import {
-  ApiResponse,
-  ApiTags,
-  ApiBearerAuth,
-  ApiBadRequestResponse,
-  ApiConsumes,
-  ApiBody,
-} from '@nestjs/swagger';
 import { UserDecorator } from 'src/global/decorators/global.decorators';
 import { JwtPayload } from 'jsonwebtoken';
+import { MediaDoc } from './swagger/media.swagger';
 
 @Controller('media')
 export class MediaController {
@@ -32,13 +24,7 @@ export class MediaController {
     private readonly storageService: StorageService,
   ) {}
 
-  @ApiBearerAuth()
-  @ApiTags('user')
-  @ApiResponse({ status: 200, description: 'File uploaded successfully' })
-  @ApiBadRequestResponse({
-    description:
-      'File size should not exceed 5m and should be of type jpeg or png',
-  })
+  @MediaDoc()
   @Post()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
@@ -62,9 +48,7 @@ export class MediaController {
     file: Express.Multer.File,
     @UserDecorator() user: JwtPayload,
   ): Promise<Response> {
-    const path = `media/${user.id}.${
-      file.mimetype.split('/')[1]
-    }`;
+    const path = `media/${user.id}.${file.mimetype.split('/')[1]}`;
     const ret: Response = this.storageService.save(path, file.buffer);
     this.userService.updateAvatar(
       user.sub,

@@ -6,7 +6,6 @@ import {
   Body,
   UseGuards,
   Res,
-  HttpStatus,
   Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -17,7 +16,7 @@ import { ConfigService } from '@nestjs/config';
 import { Response, Request } from 'express';
 import { ApiExcludeEndpoint, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtResponse, User } from 'src/types';
-
+import { SignupDoc, SigninDoc} from './swagger/auth.swagger';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -25,11 +24,7 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
-  @ApiResponse({
-    status: 201,
-    description: 'object with user mail and username',
-  })
-  @ApiTags('local auth')
+  @SignupDoc()
   @Post('/signup/local')
   async signupLocal(
     @Body() userDto: CreateUserDto,
@@ -39,18 +34,7 @@ export class AuthController {
     res.json(user).send();
   }
 
-  @ApiTags('local auth')
-  @ApiResponse({
-    status: 201,
-    description: 'object with jwt token',
-    content: {
-      schema: {
-        example: {
-          token: 'jwt token',
-        },
-      },
-    },
-  })
+  @SigninDoc()
   @Post('/signin/local')
   @UseGuards(LocalAuthGuard)
   async signinLocal(@Req() req: Request): Promise<JwtResponse> {

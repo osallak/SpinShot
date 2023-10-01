@@ -6,22 +6,14 @@ import { PaginationResponse, Response } from 'src/global/interfaces';
 import { User } from 'src/types/user.types';
 import { FriendsQueryDto } from './dto/pagination.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AcceptFriendDoc, AddFriendDoc, BlockFriendDoc, GetFriendsDoc, UnblockFriendDoc, UnfriendDoc } from './swagger/friends.swagger';
 
 @ApiTags('friends')
 @Controller('friends')
 export class FriendsController {
   constructor(private readonly friendsService: FriendsService) {}
 
-  @ApiResponse({
-    status: 201,
-    schema: {
-      example: {
-        status: 201,
-        message: 'Added successfully',
-      },
-    },
-  })
-  @ApiBearerAuth()
+  @AddFriendDoc()
   @Post('add/:id')
   @UseGuards(JwtAuthGuard)
   async addFriend(
@@ -31,12 +23,8 @@ export class FriendsController {
     return await this.friendsService.addFriend(id, user.id);
   }
 
-  @ApiBearerAuth()
-  @ApiResponse({
-    status: 200,
-    description:
-      'an object holding an array of friends and  pagination metadata',
-  })
+
+  @GetFriendsDoc()
   @UseGuards(JwtAuthGuard)
   @Get()
   async getFriends(
@@ -46,15 +34,7 @@ export class FriendsController {
     return await this.friendsService.getAll(user, query);
   }
 
-  @ApiBearerAuth()
-  @ApiResponse({
-    schema: {
-      example: {
-        status: 201,
-        description: 'friend request accepted',
-      },
-    },
-  })
+  @AcceptFriendDoc()
   @Post('/accept/:id')
   @UseGuards(JwtAuthGuard)
   accept(
@@ -64,15 +44,7 @@ export class FriendsController {
     return this.friendsService.accept(user.id, id);
   }
 
-  @ApiBearerAuth()
-  @ApiResponse({
-    schema: {
-      example: {
-        status: 201,
-        message: 'user blocked successfully',
-      },
-    },
-  })
+  @BlockFriendDoc()
   @UseGuards(JwtAuthGuard)
   @Post('/block/:id')
   block(
@@ -82,15 +54,7 @@ export class FriendsController {
     return this.friendsService.block(user.id, id);
   }
 
-  @ApiBearerAuth()
-  @ApiResponse({
-    schema: {
-      example: {
-        status: 201,
-        message: 'user unblocked successfully',
-      },
-    },
-  })
+  @UnblockFriendDoc()
   @Post('/unblock/:id')
   @UseGuards(JwtAuthGuard)
   unblock(
@@ -100,15 +64,7 @@ export class FriendsController {
     return this.friendsService.unblock(user.id, id);
   }
 
-  @ApiBearerAuth()
-  @ApiResponse({
-    schema: {
-      example: {
-        status: 201,
-        message: 'friend removed successfully',
-      },
-    },
-  })
+  @UnfriendDoc()
   @UseGuards(JwtAuthGuard)
   @Post('/unfriend/:id')
   async unfriend(@Param('id') id: string, @UserDecorator() user: User): Promise<Response> {

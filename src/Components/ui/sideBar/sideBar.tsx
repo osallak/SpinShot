@@ -15,7 +15,7 @@ const SideBar = () => {
   const Icons = [
     { icon: search, route: "/Search" },
     { icon: profile, route: "/Profile" },
-    { icon: message, route: "/Messages" },
+    { icon: message, route: "/messages" },
     { icon: friend, route: "/Friends" },
     { icon: game, route: "/Game" },
   ];
@@ -26,7 +26,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className="bg-white/10 rounded-2xl h-full md:flex flex-col hidden lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px]">
+    <div className={`bg-white/10 rounded-2xl h-full md:flex flex-col hidden lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px]`}>
       <div className="w-full h-[10%] min-h-[100px] flex justify-center items-center flex-col">
         <div className="flex justify-center items-center h-full">
           <Image src={logoWhite} alt="white logo" className="h-[120px]" />

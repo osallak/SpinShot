@@ -27,6 +27,7 @@ module.exports = withMT({
         'Sarabun': ['Sarabun', 'sans-serif']
       },
       screens: {
+        'xs': '321px',
         'x-pp': '1600px',
         'n-pp': '1350px',
         'd-sc': '1800px',

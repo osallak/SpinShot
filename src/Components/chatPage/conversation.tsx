@@ -226,57 +226,57 @@ const Conversation = () => {
   //   console.log(jwtToken.sub);
   // };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const ayoubToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5b3ViIiwic3ViIjoiMTE4NTc5ZTctZGE3Yy00MGExLWI4ZmYtNGVkMjE5MDhkYTE0IiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTUyNTE2MTYsImV4cCI6MTY5NTMzODAxNn0.DN5AXkCuE6Sh-ZpubfdY66V-uS-upKFHHG2yioFZoOo";
-      const yaakoubToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InlhYWtvdWIiLCJzdWIiOiI2ZjllNWMxZS1iMTVlLTQ0NDAtOTk5Mi0zMDUxZGVhYzE4MDAiLCJpc3MiOiJzcGluc2hvdCIsImlhdCI6MTY5NTI1MTcxMiwiZXhwIjoxNjk1MzM4MTEyfQ.UFqT9GT5Xt2iLW-ni9aLao2eXjOFbUJh5vS-NB5FokM"
-      function parseJwt(token: string) {
-        var base64Url = token.split(".")[1];
-        var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-        var jsonPayload = decodeURIComponent(
-          window
-            .atob(base64)
-            .split("")
-            .map(function (c) {
-              return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-            })
-            .join("")
-        );
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const ayoubToken = // this token for ataji tajiayoub35@gmail.com
+  //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiNjAzY2RlNDctZmUxMy00OWQyLWJjOWUtOGMyNmEzZmJlNDcyIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTYxMjI2MjcsImV4cCI6MTY5NjIwOTAyN30.OduZumegWu572Gf9tnaAzXm6aScbKjWxDe9kfL3HKec";
+  //     const yaakoubToken = // this token for ayoub taji35@gmail.com
+  //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5b3ViIiwic3ViIjoiZjUxYjU4NmItZjVjMi00ZjVmLTk2YTktM2E2YjMyMGE0NzdiIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTYxMjI1NjAsImV4cCI6MTY5NjIwODk2MH0.PAGXXjP-FpjTI-FrpDq302LU2dUlyxeZq3yHtQWyPwg"
+  //     function parseJwt(token: string) {
+  //       var base64Url = token.split(".")[1];
+  //       var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  //       var jsonPayload = decodeURIComponent(
+  //         window
+  //           .atob(base64)
+  //           .split("")
+  //           .map(function (c) {
+  //             return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+  //           })
+  //           .join("")
+  //       );
 
-        return JSON.parse(jsonPayload);
-      }
-      const jwtToken = parseJwt(ayoubToken);
-      const yaakoubjwtToken = parseJwt(yaakoubToken);
+  //       return JSON.parse(jsonPayload);
+  //     }
+  //     const jwtToken = parseJwt(ayoubToken);
+  //     const yaakoubjwtToken = parseJwt(yaakoubToken);
 
-      // console.log(jwtToken);
-      try {
-        const res = await axios.get(
+  //     // console.log(jwtToken);
+  //     try {
+  //       const res = await axios.get(
  
-          `http://e3r10p14.1337.ma:3000/chat/individual`, {
-            headers: {
-              Authorization: `Bearer ${ayoubToken}`,
-            },
-          params: {
-            id: jwtToken.sub,
-            page: 1,
-            limit: 5,
-            user: yaakoubjwtToken.sub,
-          }}
-        );
-        // console.log(res.data);
-      } catch (error) {
-        console.log("error of fetching data: ", error);
-      }
-    };
-    fetchData();
-  });
+  //         `http://localhost:3000/chat/individual`, {
+  //           headers: {
+  //             Authorization: `Bearer ${ayoubToken}`,
+  //           },
+  //         params: {
+  //           id: jwtToken.sub,
+  //           page: 1,
+  //           limit: 5,
+  //         }}
+  //       );
+  //       console.log(res.data);
+  //     } catch (error) {
+  //       console.log("error of fetching data: ", error);
+  //     }
+  //   };
+  //   fetchData();
+  // });
   //   useEffect(() => socketInitializer(), []);
   return (
-    <div className="bg-white/10 md:h-full h-[92%] rounded-2xl w-full flex justify-center items-center flex-col">
+    <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">
+      <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
       <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
-        <div className="md:h-full flex items-center justify-between border w-[90%]">
+        <div className="md:h-full flex items-center justify-between w-[90%]">
           <div className="flex justify-center items-center space-x-2 flex-row">
               <Image
                 src={test1}
@@ -340,7 +340,7 @@ const Conversation = () => {
           ))}
         </div>
       </div>
-      <div className="w-full h-[10%] min-h-[100px] flex justify-center items-center flex-col">
+      <div className="w-full h-[10%] md:min-h-[100px] min-h-[60px] flex justify-center items-center flex-col">
         <div className="w-[93%] border border-pearl border-opacity-40"></div>
         <div className="w-[90%] h-full flex justify-center items-center flex-row">
           <div className="w-full md:h-14 sm:h-10 h-8 flex justify-center items-center pr-5 md:pl-10 sm:pl-8 pl-6 space-x-2 bg-very-dark-purple rounded-full">
@@ -364,6 +364,7 @@ const Conversation = () => {
             </button>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

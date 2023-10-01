@@ -1,4 +1,5 @@
 "use client";
+import MobileSideBar from "../ui/sideBar/mobileSideBar";
 import Image from "next/image";
 import test1 from "../../../public/test1.svg";
 import {
@@ -22,12 +23,18 @@ import { Socket } from "socket.io";
 import ExploreChannels from "./exploreChannels";
 import CreateChannels from "./createChannels";
 
-function parseJwt (token: string) {
-  var base64Url = token.split('.')[1];
-  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  }).join(''));
+function parseJwt(token: string) {
+  var base64Url = token.split(".")[1];
+  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  var jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
 
   return JSON.parse(jsonPayload);
 }
@@ -216,7 +223,7 @@ const Chat = () => {
 
   useEffect(() => {
     // Get the token from localStorage
-    const storedToken = localStorage.getItem('token');
+    const storedToken = localStorage.getItem("token");
 
     // Redirect to the Signin page if token is not available
     // if (!storedToken) {
@@ -231,16 +238,25 @@ const Chat = () => {
   console.log("======> token: ", storedToken);
   const [exploreOpen, setExploreOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
+  const [openSideBar, setOpenSideBar] = useState(false);
   const [open, setOpen] = useState(false);
   const [flag, setFlag] = useState("");
+
   return (
-    <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 pl-0 py-0 pr-0 items-center md:flex-row flex-col">
-      <NavBar />
+    <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 md:pl-3 pl-0 py-0 pr-0 items-center flex-row">
       <SideBar />
+      {openSideBar && <MobileSideBar />}
       <SubSideBar open={open} setOpen={setOpen} setFlag={setFlag} />
-      {flag === "ExploreChannels" && <ExploreChannels open={open} setOpen={setOpen} />}
-      {flag === "CreateChannels" && <CreateChannels open={open} setOpen={setOpen} />}
-      <Conversation />
+      {flag === "ExploreChannels" && (
+        <ExploreChannels open={open} setOpen={setOpen} />
+      )}
+      {flag === "CreateChannels" && (
+        <CreateChannels open={open} setOpen={setOpen} />
+      )}
+      <div className="w-full h-full">
+        <NavBar open={openSideBar} setOpen={setOpenSideBar} />
+        <Conversation />
+      </div>
     </div>
   );
 };

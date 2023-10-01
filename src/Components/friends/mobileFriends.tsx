@@ -21,6 +21,7 @@ const MobileCurrentFriends = () => {
   };
 
   return (
+    <div className="w-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2 flex">
     <div className="w-full h-full rounded-2xl bg-white/10 flex md:hidden justify-center items-center flex-col">
       <div className="flex justify-center items-center flex-col w-full h-[10%] min-h-[100px]">
         <div className="w-full h-full flex justify-center items-center flex-col">
@@ -30,7 +31,7 @@ const MobileCurrentFriends = () => {
               alt="message icon"
               className=" h-full xl:w-10 w-9"
             />
-            <h1 className="flex  justify-center items-center font-Poppins text-pearl xl:text-4xl text-3xl font-bold h-full">
+            <h1 className="flex  justify-center items-center font-Poppins text-pearl text-xl font-bold h-full">
               Friends
             </h1>
           </div>
@@ -46,7 +47,7 @@ const MobileCurrentFriends = () => {
           <motion.button
             onClick={myFriendsChange}
             whileTap={{ scale: 0.9 }}
-            className="font-Passion-One text-pearl text-xl"
+            className="font-Passion-One text-pearl xs:text-base text-sm"
           >
             My Friends
           </motion.button>
@@ -59,14 +60,15 @@ const MobileCurrentFriends = () => {
           <motion.button
             onClick={friendsRequestChange}
             whileTap={{ scale: 0.9 }}
-            className="font-Passion-One text-pearl text-xl"
+            className="font-Passion-One text-pearl xs:text-base text-sm"
           >
-            Friends Requests
+            Friend Requests
           </motion.button>
         </div>
       </div>
       {friendPage === "myFriend" && <ContentMyFriends />}
       {friendPage === "friendsRequest" && <ContentFriendsRequests />}
+    </div>
     </div>
   );
 };

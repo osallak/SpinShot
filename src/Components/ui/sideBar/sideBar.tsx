@@ -15,7 +15,7 @@ const SideBar = () => {
   const Icons = [
     { icon: search, route: "/Search" },
     { icon: profile, route: "/Profile" },
-    { icon: message, route: "/messages" },
+    { icon: message, route: "/Messages" },
     { icon: friend, route: "/Friends" },
     { icon: game, route: "/Game" },
   ];
@@ -39,7 +39,7 @@ const SideBar = () => {
             key={index}
             className="w-full h-[60px] flex items-center justify-center opacity-40 hover:opacity-100"
           >
-            {option.route != "/search" && option.route != "/notification" ? (
+            {option.route != "/Search" ? (
               <button onClick={(event) => changePage(event, option.route)}>
                 {" "}
                 <Image src={option.icon} alt="" />{" "}

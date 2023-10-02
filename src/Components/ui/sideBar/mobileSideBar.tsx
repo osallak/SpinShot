@@ -28,7 +28,7 @@ const MobileSideBar = () => {
   return (
     <div className="h-full flex justify-center items-center md:hidden w-[70px] min-w-[50px] py-2 pl-2">
       <div
-        className={`bg-white/10 rounded-2xl h-full flex flex-col md:hidden w-full`}
+        className={`bg-white/10 rounded-xl h-full flex flex-col md:hidden w-full`}
       >
         <div className="w-full h-[10%] min-h-[70px] flex justify-center items-center flex-col">
           <div className="flex justify-center items-center h-full">
@@ -42,7 +42,7 @@ const MobileSideBar = () => {
               key={index}
               className="w-full h-[40px] flex items-center justify-center opacity-40 hover:opacity-100"
             >
-              {option.route != "/search" && option.route != "/notification" ? (
+              {option.route != "/Search" ? (
                 <button onClick={(event) => changePage(event, option.route)}>
                   {" "}
                   <Image src={option.icon} alt="" className="w-5" />{" "}

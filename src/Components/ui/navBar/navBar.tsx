@@ -10,7 +10,7 @@ const NavBar = (props: ({open: boolean, setOpen: Function})) => {
 
   return (
     <div className="w-full h-[9%] md:hidden flex justify-center items-center px-2 pt-2 pb-1">
-      <div className="w-full h-full flex justify-between p-3 items-center bg-white/10 sm:rounded-2xl rounded-xl">
+      <div className="w-full h-full flex justify-between p-3 items-center bg-white/10 rounded-xl">
         <button onClick={openSideBar} className="flex justify-center items-center w-10">
           <Image src={threeLines} alt="three lines" />
         </button>

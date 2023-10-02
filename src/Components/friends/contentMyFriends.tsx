@@ -1,6 +1,9 @@
 import test1 from "../../../public/test1.svg";
 import Image from "next/image";
-import Example from "../ui/dropDown/menu";
+import DropDown from "../ui/dropDown/dropDown";
+import newMessage from "../../../public/newMessage.svg"
+import block from "../../../public/block.svg"
+import game from "../../../public/game.svg"
 
 const ContentMyFriends = () => {
   const array = [
@@ -46,9 +49,9 @@ const ContentMyFriends = () => {
   };
 
 	const menu = [
-    { content: "Message", click: handleClick },
-    { content: "Block", click: handleClick },
-    { content: "Let't Play", click: handleClick },
+    { content: "Message", click: handleClick, icon: newMessage },
+    { content: "Block", click: handleClick, icon: block },
+    { content: "Let't Play", click: handleClick, icon: game },
   ];
   return (
     <>
@@ -57,7 +60,7 @@ const ContentMyFriends = () => {
           7 Friends
         </h1>
       </div>
-      <div className="h-[70%] flex flex-col items-center min-h-[100px] w-[95%] overflow-auto">
+      <div className="h-[70%] flex flex-col items-center min-h-[100px] w-[95%] overflow-auto rounded-sm">
         {array.map((items, index) => (
           <div key={index} className="w-full h-[60px] min-h-[60px]">
             <div className="w-full h-full flex items-center justify-center">
@@ -77,7 +80,7 @@ const ContentMyFriends = () => {
                 </div>
               </div>
               <div className="w-[50%] h-full flex justify-end items-center xl:space-x-3 md:space-x-2 space-x-1 xl:pr-3 pr-1">
-                <Example data={menu} />
+                <DropDown data={menu} />
               </div>
             </div>
           </div>

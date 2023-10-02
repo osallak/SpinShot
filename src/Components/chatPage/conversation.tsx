@@ -12,11 +12,14 @@ import {
 } from "react";
 import SideBar from "@/Components/ui/sideBar/sideBar";
 import sendMessageIcon from "../../../public/sendMessage.svg";
-import { DropDown } from "../ui/dropDown/dropDown";
+import DropDown from "../ui/dropDown/dropDown";
 import { useRouter } from "next/router";
 import axios from "axios";
 import io from "Socket.IO-client";
 import { headers } from "next/dist/client/components/headers";
+import game from "../../../public/game.svg";
+import trash from "../../../public/trash.svg";
+import add from "../../../public/add.svg";
 
 const Conversation = () => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -116,6 +119,16 @@ const Conversation = () => {
       sender: "owner",
     },
   ];
+
+  const handleClick = () => {
+    console.log("hello world from the other side");
+  }
+
+  const dropDownContent = [
+    { content: "Delete Conversation", click: handleClick, icon: trash },
+    { content: "Let't Play", click: handleClick, icon: game },
+  ]
+
 
   // const handleMessage = (event: ChangeEvent<HTMLInputElement>) => {
   //   event.preventDefault();
@@ -292,7 +305,7 @@ const Conversation = () => {
               </p>
             </div>
           </div>
-          <DropDown />
+          <DropDown data={dropDownContent} />
         </div>
         <div className="w-[93%] border border-pearl border-opacity-40"></div>
       </div>

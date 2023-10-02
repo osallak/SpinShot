@@ -4,7 +4,9 @@ import EmptyButton from "../ui/Buttons/EmptyButton";
 import SimpleButton from "../ui/Buttons/SimpleButton";
 import { MouseEvent } from "react";
 import { motion } from "framer-motion";
-import Example from "../ui/dropDown/menu";
+import accept from "../../../public/active.svg"
+import refuse from "../../../public/unactive.svg"
+import DropDown from "../ui/dropDown/dropDown";
 
 const FriendsRequest = () => {
   const array = [
@@ -125,8 +127,8 @@ const FriendsRequest = () => {
   };
 
   const menu = [
-    { content: "Accept", click: handleClick },
-    { content: "Refuse", click: handleClick },
+    { content: "Accept", click: handleClick, icon: accept },
+    { content: "Refuse", click: handleClick, icon: refuse },
   ];
 
   return (
@@ -162,7 +164,7 @@ const FriendsRequest = () => {
                 </div>
               </div>
               <div className="w-[50%] h-full flex justify-end items-center xl:space-x-3 md:space-x-2 space-x-1 xl:pr-3 pr-1">
-                <Example data={menu} />
+                <DropDown data={menu} />
               </div>
             </div>
           </div>

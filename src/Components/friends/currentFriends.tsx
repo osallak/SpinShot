@@ -1,7 +1,10 @@
 import Image from "next/image";
 import FriendsIcon from "../../../public/friend.svg";
 import test1 from "../../../public/test1.svg"
-import Example from "../ui/dropDown/menu";
+import newMessage from "../../../public/newMessage.svg"
+import block from "../../../public/block.svg"
+import game from "../../../public/game.svg"
+import DropDown from "../ui/dropDown/dropDown";
 
 const CurrentFriends = () => {
   const array = [
@@ -47,9 +50,9 @@ const CurrentFriends = () => {
   };
 
   const menu = [
-    { content: "Message", click: handleClick },
-    { content: "Block", click: handleClick },
-    { content: "Let't Play", click: handleClick },
+    { content: "Message", click: handleClick, icon: newMessage },
+    { content: "Block", click: handleClick, icon: block },
+    { content: "Let't Play", click: handleClick, icon: game },
   ];
 
   return (
@@ -94,7 +97,7 @@ const CurrentFriends = () => {
                 </div>
               </div>
               <div className="w-[50%] h-full flex justify-end items-center xl:space-x-3 md:space-x-2 space-x-1 xl:pr-3 pr-1">
-                <Example data={menu} />
+                <DropDown data={menu} />
               </div>
             </div>
           </div>

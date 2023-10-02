@@ -22,8 +22,8 @@ const MobileCurrentFriends = () => {
 
   return (
     <div className="w-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2 flex">
-    <div className="w-full h-full rounded-2xl bg-white/10 flex md:hidden justify-center items-center flex-col">
-      <div className="flex justify-center items-center flex-col w-full h-[10%] min-h-[100px]">
+    <div className="w-full h-full rounded-xl bg-white/10 flex md:hidden justify-center items-center flex-col">
+      <div className="flex justify-center items-center flex-col w-full h-[10%] min-h-[70px]">
         <div className="w-full h-full flex justify-center items-center flex-col">
           <div className="w-[80%] flex flex-row justify-start items-center space-x-3 h-full">
             <Image

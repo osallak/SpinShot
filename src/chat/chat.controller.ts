@@ -35,10 +35,7 @@ export class ChatController {
   @ApiTags('chat')
   @UseGuards(JwtAuthGuard)
   @Get('all')
-  async getAll(
-    @Req() req: Request,
-    @Res() expressResponse: ExpressResponse,
-  ) {
+  async getAll(@Req() req: Request, @Res() expressResponse: ExpressResponse) {
     const response = await this.chatService.getAllLatestMessages(
       (req as any)?.user?.id,
     );
@@ -62,20 +59,22 @@ export class ChatController {
   @ApiTags('chat')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @Get('individual')
+  @Get('individual/:user')
   async getIndividualMessagesWithAUser(
     @Req() req: Request,
-    @Query() query: PaginationQueryDto,
-    @Query('user') receiverId: string,
+    @Param('user') receiverId: string,
     @Res() response: ExpressResponse,
   ) {
-    const res = await this.chatService.getIndividualMessages(
-      (req as any)?.user?.id,
-      query,
-      receiverId,
-    );
-		if (res) {
-			return response.status(res.status).json(res.content);
-		}
+    try {
+      const res = await this.chatService.getIndividualMessages(
+        (req as any)?.user?.id,
+        receiverId,
+      );
+      if (res) {
+        return response.status(res.status).json(toObject.call(res.content));
+      }
+    } catch {
+      return response.status(500).json('Internal Server Error');
+    }
   }
 }

@@ -170,13 +170,22 @@ export class ChatService {
       }
     }
   }
-
   private formatResponseBasedOnUser(message, userId) {
-    // TODO
-    console.log('before', message);
     let output = [];
-    message.array.forEach((element) => {
-      output.push(element);
+    if (!message) {
+      return output;
+    }
+    message.forEach((element) => {
+      let obj = {};
+      obj['sender'] = element.sender;
+      obj['message'] = element.message;
+      if (element?.Sender) {
+        obj['other'] = element.Sender;
+      } else if (element?.Receiver) {
+        obj['other'] = element.Receiver;
+      }
+      obj['sentAt'] = element.sentAt;
+      output.push(obj);
     });
     return output;
   }
@@ -198,7 +207,7 @@ export class ChatService {
       return undefined;
     }
   }
-				
+
   async getAllLatestMessages(userId: string) {
     try {
       if (!userId) {
@@ -257,7 +266,8 @@ export class ChatService {
         status: 200,
         content: this.formatResponseBasedOnUser(message, userId),
       };
-    } catch {
+    } catch (e) {
+      console.log(e);
       return {
         status: 500,
         content: 'Failed to get latest messages',
@@ -265,11 +275,7 @@ export class ChatService {
     }
   }
 
-  async getIndividualMessages(
-    userId: string,
-    query: PaginationQueryDto,
-    receiverId: string,
-  ) {
+  async getIndividualMessages(userId: string, receiverId: string) {
     try {
       const users = await this.prismaService.user.findMany({
         where: {
@@ -283,7 +289,6 @@ export class ChatService {
           ],
         },
       });
-
       if (!users || !receiverId || (users && users.length != 2)) {
         return {
           status: 404,
@@ -292,8 +297,6 @@ export class ChatService {
       }
       const toFrom = [userId, receiverId].sort();
       const content = await this.prismaService.conversation.findMany({
-        skip: query.getSkip(),
-        take: query.limit,
         orderBy: {
           sentAt: 'asc',
         },
@@ -315,11 +318,7 @@ export class ChatService {
       });
       return {
         status: 200,
-        content: serializePaginationResponse(
-          content,
-          content.length,
-          query.limit,
-        ),
+        content: content,
       };
     } catch {
       return {

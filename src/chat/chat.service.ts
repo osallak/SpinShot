@@ -19,6 +19,7 @@ import { NotificationService } from 'src/notification/notification.service';
 import { UserService } from 'src/user/user.service';
 import { serializePaginationResponse } from 'src/user/helpers';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
+import { RoomService } from 'src/room/room.service';
 @Injectable()
 export class ChatService {
   private World: Map<string, ChatUser> = new Map<string, ChatUser>();
@@ -30,6 +31,7 @@ export class ChatService {
     private readonly configService: ConfigService,
     private readonly notificationService: NotificationService,
     private readonly userService: UserService,
+    private readonly roomService: RoomService,
   ) {}
 
   private getUserFromUrl(url: string) {
@@ -170,7 +172,7 @@ export class ChatService {
       }
     }
   }
-  private formatResponseBasedOnUser(message, userId) {
+  private async formatResponseBasedOnUser(message, userId) {
     let output = [];
     if (!message) {
       return output;
@@ -187,7 +189,16 @@ export class ChatService {
       obj['sentAt'] = element.sentAt;
       output.push(obj);
     });
-    return output;
+    let response = {};
+		try {
+		let rooms = (await this.roomService.getAllRooms(userId))?.data;
+			response['room'] = rooms;
+			response['individual'] = output;
+			return response;
+		} catch(e) {
+			console.log(e);
+			return output;
+		}
   }
 
   extractJwtToken(client: Socket): JwtAuthPayload | undefined {

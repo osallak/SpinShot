@@ -288,7 +288,7 @@ export class RoomService {
     userStatusGroup: UserStatusGroup,
     prismaService: PrismaService,
     muteDurations?: MuteDurations,
-    mutedAt?: bigint,
+    mutedAt?: string,
   ) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -795,6 +795,27 @@ export class RoomService {
           status: 500,
           message: 'Internal Server Error',
         });
+      }
+    });
+  }
+
+  async getRoomMembers(roomName: string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const roomMembers =
+          await this.prismaService.roomChatConversation.findMany({
+            where: {
+              roomChatId: roomName,
+              userStatus: null,
+            },
+            select: {
+              userId: true,
+            },
+          });
+        resolve(roomMembers);
+      } catch (e) {
+        console.log(e);
+        reject([]);
       }
     });
   }

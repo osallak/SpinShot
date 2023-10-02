@@ -13,9 +13,9 @@ class userToBeMuted {
   @IsNotEmpty()
   userId: string;
   @IsEnum(MuteDurations)
-  time: MuteDurations; 
-  @IsNumber()
-  mutedAt: bigint;
+  time: MuteDurations;
+  @IsNotEmpty()
+  mutedAt: string;
 }
 
 export class MuteUserInRoomDto {
@@ -28,5 +28,4 @@ export class MuteUserInRoomDto {
 
   @IsEnum(RoomType)
   type: RoomType;
-
 }

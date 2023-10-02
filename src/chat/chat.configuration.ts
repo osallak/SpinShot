@@ -7,7 +7,7 @@ export const OPTIONS = {
 };
 
 export const PRIVATE_MESSAGE = 'pm';
-export const GROUP_MESSAGE = 'pm';
+export const GROUP_MESSAGE = 'gm';
 export const MESSAGE_SENT = 'lsm';
 export const EXCEPTION = 'exception';
 export const INTERNAL_SERVER_ERROR_MESSAGE = 'Internal Server Error';

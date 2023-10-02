@@ -12,7 +12,7 @@ import { ChatService } from './chat.service';
 import { Logger, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
 import { WsBadRequestException } from './exceptions/ws-exceptions';
 import { ValidationError } from 'class-validator';
-import { SendMessageDto } from './dtos/send-message.dto';
+import { SendMessageDto, sendRoomMessageDto } from './dtos/send-message.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import {
   CHAT_PORT,
@@ -20,9 +20,11 @@ import {
   INVALID_DATA_MESSAGE,
   PRIVATE_MESSAGE,
   GROUP_MESSAGE,
+  INTERNAL_SERVER_ERROR_MESSAGE,
 } from './chat.configuration';
 
 import { WsGuard } from './chat.guard';
+import { error } from 'console';
 
 @WebSocketGateway(CHAT_PORT, OPTIONS)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -46,7 +48,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleConnection(client: Socket) {
-		this.logger.debug("new client: ", client.id);
     this.chatService.addUserToWorld(client);
   }
 
@@ -57,14 +58,21 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(WsGuard)
   @SubscribeMessage(GROUP_MESSAGE)
   async handleGroupMessage(
-    @MessageBody(new ValidationPipe({
-    exceptionFactory: (errors: ValidationError[]) => {
-      return new WsBadRequestException(INVALID_DATA_MESSAGE);
-    },
-  })) body: SendMessageDto,
+    @MessageBody(
+      new ValidationPipe({
+        exceptionFactory: (errors: ValidationError[]) => {
+          return new WsBadRequestException(INVALID_DATA_MESSAGE);
+        },
+      }),
+    )
+    body: sendRoomMessageDto,
     @ConnectedSocket() socket: Socket,
   ) {
-		// return this.chatService.sendGroupMessage(body);
-	}
-
+    try {
+      return await this.chatService.sendGroupMessage(body);
+    } catch (e) {
+      this.logger.error(e);
+      throw new WsBadRequestException(INTERNAL_SERVER_ERROR_MESSAGE);
+    }
+  }
 }

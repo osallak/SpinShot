@@ -141,7 +141,7 @@ model RoomChatConversation {
   userId       String           @map("user_id")
   userStatus   UserStatusGroup? @map("user_status")
   muteDuration MuteDurations?
-  mutedAt      BigInt?
+  mutedAt      String?
   userRole     UserRole
 
   User     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -160,7 +160,7 @@ model Message {
   RoomChatConversation   RoomChatConversation @relation(fields: [roomChatConversationId], references: [id], onDelete: Cascade)
   user                   User                 @relation("messages", fields: [senderId], references: [id], onDelete: Cascade)
   roomChatConversationId String               @map("room_chat_conversation_id")
-  sentAt                 BigInt
+  sentAt                 String
   RoomChat               RoomChat?            @relation(fields: [roomChatId], references: [id], onDelete: Cascade)
   roomChatId             String?
 
@@ -174,7 +174,7 @@ model Conversation {
 
   Sender   User   @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
   Receiver User   @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
-  sentAt   BigInt
+  sentAt   String
   message  String
   sender   String
 

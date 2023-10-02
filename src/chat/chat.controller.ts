@@ -2,14 +2,12 @@ import {
   Controller,
   Get,
   Param,
-  Query,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { Response as ExpressResponse, Request } from 'express';
 import { ChatService } from './chat.service';
-import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { toObject } from 'src/global/interfaces';

@@ -1,6 +1,5 @@
 import { IsDateString, IsNotEmpty, IsNumber } from 'class-validator';
 
-
 export class SendMessageDto {
   @IsNotEmpty()
   from: string;
@@ -11,6 +10,20 @@ export class SendMessageDto {
   @IsNotEmpty()
   content: string;
 
-  @IsNumber()
-  timestamp: bigint;
+  @IsNotEmpty()
+  timestamp: string;
+}
+
+export class sendRoomMessageDto {
+  @IsNotEmpty()
+  from: string;
+
+  @IsNotEmpty()
+  roomName: string;
+
+  @IsNotEmpty()
+  content: string;
+
+  @IsNotEmpty()
+  timestamp: string;
 }

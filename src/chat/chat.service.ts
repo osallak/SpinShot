@@ -5,12 +5,13 @@ import { FriendshipStatus } from '@prisma/client';
 import { Socket } from 'socket.io';
 import {
   EXCEPTION,
+  GROUP_MESSAGE,
   INTERNAL_SERVER_ERROR_MESSAGE,
   PRIVATE_MESSAGE,
 } from './chat.configuration';
 
 import { eventType } from './types/event.type';
-import { SendMessageDto } from './dtos/send-message.dto';
+import { SendMessageDto, sendRoomMessageDto } from './dtos/send-message.dto';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
 import { JwtAuthPayload } from 'src/auth/interfaces';
@@ -150,11 +151,11 @@ export class ChatService {
     if (isFriend) {
       const receiver = this.getSocketsAssociatedWithUser(body.to);
       if (!receiver || receiver.length === 0) {
-        // TODO: push to notification
+        // TODO: should the client side be notified ?
         return;
       }
       for (let i = 0; i < receiver.length; ++i) {
-        receiver[i].emit(event.event, JSON.stringify(event.content));
+        receiver[i].emit(event.event, JSON.stringify(body));
       }
       let user: ChatUser = this.World.get(body.from);
       try {
@@ -190,15 +191,15 @@ export class ChatService {
       output.push(obj);
     });
     let response = {};
-		try {
-		let rooms = (await this.roomService.getAllRooms(userId))?.data;
-			response['room'] = rooms;
-			response['individual'] = output;
-			return response;
-		} catch(e) {
-			console.log(e);
-			return output;
-		}
+    try {
+      let rooms = (await this.roomService.getAllRooms(userId))?.data;
+      response['room'] = rooms;
+      response['individual'] = output;
+      return response;
+    } catch (e) {
+      console.log(e);
+      return output;
+    }
   }
 
   extractJwtToken(client: Socket): JwtAuthPayload | undefined {
@@ -337,5 +338,31 @@ export class ChatService {
         content: 'Failed to retrieve messages',
       };
     }
+  }
+
+  async sendGroupMessage(body: sendRoomMessageDto) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const roomMembers = await this.roomService.getRoomMembers(
+          body.roomName,
+        );
+        roomMembers?.forEach((member) => {
+          if (member?.userId !== body.from) {
+            let memberSockets = this.getSocketsAssociatedWithUser(
+              member?.userId,
+            );
+            memberSockets?.forEach((socket) => {
+              socket.emit(
+                GROUP_MESSAGE,
+                JSON.stringify(body),
+              );
+            });
+          }
+        });
+      } catch (e) {
+        console.log(e);
+        reject(null);
+      }
+    });
   }
 }

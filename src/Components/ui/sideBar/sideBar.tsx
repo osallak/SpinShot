@@ -7,11 +7,13 @@ import profile from "../../../../public/profile.svg";
 import game from "../../../../public/game.svg";
 import notification from "../../../../public/notification.svg";
 import test1 from "../../../../public/test1.svg";
-import { MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
 import { useRouter } from "next/router";
+import logout from "../../../../public/logout.svg"
 
 const SideBar = () => {
   const Router = useRouter()
+  const [hovered, setHovered] = useState(false);
   const Icons = [
     { icon: search, route: "/Search" },
     { icon: profile, route: "/Profile" },
@@ -24,6 +26,17 @@ const SideBar = () => {
     event.preventDefault();
     Router.push(path);
   };
+
+  const handleHover = () => {
+    setHovered(true);
+  }
+  const handleHoverOut = () => {
+    setHovered(false);
+  }
+
+  const handleLogOut = () => {
+    console.log("logout");
+  }
 
   return (
     <div className={`bg-white/10 rounded-2xl h-full md:flex flex-col hidden lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px]`}>
@@ -53,8 +66,9 @@ const SideBar = () => {
           </div>
         ))}
       </div>
-      <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center">
-        <Image src={test1} alt="test1" />
+      <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center relative">
+        <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} className={`${hovered ? "opacity-10" : "opacity-100"} cursor-pointer`} src={test1} alt="test1" />
+        {hovered && <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={logout} alt="logout" className="absolute cursor-pointer" />}
       </div>
     </div>
   );

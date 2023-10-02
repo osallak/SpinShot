@@ -131,6 +131,10 @@ const FriendsRequest = () => {
     { content: "Refuse", click: handleClick, icon: refuse },
   ];
 
+  const goToUser = () => {
+    console.log("hello");
+  }
+
   return (
     <div className="w-[50%] h-full rounded-2xl bg-white/10 md:flex hidden justify-center items-center flex-col">
       <div className="flex justify-center items-center flex-col w-full h-[10%] min-h-[100px]">
@@ -144,7 +148,7 @@ const FriendsRequest = () => {
           7 Friend Requests
         </h1>
       </div>
-      <div className="h-[80%] flex flex-col items-center min-h-[150px] w-[95%] overflow-auto">
+      <div className="h-[80%] flex flex-col items-center min-h-[150px] w-[98%] overflow-auto rounded-sm">
         {array.map((items, index) => (
           <div key={index} className="w-full h-[90px] min-h-[80px]">
             <div className="w-full h-full flex items-center justify-center">
@@ -156,7 +160,7 @@ const FriendsRequest = () => {
                 />
                 <div className="h-[70%] flex justify-center flex-col">
                   <p className="font-Poppins text-pearl font-semibold xl:text-xl md:text-lg text-base">
-                    {items.name}
+                    <span className="cursor-pointer" onClick={goToUser}>{items.name}</span>
                   </p>
                   <p className="font-Poppins text-pearl text-opacity-40 font-normal xl:text-base md:text-sm text-xs">
                     {items.email}

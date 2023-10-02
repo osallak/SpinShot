@@ -7,11 +7,13 @@ import profile from "../../../../public/profile.svg";
 import game from "../../../../public/game.svg";
 import notification from "../../../../public/notification.svg";
 import test1 from "../../../../public/test1.svg";
-import { MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
 import { useRouter } from "next/router";
+import logout from "../../../../public/logout.svg"
 
 const MobileSideBar = () => {
   const Router = useRouter();
+  const [hovered, setHovered] = useState(false);
   const Icons = [
     { icon: search, route: "/Search" },
     { icon: profile, route: "/Profile" },
@@ -24,6 +26,17 @@ const MobileSideBar = () => {
     event.preventDefault();
     Router.push(path);
   };
+
+  const handleHover = () => {
+    setHovered(true);
+  }
+  const handleHoverOut = () => {
+    setHovered(false);
+  }
+
+  const handleLogOut = () => {
+    console.log("logout");
+  }
 
   return (
     <div className="h-full flex justify-center items-center md:hidden w-[70px] min-w-[50px] py-2 pl-2">
@@ -57,7 +70,8 @@ const MobileSideBar = () => {
           ))}
         </div>
         <div className="w-full h-[6%] min-h-[60px] py-2 flex justify-center items-center">
-          <Image src={test1} alt="test1" className="w-9" />
+          <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={test1} alt="test1" className={`w-9 ${hovered ? "opacity-10" : "opacity-100"}`} />
+          {hovered && <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={logout} alt="logout" className="absolute cursor-pointer" />}
         </div>
       </div>
     </div>

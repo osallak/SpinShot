@@ -43,6 +43,41 @@ const CurrentFriends = () => {
       email: "tajiayoub35@gmail.com",
       name: "PonPon",
     },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "PonPon",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "PonPon",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "PonPon",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "PonPon",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "PonPon",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "PonPon",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "PonPon",
+    },
   ]
 
   const handleClick = () => {
@@ -54,6 +89,10 @@ const CurrentFriends = () => {
     { content: "Block", click: handleClick, icon: block },
     { content: "Let't Play", click: handleClick, icon: game },
   ];
+
+  const goToUser = () => {
+    console.log("hello");
+  }
 
   return (
     <div className="w-[50%] h-full rounded-2xl bg-white/10 md:flex hidden justify-center items-center flex-col">
@@ -77,11 +116,11 @@ const CurrentFriends = () => {
           7 Friends
         </h1>
       </div>
-      <div className="h-[80%] flex flex-col items-center min-h-[100px] w-[95%] overflow-auto">
+      <div className="h-[80%] flex flex-col items-center min-h-[100px] w-[98%] overflow-auto rounded-sm">
       {array.map((items, index) => (
           <div key={index} className="w-full h-[90px] min-h-[80px]">
             <div className="w-full h-full flex items-center justify-center">
-              <div className="w-[50%] h-full flex justify-start items-center space-x-2">
+              <div className="w-[50%] h-full flex justify-start items-center space-x-2 ">
                 <Image
                   src={items.icon}
                   alt="avatar"
@@ -89,7 +128,7 @@ const CurrentFriends = () => {
                 />
                 <div className="h-[70%] flex justify-center flex-col">
                   <p className="font-Poppins text-pearl font-semibold xl:text-xl md:text-lg text-base">
-                    {items.name}
+                    <span className="cursor-pointer" onClick={goToUser}>{items.name}</span>
                   </p>
                   <p className="font-Poppins text-pearl text-opacity-40 font-normal xl:text-base md:text-sm text-xs">
                     {items.email}

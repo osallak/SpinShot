@@ -2,14 +2,32 @@ import Image from "next/image"
 import searchInput from "../../../../public/searchInput.svg"
 import { ChangeEvent, useState, useEffect, useRef } from "react"
 
-const SearchInput = () => {
+type Array = {
+  icon: string,
+  messages: string,
+  userName: string,
+}
+
+type Content = {
+  data: Array[]
+}
+
+const SearchInput: React.FC<Content> = ({data}) => {
 
   const [searchValue, setSearchValue] = useState("");
 
   const search = (event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault()
+    event.preventDefault();
     setSearchValue(event.target.value);
   }
+
+  useEffect(() => {
+    data.map((items) => {
+      if (searchValue === items.userName) {
+        console.log("hello world from search");
+      }
+    })
+  })
 
   return(
     <div className="pl-4 space-x-2 bg-very-dark-purple rounded-full w-full h-full flex justify-center items-center flex-row">

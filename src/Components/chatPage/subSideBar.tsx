@@ -18,18 +18,21 @@ import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";
 import axios from "axios";
 
-
 interface data {
-  id: string,
-  avatar: string,
-  username: string
+  id: string;
+  avatar: string;
+  username: string;
 }
 
 interface otherdata {
-  Receiver: data,
+  Receiver: data;
 }
 
-function SubSideBar(props: {open: boolean, setOpen: Function, setFlag: Function}) {
+function SubSideBar(props: {
+  open: boolean;
+  setOpen: Function;
+  setFlag: Function;
+}) {
   const [readed, setReaded] = useState(false);
   const [clicked, setClicked] = useState<number>();
 
@@ -48,51 +51,104 @@ function SubSideBar(props: {open: boolean, setOpen: Function, setFlag: Function}
     event.preventDefault();
     props.setFlag("CreateChannels");
     props.setOpen(!props.open);
-  }
+  };
 
   const [respo, setRespo] = useState<otherdata[]>([]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const ayoubToken =
-  //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5b3ViIiwic3ViIjoiMTE4NTc5ZTctZGE3Yy00MGExLWI4ZmYtNGVkMjE5MDhkYTE0IiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTUyNTE2MTYsImV4cCI6MTY5NTMzODAxNn0.DN5AXkCuE6Sh-ZpubfdY66V-uS-upKFHHG2yioFZoOo";
-  //     function parseJwt(token: string) {
-  //       var base64Url = token.split(".")[1];
-  //       var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-  //       var jsonPayload = decodeURIComponent(
-  //         window
-  //           .atob(base64)
-  //           .split("")
-  //           .map(function (c) {
-  //             return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-  //           })
-  //           .join("")
-  //       );
+  useEffect(() => {
+    const fetchData = async () => {
+      const ayoubToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5b3ViIiwic3ViIjoiMTE4NTc5ZTctZGE3Yy00MGExLWI4ZmYtNGVkMjE5MDhkYTE0IiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTUyNTE2MTYsImV4cCI6MTY5NTMzODAxNn0.DN5AXkCuE6Sh-ZpubfdY66V-uS-upKFHHG2yioFZoOo";
+      function parseJwt(token: string) {
+        var base64Url = token.split(".")[1];
+        var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        var jsonPayload = decodeURIComponent(
+          window
+            .atob(base64)
+            .split("")
+            .map(function (c) {
+              return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join("")
+        );
 
-  //       return JSON.parse(jsonPayload);
-  //     }
-  //     const jwtToken = parseJwt(ayoubToken);
-  //     try {
-  //       const res = await axios.get(
-  //         `http://e3r10p14.1337.ma:3000/chat/all`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${ayoubToken}`,
-  //           },
-  //           params: {
-  //             id: jwtToken.sub,
-  //           },
-  //         }
-  //       );
-  //       setRespo(res.data);
-  //       // console.log("message : ", respo);
-  //       // console.log("response data: ", res.data[0].Receiver);
-  //     } catch (error) {
-  //       console.log("error of fetching data: ", error);
-  //     }
-  //   };
-  //   fetchData();
-  // });
+        return JSON.parse(jsonPayload);
+      }
+      const jwtToken = parseJwt(ayoubToken);
+      try {
+        const res = await axios.get(
+          `http://e3r10p14.1337.ma:3000/chat/all`,
+          {
+            headers: {
+              Authorization: `Bearer ${ayoubToken}`,
+            },
+            params: {
+              id: jwtToken.sub,
+            },
+          }
+        );
+        setRespo(res.data);
+        // console.log("message : ", respo);
+        // console.log("response data: ", res.data[0].Receiver);
+      } catch (error) {
+        console.log("error of fetching data: ", error);
+      }
+    };
+    fetchData();
+  });
+
+  const array = [
+    {
+      icon: test1,
+      messages: "hello world from the other side",
+      userName: "ataji",
+    },
+    {
+      icon: test1,
+      messages: "hello world from the other side",
+      userName: "fragger",
+    },
+    {
+      icon: test1,
+      messages: "hello world from the other side",
+      userName: "machlouj",
+    },
+    {
+      icon: test1,
+      messages: "hello world from the other side",
+      userName: "ponpon",
+    },
+    {
+      icon: test1,
+      messages: "hello world from the other side",
+      userName: "hlalouli",
+    },
+    {
+      icon: test1,
+      messages: "hello world from the other side",
+      userName: "sknahs",
+    },
+    {
+      icon: test1,
+      messages: "hello world from the other side",
+      userName: "navoos",
+    },
+    {
+      icon: test1,
+      messages: "hello world from the other side",
+      userName: "ayoub",
+    },
+    {
+      icon: test1,
+      messages: "hello world from the other side",
+      userName: "teejee",
+    },
+    {
+      icon: test1,
+      messages: "hello world from the other side",
+      userName: "yakhoudr",
+    },
+  ]
 
   return (
     <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl w-[25%] min-w-[350px]">
@@ -113,11 +169,11 @@ function SubSideBar(props: {open: boolean, setOpen: Function, setFlag: Function}
       </div>
       <div className="w-full flex justify-center items-center h-[10%] min-h-[55px]">
         <div className="w-[90%] h-[45px] rounded-full">
-          <SearchInput />
+          <SearchInput data={array} />
         </div>
       </div>
       <div className="w-[99%] xl:px-6 px-2 hover:overflow-auto overflow-hidden h-[70%] min-h-[100px]">
-        {respo.map((data, index) => (
+        {array.map((data, index) => (
           <button
             onClick={(event) => clickChat(event, index)}
             key={index}
@@ -125,16 +181,15 @@ function SubSideBar(props: {open: boolean, setOpen: Function, setFlag: Function}
               clicked == index ? "bg-very-dark-purple" : "bg-transparent"
             }`}
           >
-            <Image src={test1} alt="test" />
+            <Image src={data.icon} alt="test" />
             <div className="flex justify-start items-start space-y-1 flex-col">
               <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
-                {data.Receiver.username}
+                {data.userName}
               </p>
               <p
-                className={`font-poopins text-pearl flex justify-start text-sm font-medium ${"opacity-40"
-                }`}
+                className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
               >
-                {data.Receiver.id}
+                {data.messages}
               </p>
             </div>
           </button>

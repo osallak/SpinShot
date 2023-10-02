@@ -239,52 +239,63 @@ const Conversation = () => {
   //   console.log(jwtToken.sub);
   // };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const ayoubToken = // this token for ataji tajiayoub35@gmail.com
-  //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiNjAzY2RlNDctZmUxMy00OWQyLWJjOWUtOGMyNmEzZmJlNDcyIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTYxMjI2MjcsImV4cCI6MTY5NjIwOTAyN30.OduZumegWu572Gf9tnaAzXm6aScbKjWxDe9kfL3HKec";
-  //     const yaakoubToken = // this token for ayoub taji35@gmail.com
-  //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5b3ViIiwic3ViIjoiZjUxYjU4NmItZjVjMi00ZjVmLTk2YTktM2E2YjMyMGE0NzdiIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTYxMjI1NjAsImV4cCI6MTY5NjIwODk2MH0.PAGXXjP-FpjTI-FrpDq302LU2dUlyxeZq3yHtQWyPwg"
-  //     function parseJwt(token: string) {
-  //       var base64Url = token.split(".")[1];
-  //       var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-  //       var jsonPayload = decodeURIComponent(
-  //         window
-  //           .atob(base64)
-  //           .split("")
-  //           .map(function (c) {
-  //             return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-  //           })
-  //           .join("")
-  //       );
+  interface data {
+    sentAt: string;
+    sender: string;
+    message: string;
+  }
 
-  //       return JSON.parse(jsonPayload);
-  //     }
-  //     const jwtToken = parseJwt(ayoubToken);
-  //     const yaakoubjwtToken = parseJwt(yaakoubToken);
+  const [response, setResponse] = useState<data[]>([]);
+  const [useId, setUserId] = useState("");
 
-  //     // console.log(jwtToken);
-  //     try {
-  //       const res = await axios.get(
- 
-  //         `http://localhost:3000/chat/individual`, {
-  //           headers: {
-  //             Authorization: `Bearer ${ayoubToken}`,
-  //           },
-  //         params: {
-  //           id: jwtToken.sub,
-  //           page: 1,
-  //           limit: 5,
-  //         }}
-  //       );
-  //       console.log(res.data);
-  //     } catch (error) {
-  //       console.log("error of fetching data: ", error);
-  //     }
-  //   };
-  //   fetchData();
-  // });
+  const fetchData = async () => {
+    const u1 = // this token for ataji tajiayoub35@gmail.com
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InV0aWxpc2F0ZXVyMSIsInN1YiI6IjQ1Y2FmODlmLTJlMzktNDJkOC1iOTY3LTBlYzhkNzI3ODRkZSIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2MjQ3NjMwLCJleHAiOjE2OTYzMzQwMzB9.7DFjPumA7GNokKf3lXrJidaZ6t5-hKUQJ8KcAv5Y-Ic";
+    const u2 = // this token for ayoub taji35@gmail.com
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InV0aWxpc2F0ZXVyMiIsInN1YiI6IjM3MzQ0ZTVjLWY0MjEtNDcxNS1iODgyLTY2NTAyNzg0MDc3MiIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2MjQ3NjU1LCJleHAiOjE2OTYzMzQwNTV9.GA_BVSFA1QMsXm0v104eSjKUcW9qb6Yg_dGRokHYzUk"
+    function parseJwt(token: string) {
+      var base64Url = token.split(".")[1];
+      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      var jsonPayload = decodeURIComponent(
+        window
+          .atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+
+      return JSON.parse(jsonPayload);
+    }
+    const jwtU1 = parseJwt(u1);
+    const jwtU2 = parseJwt(u2);
+
+    // console.log(jwtToken);
+    try {
+      const res = await axios.get(
+        `http://e3r10p14.1337.ma:3000/chat/individual/${jwtU2.sub}`, {
+          headers: {
+            Authorization: `Bearer ${u1}`,
+          },
+        params: {
+          page: 1,
+          limit: 5,
+          id: jwtU1.sub,
+        }}
+      );
+      setResponse(res.data);
+      setUserId(jwtU1.sub);
+      console.log("res from conversation: ", response);
+    } catch (error) {
+      console.log("error of fetching data fron conversation: ", error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   //   useEffect(() => socketInitializer(), []);
+  //{sentAt: '0', sender: '37344e5c-f421-4715-b882-665027840772', message: 'salam 1'}
   return (
     <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">
       <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
@@ -314,32 +325,32 @@ const Conversation = () => {
         className={`w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden `}
       >
         <div className="w-[94%] space-y-1">
-          {msg.map((msg, index) => (
+          {response.map((items, index) => (
             <div
               key={index}
               className={`flex ${
-                msg.sender == "receiver"
+                items.sender != useId
                   ? "flex-row-reverse space-x-reverse space-x-5"
                   : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
               } justify-end`}
             >
               <div
                 className={`bg-transparent x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] flex ${
-                  msg.sender == "receiver" ? "items-start" : "items-end"
+                  items.sender != useId ? "items-start" : "items-end"
                 } flex-col md:space-y-1 space-y-0`}
               >
                 <div className="font-Poppins text-pearl md:text-base sm:text-sm text-xs sm:h-5 h-4">
-                  <span>{user}</span>
-                  <span>10:12</span>
+                  <span>{items.sender != useId ? items.sender : "you"}</span>
+                  <span>{items.sentAt}</span>
                 </div>
                 <div
                   className={`${
-                    msg.sender == "receiver"
+                    items.sender != useId
                       ? "rounded-r-2xl rounded-bl-2xl bg-peridot text-very-dark-purple"
                       : "rounded-l-2xl rounded-br-2xl bg-very-dark-purple text-pearl"
                   } md:p-2 p-1 px-3 font-Sarabun md:text-base sm:text-sm text-xs flex justify-center items-center`}
                 >
-                  {msg.message}
+                  {items.message}
                 </div>
               </div>
               <div>

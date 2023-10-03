@@ -4,7 +4,6 @@ import { CreateRoomDto } from './dtos/create-room.dto';
 import { JoinRoomDto } from './dtos/join-room.dto';
 import {
   FriendshipStatus,
-  MuteDurations,
   RoomType,
   User,
   UserRole,
@@ -287,7 +286,7 @@ export class RoomService {
     roomName: string,
     userStatusGroup: UserStatusGroup,
     prismaService: PrismaService,
-    muteDurations?: MuteDurations,
+    muteDurations?: string,
     mutedAt?: string,
   ) {
     return new Promise(async (resolve, reject) => {
@@ -806,10 +805,18 @@ export class RoomService {
           await this.prismaService.roomChatConversation.findMany({
             where: {
               roomChatId: roomName,
-              userStatus: null,
+              OR: [
+                {
+                  userStatus: null,
+                },
+                {
+                  userStatus: UserStatusGroup.MUTED,
+                },
+              ],
             },
             select: {
               userId: true,
+              userStatus: true,
             },
           });
         resolve(roomMembers);

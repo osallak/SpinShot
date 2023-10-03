@@ -140,7 +140,7 @@ model RoomChatConversation {
   roomChatId   String           @map("room_chat_id")
   userId       String           @map("user_id")
   userStatus   UserStatusGroup? @map("user_status")
-  muteDuration MuteDurations?
+  muteDuration String?
   mutedAt      String?
   userRole     UserRole
 
@@ -232,12 +232,6 @@ enum NotifType {
   FRIEND_REQUEST
 
   @@map("notif_type")
-}
-
-enum MuteDurations {
-  EIGHT_HOURS
-  ONE_WEEK
-  ALWAYS
 }
 
 enum FriendshipStatus {

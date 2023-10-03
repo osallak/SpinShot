@@ -343,6 +343,7 @@ export class ChatService {
   async sendGroupMessage(body: sendRoomMessageDto) {
     return new Promise(async (resolve, reject) => {
       try {
+				// TODO: check if the muted time has passed
         const roomMembers = await this.roomService.getRoomMembers(
           body.roomName,
         );

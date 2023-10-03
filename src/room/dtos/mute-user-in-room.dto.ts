@@ -1,4 +1,4 @@
-import { MuteDurations, RoomType } from '@prisma/client';
+import {  RoomType } from '@prisma/client';
 import {
   IsEnum,
   IsNotEmpty,
@@ -12,8 +12,8 @@ import {
 class userToBeMuted {
   @IsNotEmpty()
   userId: string;
-  @IsEnum(MuteDurations)
-  time: MuteDurations;
+  @IsNotEmpty()
+  time: string;
   @IsNotEmpty()
   mutedAt: string;
 }

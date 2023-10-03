@@ -21,8 +21,6 @@ import { Response, toObject } from 'src/global/interfaces';
 import { Response as ExpressResponse } from 'express';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import { Response as CustomResponse } from 'src/global/interfaces';
-import { IsEnum, IsNotEmpty } from 'class-validator';
-import { MuteDurations } from '@prisma/client';
 import { banUserDto } from './dtos/ban-user.dto';
 import { ProtectRoomDto } from './dtos/protect-room.dto';
 import { ElevateUserDto } from './dtos/elevate-user.dto';

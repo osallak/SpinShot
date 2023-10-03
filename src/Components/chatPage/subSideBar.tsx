@@ -28,6 +28,11 @@ interface otherdata {
   Receiver: data;
 }
 
+function compare(props: {userName: string, searchValue: string}) {
+  if (props.userName === props.searchValue)
+    console.log("hello world from compare function");
+}
+
 function SubSideBar(props: {
   open: boolean;
   setOpen: Function;
@@ -35,6 +40,7 @@ function SubSideBar(props: {
 }) {
   const [readed, setReaded] = useState(false);
   const [clicked, setClicked] = useState<number>();
+  const [searchValue, setSearchValue] = useState("");
 
   const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number) => {
     event.preventDefault();
@@ -76,17 +82,14 @@ function SubSideBar(props: {
       }
       const jwtToken = parseJwt(ayoubToken);
       try {
-        const res = await axios.get(
-          `http://e3r10p14.1337.ma:3000/chat/all`,
-          {
-            headers: {
-              Authorization: `Bearer ${ayoubToken}`,
-            },
-            params: {
-              id: jwtToken.sub,
-            },
-          }
-        );
+        const res = await axios.get(`http://e3r10p14.1337.ma:3000/chat/all`, {
+          headers: {
+            Authorization: `Bearer ${ayoubToken}`,
+          },
+          params: {
+            id: jwtToken.sub,
+          },
+        });
         setRespo(res.data);
         // console.log("message : ", respo);
         // console.log("response data: ", res.data[0].Receiver);
@@ -148,7 +151,9 @@ function SubSideBar(props: {
       messages: "hello world from the other side",
       userName: "yakhoudr",
     },
-  ]
+  ];
+
+  console.log("search Value lenght: ", searchValue.length);
 
   return (
     <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl w-[25%] min-w-[350px]">
@@ -169,32 +174,61 @@ function SubSideBar(props: {
       </div>
       <div className="w-full flex justify-center items-center h-[10%] min-h-[55px]">
         <div className="w-[90%] h-[45px] rounded-full">
-          <SearchInput data={array} />
+          <SearchInput setValue={setSearchValue} />
         </div>
       </div>
-      <div className="w-[99%] xl:px-6 px-2 hover:overflow-auto overflow-hidden h-[70%] min-h-[100px]">
-        {array.map((data, index) => (
-          <button
-            onClick={(event) => clickChat(event, index)}
-            key={index}
-            className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
-              clicked == index ? "bg-very-dark-purple" : "bg-transparent"
-            }`}
-          >
-            <Image src={data.icon} alt="test" />
-            <div className="flex justify-start items-start space-y-1 flex-col">
-              <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
-                {data.userName}
-              </p>
-              <p
-                className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
-              >
-                {data.messages}
-              </p>
+      {searchValue.length === 0 ? (
+        <div className="w-[99%] xl:px-6 px-2 hover:overflow-auto overflow-hidden h-[70%] min-h-[100px]">
+          {array.map((data, index) => (
+            <button
+              onClick={(event) => clickChat(event, index)}
+              key={index}
+              className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
+                clicked == index ? "bg-very-dark-purple" : "bg-transparent"
+              }`}
+            >
+              <Image src={data.icon} alt="test" />
+              <div className="flex justify-start items-start space-y-1 flex-col">
+                <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
+                  {data.userName}
+                </p>
+                <p
+                  className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
+                >
+                  {data.messages}
+                </p>
+              </div>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="border w-[99%] xl:px-6 px-2 hover:overflow-auto overflow-hidden h-[70%] min-h-[100px]">
+          {array.map((data, index) => (
+            <div key={index} className="w-full flex justify-center items-center outline-none rounded-2xl">
+              {compare(data.userName, searchValue)} {/* this is a function but don't work i don't know how */}
+            <button
+              onClick={(event) => clickChat(event, index)}
+              key={index}
+              className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
+                clicked == index ? "bg-very-dark-purple" : "bg-transparent"
+              }`}
+            >
+              <Image src={data.icon} alt="test" />
+              <div className="flex justify-start items-start space-y-1 flex-col">
+                <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
+                  {data.userName}
+                </p>
+                <p
+                  className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
+                >
+                  {data.messages}
+                </p>
+              </div>
+            </button>
             </div>
-          </button>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
       <div className="flex justify-around items-center w-full h-[10%] min-h-[60px]">
         <div className="w-[45%] h-10 flex justify-center items-center">
           <IconButton

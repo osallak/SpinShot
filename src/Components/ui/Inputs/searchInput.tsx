@@ -12,22 +12,15 @@ type Content = {
   data: Array[]
 }
 
-const SearchInput: React.FC<Content> = ({data}) => {
+const SearchInput = (props: {setValue: Function}) => {
 
   const [searchValue, setSearchValue] = useState("");
 
   const search = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setSearchValue(event.target.value);
+    props.setValue(event.target.value);
   }
-
-  useEffect(() => {
-    data.map((items) => {
-      if (searchValue === items.userName) {
-        console.log("hello world from search");
-      }
-    })
-  })
 
   return(
     <div className="pl-4 space-x-2 bg-very-dark-purple rounded-full w-full h-full flex justify-center items-center flex-row">

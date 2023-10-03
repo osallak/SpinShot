@@ -92,7 +92,7 @@ export class AuthController {
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<void> {
-    res.cookie('jwt', 'test'); //todo: replace with jwt token
+    res.cookie('jwt', 'test'); //TODO: replace with jwt token
     res.redirect(this.configService.get('FRONTEND_ORIGIN'));
   }
 }

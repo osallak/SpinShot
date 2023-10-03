@@ -2,12 +2,10 @@ import {
   Controller,
   Get,
   UseGuards,
-  Req,
   Param,
   Query,
   Patch,
   Body,
-  ConsoleLogger,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { UserService } from '../user.service';
@@ -19,15 +17,15 @@ import { PaginationResponse } from 'src/global/interfaces';
 import { UserDecorator } from 'src/global/decorators/global.decorators';
 import { JwtPayload } from 'jsonwebtoken';
 import { SearchDto } from '../dto/search.dto';
+import { GetProfileDoc, GetUserGamesDoc, SearchDoc, UpdateUserDoc } from '../swagger/user.swagger';
 
 @ApiTags('user')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  @Get('search')
+  @SearchDoc()
+  @Get()
   async search(
     @Query() query: SearchDto,
     @UserDecorator() user: User,
@@ -35,16 +33,14 @@ export class UserController {
     return await this.userService.search(query);
   }
 
-  @ApiBearerAuth()
+  @GetProfileDoc()
   @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 200, description: 'Get user by username' })
   @Get('/profile/:username')
   async getUser(@Param('username') username: string): Promise<SerialisedUser> {
     return await this.userService.getUser(username);
   }
 
-  @ApiBearerAuth()
-  @ApiResponse({ status: 200, description: 'Get user games by username' })
+  @GetUserGamesDoc()
   @UseGuards(JwtAuthGuard)
   @Get('/games/:username')
   async getUserGames(
@@ -54,20 +50,7 @@ export class UserController {
     return await this.userService.getUserGames(username, query);
   }
 
-  @ApiResponse({
-    status: 200,
-    content: {
-      schema: {
-        example: {
-          username: 'john_doe',
-          email: 'valid@email.com',
-        },
-      },
-    },
-    description: 'Update user by username',
-    type: UpdateUserDto,
-  })
-  @ApiBearerAuth()
+  @UpdateUserDoc()
   @UseGuards(JwtAuthGuard)
   @Patch()
   async updateUser(

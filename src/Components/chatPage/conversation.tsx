@@ -250,9 +250,9 @@ const Conversation = () => {
 
   const fetchData = async () => {
     const u1 = // this token for ataji tajiayoub35@gmail.com
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InV0aWxpc2F0ZXVyMSIsInN1YiI6IjQ1Y2FmODlmLTJlMzktNDJkOC1iOTY3LTBlYzhkNzI3ODRkZSIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2MjQ3NjMwLCJleHAiOjE2OTYzMzQwMzB9.7DFjPumA7GNokKf3lXrJidaZ6t5-hKUQJ8KcAv5Y-Ic";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InV0aWxpc2F0ZXVyMSIsInN1YiI6ImMyYmFiMWRkLTY3MWUtNGJlNC04OWE2LTY2ZGU5NjlmYjdmMiIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2MzI5MjkxLCJleHAiOjE2OTY0MTU2OTF9.squkJh4GumVqR7EGvN55PrPHLyYVsmxvqCH35KnUwyQ";
     const u2 = // this token for ayoub taji35@gmail.com
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InV0aWxpc2F0ZXVyMiIsInN1YiI6IjM3MzQ0ZTVjLWY0MjEtNDcxNS1iODgyLTY2NTAyNzg0MDc3MiIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2MjQ3NjU1LCJleHAiOjE2OTYzMzQwNTV9.GA_BVSFA1QMsXm0v104eSjKUcW9qb6Yg_dGRokHYzUk"
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InV0aWxpc2F0ZXVyMiIsInN1YiI6Ijg4NjBlMTBkLWU5YWItNGVmNC1iZTZlLWYxZDA3Njg3MGQxYiIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2MzI5MzA5LCJleHAiOjE2OTY0MTU3MDl9.sf7cxAteR6GLm5zkW6JiBIUSmeq4aQ2POiOIG9YTVbY"
     function parseJwt(token: string) {
       var base64Url = token.split(".")[1];
       var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
@@ -274,7 +274,7 @@ const Conversation = () => {
     // console.log(jwtToken);
     try {
       const res = await axios.get(
-        `http://e3r10p14.1337.ma:3000/chat/individual/${jwtU2.sub}`, {
+        `http://e3r10p18.1337.ma:3000/chat/individual/${jwtU2.sub}`, {
           headers: {
             Authorization: `Bearer ${u1}`,
           },
@@ -286,7 +286,7 @@ const Conversation = () => {
       );
       setResponse(res.data);
       setUserId(jwtU1.sub);
-      console.log("res from conversation: ", response);
+      console.log("response from conversation: ", res.data);
     } catch (error) {
       console.log("error of fetching data fron conversation: ", error);
     }

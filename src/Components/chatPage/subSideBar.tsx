@@ -18,19 +18,41 @@ import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";
 import axios from "axios";
 
-interface data {
-  id: string;
+// message
+// :
+// "hello world 4"
+// other
+// :
+// avatar
+// :
+// "defaultAvatar"
+// id
+// :
+// "8860e10d-e9ab-4ef4-be6e-f1d076870d1b"
+// username
+// :
+// "utilisateur2"
+// [[Prototype]]
+// :
+// Object
+// sender
+// :
+// "8860e10d-e9ab-4ef4-be6e-f1d076870d1b"
+// sentAt
+// :
+// "3"
+
+interface other {
   avatar: string;
+  id: string;
   username: string;
 }
 
-interface otherdata {
-  Receiver: data;
-}
-
-function compare(props: {userName: string, searchValue: string}) {
-  if (props.userName === props.searchValue)
-    console.log("hello world from compare function");
+interface data {
+  message: string;
+  other: other;
+  sender: string;
+  sentAt: string;
 }
 
 function SubSideBar(props: {
@@ -59,101 +81,100 @@ function SubSideBar(props: {
     props.setOpen(!props.open);
   };
 
-  const [respo, setRespo] = useState<otherdata[]>([]);
+  const [respo, setRespo] = useState<data[]>([]);
+
+  const fetchData = async () => {
+    const ayoubToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InV0aWxpc2F0ZXVyMSIsInN1YiI6ImMyYmFiMWRkLTY3MWUtNGJlNC04OWE2LTY2ZGU5NjlmYjdmMiIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2MzI5MjkxLCJleHAiOjE2OTY0MTU2OTF9.squkJh4GumVqR7EGvN55PrPHLyYVsmxvqCH35KnUwyQ";
+    function parseJwt(token: string) {
+      var base64Url = token.split(".")[1];
+      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      var jsonPayload = decodeURIComponent(
+        window
+          .atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+
+      return JSON.parse(jsonPayload);
+    }
+    const jwtToken = parseJwt(ayoubToken);
+    try {
+      const res = await axios.get(`http://e3r10p18.1337.ma:3000/chat/all`, {
+        headers: {
+          Authorization: `Bearer ${ayoubToken}`,
+        },
+        params: {
+          id: jwtToken.sub,
+        },
+      });
+      setRespo(res.data.individual);
+      console.log("message: ", res.data.individual[0]);
+      // console.log("response data: ", res.data[0].Receiver);
+    } catch (error) {
+      console.log("error of fetching data: ", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const ayoubToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF5b3ViIiwic3ViIjoiMTE4NTc5ZTctZGE3Yy00MGExLWI4ZmYtNGVkMjE5MDhkYTE0IiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTUyNTE2MTYsImV4cCI6MTY5NTMzODAxNn0.DN5AXkCuE6Sh-ZpubfdY66V-uS-upKFHHG2yioFZoOo";
-      function parseJwt(token: string) {
-        var base64Url = token.split(".")[1];
-        var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-        var jsonPayload = decodeURIComponent(
-          window
-            .atob(base64)
-            .split("")
-            .map(function (c) {
-              return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-            })
-            .join("")
-        );
-
-        return JSON.parse(jsonPayload);
-      }
-      const jwtToken = parseJwt(ayoubToken);
-      try {
-        const res = await axios.get(`http://e3r10p14.1337.ma:3000/chat/all`, {
-          headers: {
-            Authorization: `Bearer ${ayoubToken}`,
-          },
-          params: {
-            id: jwtToken.sub,
-          },
-        });
-        setRespo(res.data);
-        // console.log("message : ", respo);
-        // console.log("response data: ", res.data[0].Receiver);
-      } catch (error) {
-        console.log("error of fetching data: ", error);
-      }
-    };
     fetchData();
-  });
+  }, []);
 
   const array = [
     {
       icon: test1,
-      messages: "hello world from the other side",
-      userName: "ataji",
+      message: "hello world from the other side",
+      username: "ataji",
     },
     {
       icon: test1,
-      messages: "hello world from the other side",
-      userName: "fragger",
+      message: "hello world from the other side",
+      username: "fragger",
     },
     {
       icon: test1,
-      messages: "hello world from the other side",
-      userName: "machlouj",
+      message: "hello world from the other side",
+      username: "machlouj",
     },
     {
       icon: test1,
-      messages: "hello world from the other side",
-      userName: "ponpon",
+      message: "hello world from the other side",
+      username: "ponpon",
     },
     {
       icon: test1,
-      messages: "hello world from the other side",
-      userName: "hlalouli",
+      message: "hello world from the other side",
+      username: "hlalouli",
     },
     {
       icon: test1,
-      messages: "hello world from the other side",
-      userName: "sknahs",
+      message: "hello world from the other side",
+      username: "sknahs",
     },
     {
       icon: test1,
-      messages: "hello world from the other side",
-      userName: "navoos",
+      message: "hello world from the other side",
+      username: "navoos",
     },
     {
       icon: test1,
-      messages: "hello world from the other side",
-      userName: "ayoub",
+      message: "hello world from the other side",
+      username: "ayoub",
     },
     {
       icon: test1,
-      messages: "hello world from the other side",
-      userName: "teejee",
+      message: "hello world from the other side",
+      username: "teejee",
     },
     {
       icon: test1,
-      messages: "hello world from the other side",
-      userName: "yakhoudr",
+      message: "hello world from the other side",
+      username: "yakhoudr",
     },
   ];
-
-  console.log("search Value lenght: ", searchValue.length);
 
   return (
     <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl w-[25%] min-w-[350px]">
@@ -187,44 +208,48 @@ function SubSideBar(props: {
                 clicked == index ? "bg-very-dark-purple" : "bg-transparent"
               }`}
             >
-              <Image src={data.icon} alt="test" />
+              <Image src={test1} alt="test" />
               <div className="flex justify-start items-start space-y-1 flex-col">
                 <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
-                  {data.userName}
+                  {data.username}
                 </p>
                 <p
                   className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
                 >
-                  {data.messages}
+                  {data.message}
                 </p>
               </div>
             </button>
           ))}
         </div>
       ) : (
-        <div className="border w-[99%] xl:px-6 px-2 hover:overflow-auto overflow-hidden h-[70%] min-h-[100px]">
+        <div className="w-[99%] xl:px-6 px-2 hover:overflow-auto overflow-hidden h-[70%] min-h-[100px]">
           {array.map((data, index) => (
-            <div key={index} className="w-full flex justify-center items-center outline-none rounded-2xl">
-              {compare(data.userName, searchValue)} {/* this is a function but don't work i don't know how */}
-            <button
-              onClick={(event) => clickChat(event, index)}
+            <div
               key={index}
-              className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
-                clicked == index ? "bg-very-dark-purple" : "bg-transparent"
-              }`}
+              className="w-full flex justify-center items-center outline-none rounded-2xl"
             >
-              <Image src={data.icon} alt="test" />
-              <div className="flex justify-start items-start space-y-1 flex-col">
-                <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
-                  {data.userName}
-                </p>
-                <p
-                  className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
+              {data.username.startsWith(searchValue) && (
+                <button
+                  onClick={(event) => clickChat(event, index)}
+                  key={index}
+                  className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
+                    clicked == index ? "bg-very-dark-purple" : "bg-transparent"
+                  }`}
                 >
-                  {data.messages}
-                </p>
-              </div>
-            </button>
+                  <Image src={data.icon} alt="test" />
+                  <div className="flex justify-start items-start space-y-1 flex-col">
+                    <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
+                      {data.username}
+                    </p>
+                    <p
+                      className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
+                    >
+                      {data.message}
+                    </p>
+                  </div>
+                </button>
+              )}
             </div>
           ))}
         </div>

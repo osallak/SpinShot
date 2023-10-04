@@ -16,7 +16,7 @@ import DropDown from "../ui/dropDown/dropDown";
 import dataConversation from "@/types/messagesArrays";
 import dataSubSideBar from "@/types/messagesArrays";
 
-const Conversation = (props: {data: dataConversation[], otherData: dataSubSideBar[], userId: string}) => {
+const Conversation = (props: {data: dataConversation[], userName: string, userId: string}) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [currentMsg, setCurrentMsg] = useState("");
   const Router = useRouter();
@@ -243,7 +243,7 @@ const Conversation = (props: {data: dataConversation[], otherData: dataSubSideBa
                 } flex-col md:space-y-1 space-y-0`}
               >
                 <div className="font-Poppins text-pearl md:text-base sm:text-sm text-xs sm:h-5 h-4">
-                  <span>{items.sender != props.userId ? items.sender : "you"}</span>
+                  <span>{items.sender != props.userId ? props.userName : "you"}</span>
                   <span>{items.sentAt}</span>
                 </div>
                 <div

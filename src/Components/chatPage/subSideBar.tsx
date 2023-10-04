@@ -53,45 +53,45 @@ function SubSideBar(props: {
 
   const [respo, setRespo] = useState<data[]>([]);
 
-  const fetchDataSubSideBar = async () => {
-    const ayoubToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsInN1YiI6ImNkYTMxODA4LTE0M2QtNDJjNy1iY2U2LTY1OGZjYjMxYTA3NCIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NDE1NDQ4LCJleHAiOjE2OTY1MDE4NDh9.i3AtMo6H4WS0_B5CnK6R_ETr272T92hmS0NFlmwgkt0";
-    function parseJwt(token: string) {
-      var base64Url = token.split(".")[1];
-      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      var jsonPayload = decodeURIComponent(
-        window
-          .atob(base64)
-          .split("")
-          .map(function (c) {
-            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-          })
-          .join("")
-      );
+  // const fetchDataSubSideBar = async () => {
+  //   const ayoubToken =
+  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsInN1YiI6ImNkYTMxODA4LTE0M2QtNDJjNy1iY2U2LTY1OGZjYjMxYTA3NCIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NDE1NDQ4LCJleHAiOjE2OTY1MDE4NDh9.i3AtMo6H4WS0_B5CnK6R_ETr272T92hmS0NFlmwgkt0";
+  //   function parseJwt(token: string) {
+  //     var base64Url = token.split(".")[1];
+  //     var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  //     var jsonPayload = decodeURIComponent(
+  //       window
+  //         .atob(base64)
+  //         .split("")
+  //         .map(function (c) {
+  //           return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+  //         })
+  //         .join("")
+  //     );
 
-      return JSON.parse(jsonPayload);
-    }
-    const jwtToken = parseJwt(ayoubToken);
-    try {
-      const res = await axios.get(`http://e3r10p14.1337.ma:3000/chat/all`, {
-        headers: {
-          Authorization: `Bearer ${ayoubToken}`,
-        },
-        params: {
-          id: jwtToken.sub,
-        },
-      });
-      setRespo(res.data.individual);
-      console.log("message: ", res.data.individual[0]);
-      console.log("response from subsidebar: ", res.data);
-    } catch (error) {
-      console.log("error of fetching data: ", error);
-    }
-  };
+  //     return JSON.parse(jsonPayload);
+  //   }
+  //   const jwtToken = parseJwt(ayoubToken);
+  //   try {
+  //     const res = await axios.get(`http://e3r10p14.1337.ma:3000/chat/all`, {
+  //       headers: {
+  //         Authorization: `Bearer ${ayoubToken}`,
+  //       },
+  //       params: {
+  //         id: jwtToken.sub,
+  //       },
+  //     });
+  //     setRespo(res.data.individual);
+  //     console.log("message: ", res.data.individual[0]);
+  //     console.log("response from subsidebar: ", res.data);
+  //   } catch (error) {
+  //     console.log("error of fetching data: ", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchDataSubSideBar();
-  }, []);
+  // useEffect(() => {
+  //   fetchDataSubSideBar();
+  // }, []);
 
   const array = [
     {

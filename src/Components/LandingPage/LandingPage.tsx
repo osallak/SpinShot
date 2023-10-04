@@ -2,7 +2,7 @@ import Racket from "../../../public/racket.svg";
 import Image from "next/image";
 import SimpleButton from "../ui/Buttons/SimpleButton";
 import RacketThreeD from "./RacketThreeD";
-import { MouseEvent } from "react";
+import { MouseEvent, KeyboardEvent } from "react";
 import { useRouter } from "next/router";
 
 const LandingPage = () => {
@@ -12,7 +12,11 @@ const LandingPage = () => {
     e.preventDefault();
     Router.push("/Signin");
   };
-
+  const handleKeyPress = (e: KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "Enter") {
+      Router.push("/Signin");
+    }
+  };
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex items-center">
       <div className="fl:w-1/2 w-full h-full flex justify-center items-center x-pp:p-36 2xl:p-28 xl:p-20 fl:p-14 p-0 ">
@@ -23,11 +27,19 @@ const LandingPage = () => {
                 SpinShot
               </div>
               <div className="w-full flex flex-row i-sm:space-x-4 s-sm:space-x-2 b-sm:space-x-1 space-x-0">
-                <Image className="tx:w-[50px] i-sm:w-[40px] w-[30px] tx:h-[50px] i-sm:h-[40px] s-sm:h-[30px] b-sm:h-[20px] h-[10px] " src={Racket} alt="racket of ping pong" />
+                <Image
+                  className="tx:w-[50px] i-sm:w-[40px] w-[30px] tx:h-[50px] i-sm:h-[40px] s-sm:h-[30px] b-sm:h-[20px] h-[10px] "
+                  src={Racket}
+                  alt="racket of ping pong"
+                />
                 <p className="text-pearl flex justify-center items-center text-opacity-40 font-semibold text-xl">
                   Ping-Pong
                 </p>
-                <Image className="tx:w-[50px] i-sm:w-[40px] w-[30px] tx:h-[50px] i-sm:h-[40px] s-sm:h-[30px] b-sm:h-[20px] h-[10px]" src={Racket} alt="racket of ping pong" />
+                <Image
+                  className="tx:w-[50px] i-sm:w-[40px] w-[30px] tx:h-[50px] i-sm:h-[40px] s-sm:h-[30px] b-sm:h-[20px] h-[10px]"
+                  src={Racket}
+                  alt="racket of ping pong"
+                />
               </div>
             </div>
             <div className="space-y-5">
@@ -43,11 +55,14 @@ const LandingPage = () => {
               </p>
             </div>
             <div className="w-full flex justify-center items-center">
-              <SimpleButton
-                Type="button"
-                onclick={(e) => redirect(e)}
-                content="Get Started"
-              />
+              <div className="b-sm:w-40 w-3/4 c-md:h-10 sm:h-10 h-9 flex justify-center items-center rounded-full">
+                <SimpleButton
+                  Type="button"
+                  onclick={(e) => redirect(e)}
+                  content="Get Started"
+                  onkeydown={(e) => handleKeyPress(e)}
+                />
+              </div>
             </div>
           </div>
         </div>

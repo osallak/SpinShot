@@ -1,46 +1,16 @@
-import Image from "next/image";
-import messagesIcon from "../../../public/messagesIcon.svg";
 import SearchInput from "@/Components/ui/Inputs/searchInput";
-import test1 from "../../../public/test1.svg";
-import test2 from "../../../public/test2.svg";
-import test3 from "../../../public/test3.svg";
+import axios from "axios";
+import Image from "next/image";
 import {
-  ChangeEvent,
   MouseEvent,
   useEffect,
-  useState,
-  useRef,
-  KeyboardEvent,
-  useCallback,
+  useState
 } from "react";
-import IconButton from "../ui/Buttons/IconButton";
 import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";
-import axios from "axios";
-
-// message
-// :
-// "hello world 4"
-// other
-// :
-// avatar
-// :
-// "defaultAvatar"
-// id
-// :
-// "8860e10d-e9ab-4ef4-be6e-f1d076870d1b"
-// username
-// :
-// "utilisateur2"
-// [[Prototype]]
-// :
-// Object
-// sender
-// :
-// "8860e10d-e9ab-4ef4-be6e-f1d076870d1b"
-// sentAt
-// :
-// "3"
+import messagesIcon from "../../../public/messagesIcon.svg";
+import test1 from "../../../public/test1.svg";
+import IconButton from "../ui/Buttons/IconButton";
 
 interface other {
   avatar: string;
@@ -83,9 +53,9 @@ function SubSideBar(props: {
 
   const [respo, setRespo] = useState<data[]>([]);
 
-  const fetchData = async () => {
+  const fetchDataSubSideBar = async () => {
     const ayoubToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InV0aWxpc2F0ZXVyMSIsInN1YiI6ImMyYmFiMWRkLTY3MWUtNGJlNC04OWE2LTY2ZGU5NjlmYjdmMiIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2MzI5MjkxLCJleHAiOjE2OTY0MTU2OTF9.squkJh4GumVqR7EGvN55PrPHLyYVsmxvqCH35KnUwyQ";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsInN1YiI6ImNkYTMxODA4LTE0M2QtNDJjNy1iY2U2LTY1OGZjYjMxYTA3NCIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NDE1NDQ4LCJleHAiOjE2OTY1MDE4NDh9.i3AtMo6H4WS0_B5CnK6R_ETr272T92hmS0NFlmwgkt0";
     function parseJwt(token: string) {
       var base64Url = token.split(".")[1];
       var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
@@ -103,7 +73,7 @@ function SubSideBar(props: {
     }
     const jwtToken = parseJwt(ayoubToken);
     try {
-      const res = await axios.get(`http://e3r10p18.1337.ma:3000/chat/all`, {
+      const res = await axios.get(`http://e3r10p14.1337.ma:3000/chat/all`, {
         headers: {
           Authorization: `Bearer ${ayoubToken}`,
         },
@@ -113,14 +83,14 @@ function SubSideBar(props: {
       });
       setRespo(res.data.individual);
       console.log("message: ", res.data.individual[0]);
-      // console.log("response data: ", res.data[0].Receiver);
+      console.log("response from subsidebar: ", res.data);
     } catch (error) {
       console.log("error of fetching data: ", error);
     }
   };
 
   useEffect(() => {
-    fetchData();
+    fetchDataSubSideBar();
   }, []);
 
   const array = [
@@ -133,6 +103,26 @@ function SubSideBar(props: {
       icon: test1,
       message: "hello world from the other side",
       username: "fragger",
+    },
+    {
+      icon: test1,
+      message: "hello world from the other side",
+      username: "machlouj",
+    },
+    {
+      icon: test1,
+      message: "hello world from the other side",
+      username: "machlouj",
+    },
+    {
+      icon: test1,
+      message: "hello world from the other side",
+      username: "machlouj",
+    },
+    {
+      icon: test1,
+      message: "hello world from the other side",
+      username: "machlouj",
     },
     {
       icon: test1,

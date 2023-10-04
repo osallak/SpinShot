@@ -1,27 +1,19 @@
 "use client";
-import MobileSideBar from "../ui/sideBar/mobileSideBar";
-import Image from "next/image";
-import test1 from "../../../public/test1.svg";
-import {
-  ChangeEvent,
-  MouseEvent,
-  useEffect,
-  useState,
-  useRef,
-  KeyboardEvent,
-  useCallback,
-} from "react";
 import SideBar from "@/Components/ui/sideBar/sideBar";
-import sendMessageIcon from "../../../public/sendMessage.svg";
-import { DropDown } from "../ui/dropDown/dropDown";
+import axios from "axios";
 import { useRouter } from "next/router";
-import io from "Socket.IO-client";
-import SubSideBar from "./subSideBar";
+import {
+  useEffect,
+  useState
+} from "react";
 import NavBar from "../ui/navBar/navBar";
+import MobileSideBar from "../ui/sideBar/mobileSideBar";
 import Conversation from "./conversation";
-import { Socket } from "socket.io";
-import ExploreChannels from "./exploreChannels";
 import CreateChannels from "./createChannels";
+import ExploreChannels from "./exploreChannels";
+import SubSideBar from "./subSideBar";
+import dataConversation from "@/types/messagesArrays";
+import dataSubSideBar from "@/types/messagesArrays";
 
 function parseJwt(token: string) {
   var base64Url = token.split(".")[1];
@@ -221,19 +213,97 @@ const Chat = () => {
 
   // useEffect(() => socketInitializer(), []);
 
+  const [response, setResponse] = useState<dataConversation[]>([]);
+  const [userId, setUserId] = useState("");
+  const [respo, setRespo] = useState<dataSubSideBar[]>([]);
+
+  const fetchDataConversation = async () => {
+    const u1 = // this token for ataji tajiayoub35@gmail.com
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsInN1YiI6ImNkYTMxODA4LTE0M2QtNDJjNy1iY2U2LTY1OGZjYjMxYTA3NCIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NDE1NDQ4LCJleHAiOjE2OTY1MDE4NDh9.i3AtMo6H4WS0_B5CnK6R_ETr272T92hmS0NFlmwgkt0"
+    const u2 = // this token for ayoub taji35@gmail.com
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMiIsInN1YiI6ImMzNGFjMzNiLTJlOGEtNDJiNS05OTg1LWQ3ZmE5OTk3NzE2YSIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NDE1NTA4LCJleHAiOjE2OTY1MDE5MDh9.F3WsEuWzpPByr5WA_8gNh_IrIdyCH3t_0Dcycr6-XEA"
+    function parseJwt(token: string) {
+      var base64Url = token.split(".")[1];
+      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      var jsonPayload = decodeURIComponent(
+        window
+          .atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+
+      return JSON.parse(jsonPayload);
+    }
+    const jwtU1 = parseJwt(u1);
+    const jwtU2 = parseJwt(u2);
+
+    // console.log(jwtU1);
+    try {
+      const res = await axios.get(
+        `http://e3r10p14.1337.ma:3000/chat/individual/${jwtU2.sub}`, {
+          headers: {
+            Authorization: `Bearer ${u1}`,
+          },
+        params: {
+          page: 1,
+          limit: 5,
+          id: jwtU1.sub,
+        }}
+      );
+      setResponse(res.data);
+      setUserId(jwtU1.sub);
+      console.log("response from conversation: ", res.data);
+    } catch (error) {
+      console.log("error of fetching data fron conversation: ", error);
+    }
+  };
+
+  // const fetchDataSubSideBar = async () => {
+  //   const ayoubToken =
+  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsInN1YiI6ImNkYTMxODA4LTE0M2QtNDJjNy1iY2U2LTY1OGZjYjMxYTA3NCIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NDE1NDQ4LCJleHAiOjE2OTY1MDE4NDh9.i3AtMo6H4WS0_B5CnK6R_ETr272T92hmS0NFlmwgkt0";
+  //   function parseJwt(token: string) {
+  //     var base64Url = token.split(".")[1];
+  //     var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  //     var jsonPayload = decodeURIComponent(
+  //       window
+  //         .atob(base64)
+  //         .split("")
+  //         .map(function (c) {
+  //           return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+  //         })
+  //         .join("")
+  //     );
+
+  //     return JSON.parse(jsonPayload);
+  //   }
+  //   const jwtToken = parseJwt(ayoubToken);
+  //   try {
+  //     const res = await axios.get(`http://e3r10p14.1337.ma:3000/chat/all`, {
+  //       headers: {
+  //         Authorization: `Bearer ${ayoubToken}`,
+  //       },
+  //       params: {
+  //         id: jwtToken.sub,
+  //       },
+  //     });
+  //     setRespo(res.data.individual);
+  //     console.log("message: ", res.data.individual[0]);
+  //     console.log("response from subsidebar: ", res.data);
+  //   } catch (error) {
+  //     console.log("error of fetching data: ", error);
+  //   }
+  // };
+
   useEffect(() => {
-    // Get the token from localStorage
-    const storedToken = localStorage.getItem("token");
-
-    // Redirect to the Signin page if token is not available
-    // if (!storedToken) {
-    //   Router.push('/signin');
-    //   return;
-    // }
-
-    // Set the token state
-    // setToken(storedToken);
+    fetchDataConversation();
   }, []);
+
+  // useEffect(() => {
+  //   fetchDataSubSideBar();
+  // }, []);
 
   console.log("======> token: ", storedToken);
   const [exploreOpen, setExploreOpen] = useState(false);
@@ -255,7 +325,7 @@ const Chat = () => {
       )}
       <div className="w-full h-full">
         <NavBar open={openSideBar} setOpen={setOpenSideBar} />
-        <Conversation />
+        <Conversation data={response} otherData={respo} userId={userId} />
       </div>
     </div>
   );

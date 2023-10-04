@@ -24,9 +24,9 @@ const Signin = () => {
   const Router = useRouter();
   const SigninArray = [
     {
-      inputValue: username || email,
-      setinputValue: setUsername || setEmail,
-      Value: username || email,
+      inputValue: username,
+      setinputValue: setUsername,
+      Value: username,
       setisValid: setisValid,
       type: "text",
       PlaceHolder: "Email or Username",
@@ -56,7 +56,7 @@ const Signin = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://e3r10p17.1337.ma:3000/auth/signin/local",
+        "http://34.95.172.25/auth/signin/local",
         {
           username,
           password,
@@ -76,9 +76,9 @@ const Signin = () => {
 
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    Router.push("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Fgoogle.com&response_type=code");
+    Router.push("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2FMessages&response_type=code");
     // try {
-    //   await axios.get("http://e3r9p12.1337.ma:3000/auth/42");
+    //   await axios.get("http://34.95.172.25/auth/42");
     //   console.log("good");
     // } catch (error) {
     //   console.log(error);
@@ -156,6 +156,7 @@ const Signin = () => {
               </div>
               <div className="w-full flex justify-center items-center flex-col sm:space-y-12 space-y-8">
                 <div className="w-full flex justify-center items-center rounded-full">
+                  <div className="b-sm:w-40 w-3/4 c-md:h-10 sm:h-10 h-9 flex justify-center items-center rounded-full">
                   <SimpleButton
                     Type="submit"
                     onclick={(e) =>
@@ -163,6 +164,7 @@ const Signin = () => {
                     }
                     content="Sign in"
                   />
+                  </div>
                 </div>
                 <div className="flex flex-col justify-center items-center c-md:space-y-10 space-y-3 w-full">
                   <div className="flex justify-center items-center pt-10 flex-row space-x-5 w-full">

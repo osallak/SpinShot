@@ -60,6 +60,7 @@ const InputBorder: React.FC<InputsProps> = ({
           <Image src={icon} alt="username or Email" className="h-5 w-5" />
         </div>
         <input
+          autoComplete="off"
           type={type == "password" && ShowPassword ? "text" : type}
           value={value}
           onChange={(event) => HandleChange(event)}

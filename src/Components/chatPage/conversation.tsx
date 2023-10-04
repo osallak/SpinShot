@@ -1,124 +1,27 @@
 "use client";
 import Image from "next/image";
-import test1 from "../../../public/test1.svg";
+import { useRouter } from "next/router";
 import {
-  ChangeEvent,
-  MouseEvent,
-  useEffect,
-  useState,
-  useRef,
   KeyboardEvent,
   useCallback,
+  useEffect,
+  useRef,
+  useState
 } from "react";
-import SideBar from "@/Components/ui/sideBar/sideBar";
-import sendMessageIcon from "../../../public/sendMessage.svg";
-import DropDown from "../ui/dropDown/dropDown";
-import { useRouter } from "next/router";
-import axios from "axios";
-import io from "Socket.IO-client";
-import { headers } from "next/dist/client/components/headers";
 import game from "../../../public/game.svg";
+import sendMessageIcon from "../../../public/sendMessage.svg";
+import test1 from "../../../public/test1.svg";
 import trash from "../../../public/trash.svg";
-import add from "../../../public/add.svg";
+import DropDown from "../ui/dropDown/dropDown";
+import dataConversation from "@/types/messagesArrays";
+import dataSubSideBar from "@/types/messagesArrays";
 
-const Conversation = () => {
+const Conversation = (props: {data: dataConversation[], otherData: dataSubSideBar[], userId: string}) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [currentMsg, setCurrentMsg] = useState("");
   const Router = useRouter();
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState<string[]>([]);
-  const user = "You";
-  const msg = [
-    {
-      message: "hey",
-      sender: "owner",
-    },
-    {
-      message:
-        "what's up impmport sendMessageIcogeIcon from import sendMessageIcon ort sendMessageIcon from ",
-      sender: "receiver",
-    },
-    {
-      message: "what do you doing",
-      sender: "owner",
-    },
-    {
-      message:
-        "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-      sender: "receiver",
-    },
-    {
-      message: "what do you doing",
-      sender: "owner",
-    },
-    {
-      message:
-        "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-      sender: "receiver",
-    },
-    {
-      message: "what do you doing",
-      sender: "owner",
-    },
-    {
-      message:
-        "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-      sender: "receiver",
-    },
-    {
-      message: "what do you doing",
-      sender: "owner",
-    },
-    {
-      message:
-        "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-      sender: "receiver",
-    },
-    {
-      message: "what do you doing",
-      sender: "owner",
-    },
-    {
-      message:
-        "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-      sender: "receiver",
-    },
-    {
-      message: "what do you doing",
-      sender: "owner",
-    },
-    {
-      message: "hey",
-      sender: "owner",
-    },
-    {
-      message:
-        "what's up impmport sendMessageIcogeIcon from import sendMessageIcon ort sendMessageIcon from ",
-      sender: "receiver",
-    },
-    {
-      message: "what do you doing",
-      sender: "owner",
-    },
-    {
-      message:
-        "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-      sender: "receiver",
-    },
-    {
-      message: "what do you doing",
-      sender: "owner",
-    },
-    {
-      message:
-        "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-      sender: "receiver",
-    },
-    {
-      message: "what do you doing",
-      sender: "owner",
-    },
-  ];
 
   const handleClick = () => {
     console.log("hello world from the other side");
@@ -239,61 +142,61 @@ const Conversation = () => {
   //   console.log(jwtToken.sub);
   // };
 
-  interface data {
-    sentAt: string;
-    sender: string;
-    message: string;
-  }
+  // interface data {
+  //   sentAt: string;
+  //   sender: string;
+  //   message: string;
+  // }
 
-  const [response, setResponse] = useState<data[]>([]);
-  const [useId, setUserId] = useState("");
+  // const [response, setResponse] = useState<data[]>([]);
+  // const [useId, setUserId] = useState("");
 
-  const fetchData = async () => {
-    const u1 = // this token for ataji tajiayoub35@gmail.com
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InV0aWxpc2F0ZXVyMSIsInN1YiI6ImMyYmFiMWRkLTY3MWUtNGJlNC04OWE2LTY2ZGU5NjlmYjdmMiIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2MzI5MjkxLCJleHAiOjE2OTY0MTU2OTF9.squkJh4GumVqR7EGvN55PrPHLyYVsmxvqCH35KnUwyQ";
-    const u2 = // this token for ayoub taji35@gmail.com
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InV0aWxpc2F0ZXVyMiIsInN1YiI6Ijg4NjBlMTBkLWU5YWItNGVmNC1iZTZlLWYxZDA3Njg3MGQxYiIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2MzI5MzA5LCJleHAiOjE2OTY0MTU3MDl9.sf7cxAteR6GLm5zkW6JiBIUSmeq4aQ2POiOIG9YTVbY"
-    function parseJwt(token: string) {
-      var base64Url = token.split(".")[1];
-      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      var jsonPayload = decodeURIComponent(
-        window
-          .atob(base64)
-          .split("")
-          .map(function (c) {
-            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-          })
-          .join("")
-      );
+  // const fetchDataConversation = async () => {
+  //   const u1 = // this token for ataji tajiayoub35@gmail.com
+  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsInN1YiI6ImNkYTMxODA4LTE0M2QtNDJjNy1iY2U2LTY1OGZjYjMxYTA3NCIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NDE1NDQ4LCJleHAiOjE2OTY1MDE4NDh9.i3AtMo6H4WS0_B5CnK6R_ETr272T92hmS0NFlmwgkt0"
+  //   const u2 = // this token for ayoub taji35@gmail.com
+  //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMiIsInN1YiI6ImMzNGFjMzNiLTJlOGEtNDJiNS05OTg1LWQ3ZmE5OTk3NzE2YSIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NDE1NTA4LCJleHAiOjE2OTY1MDE5MDh9.F3WsEuWzpPByr5WA_8gNh_IrIdyCH3t_0Dcycr6-XEA"
+  //   function parseJwt(token: string) {
+  //     var base64Url = token.split(".")[1];
+  //     var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  //     var jsonPayload = decodeURIComponent(
+  //       window
+  //         .atob(base64)
+  //         .split("")
+  //         .map(function (c) {
+  //           return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+  //         })
+  //         .join("")
+  //     );
 
-      return JSON.parse(jsonPayload);
-    }
-    const jwtU1 = parseJwt(u1);
-    const jwtU2 = parseJwt(u2);
+  //     return JSON.parse(jsonPayload);
+  //   }
+  //   const jwtU1 = parseJwt(u1);
+  //   const jwtU2 = parseJwt(u2);
 
-    // console.log(jwtToken);
-    try {
-      const res = await axios.get(
-        `http://e3r10p18.1337.ma:3000/chat/individual/${jwtU2.sub}`, {
-          headers: {
-            Authorization: `Bearer ${u1}`,
-          },
-        params: {
-          page: 1,
-          limit: 5,
-          id: jwtU1.sub,
-        }}
-      );
-      setResponse(res.data);
-      setUserId(jwtU1.sub);
-      console.log("response from conversation: ", res.data);
-    } catch (error) {
-      console.log("error of fetching data fron conversation: ", error);
-    }
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
+  //   // console.log(jwtU1);
+  //   try {
+  //     const res = await axios.get(
+  //       `http://e3r10p14.1337.ma:3000/chat/individual/${jwtU2.sub}`, {
+  //         headers: {
+  //           Authorization: `Bearer ${u1}`,
+  //         },
+  //       params: {
+  //         page: 1,
+  //         limit: 5,
+  //         id: jwtU1.sub,
+  //       }}
+  //     );
+  //     setResponse(res.data);
+  //     setUserId(jwtU1.sub);
+  //     console.log("response from conversation: ", res.data);
+  //   } catch (error) {
+  //     console.log("error of fetching data fron conversation: ", error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   fetchDataConversation();
+  // }, []);
   //   useEffect(() => socketInitializer(), []);
   //{sentAt: '0', sender: '37344e5c-f421-4715-b882-665027840772', message: 'salam 1'}
   return (
@@ -325,27 +228,27 @@ const Conversation = () => {
         className={`w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden `}
       >
         <div className="w-[94%] space-y-1">
-          {response.map((items, index) => (
+          {props.data.map((items, index) => (
             <div
               key={index}
               className={`flex ${
-                items.sender != useId
+                items.sender != props.userId
                   ? "flex-row-reverse space-x-reverse space-x-5"
                   : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
               } justify-end`}
             >
               <div
                 className={`bg-transparent x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] flex ${
-                  items.sender != useId ? "items-start" : "items-end"
+                  items.sender != props.userId ? "items-start" : "items-end"
                 } flex-col md:space-y-1 space-y-0`}
               >
                 <div className="font-Poppins text-pearl md:text-base sm:text-sm text-xs sm:h-5 h-4">
-                  <span>{items.sender != useId ? items.sender : "you"}</span>
+                  <span>{items.sender != props.userId ? items.sender : "you"}</span>
                   <span>{items.sentAt}</span>
                 </div>
                 <div
                   className={`${
-                    items.sender != useId
+                    items.sender != props.userId
                       ? "rounded-r-2xl rounded-bl-2xl bg-peridot text-very-dark-purple"
                       : "rounded-l-2xl rounded-br-2xl bg-very-dark-purple text-pearl"
                   } md:p-2 p-1 px-3 font-Sarabun md:text-base sm:text-sm text-xs flex justify-center items-center`}

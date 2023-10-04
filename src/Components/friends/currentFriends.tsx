@@ -5,6 +5,7 @@ import newMessage from "../../../public/newMessage.svg"
 import block from "../../../public/block.svg"
 import game from "../../../public/game.svg"
 import DropDown from "../ui/dropDown/dropDown";
+import { useEffect } from "react";
 
 const CurrentFriends = () => {
   const array = [

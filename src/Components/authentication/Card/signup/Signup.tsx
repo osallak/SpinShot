@@ -78,13 +78,13 @@ const Signup = () => {
     e.preventDefault();
     if (isValid && isMatch) {
       try {
-        await axios.post('http://e3r10p17.1337.ma:3000/auth/signup/local', {
+        await axios.post("http://34.95.172.25/auth/signup/local", {
           email,
           username,
           password,
         });
       } catch (error: any) {
-        setErrorMessage(error.response.data.message)
+        setErrorMessage(error.response.data.message);
         setError(true);
       }
       Router.push(Path);
@@ -177,18 +177,20 @@ const Signup = () => {
                     Password do not match
                   </div>
                 )}
-                {error &&
+                {error && (
                   <div className="text-red-900 h-[5px] text-sm font-Poppins">
                     {errorMessage}
                   </div>
-                }
+                )}
               </div>
               <div className="w-full flex justify-center items-center rounded-full">
-                <SimpleButton
-                  Type="submit"
-                  onclick={(e) => RedirectionFunction(e, "/Signin")}
-                  content="Sign up"
-                />
+                <div className="b-sm:w-40 w-3/4 c-md:h-10 sm:h-10 h-9 flex justify-center items-center rounded-full">
+                  <SimpleButton
+                    Type="submit"
+                    onclick={(e) => RedirectionFunction(e, "/Signin")}
+                    content="Sign up"
+                  />
+                </div>
               </div>
             </form>
           </div>
@@ -199,7 +201,11 @@ const Signup = () => {
               <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
                 Already have an account?
               </p>
-              <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign In" />
+              <EmptyButton
+                flag="authentication"
+                onclick={(e) => redirection(e)}
+                content="Sign In"
+              />
             </div>
           )}
         </div>
@@ -209,7 +215,11 @@ const Signup = () => {
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
             Already have an account?&nbsp;
           </p>
-          <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign In" />
+          <EmptyButton
+            flag="authentication"
+            onclick={(e) => redirection(e)}
+            content="Sign In"
+          />
         </div>
       )}
     </div>

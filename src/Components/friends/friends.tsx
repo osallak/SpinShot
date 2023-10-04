@@ -1,4 +1,5 @@
 import SideBar from "../ui/sideBar/sideBar";
+import axios from "axios";
 import FriendsRequest from "./friendRequest";
 import CurrentFriends from "./currentFriends";
 import MobileFriends from "./mobileFriends";
@@ -8,8 +9,30 @@ import NavBar from "../ui/navBar/navBar";
 
 const FriendsPage = () => {
 
-  const fetchData = () => {
-    
+  const fetchData = async () => {
+    console.log(localStorage.getItem("token"))
+    const token = localStorage.getItem("token");
+    function parseJwt(token: string) {
+      var base64Url = token.split(".")[1];
+      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      var jsonPayload = decodeURIComponent(
+        window
+          .atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+
+      return JSON.parse(jsonPayload);
+    }
+    const jwtToken = parseJwt(JSON.stringify(token));
+    try {
+      const res = await axios.get("http://34.95.172.25/friends")
+    } catch (error: any){
+      console.log("error: ", error);
+    }
   }
   
   useEffect(() => {

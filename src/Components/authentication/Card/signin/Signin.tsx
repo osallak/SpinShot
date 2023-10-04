@@ -29,7 +29,7 @@ const Signin = () => {
       Value: username,
       setisValid: setisValid,
       type: "text",
-      PlaceHolder: "Email or Username",
+      PlaceHolder: "Username",
       icon: mail,
       Border: "#FEECFC40",
       Color: "transparent",

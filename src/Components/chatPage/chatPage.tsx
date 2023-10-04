@@ -325,7 +325,7 @@ const Chat = () => {
       )}
       <div className="w-full h-full">
         <NavBar open={openSideBar} setOpen={setOpenSideBar} />
-        <Conversation data={response} userName={individual[0].other.username} userId={userId} />
+        <Conversation data={response} userName={"individual[0].message"} userId={userId} />
       </div>
     </div>
   );

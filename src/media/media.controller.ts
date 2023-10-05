@@ -51,7 +51,7 @@ export class MediaController {
     const path = `media/${user.id}.${file.mimetype.split('/')[1]}`;
     const ret: Response = this.storageService.save(path, file.buffer);
     this.userService.updateAvatar(
-      user.sub,
+      user.id,
       this.storageService.getPublicUrl(path),
     );
     return ret;

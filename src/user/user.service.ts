@@ -163,7 +163,7 @@ export class UserService {
 
   async verifyEmail(email: string, reject: boolean): Promise<boolean> {
     const user: User = await this.findOneByEmail(email);
-    if (!user) throw new  NotFoundException('user not found');
+    if (!user) throw new NotFoundException('user not found');
 
     if (user.mailVerified) throw new BadRequestException('Link already used');
 
@@ -207,48 +207,48 @@ export class UserService {
   }
 
   async mergeAccounts(profile: any): Promise<User> {
-      return await this.prisma.user.update({
-        where: { email: profile.email },
-        data: {
-          is42User: true,
-          firstName: profile.firstName,
-          lastName: profile.lastName,
-          avatar: profile.avatar,
-          status: UserStatus.ONLINE, //todo: check this
-          country: profile.country,
-        },
-      });
+    return await this.prisma.user.update({
+      where: { email: profile.email },
+      data: {
+        is42User: true,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        avatar: profile.avatar,
+        status: UserStatus.ONLINE, //todo: check this
+        country: profile.country,
+      },
+    });
   }
 
   async getUser(username: string): Promise<SerialisedUser> {
-      const user: User = await this.prisma.user.findUnique({
-        where: {
-          username,
-        },
-        include: {
-          logs: {
-            select: {
-              victories: true,
-              defeats: true,
-              level: true,
-              rank: true,
-            },
+    const user: User = await this.prisma.user.findUnique({
+      where: {
+        username,
+      },
+      include: {
+        logs: {
+          select: {
+            victories: true,
+            defeats: true,
+            level: true,
+            rank: true,
           },
-          HaveAchievement: {
-            select: {
-              level: true,
-              Achiement: {
-                select: {
-                  name: true,
-                  description: true,
-                },
+        },
+        HaveAchievement: {
+          select: {
+            level: true,
+            Achiement: {
+              select: {
+                name: true,
+                description: true,
               },
             },
           },
         },
-      });
-      if (!user) throw new NotFoundException('Invalid username');
-      return serializeUser(user);
+      },
+    });
+    if (!user) throw new NotFoundException('Invalid username');
+    return serializeUser(user);
   }
 
   async getUserGames(
@@ -284,7 +284,7 @@ export class UserService {
     };
   }
 
-  async updateAvatar(id: string, publicUrl: string): Promise<User> {
+  async updateAvatar(id: string, publicUrl: string): Promise<any> {
     return await this.prisma.user.update({
       where: { id },
       data: { avatar: publicUrl },

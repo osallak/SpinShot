@@ -30,8 +30,18 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async generateToken(payload: JwtAuthPayload): Promise<JwtResponse> {
-    payload['iss'] = this.configService.get('JWT_ISSUER');
+  async generateToken(
+    user: any,
+    isTwoFaAuthenticated: boolean,
+  ): Promise<JwtResponse> {
+    const payload: JwtAuthPayload = {
+      isTwoFaAuthenticated,
+      isTwoFactorEnable: user.twoFactorAuth,
+      username: user.username,
+      sub: user.id,
+      iss: this.configService.get('JWT_ISSUER'),
+    };
+
     try {
       return {
         token: await this.jwtService.signAsync(payload),
@@ -87,13 +97,14 @@ export class AuthService {
     }
   }
 
-  async signIn(username: string, pass: string): Promise<JwtResponse> {
-    const user: User = await this.userService.signIn(username, pass);
+  async signIn(
+    username: string,
+    pass: string,
+    isTwoFaAuthenticated: boolean,
+  ): Promise<JwtResponse> {
     try {
-      return await this.generateToken({
-        username: user.username,
-        sub: user.id,
-      } as JwtAuthPayload);
+      const user: User = await this.userService.signIn(username, pass);
+      return await this.generateToken(user, isTwoFaAuthenticated);
     } catch (e) {
       this.logger.error(e.message);
       throw e;

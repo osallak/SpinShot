@@ -4,4 +4,7 @@ export interface JwtAuthPayload {
   iss?: string;
   iat?: number;
   exp?: number;
+
+  isTwoFactorEnable?: boolean;
+  isTwoFaAuthenticated?: boolean;
 }

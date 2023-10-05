@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  HttpException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -16,7 +17,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { achievements } from './constants';
 import { serializePaginationResponse, serializeUser } from './helpers';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
-import { PaginationResponse } from 'src/global/interfaces/global.intefraces';
+import {
+  PaginationResponse,
+  Response,
+} from 'src/global/interfaces/global.intefraces';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import { SerialisedUser, User } from 'src/types';
@@ -323,5 +327,28 @@ export class UserService {
       totalCount,
       query.limit,
     );
+  }
+
+  async updateData(id: string, data: object): Promise<User | Response> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user: User = await this.prisma.user.update({
+          where: { id },
+          data: data,
+        });
+        return resolve({
+          status: 200,
+          message: 'User updated',
+          data: {
+            user,
+          },
+        });
+      } catch {
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    });
   }
 }

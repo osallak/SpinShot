@@ -10,6 +10,9 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.stategy';
 import { FortyTwoStrategy } from './strategies/fortyTwo.strategy';
+import { TwoFactorAuthService } from './two-factor-auth.service';
+import { TwoFactorAuthController } from './two-factor-auth.controller';
+import { JwtTwoFaStrategy } from './strategies/jwt-2fa.strategy';
 
 @Module({
   imports: [
@@ -17,11 +20,11 @@ import { FortyTwoStrategy } from './strategies/fortyTwo.strategy';
     JwtModule.register({
       secret: JWT_SECRET,
 
-      signOptions: { expiresIn: '1d'},
+      signOptions: { expiresIn: '1d' },
     }),
     PassportModule,
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, TwoFactorAuthController],
   providers: [
     AuthService,
     PrismaService,
@@ -29,6 +32,8 @@ import { FortyTwoStrategy } from './strategies/fortyTwo.strategy';
     LocalStrategy,
     FortyTwoStrategy,
     JwtStrategy,
+    TwoFactorAuthService,
+    JwtTwoFaStrategy,
   ],
   exports: [AuthService],
 })

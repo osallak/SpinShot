@@ -6,6 +6,7 @@ import { PaginationResponse, Response } from 'src/global/interfaces';
 import { User } from 'src/types/user.types';
 import { FriendsQueryDto } from './dto/pagination.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtTwoFactorGuard } from 'src/auth/guards/jwt-2fa.guard';
 
 @ApiTags('friends')
 @Controller('friends')
@@ -23,7 +24,7 @@ export class FriendsController {
   })
   @ApiBearerAuth()
   @Post('add/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtTwoFactorGuard)
   async addFriend(
     @Param('id') id: string,
     @UserDecorator() user: User,
@@ -37,7 +38,7 @@ export class FriendsController {
     description:
       'an object holding an array of friends and  pagination metadata',
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Get()
   async getFriends(
     @UserDecorator() user: User,
@@ -56,7 +57,7 @@ export class FriendsController {
     },
   })
   @Post('/accept/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtTwoFactorGuard)
   accept(
     @Param('id') id: string,
     @UserDecorator() user: User,
@@ -73,7 +74,7 @@ export class FriendsController {
       },
     },
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Post('/block/:id')
   block(
     @Param('id') id: string,
@@ -92,7 +93,7 @@ export class FriendsController {
     },
   })
   @Post('/unblock/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtTwoFactorGuard)
   unblock(
     @Param('id') id: string,
     @UserDecorator() user: User,
@@ -109,7 +110,7 @@ export class FriendsController {
       },
     },
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Post('/unfriend/:id')
   async unfriend(@Param('id') id: string, @UserDecorator() user: User): Promise<Response> {
     return this.friendsService.unfriend(user.id, id);

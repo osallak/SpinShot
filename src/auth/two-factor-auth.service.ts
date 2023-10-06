@@ -6,6 +6,7 @@ import { authenticator } from 'otplib';
 import { ConfigService } from '@nestjs/config';
 import { toFileStream } from 'qrcode';
 import { Response } from 'src/global/interfaces';
+import { TwoFaAuthDto } from './dtos/two-fa-auth.dto';
 @Injectable()
 export class TwoFactorAuthService {
   constructor(
@@ -74,7 +75,7 @@ export class TwoFactorAuthService {
 
   public async validateTwoFactorAuthCode(
     user: any,
-    code: string,
+    code: TwoFaAuthDto,
   ): Promise<Response> {
     return new Promise(async (resolve, reject) => {
       try {
@@ -86,7 +87,7 @@ export class TwoFactorAuthService {
           });
         }
         const isValid = authenticator.verify({
-          token: code,
+          token: code.code,
           secret: u?.twoFactorAuthSecret,
         });
         if (isValid) {
@@ -105,6 +106,40 @@ export class TwoFactorAuthService {
         return reject({
           status: 500,
           message: 'Internal Server Error',
+        });
+      }
+    });
+  }
+
+  public async authenticateTwoFactorAuth(
+    user: any,
+    code: TwoFaAuthDto,
+  ): Promise<Response> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const u: any = await this.userService.findOneById(user?.id);
+        const isValid = authenticator.verify({
+          token: code.code,
+          secret: u?.twoFactorAuthSecret,
+        });
+        if (!isValid) {
+          return reject({
+            status: 400,
+            message: '2FA code is invalid',
+          });
+        }
+        const accessToken = await this.authService.generateToken(u, true);
+        resolve({
+          status: 200,
+          message: '2FA code is valid',
+          data: {
+            accessToken,
+          },
+        });
+      } catch (e) {
+        return reject({
+          status: e.status,
+          message: e.message,
         });
       }
     });

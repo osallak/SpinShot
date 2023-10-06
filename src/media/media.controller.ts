@@ -24,6 +24,7 @@ import {
 } from '@nestjs/swagger';
 import { UserDecorator } from 'src/global/decorators/global.decorators';
 import { JwtPayload } from 'jsonwebtoken';
+import { JwtTwoFactorGuard } from 'src/auth/guards/jwt-2fa.guard';
 
 @Controller('media')
 export class MediaController {
@@ -40,7 +41,7 @@ export class MediaController {
       'File size should not exceed 5m and should be of type jpeg or png',
   })
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @UploadedFile(

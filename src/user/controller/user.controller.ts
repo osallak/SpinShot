@@ -19,6 +19,7 @@ import { PaginationResponse } from 'src/global/interfaces';
 import { UserDecorator } from 'src/global/decorators/global.decorators';
 import { JwtPayload } from 'jsonwebtoken';
 import { SearchDto } from '../dto/search.dto';
+import { JwtTwoFactorGuard } from 'src/auth/guards/jwt-2fa.guard';
 
 @ApiTags('user')
 @Controller('users')
@@ -26,7 +27,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Get('search')
   async search(
     @Query() query: SearchDto,
@@ -36,7 +37,7 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @ApiResponse({ status: 200, description: 'Get user by username' })
   @Get('/profile/:username')
   async getUser(@Param('username') username: string): Promise<SerialisedUser> {
@@ -45,7 +46,7 @@ export class UserController {
 
   @ApiBearerAuth()
   @ApiResponse({ status: 200, description: 'Get user games by username' })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Get('/games/:username')
   async getUserGames(
     @Param('username') username: string,
@@ -68,7 +69,7 @@ export class UserController {
     type: UpdateUserDto,
   })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtTwoFactorGuard)
   @Patch()
   async updateUser(
     @UserDecorator() user: User,

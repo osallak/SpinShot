@@ -1,12 +1,13 @@
 import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import Country from "@/Components/ui/Buttons/Country";
 import React, { useState } from "react";
-import { useAppDispatch } from "../../../redux_tool";
+import { useAppDispatch, useAppSelector } from "../../../redux_tool";
 import axios from "axios";
 import FormInput from "@/Components/ui/formInput/FormInput";
 
 const PersonalInformation = (props: any) => {
   // const dispatch = useAppDispatch();
+  const data = useAppSelector((state) => state.Profile);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setUsername] = useState("");
@@ -16,23 +17,26 @@ const PersonalInformation = (props: any) => {
   const hendleUpdata = async () => {
     const my_data = new FormData();
     my_data.append("firstName", firstName);
-    my_data.append("Lastname", lastName);
-    my_data.append("Username", userName);
-    my_data.append("Email", email);
+    my_data.append("lastName", lastName);
+    my_data.append("username", userName);
     my_data.append("country", country);
 
     try {
       const response = await axios.patch(
-        "http://34.173.232.127/api/v1/users/settings",
-        my_data,
+        "http://34.95.172.25:/users",
+        {
+          username: userName,
+          firstName: firstName,
+          lastName: lastName,
+          country: country,
+        },
         {
           headers: {
             Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImY0N2UwYzQ5LTFmODctNDhlYy1hZmM5LTM5ZjcyYTI3YTBmZCIsImVtYWlsIjoiaWJlbm1haW5AZ21haWwuY29tIiwidXNlciI6ImliZW5tYWluIiwiaWF0IjoxNjk0NTE1NDIwLCJleHAiOjE2OTUzNzk0MjB9.Xjyys9uePoq40e_yJG32r0FxyBajRBCWo1YbmmgxUCg",
+              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imlzc2FtIiwic3ViIjoiNDhjOGQwYzktNTJiMy00NGY5LTllMmMtNzFkY2VhYzM4ZmM1IiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY1MzMwNjYsImV4cCI6MTY5NjYxOTQ2Nn0.pRPiFYoGUVEH6FqqxABHooJwYRK4dtnisV9ok8k7XAI",
           },
         }
       );
-      console.log("data :", response.data);
     } catch (error) {
       console.error(error);
     }
@@ -40,17 +44,18 @@ const PersonalInformation = (props: any) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     {
-      e.target.name == "Firstname"
+      e.target.name == "firstName"
         ? setFirstName(e.target.value)
-        : e.target.name == "Lastname"
+        : e.target.name == "lastName"
         ? setLastName(e.target.value)
-        : e.target.name == "Username"
+        : e.target.name == "username"
         ? setUsername(e.target.value)
-        : e.target.name == "Email"
+        : e.target.name == "email"
         ? setEmail(e.target.value)
         : null;
     }
   };
+
 
   return (
     <div className="space-y-40  md:space-y-10 h-[910px]  ">
@@ -65,14 +70,14 @@ const PersonalInformation = (props: any) => {
                 <div className="w-full md:w-[49%] ">
                   <FormInput
                     handleChange={handleChange}
-                    name={"Firstname"}
+                    name={"firstName"}
                     placehold={"First name"}
                   />
                 </div>
                 <div className="w-full md:w-[49%] ">
                   <FormInput
                     handleChange={handleChange}
-                    name={"Lastname"}
+                    name={"lastName"}
                     placehold={"Last name"}
                   />
                 </div>
@@ -82,17 +87,17 @@ const PersonalInformation = (props: any) => {
               <div className="w-full md:w-[49%] ">
                 <FormInput
                   handleChange={handleChange}
-                  name={"Username"}
+                  name={"username"}
                   placehold={"Username"}
                 />
               </div>
             </div>
             <div className="flex flex-col space-y-8 md:space-y-0 md:flex-row   c-10xl:space-x-[15%] items-center">
               <div className=" w-full">
-                <FormInput
-                  handleChange={handleChange}
-                  name={"Email"}
-                  placehold={"Email"}
+                <input
+                  className=" bg-very-dark-purple w-full rounded-[20px] px-5 h-14 placeholder:text-pearl placeholder:text-opacity-40 outline-none"
+                  disabled
+                  placeholder={data.profile.email}
                 />
               </div>
             </div>

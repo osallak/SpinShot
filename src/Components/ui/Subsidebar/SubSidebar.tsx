@@ -20,7 +20,7 @@ const SubSidebar = (props:any) => {
       setBackground(true);
   };
   return (
-    <div className=" backdrop:blur  bg-white/10 space-y-10 w-[30%] hidden c-gb:block rounded-[20px]  ">
+    <div className=" backdrop:blur  bg-white/10 space-y-10 w-[30%] hidden c-gb:block rounded-[20px]  ml-2">
       <div className="w-full flex flex-col h-[132px]">
         <div className="flex justify-center  w-full h-full items-center text-[35px] font-Poppins font-extrabold text-pearl">
           <div className="w-[80%]">
@@ -31,7 +31,7 @@ const SubSidebar = (props:any) => {
           <div className=" bg-pearl w-[80%] opacity-40 border"></div>
         </div>
       </div>
-      <div className={`font-Poppins text-pearl text-[1.32rem] `}>
+      <div className={`font-Poppins font-semibold text-pearl text-[1.32rem] `}>
         {buttons.map((button) => (
           <div
             key={button.id}

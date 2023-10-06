@@ -31,6 +31,7 @@ const UploadImage = (props: {upload:boolean, setUpload:Function, open: boolean, 
     }
   };
 
+
   return (
     <div className="">
       <Dialog

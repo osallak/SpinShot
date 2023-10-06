@@ -17,6 +17,7 @@ module.exports = withMT({
       colors: {
         'very-dark-purple': '#260323',
         'peridot': '#D8EA10',
+        'purple': '#B190B6',
         'pearl': '#FEECFC',
         'light-grey': '#D9D9D9',
         'gradiant-white': '#ffffff15'

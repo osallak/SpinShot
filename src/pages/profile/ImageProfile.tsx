@@ -1,7 +1,8 @@
 import ibenmain from "./../../../public/ibenmain.jpeg";
+import avatar from "./../../../public/test1.svg";
 import email from "./../../../public/Email.svg";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../../redux_tool";
 import UploadImage from "../../Components/ui/UploadImage/UploadImage";
 
@@ -10,7 +11,11 @@ const ImageProfile = (props: any) => {
   const [handelMous, setImage] = useState(false);
   // const [open, setOpenDialog] = useState(false);
   const [upload, setUpload] = useState(false);
+  const [image, setMyImage] = useState();
   const data = useAppSelector((state) => state.Profile);
+  const [width, setWidth] = useState(null);
+  const [height, setHeight] = useState(null);
+  const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
 
   const handleMouseEnter = () => {
     setImage(true);
@@ -25,12 +30,25 @@ const ImageProfile = (props: any) => {
     props.setOpenDialog(!props.open);
   };
 
+  const handleImageLoad = (event:any) => {
+    const { naturalWidth, naturalHeight } = event.target;
+    setWidth(naturalWidth);
+    setHeight(naturalHeight);
+  };
+
+  useEffect(() => {
+    if (data.profile?.profile?.avatar)
+    {
+      const img = data.profile?.profile?.avatar;
+      setMyImage(img);
+    }
+  }, [data])
 
   return (
     <div
       className={` ${
         (props.opne && props.width < 1024) ? "opacity-10" : ""
-      }  rounded-[20px] flex flex-col items-center justify-center text-pearl text-opacity-40 w-full p-20 c-gb:w-[30%]  relative`}
+      }  rounded-[20px] flex flex-col items-center justify-center text-pearl text-opacity-40 w-full p-20 c-gb:w-[30%]  relative `}
     >
       {handelMous && (
         <div className=" flex justify-center items-center flex-col  transition-all absolute">
@@ -42,25 +60,26 @@ const ImageProfile = (props: any) => {
         onMouseLeave={handleMouseLeave}
         className=" rounded-3xl w-[120px]  c-gb:w-[10rem] c-10xl:w-[15rem]  relative transition-all duration-300 bg-white hover:opacity-40 "
       >
-        <input type="" className="hidden" onClick={Open} />
-        <div className=" flex justify-center items-center ">
-          {upload ? (
+        <input type="" className="hidden " accept={allowedExtensions.map((ext) => `.${ext}`).join(',')} onClick={Open} />
+        <div className=" flex justify-center items-center bg-purple  rounded-3xl overflow-hidden">
+          {image && (
             <picture>
               <img
+                onLoad={handleImageLoad}
                 className={` rounded-[20px]`}
-                src={URL.createObjectURL(props.myImage!)}
+                src={image}
                 alt=""
                 />
             </picture>
-          ) : (
-            <Image className={` rounded-[20px]`} src={ibenmain} alt="" />
-          )}
+            )}
         </div>
       </label>
-      <div className="flex flex-col items-center c-10xl:text-xl text-md">
-        {/* <span>{data.profile.response?.user.firstName}</span> */}
-        <span>ibenmain</span>
-        <span>ibenmain@gmail.com</span>
+      <div className="flex flex-col items-center c-10xl:text-xl text-md mt-4">
+        <span>{data.profile?.username}</span>
+        {/* <span>ibenmain</span> */}
+        {/* {width} */}
+        {/* {height} */}
+        <span>{data.profile?.email}</span>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import imagePlayer from "../../../public/imagePlayer.svg";
 import Image from "next/image";
-import { Pagination } from "@nextui-org/react";
+import Pagination from "../../Components/ui/pagination/Pagination";
 const MatchHistory = () => {
   return (
     <div className="  h-[1100px] c-gb:h-[900px] relative">
@@ -10,7 +10,7 @@ const MatchHistory = () => {
       </div>
       <div className="  flex justify-between flex-col c-gb:flex-row h-full sm:h-[95%]  md:h-full  c-gb:h-[75%] space-y-11 text-pearl c-3xl:text-2xl c-lg:text-xl ">
         <div className=" w-full c-gb:w-[40%] flex justify-center items-center h-[40%]  c-gb:h-full ">
-          <div className=" w-[50%] sm:w-[40%] h-[50%] c-gb:w-[70%] sm:h-[70%] c-lg:w-[80%]  c-lg:h-[50%] rounded-[20px] bg-very-dark-purple flex flex-col items-center ">
+          <div className="  w-[70%] h-[80%] sm:w-[40%]  c-gb:h-[50%] c-gb:w-[90%] rounded-[20px] bg-very-dark-purple flex flex-col items-center ">
             <div className="flex justify-center items-center flex-col h-[50%]">
               <h1>Games</h1>
               <h1 className="opacity-40">160</h1>
@@ -35,9 +35,9 @@ const MatchHistory = () => {
         {/* todo */}
         <div className=" w-full flex c-gb:flex-row items-start flex-col h-full space-y-10  c-gb:space-y-0   relative ">
           <div className=" w-full c-gb:space-y-10 space-y-2 flex justify-center items-center flex-col  ">
-            <div className=" flex flex-row justify-center items-center c-3xl:space-x-20  md:space-x-32 c-gb:space-x-8 sm:space-x-24 space-x-3 ">
+            <div className="text-[15px] c-3xl:text-[20px] flex flex-row justify-center items-center c-3xl:space-x-20  md:space-x-32 c-gb:space-x-8 sm:space-x-24 space-x-3 ">
               <div className="w-[60px] ">
-                <Image src={imagePlayer} alt="" />
+                <Image className="w-[70%] sm:w-full" src={imagePlayer} alt="" />
               </div>
               <div className="opacity-40">
                 <div className="flex flex-row">
@@ -54,9 +54,9 @@ const MatchHistory = () => {
                 <h1>3</h1>
               </div>
             </div>
-            <div className=" flex flex-row justify-center items-center c-3xl:space-x-20 md:space-x-32 m-0  c-gb:space-x-8 sm:space-x-24 space-x-3 ">
+            <div className=" text-[15px] c-3xl:text-[20px] flex flex-row justify-center items-center c-3xl:space-x-20 md:space-x-32 m-0  c-gb:space-x-8 sm:space-x-24 space-x-3 ">
               <div className="w-[60px]">
-                <Image src={imagePlayer} alt="" />
+                <Image className="w-[70%] sm:w-full" src={imagePlayer} alt="" />
               </div>
               <div className="opacity-40">
                 <div className="flex flex-row">
@@ -73,9 +73,9 @@ const MatchHistory = () => {
                 <h1>3</h1>
               </div>
             </div>
-            <div className=" flex flex-row justify-center items-center c-3xl:space-x-20 md:space-x-32 m-0  c-gb:space-x-8 sm:space-x-24 space-x-3 ">
+            <div className=" text-[15px] c-3xl:text-[20px] flex flex-row justify-center items-center c-3xl:space-x-20 md:space-x-32 m-0  c-gb:space-x-8 sm:space-x-24 space-x-3 ">
               <div className="w-[60px]">
-                <Image src={imagePlayer} alt="" />
+                <Image className="w-[70%] sm:w-full" src={imagePlayer} alt="" />
               </div>
               <div className="opacity-40">
                 <div className="flex flex-row">
@@ -92,9 +92,9 @@ const MatchHistory = () => {
                 <h1>3</h1>
               </div>
             </div>
-            <div className=" flex flex-row justify-center items-center c-3xl:space-x-20 md:space-x-32 m-0  c-gb:space-x-8 sm:space-x-24 space-x-3 ">
+            <div className=" text-[15px] c-3xl:text-[20px] flex flex-row justify-center items-center c-3xl:space-x-20 md:space-x-32 m-0  c-gb:space-x-8 sm:space-x-24 space-x-3 ">
               <div className="w-[60px]">
-                <Image src={imagePlayer} alt="" />
+                <Image className="w-[70%] sm:w-full" src={imagePlayer} alt="" />
               </div>
               <div className="opacity-40">
                 <div className="flex flex-row">
@@ -111,9 +111,9 @@ const MatchHistory = () => {
                 <h1>3</h1>
               </div>
             </div>
-            <div className=" flex flex-row justify-center items-center c-3xl:space-x-20 md:space-x-32 m-0  c-gb:space-x-8 sm:space-x-24 space-x-3 ">
+            <div className=" text-[15px] c-3xl:text-[20px] flex flex-row justify-center items-center c-3xl:space-x-20 md:space-x-32 m-0  c-gb:space-x-8 sm:space-x-24 space-x-3 ">
               <div className="w-[60px]">
-                <Image src={imagePlayer} alt="" />
+                <Image className="w-[70%] sm:w-full" src={imagePlayer} alt="" />
               </div>
               <div className="opacity-40">
                 <div className="flex flex-row">
@@ -156,7 +156,7 @@ const MatchHistory = () => {
               <h1 className="text-red-900">DEFEAT</h1>
             </div>
           </div>
-        <div className="flex justify-center bottom-0 right-0 absolute px-10">
+        <div className=" c-gb:bottom-0  w-full border c-gb:right-0 c-gb:absolute">
           <Pagination/>
         </div>
         </div>

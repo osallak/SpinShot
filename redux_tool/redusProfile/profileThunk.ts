@@ -5,12 +5,11 @@ export const getProfile = createAsyncThunk(
     "profile",
     async () => {
         try {
-                const respo = await axios.get(`https://jsonplaceholder.typicode.com/posts`, {
+                const respo = await axios.get(`http://34.95.172.25/users/profile/ibenmain`, {
                   headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRlZTc0NjRmLWNiNGEtNDE5YS05MjI5LTFlYjA4NjI0YjdmMSIsImVtYWlsIjoiaWJlbm1haW5AZ21haWwuY29tIiwidXNlciI6ImliZW5tYWluIiwiaWF0IjoxNjk0MTgwMzIwLCJleHAiOjE2OTUwNDQzMjB9.izG5Om77OBtyUCR-m5wtj5Hy8i6FnMXqn1vlSS-Xqss`,
+                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imlzc2FtIiwic3ViIjoiNDhjOGQwYzktNTJiMy00NGY5LTllMmMtNzFkY2VhYzM4ZmM1IiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY1MzMwNjYsImV4cCI6MTY5NjYxOTQ2Nn0.pRPiFYoGUVEH6FqqxABHooJwYRK4dtnisV9ok8k7XAI`,
                   }
                 },)
-                console.log("respo ha ===", respo.data);
                 return respo.data;
         } catch (error) {
             console.log(error);

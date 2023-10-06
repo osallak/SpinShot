@@ -70,10 +70,10 @@ const Profile = () => {
   const handleResize = () => {
     setWidth(window.innerWidth);
   };
-
+  // console.log("lalal",profile_data.profile.username);
   return (
-    <div className={"bg-very-dark-purple w-full h-full"}>
-      <div className={` flex flex-row c-gb:space-x-2 p-2 w-screen h-screen`}>
+    <div className={"bg-very-dark-purple w-full h-full font-semibold font-Poppins"}>
+      <div className={` flex flex-row p-2 w-screen h-screen `}>
         <SideBar />
         <SubSidebar setContent={setContent} setPassword={setPassword} isActive={isActive} setisActive={setisActive} />
         {isopen && (
@@ -84,14 +84,14 @@ const Profile = () => {
           />
         )}
         <div
-          className={`${((isopen && !isActive && !open) || (isopen && !open && !isActive )) ? "ml-[75px]" : ""} w-full  rounded-[20px] `}
+          className={` ${((isopen && !isActive && !open ) || (isopen && !open && !isActive )) ? (width! > 1024 ? "" : "ml-[75px]")  : ""} w-full  rounded-[20px] c-gb:ml-2`}
         >
           <NavbarMobile
             setMenu={setMenu}
             handleMenu={handleMenu}
             isopen={isopen}
             />
-          <div className="flex flex-col  c-gb:h-full   overflow-auto ">
+          <div className="flex flex-col  c-gb:h-full   overflow-auto  ">
             <div className="rounded-[20px] c-gb:flex c-gb:flex-row  ">
               <ImageProfile opne={opened} setOpenDialog={setOpenDialog} myImage={myImage} width={width}/>
                 {open ? (
@@ -110,7 +110,7 @@ const Profile = () => {
                 (opened && width! < 1024)
                   ? "backdrop:blur  bg-white/10 opacity-10"
                   : "backdrop:blur  bg-white/10"
-              } flex flex-auto flex-col rounded-[20px] w-full mt-2  h-[1200px]  c-gb:h-[960px]`}
+              } flex flex-auto flex-col rounded-[20px] w-full mt-2  h-[1200px] c-gb:h-[800px]`} /*h-[1200px]  c-gb:h-[960px]*/
             >
               {content == "Personal_Information" ? (
                 <PersonalInformation />

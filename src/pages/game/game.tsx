@@ -6,8 +6,9 @@ import SubSidebarGame from "@/Components/ui/Subsidebar/SubSidebarGame";
 import NavbarMobile from "@/Components/ui/Navbar/NavbarMobile";
 import NavGame from "@/Components/ui/Navbar/NavGame";
 import SidebarM from "@/Components/ui/Sidebar/SidebarMobile";
-import PingPongGame from "./test";
-import GameCover from "./GameCover";
+import GameNormal from "./GameNormal";
+import GameHard from "./GameHard";
+import GameExpert from "./GameExpert";
 const Game = () => {
   const [isopen, setMenu] = useState(false);
   const [opened, setOpned] = useState(false);
@@ -20,7 +21,7 @@ const Game = () => {
   };
 
   return (
-    <div className={"bg-very-dark-purple w-screen h-screen "}>
+    <div className={"bg-very-dark-purple w-screen h-screen font-semibold font-Poppins"}>
       <div className={` flex flex-row c-gb:space-x-1 p-2 w-full  h-full `}>
         <SideBar />
         <SubSidebarGame setMode={setMode} setMap={setMap} />
@@ -64,12 +65,16 @@ const Game = () => {
             ) : null}
             {map == "map1" ? (
               <div className=" h-[70%] c-gb:h-[85%] w-[85%] sm:w-[75%] c-gb:w-[55%]  rounded-3xl absolute   sm:min-w-[450px] c-gb:min-w-[600px]  top-[125px] sm:top-44 c-gb:top-28   ">
-                <GameCover/>
+                <GameNormal />
               </div>
             ) : map == "map2" ? (
-              <div className=" h-[70%] c-gb:h-[85%] w-[85%] sm:w-[75%] c-gb:w-[55%] rounded-3xl absolute   sm:min-w-[450px] c-gb:min-w-[600px]  top-[125px] sm:top-44 c-gb:top-28  bg-red-700 "></div>
-            ) : map == "map3" ? (
-              <div className=" h-[70%] c-gb:h-[85%] w-[85%] sm:w-[75%] c-gb:w-[55%] rounded-3xl absolute   sm:min-w-[450px] c-gb:min-w-[600px]  top-[125px] sm:top-44 c-gb:top-28 bg-green-400  "></div>
+              <div className=" h-[70%] c-gb:h-[85%] w-[85%] sm:w-[75%] c-gb:w-[55%] rounded-3xl absolute   sm:min-w-[450px] c-gb:min-w-[600px]  top-[125px] sm:top-44 c-gb:top-28  ">
+                <GameHard /> 
+              </div>
+              ) : map == "map3" ? (
+                <div className=" h-[70%] c-gb:h-[85%] w-[85%] sm:w-[75%] c-gb:w-[55%] rounded-3xl absolute   sm:min-w-[450px] c-gb:min-w-[600px]  top-[125px] sm:top-44 c-gb:top-28  ">
+                  <GameExpert />
+                </div>
             ) : null}
           </div>
         </div>

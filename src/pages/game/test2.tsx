@@ -1,12 +1,13 @@
-import React from "react";
-import Zob from "./test";
+import React from 'react'
+import Test from './test'
 
 const test2 = () => {
+    console.log(<Test/>)
   return (
-    <div className="border w-screen h-screen bg-blue-gray-100">
-      <Zob />
+    <div className='text-white'>
+        test2
     </div>
-  );
-};
+  )
+}
 
-export default test2;
+export default test2

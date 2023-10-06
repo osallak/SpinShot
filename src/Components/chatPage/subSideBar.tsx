@@ -1,36 +1,19 @@
 import SearchInput from "@/Components/ui/Inputs/searchInput";
-import axios from "axios";
+import dataSubSideBar from "@/types/messagesArrays";
 import Image from "next/image";
-import {
-  MouseEvent,
-  useEffect,
-  useState
-} from "react";
+import { MouseEvent, useState } from "react";
 import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";
 import messagesIcon from "../../../public/messagesIcon.svg";
 import test1 from "../../../public/test1.svg";
 import IconButton from "../ui/Buttons/IconButton";
 
-interface other {
-  avatar: string;
-  id: string;
-  username: string;
-}
-
-interface data {
-  message: string;
-  other: other;
-  sender: string;
-  sentAt: string;
-}
-
 function SubSideBar(props: {
   open: boolean;
   setOpen: Function;
   setFlag: Function;
+  data: dataSubSideBar[];
 }) {
-  const [readed, setReaded] = useState(false);
   const [clicked, setClicked] = useState<number>();
   const [searchValue, setSearchValue] = useState("");
 
@@ -50,121 +33,6 @@ function SubSideBar(props: {
     props.setFlag("CreateChannels");
     props.setOpen(!props.open);
   };
-
-  const [respo, setRespo] = useState<data[]>([]);
-
-  const fetchDataSubSideBar = async () => {
-    const ayoubToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsInN1YiI6ImNkYTMxODA4LTE0M2QtNDJjNy1iY2U2LTY1OGZjYjMxYTA3NCIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NDE1NDQ4LCJleHAiOjE2OTY1MDE4NDh9.i3AtMo6H4WS0_B5CnK6R_ETr272T92hmS0NFlmwgkt0";
-    function parseJwt(token: string) {
-      var base64Url = token.split(".")[1];
-      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      var jsonPayload = decodeURIComponent(
-        window
-          .atob(base64)
-          .split("")
-          .map(function (c) {
-            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-          })
-          .join("")
-      );
-
-      return JSON.parse(jsonPayload);
-    }
-    const jwtToken = parseJwt(ayoubToken);
-    try {
-      const res = await axios.get(`http://e3r10p14.1337.ma:3000/chat/all`, {
-        headers: {
-          Authorization: `Bearer ${ayoubToken}`,
-        },
-        params: {
-          id: jwtToken.sub,
-        },
-      });
-      setRespo(res.data.individual);
-      console.log("response from subsidebar: ", res.data);
-      console.log("hello world from sub side bar: ", res.data.individual[0]);
-    } catch (error) {
-      console.log("error of fetching data: ", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchDataSubSideBar();
-  }, []);
-
-  const array = [
-    {
-      icon: test1,
-      message: "hello world from the other side",
-      username: "ataji",
-    },
-    {
-      icon: test1,
-      message: "hello world from the other side",
-      username: "fragger",
-    },
-    {
-      icon: test1,
-      message: "hello world from the other side",
-      username: "machlouj",
-    },
-    {
-      icon: test1,
-      message: "hello world from the other side",
-      username: "machlouj",
-    },
-    {
-      icon: test1,
-      message: "hello world from the other side",
-      username: "machlouj",
-    },
-    {
-      icon: test1,
-      message: "hello world from the other side",
-      username: "machlouj",
-    },
-    {
-      icon: test1,
-      message: "hello world from the other side",
-      username: "machlouj",
-    },
-    {
-      icon: test1,
-      message: "hello world from the other side",
-      username: "ponpon",
-    },
-    {
-      icon: test1,
-      message: "hello world from the other side",
-      username: "hlalouli",
-    },
-    {
-      icon: test1,
-      message: "hello world from the other side",
-      username: "sknahs",
-    },
-    {
-      icon: test1,
-      message: "hello world from the other side",
-      username: "navoos",
-    },
-    {
-      icon: test1,
-      message: "hello world from the other side",
-      username: "ayoub",
-    },
-    {
-      icon: test1,
-      message: "hello world from the other side",
-      username: "teejee",
-    },
-    {
-      icon: test1,
-      message: "hello world from the other side",
-      username: "yakhoudr",
-    },
-  ];
 
   return (
     <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl w-[25%] min-w-[350px]">
@@ -190,7 +58,7 @@ function SubSideBar(props: {
       </div>
       {searchValue.length === 0 ? (
         <div className="w-[99%] xl:px-6 px-2 hover:overflow-auto overflow-hidden h-[70%] min-h-[100px]">
-          {array.map((data, index) => (
+          {props.data.map((items, index) => (
             <button
               onClick={(event) => clickChat(event, index)}
               key={index}
@@ -201,12 +69,12 @@ function SubSideBar(props: {
               <Image src={test1} alt="test" />
               <div className="flex justify-start items-start space-y-1 flex-col">
                 <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
-                  {data.username}
+                  {items.other.username}
                 </p>
                 <p
                   className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
                 >
-                  {data.message}
+                  {items.message}
                 </p>
               </div>
             </button>
@@ -214,12 +82,12 @@ function SubSideBar(props: {
         </div>
       ) : (
         <div className="w-[99%] xl:px-6 px-2 hover:overflow-auto overflow-hidden h-[70%] min-h-[100px]">
-          {array.map((data, index) => (
+          {props.data.map((items, index) => (
             <div
               key={index}
               className="w-full flex justify-center items-center outline-none rounded-2xl"
             >
-              {data.username.startsWith(searchValue) && (
+              {items.other.username.startsWith(searchValue) && (
                 <button
                   onClick={(event) => clickChat(event, index)}
                   key={index}
@@ -227,15 +95,15 @@ function SubSideBar(props: {
                     clicked == index ? "bg-very-dark-purple" : "bg-transparent"
                   }`}
                 >
-                  <Image src={data.icon} alt="test" />
+                  <Image src={items.other.avatar} alt="test" />
                   <div className="flex justify-start items-start space-y-1 flex-col">
                     <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
-                      {data.username}
+                      {items.other.username}
                     </p>
                     <p
                       className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
                     >
-                      {data.message}
+                      {items.message}
                     </p>
                   </div>
                 </button>

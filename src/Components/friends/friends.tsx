@@ -28,8 +28,19 @@ const FriendsPage = () => {
       return JSON.parse(jsonPayload);
     }
     const jwtToken = parseJwt(JSON.stringify(token));
+    console.log("jwtToken: ", jwtToken);
     try {
-      const res = await axios.get("http://34.95.172.25/friends")
+      const res = await axios.get("http://34.95.172.25/friends", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          state: "ACCEPTED",
+          page: 1,
+          limit: 5,
+        }
+      });
+      console.log("response from friends: ", res);
     } catch (error: any){
       console.log("error: ", error);
     }

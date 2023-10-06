@@ -4,6 +4,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import {
   useEffect,
+  useRef,
   useState
 } from "react";
 import NavBar from "../ui/navBar/navBar";
@@ -14,92 +15,27 @@ import ExploreChannels from "./exploreChannels";
 import SubSideBar from "./subSideBar";
 import dataConversation from "@/types/messagesArrays";
 import dataSubSideBar from "@/types/messagesArrays";
+import parseJwt from "@/utils/parsJwt";
 
-function parseJwt(token: string) {
-  var base64Url = token.split(".")[1];
-  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-  var jsonPayload = decodeURIComponent(
-    window
-      .atob(base64)
-      .split("")
-      .map(function (c) {
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join("")
-  );
-
-  return JSON.parse(jsonPayload);
-}
 const Chat = () => {
   const Router = useRouter();
   const [storedToken, setToken] = useState("");
-
+  const [otherUserID, setOtherUserID] = useState("");
+  const [exploreOpen, setExploreOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [openSideBar, setOpenSideBar] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [flag, setFlag] = useState("");
+  const [response, setResponse] = useState<dataConversation[]>([]);
+  const [userId, setUserId] = useState("");
+  const [individual, setIndividual] = useState<dataSubSideBar[]>([]);
+  const [userName, setUserName] = useState("");
+  const userIdRef = useRef<string>();
   // const chatContainerRef = useRef<HTMLDivElement>(null);
   // const [currentMsg, setCurrentMsg] = useState("");
   // const Router = useRouter();
   // const [message, setMessage] = useState("");
   // const [chatHistory, setChatHistory] = useState<string[]>([]);
-  // const user = "You";
-  // const msg = [
-  //   {
-  //     message: "hey",
-  //     sender: "owner",
-  //   },
-  //   {
-  //     message:
-  //       "what's up impmport sendMessageIcogeIcon from import sendMessageIcon ort sendMessageIcon from ",
-  //     sender: "receiver",
-  //   },
-  //   {
-  //     message: "what do you doing",
-  //     sender: "owner",
-  //   },
-  //   {
-  //     message:
-  //       "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-  //     sender: "receiver",
-  //   },
-  //   {
-  //     message: "what do you doing",
-  //     sender: "owner",
-  //   },
-  //   {
-  //     message:
-  //       "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-  //     sender: "receiver",
-  //   },
-  //   {
-  //     message: "what do you doing",
-  //     sender: "owner",
-  //   },
-  //   {
-  //     message:
-  //       "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-  //     sender: "receiver",
-  //   },
-  //   {
-  //     message: "what do you doing",
-  //     sender: "owner",
-  //   },
-  //   {
-  //     message:
-  //       "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-  //     sender: "receiver",
-  //   },
-  //   {
-  //     message: "what do you doing",
-  //     sender: "owner",
-  //   },
-  //   {
-  //     message:
-  //       "what's up import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from import sendMessageIcon from ",
-  //     sender: "receiver",
-  //   },
-  //   {
-  //     message: "what do you doing",
-  //     sender: "owner",
-  //   },
-  // ];
 
   // const handleMessage = (event: ChangeEvent<HTMLInputElement>) => {
   //   event.preventDefault();
@@ -213,74 +149,37 @@ const Chat = () => {
 
   // useEffect(() => socketInitializer(), []);
 
-  const [response, setResponse] = useState<dataConversation[]>([]);
-  const [userId, setUserId] = useState("");
-  const [individual, setIndividual] = useState<dataSubSideBar[]>([]);
-  const [userName, setUserName] = useState("");
 
-  const fetchDataConversation = async () => {
-    const u1 =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsInN1YiI6ImNkYTMxODA4LTE0M2QtNDJjNy1iY2U2LTY1OGZjYjMxYTA3NCIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NDE1NDQ4LCJleHAiOjE2OTY1MDE4NDh9.i3AtMo6H4WS0_B5CnK6R_ETr272T92hmS0NFlmwgkt0"
-    const u2 =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMiIsInN1YiI6ImMzNGFjMzNiLTJlOGEtNDJiNS05OTg1LWQ3ZmE5OTk3NzE2YSIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NDE1NTA4LCJleHAiOjE2OTY1MDE5MDh9.F3WsEuWzpPByr5WA_8gNh_IrIdyCH3t_0Dcycr6-XEA"
-    function parseJwt(token: string) {
-      var base64Url = token.split(".")[1];
-      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      var jsonPayload = decodeURIComponent(
-        window
-          .atob(base64)
-          .split("")
-          .map(function (c) {
-            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-          })
-          .join("")
-      );
-      return JSON.parse(jsonPayload);
-    }
-    const jwtU1 = parseJwt(u1);
-    const jwtU2 = parseJwt(u2);
-    // console.log(jwtU1);
+
+  const ayoubToken =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lNSIsInN1YiI6IjllNjdmZGIwLTdhMGQtNGIwZS05MjdhLTQyMTg0ODI3YTZkZiIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NTAyNjYyLCJleHAiOjE2OTY1ODkwNjJ9.-nSDzi_8hWQjVrthVdlrRc80Eq13Qoq22vigHIDAhog";
+  
+  const featchDataConversation = async (id: string, jwtTokenID: string) => {
     try {
-      const res = await axios.get(
-        `http://e3r10p14.1337.ma:3000/chat/individual/${jwtU2.sub}`, {
+      const result = await axios.get(
+        `http://e3r10p14.1337.ma:3001/chat/individual/${id}`, {
           headers: {
-            Authorization: `Bearer ${u1}`,
+            Authorization: `Bearer ${ayoubToken}`,
           },
         params: {
           page: 1,
           limit: 5,
-          id: jwtU1.sub,
+          id: jwtTokenID,
         }}
       );
-      setResponse(res.data);
-      setUserId(jwtU1.sub);
-      console.log("response from conversation: ", res.data);
+      setResponse(result.data);
+      setUserId(jwtTokenID);
+      console.log("response from conversation: ", result.data);
     } catch (error) {
       console.log("error of fetching data fron conversation: ", error);
     }
-  };
+  }
 
   const fetchDataSubSideBar = async () => {
-    const ayoubToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsInN1YiI6ImNkYTMxODA4LTE0M2QtNDJjNy1iY2U2LTY1OGZjYjMxYTA3NCIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NDE1NDQ4LCJleHAiOjE2OTY1MDE4NDh9.i3AtMo6H4WS0_B5CnK6R_ETr272T92hmS0NFlmwgkt0";
-    function parseJwt(token: string) {
-      var base64Url = token.split(".")[1];
-      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      var jsonPayload = decodeURIComponent(
-        window
-          .atob(base64)
-          .split("")
-          .map(function (c) {
-            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-          })
-          .join("")
-      );
-
-      return JSON.parse(jsonPayload);
-    }
     const jwtToken = parseJwt(ayoubToken);
+    console.log("JWTTOKEN: ", jwtToken);
     try {
-      const res = await axios.get(`http://e3r10p14.1337.ma:3000/chat/all`, {
+      const res = await axios.get(`http://e3r10p14.1337.ma:3001/chat/all`, {
         headers: {
           Authorization: `Bearer ${ayoubToken}`,
         },
@@ -288,35 +187,23 @@ const Chat = () => {
           id: jwtToken.sub,
         },
       });
-      setIndividual(res.data.individual);
-      setUserName(res.data.individual[0].other.username);
-      console.log("message: ", res.data.individual[0]);
       console.log("response from subsidebar: ", res.data);
+      setIndividual((prev) => res.data.individual);
+      featchDataConversation(res.data.individual[0].other.id, jwtToken.sub);
     } catch (error) {
-      console.log("error of fetching data: ", error);
+      console.log("error of fetching data from subsidebar: ", error);
     }
   };
 
   useEffect(() => {
-    fetchDataConversation();
     fetchDataSubSideBar();
   }, []);
-
-  // useEffect(() => {
-  // }, []);
-
-  console.log("======> token: ", storedToken);
-  const [exploreOpen, setExploreOpen] = useState(false);
-  const [createOpen, setCreateOpen] = useState(false);
-  const [openSideBar, setOpenSideBar] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [flag, setFlag] = useState("");
 
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 md:pl-3 pl-0 py-0 pr-0 items-center flex-row">
       <SideBar />
       {openSideBar && <MobileSideBar />}
-      <SubSideBar open={open} setOpen={setOpen} setFlag={setFlag} />
+      <SubSideBar open={open} setOpen={setOpen} setFlag={setFlag} data={individual} />
       {flag === "ExploreChannels" && (
         <ExploreChannels open={open} setOpen={setOpen} />
       )}
@@ -325,8 +212,8 @@ const Chat = () => {
       )}
       <div className="w-full h-full">
         <NavBar open={openSideBar} setOpen={setOpenSideBar} />
-        <Conversation data={response} userName={"individual[0].message"} userId={userId} />
-      </div>
+        <Conversation data={response} userName={individual[0]?.other?.username} userId={userId} />
+       </div>
     </div>
   );
 };

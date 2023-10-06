@@ -55,7 +55,7 @@ const SideBar = () => {
             {option.route != "/Search" ? (
               <button onClick={(event) => changePage(event, option.route)}>
                 {" "}
-                <Image src={option.icon} alt="" />{" "}
+                <Image src={option.icon} alt={option.icon} />{" "}
               </button>
             ) : (
               <button>

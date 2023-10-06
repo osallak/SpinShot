@@ -268,20 +268,15 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
                                   </div>
                                 </div>
                               </div>
-                              <div className="h-full lg:w-[200px] md:w-[170px] w-[140px] flex flex-col space-y-3">
-                                <div className="h-[50%] flex flex-row justify-start items-end space-x-2">
-                                  <div className="font-Poppins lg:text-lg md:text-md text-[10px] text-pearl flex flex-row space-x-1">
+                              <div className=" h-full lg:w-[200px] md:w-[170px] w-[140px] flex flex-col">
+                                <div className=" h-[50%] flex flex-row justify-start items-center space-x-2">
+                                  <div className=" font-Poppins lg:text-lg md:text-md text-[10px] text-pearl flex flex-row space-x-1">
                                     {splitThreePoint(content.name).map(
                                       (channelName, index) => (
                                         <p key={index}>{channelName}</p>
                                       )
                                     )}
                                   </div>
-                                </div>
-                                <div className="h-[50%] flex justify-start items-start">
-                                  <p className="font-Poppins text-pearl text-opacity-40 font-extralight text-[10px]">
-                                    {content.members} Member
-                                  </p>
                                 </div>
                               </div>
                             </div>

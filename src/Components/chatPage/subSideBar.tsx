@@ -7,6 +7,10 @@ import ExportChannels from "../../../public/ExportChannels.svg";
 import messagesIcon from "../../../public/messagesIcon.svg";
 import test1 from "../../../public/test1.svg";
 import IconButton from "../ui/Buttons/IconButton";
+import axios from "axios";
+
+const ayoubToken =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiMGM0ZjQ0ODMtNDI5Ny00ZWFkLTg1NWYtOGVhNjcyOTIwYmRmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2MDAzMzMsImV4cCI6MTY5NjY4NjczM30.3JyzTZBDHdFfUMRwu11tNFLngGucY7nH1YpCl1KSnlI";
 
 function SubSideBar(props: {
   open: boolean;
@@ -16,20 +20,41 @@ function SubSideBar(props: {
 }) {
   const [clicked, setClicked] = useState<number>();
   const [searchValue, setSearchValue] = useState("");
+  // const [responseExploreChannels, setResponseExploreChannels] = useState()
 
   const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number) => {
     event.preventDefault();
     setClicked(index);
   };
 
-  const exploreChannels = (event: MouseEvent<HTMLButtonElement>) => {
+  const exploreChannels = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    try {
+      const res = await axios.get(`http://e3r10p14.1337.ma:3001/room/all`, {
+        headers: {
+          Authorization: `Bearer ${ayoubToken}`
+        }
+      })
+      console.log("response from explore channel: ", res.data);
+    } catch (error: any) {
+      console.log("error from explore channel: ", error);
+    }
     props.setFlag("ExploreChannels");
     props.setOpen(!props.open);
   };
 
-  const createChannels = (event: MouseEvent<HTMLButtonElement>) => {
+  const createChannels = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    // try {
+    //   const createRes = await axios.get(`http://e3r10p14.1337.ma:3001/room/add`, {
+    //     headers: {
+    //       Authorization: `Bearer ${ayoubToken}`
+    //     },
+    //     params: {
+    //       type: 
+    //     }
+    //   })
+    // }
     props.setFlag("CreateChannels");
     props.setOpen(!props.open);
   };

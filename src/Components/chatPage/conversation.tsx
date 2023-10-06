@@ -27,6 +27,10 @@ const Conversation = (props: {
   const Router = useRouter();
   const [chatHistory, setChatHistory] = useState<string[]>([]);
   const [connected, setConnected] = useState<boolean>(false);
+  const [socket, setSocket] = useState<any>(undefined);
+  const [chat, setChat] = useState<IMsgDataTypes[]>([]);
+  const [test, setTest] = useState<string>("");
+  const [message, setMessage] = useState("");
 
   const handleClick = () => {
     console.log("hello world from the other side");
@@ -56,6 +60,53 @@ const Conversation = (props: {
     }
   }, [chatHistory.length]);
 
+  // const sendMessage = (event: MouseEvent<HTMLButtonElement>) => {
+  //   event.preventDefault();
+  //   setMessageContent(currentMessage);
+  //   console.log("Message Content : ", messageContent);
+  // }
+
+  interface IMsgDataTypes {
+    from: string;
+    to: string;
+    content: string;
+    timestamp: string;
+  }
+
+  console.log("data from subsidebar to conversation: ", props.data);
+
+  // const handleSendMessage = (
+  //   event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
+  //   ) => {
+  //     event.preventDefault();
+  //     if (message.trim() !== "") {
+  //       socket.on("connect", () => {
+  //         console.log("socket connected successfuly");
+  //         const messageData: IMsgDataTypes = {
+  //           from: "ataji",
+  //           to: "username3",
+  //           content: currentMsg,
+  //           timestamp: String(Date.now()),
+  //         };
+  //         setConnected(true);
+  //         socket.emit("pm", messageData);
+  //       });
+  //       socket.on("disconnect", (data: any) => console.log("disconnected"));
+  //       socket.on("pm", (data: any) => console.log("the response from the server socket: ", data));
+  //       socket.on("exception", (data: any) => console.log("exception: ", data));
+  //     setMessage("");
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const socket = io("ws://e3r10p14.1337.ma:3001", {
+  //     extraHeaders: {
+  //       authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsInN1YiI6IjMxYTQwM2M3LTM4NjItNDI0My1iNjZlLThkYjRlMzg1OWZjNSIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NTg3ODA1LCJleHAiOjE2OTY2NzQyMDV9.MW1zUeCPwYBMqt5IFhuHTNEXtILwciQFpnigZoHN_tQ`,
+  //     },
+  //   });
+  //   setSocket(socket);
+  // });
+
   useEffect(() => {
     const handleKeyPress = (event: any) => {
       event.preventDefault(); // Prevent the "/" key from being typed into the input
@@ -77,70 +128,6 @@ const Conversation = (props: {
       inputElement.focus();
     }
   }, []);
-
-  // const sendMessage = (event: MouseEvent<HTMLButtonElement>) => {
-  //   event.preventDefault();
-  //   setMessageContent(currentMessage);
-  //   console.log("Message Content : ", messageContent);
-  // }
-  interface IMsgDataTypes {
-    from: string;
-    to: string;
-    content: string;
-    timestamp: string;
-  }
-
-  console.log("data from subsidebar to conversation: ", props.data);
-  const [chat, setChat] = useState<IMsgDataTypes[]>([]);
-  const [test, setTest] = useState<string>("");
-  const [message, setMessage] = useState("");
-
-  // const socket = io("ws://e3r10p14.1337.ma:3001")
-
-  socket.on("connect", () => {
-    const msgData: IMsgDataTypes = {
-      from: "sdfsdf",
-      to: "username3",
-      content: currentMsg,
-      timestamp: String(Date.now()),
-    };
-    socket.emit("pm", msgData);
-    socket.on("pm", data => console.log(data));
-    socket.on("exception", (data) => console.log("exception: ", data));
-  });
-
-  const handleSendMessage = (
-    event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
-    ) => {
-    event.preventDefault();
-    if (message.trim() !== "") {
-      socket.on("disconnect", data => console.log("disconnected"));
-      // socket.on("hello", (data: IMsgDataTypes) => {
-      //   setChat((pre) => [...pre, data]);
-      // });
-      setMessage("");
-    }
-  };
-
-  useEffect(() => {
-    const socket = io("ws://e3r10p14.1337.ma:3001", {
-      extraHeaders: {
-        authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc1R3b0ZhQXV0aGVudGljYXRlZCI6ZmFsc2UsImlzVHdvRmFjdG9yRW5hYmxlIjpmYWxzZSwidXNlcm5hbWUiOiJuYXZvb3MiLCJzdWIiOiIxYWI2ZDdjNS04ZmRiLTQ3ZTEtYTE2Ni0wZTNhZTBiMDNmMDMiLCJpc3MiOiJzcGluc2hvdCIsImlhdCI6MTY5NjUwMDMzNSwiZXhwIjoxNjk2NTg2NzM1fQ.i-Id79s0rEdRqz22im6rOdRO_QcqSCiyd7VQdxEcfU0`,
-      },
-    });
-    socket.on("connect", () => {
-      console.log("socket connected successfuly");
-      const messageData: IMsgDataTypes = {
-        from: "ataji",
-        to: "username3",
-        content: currentMsg,
-        timestamp: String(Date.now()),
-      }
-      setConnected(true);
-      socket.emit("pm", messageData);
-      socket.
-    })
-  })
 
   return (
     <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">

@@ -69,7 +69,6 @@ const Signin = () => {
       setError(true);
     }
     if(!error) {
-      console.log("here");
       // Router.push(Path);
     }
   };

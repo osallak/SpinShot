@@ -14,59 +14,40 @@ import SimpleButton from "../ui/Buttons/SimpleButton";
 import CreateChannelIcon from "../../../public/CreateChannel.svg";
 import SubModal from "./channelsStatus/subModal";
 import SwitchButton from "../ui/Buttons/SwitchButton";
+import axios from "axios";
+
+const ayoubToken =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiMGM0ZjQ0ODMtNDI5Ny00ZWFkLTg1NWYtOGVhNjcyOTIwYmRmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2MDAzMzMsImV4cCI6MTY5NjY4NjczM30.3JyzTZBDHdFfUMRwu11tNFLngGucY7nH1YpCl1KSnlI";
 
 const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
-  const content = [
-    {
-      name: "spinshot Game",
-      members: 50,
-      status: "private",
-    },
-    {
-      name: "spinshot Game",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot Game",
-      members: 20,
-      status: "protected",
-    },
-  ];
-  const [subOpen, setSubOpen] = useState(false);
-  const [status, setStatus] = useState("");
 
-  const sp = (name: string) => {
-    const res = name.split(" ");
-    if (res.length > 2) for (let i = 0; i < res.length; i++) res.pop();
-    return res;
-  };
-
-  const splitThreePoint = (name: string) => {
-    const res = name.split(" ");
-    if (res.length > 2) {
-      for (let i = 0; i < res.length; i++) {
-        res.pop();
-      }
-      res.push("...");
-    }
-    return res;
-  };
+  const [type, setType] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
 
   const closeModal = () => {
     props.setOpen(false);
   };
 
-  const closeModaltwo = () => {
-    props.setOpen(false);
+  const addChannel = async () => {
+    console.log("type of channel: ", type);
+    try {
+      const res = await axios.post(`http://e3r10p14.1337.ma:3001/room/add`, {
+        headers: {
+          Authorization: `Bearer ${ayoubToken}`,
+        },
+        params: {
+          type: type,
+          name: name,
+          password: password,
+        }
+      })
+    } catch (error: any) {
+      console.log("error from create channels: ", error);
+    }
+    // props.setOpen(false);
   };
 
-  const joinChannel =
-    (status: string) => (event: MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
-      setSubOpen(true);
-      setStatus(status);
-    };
   return (
     <Transition appear show={props.open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -106,17 +87,17 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
                     </p>
                   </div>
                   <div className="h-[85%] overflow-auto flex items-start justify-center sm:flex-row flex-col py-3">
-										<SwitchButton />
-									</div>
+                    <SwitchButton setType={setType} />
+                  </div>
                 </div>
                 <div className="mt-7 rounded-full w-full lg:h-full md:h-[50px] sm:h-[30px] h-[20px] flex justify-end items-center md:p-5 sm:p-3 p-1">
                   <button
                     type="button"
                     className="rounded-full bg-peridot px-4 py-2 text-very-dark-purple lg:w-24 md:w-20 sm:w-16 w-14 lg:h-9 md:h-8 sm:h-7 h-6 focus:outline-none flex justify-center items-center"
-                    onClick={closeModaltwo}
+                    onClick={addChannel}
                   >
                     <span className="font-Passion-One text-very-dark-purple flex justify-center items-center">
-                      Exit
+                      Add
                     </span>
                   </button>
                 </div>

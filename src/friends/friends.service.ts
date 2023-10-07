@@ -65,7 +65,7 @@ export class FriendsService {
           AND: [{ rightUserId: user.id }, { leftUserId: { lt: user.id } }],
         },
       ],
-      state: query.state,
+      status: query.status,
     };
     const select = {
       id: true,

@@ -62,7 +62,7 @@ const ImageProfile = (props: any) => {
       >
         <input type="" className="hidden " accept={allowedExtensions.map((ext) => `.${ext}`).join(',')} onClick={Open} />
         <div className=" flex justify-center items-center bg-purple  rounded-3xl overflow-hidden">
-          {image && (
+          {/* {image && (
             <picture>
               <img
                 onLoad={handleImageLoad}
@@ -71,7 +71,8 @@ const ImageProfile = (props: any) => {
                 alt=""
                 />
             </picture>
-            )}
+            )} */}
+            <Image src={ibenmain} alt=""/>
         </div>
       </label>
       <div className="flex flex-col items-center c-10xl:text-xl text-md mt-4">

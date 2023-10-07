@@ -26,7 +26,7 @@ const GameHard = () => {
     //   Bodies.rectangle(650, 10, 20, 2090, wallOptions),
     // ]);
 
-    const paddle = Bodies.rectangle(325, 15, 150, 20, {
+    const paddle = Bodies.rectangle(325, 15, 150, 13, {
       isStatic: true,
       chamfer: { radius: 10 },
       render: {
@@ -35,7 +35,7 @@ const GameHard = () => {
       },
     });
 
-    const center = Bodies.rectangle(325, 375, 620, 10, {
+    const center = Bodies.rectangle(325, 375, 620, 5, {
       isStatic: true,
       chamfer: { radius: 10 },
       render: {
@@ -44,7 +44,7 @@ const GameHard = () => {
       },
     });
 
-    const paddle1 = Bodies.rectangle(325, 735, 150, 20, {
+    const paddle1 = Bodies.rectangle(325, 735, 150, 13, {
       isStatic: true,
       chamfer: { radius: 10 },
       render: {

@@ -26,7 +26,43 @@ const GameExpert = () => {
     //   Bodies.rectangle(650, 10, 20, 2090, wallOptions),
     // ]);
 
-    const paddle = Bodies.rectangle(325, 15, 150, 20, {
+    const obstacle  = Bodies.rectangle(650, 187, 190, 30, {
+      isStatic: true,
+      chamfer: { radius: 0 },
+      render: {
+        fillStyle: "yellow",
+        opacity: 0.9,
+      },
+    });
+   
+    const obstacle2  = Bodies.rectangle(0, 315, 390, 30, {
+      isStatic: true,
+      chamfer: { radius: 0 },
+      render: {
+        fillStyle: "yellow",
+        opacity: 0.9,
+      },
+    });
+
+    const obstacle3  = Bodies.rectangle(0, 564, 190, 30, {
+      isStatic: true,
+      chamfer: { radius: 0 },
+      render: {
+        fillStyle: "yellow",
+        opacity: 0.9,
+      },
+    });
+
+    const obstacle4  = Bodies.rectangle(650, 440, 390, 30, {
+      isStatic: true,
+      chamfer: { radius: 0 },
+      render: {
+        fillStyle: "yellow",
+        opacity: 0.9,
+      },
+    });
+
+    const center = Bodies.rectangle(325, 375, 620, 5, {
       isStatic: true,
       chamfer: { radius: 10 },
       render: {
@@ -34,7 +70,16 @@ const GameExpert = () => {
         opacity: 0.9,
       },
     });
-    const paddle1 = Bodies.rectangle(325, 735, 150, 20, {
+
+    const paddle = Bodies.rectangle(325, 15, 150, 13, {
+      isStatic: true,
+      chamfer: { radius: 10 },
+      render: {
+        fillStyle: "white",
+        opacity: 0.9,
+      },
+    });
+    const paddle1 = Bodies.rectangle(325, 735, 150, 13, {
       isStatic: true,
       chamfer: { radius: 10 },
       render: {
@@ -55,7 +100,7 @@ const GameExpert = () => {
 
     ballRef.current = ball;
 
-    World.add(engine.world, [paddle, paddle1, ball]);
+    World.add(engine.world, [paddle, paddle1, ball, center, obstacle, obstacle2, obstacle3, obstacle4]);
 
     Engine.run(engine);
     Render.run(render);

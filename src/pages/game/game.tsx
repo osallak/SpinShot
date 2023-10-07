@@ -14,10 +14,25 @@ const Game = () => {
   const [opened, setOpned] = useState(false);
   const [mode, setMode] = useState<string>();
   const [map, setMap] = useState<string>();
+  const [width, setWidth] = useState<number>();
 
   const handleMenu = () => {
     setOpned(false);
     setMenu(!isopen);
+  };
+
+  useEffect(() => {
+    handleResize();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
+  }, []);
+
+  const handleResize = () => {
+    setWidth(window.innerWidth);
   };
 
   return (
@@ -35,8 +50,8 @@ const Game = () => {
         )}
         <div
           className={` ${
-            isopen ? "ml-[75px]" : null
-          } h-full w-full flex-col flex  items-center rounded-2xl bg-white/10 space-y-10  relative  `}
+            (isopen && width! < 720)  ? "ml-[75px]" : null
+          } h-full w-full flex-col flex  items-center rounded-2xl bg-white/10 space-y-10  relative ml-2`}
         >
           <div className={`  w-full `}>
             <NavbarMobile
@@ -64,7 +79,7 @@ const Game = () => {
               </div>
             ) : null}
             {map == "map1" ? (
-              <div className=" h-[70%] c-gb:h-[85%] w-[85%] sm:w-[75%] c-gb:w-[55%]  rounded-3xl absolute   sm:min-w-[450px] c-gb:min-w-[600px]  top-[125px] sm:top-44 c-gb:top-28   ">
+              <div className=" h-[70%] c-gb:h-[85%] w-[85%] sm:w-[75%] c-gb:w-[55%]  rounded-3xl absolute   sm:min-w-[450px] c-gb:min-w-[600px]  top-[125px] sm:top-44 c-gb:top-28  ">
                 <GameNormal />
               </div>
             ) : map == "map2" ? (

@@ -20,7 +20,7 @@ const SubSidebar = (props:any) => {
       setBackground(true);
   };
   return (
-    <div className=" backdrop:blur  bg-white/10 space-y-10 w-[30%] hidden c-gb:block rounded-[20px]  ml-2">
+    <div className=" backdrop:blur  bg-white/10 space-y-10 w-[30%] hidden c-gb:block rounded-[20px]  ml-[110px]">
       <div className="w-full flex flex-col h-[132px]">
         <div className="flex justify-center  w-full h-full items-center text-[35px] font-Poppins font-extrabold text-pearl">
           <div className="w-[80%]">

@@ -74,7 +74,9 @@ const Profile = () => {
   return (
     <div className={"bg-very-dark-purple w-full h-full font-semibold font-Poppins"}>
       <div className={` flex flex-row p-2 w-screen h-screen `}>
-        <SideBar />
+        <div className="fixed h-full pb-4">
+          <SideBar />
+        </div>
         <SubSidebar setContent={setContent} setPassword={setPassword} isActive={isActive} setisActive={setisActive} />
         {isopen && (
           <SidebarM
@@ -84,14 +86,14 @@ const Profile = () => {
           />
         )}
         <div
-          className={` ${((isopen && !isActive && !open ) || (isopen && !open && !isActive )) ? (width! > 1024 ? "" : "ml-[75px]")  : ""} w-full  rounded-[20px] c-gb:ml-2`}
+          className={` ${((isopen && !isActive && !open ) || (isopen && !open && !isActive )) ? (width! > 720 ? "" : "ml-[75px]")  : ""} w-full  rounded-[20px] c-gb:ml-2`}
         >
           <NavbarMobile
             setMenu={setMenu}
             handleMenu={handleMenu}
             isopen={isopen}
             />
-          <div className="flex flex-col  c-gb:h-full   overflow-auto  ">
+          <div className="flex flex-col  c-gb:h-full   overflow-auto ml-0 md:ml-[105px] c-gb:ml-0">
             <div className="rounded-[20px] c-gb:flex c-gb:flex-row  ">
               <ImageProfile opne={opened} setOpenDialog={setOpenDialog} myImage={myImage} width={width}/>
                 {open ? (

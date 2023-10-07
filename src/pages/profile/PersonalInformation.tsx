@@ -97,7 +97,7 @@ const PersonalInformation = (props: any) => {
                 <input
                   className=" bg-very-dark-purple w-full rounded-[20px] px-5 h-14 placeholder:text-pearl placeholder:text-opacity-40 outline-none"
                   disabled
-                  placeholder={data.profile.email}
+                  placeholder={data.profile?.email}
                 />
               </div>
             </div>

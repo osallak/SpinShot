@@ -83,11 +83,11 @@ const Signup = () => {
           username,
           password,
         });
+        Router.push(Path);
       } catch (error: any) {
         setErrorMessage(error.response.data.message);
         setError(true);
       }
-      Router.push(Path);
     }
   };
 

@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { ChangeEvent, Fragment, useState } from "react";
 import Image from "next/image";
 import lock from "../../../../public/lock.svg";
 
@@ -8,9 +8,31 @@ const SubModal = (props: {
   setOpen: Function;
   type: string;
 }) => {
+
+  const [password, setPassword] = useState("");
+  const [joinSuccess, setJoinSuccess] = useState(false);
+  const params: any = {
+    name: name,
+    type: type,
+  };
+  if (password.length >= 6) params["password"] = password;
+
   function closeModal() {
     props.setOpen(false);
   }
+
+  const joinChannel = (type: string) => {
+    {
+      type === "PUBLIC" ? setJoinSuccess(true) : 
+    }
+  }
+
+  const getPassword = (event: ChangeEvent<HTMLInputElement>) {
+    event.preventDefault();
+    setPassword(event.target.value);
+  }
+
+  console.log("status", props.type);
 
   return (
     <Transition appear show={props.open} as={Fragment}>
@@ -40,7 +62,7 @@ const SubModal = (props: {
             >
               <Dialog.Panel className="lg:w-full md:w-[90%] sm:w-[80%] w-[70%] max-w-md transform overflow-hidden rounded-2xl bg-pearl p-6 text-left align-middle shadow-xl transition-all">
                 <div>
-                  {props.type === "protected" && (
+                  {props.type === "PROTECTED" && (
                     <div className="flex justify-center items-center flex-col space-y-2">
                       <span className="font-Poppins text-very-dark-purple px-4 font-semibold w-full lg:text-lg md:text-md sm:text-sm text-xs">
                         Enter the password of the channel
@@ -52,26 +74,20 @@ const SubModal = (props: {
                           className="sm:w-6 w-5"
                         />
                         <input
+                          onChange={(event) => getPassword(event)}
                           type="password"
                           className="w-full h-full rounded-full bg-very-dark-purple placeholder:text-pearl placeholder:opacity-40 lg:text-lg md:text-md sm:text-sm text-xs p-2 placeholder:font-Poppins outline-none text-pearl"
                           placeholder="Password"
                         />
                       </div>
                       <div className="w-full md:h-10 sm:h-9 h-8 flex justify-end items-center">
-                        <button className="flex justify-center items-center md:w-[100px] sm:w-[85px] w-[70px] h-full bg-peridot font-Passion-One text-very-dark-purple rounded-full lg:text-lg md:text-md sm:text-sm text-xs">
+                        <button onClick={joinChannel} className="flex justify-center items-center md:w-[100px] sm:w-[85px] w-[70px] h-full bg-peridot font-Passion-One text-very-dark-purple rounded-full lg:text-lg md:text-md sm:text-sm text-xs">
                           Confirme
                         </button>
                       </div>
                     </div>
                   )}
-                  {props.type === "private" && (
-                    <div className="flex justify-center items-center flex-col space-y-2">
-                      <span className="font-Poppins text-very-dark-purple px-4 font-semibold w-full lg:text-lg md:text-md sm:text-sm text-xs">
-                        you cannot enter to this channel because is private channel
-                      </span>
-                    </div>
-                  )}
-                  {props.type === "public" && (
+                  {props.type === "PUBLIC" && (
                     <div className="flex justify-center items-center flex-col space-y-2">
                       <span className="font-Poppins text-very-dark-purple px-4 font-semibold w-full lg:text-lg md:text-md sm:text-sm text-xs">
                         welcome to this channel

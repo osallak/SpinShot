@@ -12,6 +12,7 @@ import SubSideBar from "./subSideBar";
 import dataConversation from "@/types/messagesArrays";
 import dataSubSideBar from "@/types/messagesArrays";
 import parseJwt from "@/utils/parsJwt";
+import dataExploreChannel from "@/types/exploreChannel";
 
 const Chat = () => {
   const Router = useRouter();
@@ -23,6 +24,7 @@ const Chat = () => {
   const [open, setOpen] = useState(false);
   const [flag, setFlag] = useState("");
   const [response, setResponse] = useState<dataConversation[]>([]);
+  const [exploreChannel, setExploreChannel] = useState<dataExploreChannel[]>([]);
   const [userId, setUserId] = useState("");
   const [individual, setIndividual] = useState<dataSubSideBar[]>([]);
   const [userName, setUserName] = useState("");
@@ -146,7 +148,7 @@ const Chat = () => {
   // useEffect(() => socketInitializer(), []);
 
   const ayoubToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiMGI2OTA1NzEtMDVhMi00MTNhLTllMmEtOTZjMTAxM2ExYWZlIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2Njk3MjYsImV4cCI6MTY5Njc1NjEyNn0.eQY1YI23vP3yfrvawXchbsoUqviLOsaq0tZs8frXErc";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inlha2hvdWRyIiwic3ViIjoiOWI3MTQxMWYtNmYzMC00MDVhLTgyNTQtOGM5MWVlODBiZWZmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2NzAxODYsImV4cCI6MTY5Njc1NjU4Nn0.f2bnzH4gUoP5z-GpGs5eHthjgMsKh37aTm4Ynx_CExk";
 
   const featchDataConversation = async (id: string, jwtTokenID: string) => {
     try {
@@ -191,9 +193,31 @@ const Chat = () => {
     }
   };
 
+  const fetchDataExploreChannel = async () => {
+    if (open === true) {
+      console.log("hello");
+      try {
+        const res = await axios.get(`http://e3r10p14.1337.ma:3001/room/explore`, {
+          headers: {
+            Authorization: `Bearer ${ayoubToken}`,
+          },
+        });
+        setExploreChannel(res.data);
+        console.log("response from explore channel in chat page: ", res)
+        console.log("response from explore channel: ", res.data);
+      } catch (error: any) {
+        console.log("error from explore channel: ", error);
+      }
+    }
+  };
+
   useEffect(() => {
     fetchDataSubSideBar();
   }, []);
+
+  useEffect(() => {
+    fetchDataExploreChannel();
+  }, [open]);
 
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 md:pl-3 pl-0 py-0 pr-0 items-center flex-row">
@@ -206,7 +230,7 @@ const Chat = () => {
         data={individual}
       />
       {flag === "ExploreChannels" && (
-        <ExploreChannels open={open} setOpen={setOpen} />
+        <ExploreChannels open={open} setOpen={setOpen} data={exploreChannel} />
       )}
       {flag === "CreateChannels" && (
         <CreateChannels open={open} setOpen={setOpen} />

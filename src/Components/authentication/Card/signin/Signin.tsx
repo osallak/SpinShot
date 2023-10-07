@@ -63,13 +63,10 @@ const Signin = () => {
         }
       );
       localStorage.setItem("token", res.data.token);
-      console.log("token: " + localStorage.getItem("token"));
+      Router.push(Path);
     } catch (error: any) {
-      // setErrorMessage(error.response.data.message);
+      setErrorMessage(error.response.data.message);
       setError(true);
-    }
-    if(!error) {
-      // Router.push(Path);
     }
   };
 

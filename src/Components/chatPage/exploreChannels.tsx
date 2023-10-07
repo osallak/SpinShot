@@ -13,165 +13,13 @@ import { Fragment, MouseEvent, useState } from "react";
 import SimpleButton from "../ui/Buttons/SimpleButton";
 import pearlLock from "../../../public/pearlLock.svg";
 import SubModal from "./channelsStatus/subModal";
+import dataExploreChannel from "@/types/exploreChannel";
 
-const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
-  const content = [
-    {
-      name: "spinshot Game",
-      members: 50,
-      status: "private",
-    },
-    {
-      name: "spinshot Game",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot Game",
-      members: 20,
-      status: "protected",
-    },
-    {
-      name: "spinshot Game",
-      members: 50,
-      status: "public",
-    },
-    {
-      name: "spinshot Game",
-      members: 50,
-      status: "private",
-    },
-    {
-      name: "l3asker",
-      members: 50,
-      status: "public",
-    },
-    {
-      name: "english learning",
-      members: 20,
-      status: "protected",
-    },
-    {
-      name: "foot Channel for kora",
-      members: 50,
-      status: "private",
-    },
-    {
-      name: "chat game",
-      members: 100,
-      status: "protected",
-    },
-    {
-      name: "Game",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot 3D",
-      members: 50,
-      status: "private",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "public",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "public",
-    },
-    {
-      name: "spinshot",
-      members: 100,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 90,
-      status: "public",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "public",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "private",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "public",
-    },
-    {
-      name: "spinshot",
-      members: 90,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 2,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 299100,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 2,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 299100,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-  ];
+const ExploreChannels = (props: {
+  open: boolean;
+  setOpen: Function;
+  data: dataExploreChannel[];
+}) => {
   const [subOpen, setSubOpen] = useState(false);
   const [status, setStatus] = useState("");
 
@@ -199,7 +47,7 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
 
   const closeModaltwo = () => {
     props.setOpen(false);
-  }
+  };
 
   const joinChannel =
     (status: string) => (event: MouseEvent<HTMLButtonElement>) => {
@@ -207,6 +55,7 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
       setSubOpen(true);
       setStatus(status);
     };
+
   return (
     <>
       {subOpen && (
@@ -250,7 +99,7 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
                       </p>
                     </div>
                     <div className="h-[85%] overflow-auto flex items-center sm:flex-wrap flex-nowrap sm:flex-row flex-col py-3">
-                      {content.map((content, index) => (
+                      {props.data.map((items, index) => (
                         <div
                           key={index}
                           className="sm:w-1/2 w-full flex justify-center items-center lg:px-3 sm:px-2 px-1 md:py-5 sm:py-4 py-2"
@@ -260,7 +109,7 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
                               <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] h-full flex justify-center items-center">
                                 <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] lg:h-[70px] md:h-[60px] sm:h-[50px] h-[40px] rounded-xl bg-pearl bg-opacity-40 flex justify-center items-center">
                                   <div className="font-Poppins md:text-4xl sm:text-3xl text-2xl font-thin text-very-dark-purple flex justify-center items-center">
-                                    {sp(content.name).map((charName, index) => (
+                                    {sp(items.id).map((charName, index) => (
                                       <p key={index} className="uppercase">
                                         {charName[0]}
                                       </p>
@@ -271,7 +120,7 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
                               <div className=" h-full lg:w-[200px] md:w-[170px] w-[140px] flex flex-col">
                                 <div className=" h-[50%] flex flex-row justify-start items-center space-x-2">
                                   <div className=" font-Poppins lg:text-lg md:text-md text-[10px] text-pearl flex flex-row space-x-1">
-                                    {splitThreePoint(content.name).map(
+                                    {splitThreePoint(items.id).map(
                                       (channelName, index) => (
                                         <p key={index}>{channelName}</p>
                                       )
@@ -283,24 +132,26 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
                             <div className="h-full w-[30%] px-1">
                               <div className="h-[50%] flex justify-center items-center">
                                 <p className="font-Poppins text-[10px] text-pearl text-opacity-40">
-                                  {content.status}
+                                  {items.type}
                                 </p>
                               </div>
+                              {items.type !== "PRIVATE" && (
                               <div className="h-[50%] flex justify-center items-center outline-none">
                                 <motion.div
                                   whileTap={{ scale: 0.9 }}
                                   className="md:w-16 sm:w-12 w-10 h-5 rounded-full flex justify-center items-center bg-peridot"
                                 >
-                                  <button
-                                    onClick={joinChannel(content.status)}
-                                    className={`"bg-peridot" focus:outline-none outline-none rounded-full text-lg sm:text-xl w-full h-full font-Passion-One text-very-dark-purple`}
-                                  >
-                                    <p className="font-Passion-One text-very-dark-purple text-sm">
-                                      Join
-                                    </p>
-                                  </button>
+                                    <button
+                                      onClick={joinChannel(items.type)}
+                                      className={`"bg-peridot" focus:outline-none outline-none rounded-full text-lg sm:text-xl w-full h-full font-Passion-One text-very-dark-purple`}
+                                    >
+                                      <p className="font-Passion-One text-very-dark-purple text-sm">
+                                        Join
+                                      </p>
+                                    </button>
                                 </motion.div>
                               </div>
+                                  )}
                             </div>
                           </div>
                         </div>
@@ -313,7 +164,9 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
                       className="rounded-full bg-peridot px-4 py-2 text-very-dark-purple lg:w-24 md:w-20 sm:w-16 w-14 lg:h-9 md:h-8 sm:h-7 h-6 focus:outline-none flex justify-center items-center"
                       onClick={closeModaltwo}
                     >
-                      <span className="font-Passion-One text-very-dark-purple flex justify-center items-center">Exit</span>
+                      <span className="font-Passion-One text-very-dark-purple flex justify-center items-center">
+                        Exit
+                      </span>
                     </button>
                   </div>
                 </Dialog.Panel>

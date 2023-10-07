@@ -8,12 +8,11 @@ import messagesIcon from "../../../public/messagesIcon.svg";
 import test1 from "../../../public/test1.svg";
 import IconButton from "../ui/Buttons/IconButton";
 import axios from "axios";
-import dataExploreChannel from "@/types/exploreChannel";
 
 const ayoubToken =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inlha2hvdWRyIiwic3ViIjoiOWI3MTQxMWYtNmYzMC00MDVhLTgyNTQtOGM5MWVlODBiZWZmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2NzAxODYsImV4cCI6MTY5Njc1NjU4Nn0.f2bnzH4gUoP5z-GpGs5eHthjgMsKh37aTm4Ynx_CExk";
 
-function SubSideBar(props: {
+function MobileSubSideBar(props: {
   open: boolean;
   setOpen: Function;
   setFlag: Function;
@@ -30,16 +29,16 @@ function SubSideBar(props: {
 
   const exploreChannels = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    // try {
-    //   const res = await axios.get(`http://e3r10p14.1337.ma:3001/room/all`, {
-    //     headers: {
-    //       Authorization: `Bearer ${ayoubToken}`
-    //     }
-    //   })
-    //   console.log("response from explore channel: ", res.data);
-    // } catch (error: any) {
-    //   console.log("error from explore channel: ", error);
-    // }
+    try {
+      const res = await axios.get(`http://e3r10p14.1337.ma:3001/room/all`, {
+        headers: {
+          Authorization: `Bearer ${ayoubToken}`
+        }
+      })
+      console.log("response from explore channel: ", res.data);
+    } catch (error: any) {
+      console.log("error from explore channel: ", error);
+    }
     props.setFlag("ExploreChannels");
     props.setOpen(!props.open);
   };
@@ -139,7 +138,7 @@ function SubSideBar(props: {
         <div className="w-[45%] h-10 flex justify-center items-center">
           <IconButton
             icon={ExportChannels}
-            content="Explore channels"
+            content="Export channels"
             onclick={exploreChannels}
           />
         </div>
@@ -148,4 +147,4 @@ function SubSideBar(props: {
   );
 }
 
-export default SubSideBar;
+export default MobileSubSideBar;

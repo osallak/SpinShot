@@ -10,7 +10,7 @@ import IconButton from "../ui/Buttons/IconButton";
 import axios from "axios";
 
 const ayoubToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiMGM0ZjQ0ODMtNDI5Ny00ZWFkLTg1NWYtOGVhNjcyOTIwYmRmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2MDAzMzMsImV4cCI6MTY5NjY4NjczM30.3JyzTZBDHdFfUMRwu11tNFLngGucY7nH1YpCl1KSnlI";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inlha2hvdWRyIiwic3ViIjoiOWI3MTQxMWYtNmYzMC00MDVhLTgyNTQtOGM5MWVlODBiZWZmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2NzAxODYsImV4cCI6MTY5Njc1NjU4Nn0.f2bnzH4gUoP5z-GpGs5eHthjgMsKh37aTm4Ynx_CExk";
 
 function SubSideBar(props: {
   open: boolean;
@@ -45,16 +45,6 @@ function SubSideBar(props: {
 
   const createChannels = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    // try {
-    //   const createRes = await axios.get(`http://e3r10p14.1337.ma:3001/room/add`, {
-    //     headers: {
-    //       Authorization: `Bearer ${ayoubToken}`
-    //     },
-    //     params: {
-    //       type: 
-    //     }
-    //   })
-    // }
     props.setFlag("CreateChannels");
     props.setOpen(!props.open);
   };

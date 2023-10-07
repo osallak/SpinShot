@@ -135,11 +135,11 @@ const Conversation = (props: {
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">
             <div className="flex justify-center items-center space-x-2 flex-row">
-              <Image
-                src={test1}
-                alt="test1"
+              {/* <Image
+                src={props.data[0]?.other?.avatar}
+                alt="profile pic"
                 className="lg:w-16 md:w-14 sm:w-12 w-10"
-              />
+              /> */}
               <div className="flex flex-col">
                 <p className="font-Poppins md:text-xl sm:text-md text-sm text-pearl font-semibold">
                   {props.userName}

@@ -2,11 +2,7 @@
 import SideBar from "@/Components/ui/sideBar/sideBar";
 import axios from "axios";
 import { useRouter } from "next/router";
-import {
-  useEffect,
-  useRef,
-  useState
-} from "react";
+import { useEffect, useRef, useState } from "react";
 import NavBar from "../ui/navBar/navBar";
 import MobileSideBar from "../ui/sideBar/mobileSideBar";
 import Conversation from "./conversation";
@@ -149,23 +145,23 @@ const Chat = () => {
 
   // useEffect(() => socketInitializer(), []);
 
-
-
   const ayoubToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiMGM0ZjQ0ODMtNDI5Ny00ZWFkLTg1NWYtOGVhNjcyOTIwYmRmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2MDAzMzMsImV4cCI6MTY5NjY4NjczM30.3JyzTZBDHdFfUMRwu11tNFLngGucY7nH1YpCl1KSnlI";
-  
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiMGI2OTA1NzEtMDVhMi00MTNhLTllMmEtOTZjMTAxM2ExYWZlIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2Njk3MjYsImV4cCI6MTY5Njc1NjEyNn0.eQY1YI23vP3yfrvawXchbsoUqviLOsaq0tZs8frXErc";
+
   const featchDataConversation = async (id: string, jwtTokenID: string) => {
     try {
       const result = await axios.get(
-        `http://e3r10p14.1337.ma:3001/chat/individual/${id}`, {
+        `http://e3r10p14.1337.ma:3001/chat/individual/${id}`,
+        {
           headers: {
             Authorization: `Bearer ${ayoubToken}`,
           },
-        params: {
-          page: 1,
-          limit: 5,
-          id: jwtTokenID,
-        }}
+          params: {
+            page: 1,
+            limit: 5,
+            id: jwtTokenID,
+          },
+        }
       );
       setResponse(result.data);
       setUserId(jwtTokenID);
@@ -173,7 +169,7 @@ const Chat = () => {
     } catch (error) {
       console.log("error of fetching data fron conversation: ", error);
     }
-  }
+  };
 
   const fetchDataSubSideBar = async () => {
     const jwtToken = parseJwt(ayoubToken);
@@ -201,9 +197,14 @@ const Chat = () => {
 
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 md:pl-3 pl-0 py-0 pr-0 items-center flex-row">
-      <SideBar />
+      <SideBar avatar={individual[0]?.other?.avatar} />
       {openSideBar && <MobileSideBar />}
-      <SubSideBar open={open} setOpen={setOpen} setFlag={setFlag} data={individual} />
+      <SubSideBar
+        open={open}
+        setOpen={setOpen}
+        setFlag={setFlag}
+        data={individual}
+      />
       {flag === "ExploreChannels" && (
         <ExploreChannels open={open} setOpen={setOpen} />
       )}
@@ -212,8 +213,12 @@ const Chat = () => {
       )}
       <div className="w-full h-full">
         <NavBar open={openSideBar} setOpen={setOpenSideBar} />
-        <Conversation data={response} userName={individual[0]?.other?.username} userId={userId} />
-       </div>
+        <Conversation
+          data={response}
+          userName={individual[0]?.other?.username}
+          userId={userId}
+        />
+      </div>
     </div>
   );
 };

@@ -11,7 +11,7 @@ import { MouseEvent, useState } from "react";
 import { useRouter } from "next/router";
 import logout from "../../../../public/logout.svg"
 
-const SideBar = () => {
+const SideBar = (props: {avatar: string}) => {
   const Router = useRouter()
   const [hovered, setHovered] = useState(false);
   const Icons = [
@@ -66,10 +66,10 @@ const SideBar = () => {
           </div>
         ))}
       </div>
-      <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center relative">
-        <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} className={`${hovered ? "opacity-10" : "opacity-100"} cursor-pointer`} src={test1} alt="test1" />
+      {/* <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center relative">
+        <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} className={`${hovered ? "opacity-10" : "opacity-100"} cursor-pointer`} src={props.avatar} alt="profile pic" />
         {hovered && <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={logout} alt="logout" className="absolute cursor-pointer" />}
-      </div>
+      </div> */}
     </div>
   );
 };

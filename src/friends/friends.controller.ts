@@ -1,12 +1,20 @@
-import { Controller, Get, Post, Param, UseGuards, Query } from '@nestjs/common';
-import { FriendsService } from './friends.service';
+import { Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { UserDecorator } from 'src/global/decorators/global.decorators';
 import { PaginationResponse, Response } from 'src/global/interfaces';
 import { User } from 'src/types/user.types';
 import { FriendsQueryDto } from './dto/pagination.dto';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AcceptFriendDoc, AddFriendDoc, BlockFriendDoc, GetFriendsDoc, UnblockFriendDoc, UnfriendDoc } from './swagger/friends.swagger';
+import { FriendsService } from './friends.service';
+import { FriendsGuard } from './guards/friends.guard';
+import {
+  AcceptFriendDoc,
+  AddFriendDoc,
+  BlockFriendDoc,
+  GetFriendsDoc,
+  UnblockFriendDoc,
+  UnfriendDoc,
+} from './swagger/friends.swagger';
 
 @ApiTags('friends')
 @Controller('friends')
@@ -15,14 +23,13 @@ export class FriendsController {
 
   @AddFriendDoc()
   @Post('add/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, FriendsGuard)
   async addFriend(
     @Param('id') id: string,
     @UserDecorator() user: User,
   ): Promise<Response> {
     return await this.friendsService.addFriend(id, user.id);
   }
-
 
   @GetFriendsDoc()
   @UseGuards(JwtAuthGuard)
@@ -36,7 +43,7 @@ export class FriendsController {
 
   @AcceptFriendDoc()
   @Post('/accept/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, FriendsGuard)
   accept(
     @Param('id') id: string,
     @UserDecorator() user: User,
@@ -45,7 +52,7 @@ export class FriendsController {
   }
 
   @BlockFriendDoc()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, FriendsGuard)
   @Post('/block/:id')
   block(
     @Param('id') id: string,
@@ -65,10 +72,12 @@ export class FriendsController {
   }
 
   @UnfriendDoc()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, FriendsGuard)
   @Post('/unfriend/:id')
-  async unfriend(@Param('id') id: string, @UserDecorator() user: User): Promise<Response> {
+  async unfriend(
+    @Param('id') id: string,
+    @UserDecorator() user: User,
+  ): Promise<Response> {
     return this.friendsService.unfriend(user.id, id);
-    
   }
 }

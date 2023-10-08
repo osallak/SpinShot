@@ -1,11 +1,10 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { FriendshipStatus } from '@prisma/client';
-import { PaginationResponse } from 'src/global/interfaces';
+import { PaginationResponse, Response } from 'src/global/interfaces';
+import { serializeService } from 'src/global/services';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from 'src/types';
 import { FriendsQueryDto } from './dto/pagination.dto';
-import { serializeService } from 'src/global/services';
-import { Response } from 'src/global/interfaces';
 
 @Injectable()
 export class FriendsService {
@@ -34,16 +33,16 @@ export class FriendsService {
           status: FriendshipStatus.PENDING,
         },
       });
-   } else {
-    await this.prismaService.friendship.create({
-      data: {
-        leftUserId: sortedIds[0],
-        rightUserId: sortedIds[1],
-        status: FriendshipStatus.PENDING,
-        sender: userId,
-      }
-    });
-   }
+    } else {
+      await this.prismaService.friendship.create({
+        data: {
+          leftUserId: sortedIds[0],
+          rightUserId: sortedIds[1],
+          status: FriendshipStatus.PENDING,
+          sender: userId,
+        },
+      });
+    }
     //todo: send notif to client
     return {
       status: 201,
@@ -126,6 +125,8 @@ export class FriendsService {
         },
       },
     });
+    if (!friendship)
+      throw new BadRequestException('No pending request to accept');
     if (
       (friendship.status in FriendshipStatus &&
         friendship.status !== 'PENDING') ||
@@ -167,7 +168,7 @@ export class FriendsService {
       where: {
         leftUserId_rightUserId,
       },
-      data: { status: FriendshipStatus.NOT_FOUND },
+      data: { status: FriendshipStatus.NOT_FOUND, blocker: null },
     });
     return {
       status: 201,
@@ -188,10 +189,11 @@ export class FriendsService {
     });
     if (friendship.status !== FriendshipStatus.ACCEPTED)
       throw new BadRequestException('cannot unfriend non-friend');
-    await this.prismaService.friendship.delete({
+    await this.prismaService.friendship.update({
       where: {
         leftUserId_rightUserId,
       },
+      data: { status: FriendshipStatus.NOT_FOUND },
     });
     return {
       status: 201,

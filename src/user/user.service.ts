@@ -1,28 +1,29 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import {
   BadRequestException,
-  ConflictException,
   Injectable,
   InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { UserStatus, haveAchievement } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { DEFAULT_AVATAR } from 'src/global/constants/global.constants';
-import { Prisma, UserStatus, haveAchievement } from '@prisma/client';
-import { initUserLogs } from './helpers';
-import { v4 as uuidv4 } from 'uuid';
-import { achievements } from './constants';
-import { serializePaginationResponse, serializeUser } from './helpers';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import { PaginationResponse } from 'src/global/interfaces/global.intefraces';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { MailerService } from '@nestjs-modules/mailer';
-import { SerialisedUser, User } from 'src/types';
 import { serializeService } from 'src/global/services';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { JwtResponse, SerialisedUser, User } from 'src/types';
+import { v4 as uuidv4 } from 'uuid';
+import { PrismaService } from '../prisma/prisma.service';
+import { achievements } from './constants';
+import { CreateUserDto } from './dto/create-user.dto';
 import { SearchDto } from './dto/search.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  initUserLogs,
+  serializePaginationResponse,
+  serializeUser,
+} from './helpers';
 
 @Injectable()
 export class UserService {
@@ -220,10 +221,10 @@ export class UserService {
     });
   }
 
-  async getUser(username: string): Promise<SerialisedUser> {
+  async getUser(id: string): Promise<SerialisedUser> {
     const user: User = await this.prisma.user.findUnique({
       where: {
-        username,
+        id,
       },
       include: {
         logs: {
@@ -323,5 +324,39 @@ export class UserService {
       totalCount,
       query.limit,
     );
+  }
+
+  async registerFortyTwoUser(user: User): Promise<User> {
+    //add data validation
+
+    const generatedUsername = 'user' + '_' + uuidv4().slice(0, 8);
+
+    await this.prisma.user.upsert({
+      where: { email: user.email },
+      update: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        is42User: true,
+        username: generatedUsername,
+        avatar: user.avatar,
+        country: user.country,
+      },
+      create: {
+        username: generatedUsername,
+        email: user.email,
+        avatar: user.avatar,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        is42User: true,
+        status: UserStatus.OFFLINE,
+        country: user.country,
+        mailVerified: true,
+        logs: {
+          create: initUserLogs(),
+        },
+      },
+    });
+
+    return user;
   }
 }

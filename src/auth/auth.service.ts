@@ -1,24 +1,23 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import {
   BadRequestException,
   Injectable,
-  Logger,
-  UnauthorizedException,
   InternalServerErrorException,
+  Logger
 } from '@nestjs/common';
-import { CreateUserDto } from 'src/user/dto';
-import { UserService } from 'src/user/user.service';
-import { JwtService } from '@nestjs/jwt';
-import { JwtAuthPayload } from './interfaces/jwt.interface';
-import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import {
   HOST,
-  VERIFICATION_PATH,
   REJECTION_PATH,
+  VERIFICATION_PATH,
 } from 'src/global/constants/global.constants';
-import { JwtResponse } from 'src/types/common.types';
 import { User } from 'src/types';
+import { JwtResponse } from 'src/types/common.types';
+import { CreateUserDto } from 'src/user/dto';
+import { UserService } from 'src/user/user.service';
+import { JwtAuthPayload } from './interfaces/jwt.interface';
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger('AuthService');
@@ -119,5 +118,14 @@ export class AuthService {
       this.logger.error(error.message);
       throw error;
     }
+  }
+
+
+  async registerFortyTwoUser(user: User): Promise<JwtResponse> {
+    await this.userService.registerFortyTwoUser(user);
+    return await this.generateToken({
+      username: user.username,
+      sub: user.id,
+    } as JwtAuthPayload);
   }
 }

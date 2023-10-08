@@ -1,7 +1,6 @@
 import { PaginationResponse } from 'src/global/interfaces/global.intefraces';
 import { SerialisedUser, User } from 'src/types';
 
-//todo: add user type
 export function serializeUser(user: User): SerialisedUser {
   return {
     username: user.username,

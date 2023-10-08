@@ -1,6 +1,5 @@
 
 import { ArgumentsHost, Catch, HttpStatus } from '@nestjs/common';
-import { BaseExceptionFilter } from '@nestjs/core';
 import { Prisma } from '@prisma/client';
 import { Response } from 'express';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
@@ -21,14 +20,16 @@ export class PrismaExceptionFilter extends PrismaClientExceptionFilter {
         });
         break;
       }
-      case 'P2025': {
+      case 'P2003': {
         response.status(HttpStatus.NOT_FOUND).json({
           statusCode: HttpStatus.NOT_FOUND,
           message: 'Record not found',
         });
         break;
       }
+
       default:
+        console.log('exceptionCode: ', exception.code);
         super.catch(exception, host);
         break;
     }

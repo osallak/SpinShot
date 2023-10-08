@@ -48,21 +48,21 @@ const ImageProfile = (props: any) => {
     <div
       className={` ${
         (props.opne && props.width < 1024) ? "opacity-10" : ""
-      }  rounded-[20px] flex flex-col items-center justify-center text-pearl text-opacity-40 w-full p-20 c-gb:w-[30%]  relative `}
+      }  rounded-[20px] flex flex-col items-center justify-center text-pearl text-opacity-40 w-full ${props.isopen ? "pt-20 p-12" :  "p-20" } c-gb:w-[30%]   relative`}
     >
       {handelMous && (
-        <div className=" flex justify-center items-center flex-col  transition-all absolute">
+        <div className=" flex justify-center items-center flex-col  transition-all absolute ">
           <Image className={``} src={email} alt="" />
         </div>
       )}
       <label
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className=" rounded-3xl w-[120px]  c-gb:w-[10rem] c-10xl:w-[15rem]  relative transition-all duration-300 bg-white hover:opacity-40 "
+        className={` rounded-3xl  ${props.isopen ? "w-[80px]" :  "w-[120px]" } c-gb:w-[10rem] c-10xl:w-[15rem]  relative transition-all duration-300 bg-white hover:opacity-40 `}
       >
         <input type="" className="hidden " accept={allowedExtensions.map((ext) => `.${ext}`).join(',')} onClick={Open} />
         <div className=" flex justify-center items-center bg-purple  rounded-3xl overflow-hidden">
-          {/* {image && (
+          {image && (
             <picture>
               <img
                 onLoad={handleImageLoad}
@@ -71,16 +71,12 @@ const ImageProfile = (props: any) => {
                 alt=""
                 />
             </picture>
-            )} */}
-            <Image src={ibenmain} alt=""/>
+            )}
         </div>
       </label>
-      <div className="flex flex-col items-center c-10xl:text-xl text-md mt-4">
+      <div className="flex flex-col items-center  py-4">
         <span>{data.profile?.username}</span>
-        {/* <span>ibenmain</span> */}
-        {/* {width} */}
-        {/* {height} */}
-        <span>{data.profile?.email}</span>
+        <span >{data.profile?.email}</span>
       </div>
     </div>
   );

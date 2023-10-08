@@ -25,16 +25,6 @@ const InputBorder: React.FC<InputsProps> = ({
     event.preventDefault();
     const value = event.target.value;
     setinputValue(value);
-    // const isReg = value.match(Reg || "");
-    // if (Reg) {
-    //   if (!isReg) {
-    //     setValidReg(false);
-    //     if (setisValid !== undefined)
-    //       setisValid(false);
-    //   } else {
-    //     setValidReg(true);
-    //   }
-    // }
     if (setisMatch !== undefined) {
       if (ConfirmPassword!) {
         if (ConfirmPassword !== value)
@@ -70,6 +60,7 @@ const InputBorder: React.FC<InputsProps> = ({
           <Image src={icon} alt="username or Email" className="h-5 w-5" />
         </div>
         <input
+          autoComplete="off"
           type={type == "password" && ShowPassword ? "text" : type}
           value={value}
           onChange={(event) => HandleChange(event)}

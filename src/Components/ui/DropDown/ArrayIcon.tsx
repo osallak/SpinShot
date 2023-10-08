@@ -17,6 +17,11 @@ import line from "./../../../../public/line.svg";
 import search from "./../../../../public/searchIcon.svg";
 import signout from "./../../../../public/signOut.svg";
 import test1 from "../../../../public/test1.svg";
+import proLogo from "../../../../public/proLogo.svg";
+import masterLogo from "../../../../public/masterLogo.svg";
+import grandMasterLogo from "../../../../public/grandMasterLogo.svg";
+import eliteLogo from "../../../../public/eliteLogo.svg";
+import veteraneLogo from "../../../../public/veteranLogo.svg";
 
 export const Array = [
   { icon: AddIcon, name: "Add" },
@@ -80,6 +85,14 @@ export const Information = [
   {number: 2, text: "Email"},
   {number: 3, text: "country"},
   {number: 4, text: "avatar"},
+];
+
+export const logos = [
+  {id: 3, logo: grandMasterLogo, rank: "GRAND MASTER"},
+  {id: 2, logo: masterLogo, rank: "MASTER"},
+  {id: 4, logo: veteraneLogo, rank: "VETERAN"},
+  {id: 1, logo: proLogo, rank: "PRO"},
+  {id: 4, logo: eliteLogo, rank: "ELITE"},
 ];
 
 

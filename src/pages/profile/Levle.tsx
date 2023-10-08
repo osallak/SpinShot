@@ -36,7 +36,7 @@ const Levle = (props: any) => {
 
   return (
     <div
-      className={`rounded-[20px] ${
+      className={`rounded-[20px]  ${
         opned && props.width! < 1024
           ? "opacity-10   backdrop:blur bg-white/10 "
           : "backdrop:blur bg-white/10 "
@@ -47,13 +47,13 @@ const Levle = (props: any) => {
           <span className="text-xl md:text-2xl c-gb:text-3xl text-pearl ">
             {data.profile?.profile?.rank}
           </span>
-          {/* {logos.map((option: any) => (
+          {logos.map((option: any) => (
             <div key={option.id} className="w-full h-full ">
                {data.profile?.profile?.rank == option.rank ? ( 
-                <Image src={option.logo} alt=""/>
+                <Image  src={option.logo} alt=""/>
                 ) : null} 
             </div>
-          ))} */}
+          ))}
         </div>
         <div className="  right-0 absolute p-8 hidden c-gb:block">
           <DropdownUser Array={SignOut} />
@@ -69,7 +69,7 @@ const Levle = (props: any) => {
             <span>{my_levle}/100</span>
           </div>
         </div>
-        <div className=" bg-very-dark-purple  rounded-[20px] w-[90%] h-[25%] c-gb:h-[30%] flex items-center justify-start p-1">
+        <div className=" bg-very-dark-purple rounded-[20px] w-[90%] h-[25%] c-gb:h-[30%] flex items-center justify-start p-1">
           <div
             className={`rounded-[20px] bg-peridot  h-[100%] `}
             style={{ width: `${my_levle}%` }}

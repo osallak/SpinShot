@@ -5,6 +5,7 @@ export const store = configureStore({
   reducer: {
     Profile: DataSlice,
     // if you want add
+    
   },
 });
 export type RootState = ReturnType<typeof store.getState>;

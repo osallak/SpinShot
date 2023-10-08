@@ -9,8 +9,8 @@ const SidebarM = (props: {
   opened: boolean;
 }) => {
   return (
-    <div>
-      <div className=" fixed  w-[70px] h-full c-gb:h-full  backdrop:blur   bg-white/10 md:hidden block rounded-[20px] mr-1 ">
+    <div className="bg-very-dark-purple block md:hidden  h-full w-[70px] top-0 fixed z-50 ">
+      <div className="   w-[70px] h-full c-gb:h-full  backdrop:blur   bg-white/10 md:hidden block rounded-[20px] mr-1 ">
         <div className=" space-y-6 mt-2  ">
           {SidbarIcon.map((Icon, index) => (
             <div

@@ -37,5 +37,6 @@ export const ProfileSlice = createSlice({
   },
 })
 
+// Action creators are generated for each case reducer function
 export const { setProfile } = ProfileSlice.actions
 export default ProfileSlice.reducer

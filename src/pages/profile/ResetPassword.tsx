@@ -69,8 +69,15 @@ const ResetPassword = () => {
           />
         </div>
       </div>
-      <div className="  flex items-end md:items-center md:justify-end md:right-0 mt-36 h-[10%]  justify-center px-10 sm:px-28 ">
+      {/* <div className="  flex items-end md:items-center md:justify-end md:right-0 mt-36 h-[10%]  justify-center px-10 sm:px-28 ">
+        <div className="w-">
         <SimpleButton content="Save" onclick={() => ""} />
+        </div>
+      </div> */}
+            <div className=" h-12 flex c-gb:justify-end  justify-center items-center sm:px-28 ">
+        <div className={`  w-24 sm:w-32  h-full`}>
+        <SimpleButton content="Save" onclick={() => ""} />
+        </div>
       </div>
     </div>
   );

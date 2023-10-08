@@ -13,7 +13,7 @@ const PersonalInformation = (props: any) => {
   const [userName, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [country, setCountry] = useState("");
-
+  console.log("Image",props.myImage?.name);
   const hendleUpdata = async () => {
     const my_data = new FormData();
     my_data.append("firstName", firstName);
@@ -22,18 +22,21 @@ const PersonalInformation = (props: any) => {
     my_data.append("country", country);
 
     try {
+      const token = localStorage.getItem('token');
+      console.log(token);
       const response = await axios.patch(
-        "http://34.95.172.25:/users",
+        "http://34.95.172.25/users",
         {
           username: userName,
           firstName: firstName,
           lastName: lastName,
           country: country,
+          avatar: props.myImage.name,
         },
         {
           headers: {
             Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imlzc2FtIiwic3ViIjoiNDhjOGQwYzktNTJiMy00NGY5LTllMmMtNzFkY2VhYzM4ZmM1IiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY1MzMwNjYsImV4cCI6MTY5NjYxOTQ2Nn0.pRPiFYoGUVEH6FqqxABHooJwYRK4dtnisV9ok8k7XAI",
+              `Bearer ${token}`,
           },
         }
       );
@@ -60,11 +63,11 @@ const PersonalInformation = (props: any) => {
   return (
     <div className="space-y-40  md:space-y-10 h-[910px]  ">
       <div className=" ">
-        <div className="text-pearl text-[15px] sm:text-2xl md:h-52 h-32 flex items-center c-10xl:px-24 px-14">
+        <div className="text-pearl text-[15px] sm:text-2xl md:h-52 h-32 flex items-center c-10xl:px-24 px-8 sm:px-14">
           <span>Personal information</span>
         </div>
         <div className="flex flex-row justify-center px-4 sm:px-14  c-10xl:px-32 ">
-          <div className="flex flex-col  text-pearl  w-full c-10xl:w-[80%] space-y-5 md:space-y-14  c-10xl:px-20 px-6 ">
+          <div className="flex flex-col  text-pearl  w-full c-10xl:w-[80%] space-y-5 md:space-y-14  c-10xl:px-20  ">
             <div className="   c-10xl:space-x-[15%] w-full  ">
               <div className=" flex flex-col space-y-5 md:space-y-0 md:flex-row md:space-x-5">
                 <div className="w-full md:w-[49%] ">
@@ -112,8 +115,10 @@ const PersonalInformation = (props: any) => {
           </div>
         </div>
       </div>
-      <div className=" h-40 flex md:justify-end  justify-center items-center px-24 sm:px-28 ">
+      <div className=" h-12 flex md:justify-end  justify-center items-center sm:px-28 ">
+        <div className={`  w-24 sm:w-32  h-full`}>
         <SimpleButton content="Save" onclick={hendleUpdata} />
+        </div>
       </div>
     </div>
   );

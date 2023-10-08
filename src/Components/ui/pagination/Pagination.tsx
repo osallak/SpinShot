@@ -15,16 +15,20 @@ const Pagination = () => {
 
   const fetchData = async () => {
     try {
+      const token = localStorage.getItem('token');
       const response = await axios.get(
-        `https://jsonplaceholder.typicode.com/posts/${page}`
-      );
+        `http://34.95.172.25/users/games/land?page=${page}&limit=${5}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        },);
       setPosts(response.data);
       setTotalPages(response.data.totalPages);
+      console.log("match", response.data);
     } catch (error) {
       console.error(error);
     }
   };
-  console.log(posts);
 
   const nextPage = () => {
     setPage(page + 1);

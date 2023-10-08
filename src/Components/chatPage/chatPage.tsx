@@ -1,4 +1,5 @@
 "use client";
+<<<<<<< HEAD
 import Image from "next/image";
 import logoWhite from "../../../public/logoWhite.svg";
 import messagesIcon from "../../../public/messagesIcon.svg";
@@ -19,186 +20,223 @@ import profile from "../../../public/profile.svg";
 import game from "../../../public/game.svg";
 import sendMessage from "../../../public/sendMessage.svg";
 import { DropDown } from "../ui/DropDown/DropDown";
+=======
+import SideBar from "@/Components/ui/sideBar/sideBar";
+import axios from "axios";
+>>>>>>> cb3d66ebfce8b831db17ca13ded614f1aec4dbc6
 import { useRouter } from "next/router";
+import {
+  useEffect,
+  useRef,
+  useState
+} from "react";
+import NavBar from "../ui/navBar/navBar";
+import MobileSideBar from "../ui/sideBar/mobileSideBar";
+import Conversation from "./conversation";
+import CreateChannels from "./createChannels";
+import ExploreChannels from "./exploreChannels";
+import SubSideBar from "./subSideBar";
+import dataConversation from "@/types/messagesArrays";
+import dataSubSideBar from "@/types/messagesArrays";
+import parseJwt from "@/utils/parsJwt";
 
 const Chat = () => {
-  const [clicked, setClicked] = useState<number>();
-  const [messageContent, setMessageContent] = useState("");
-  const [readed, setReaded] = useState(false);
-  const [id, setId] = useState("");
   const Router = useRouter();
-  var divId = 0;
-  const data = [
-    {
-      icon: test1,
-      username: "Navoos",
-      message: "You: hello!",
-      readed,
-      // me: true,
-      id: JSON.stringify(divId),
-    },
-    {
-      icon: test2,
-      username: "Ael-jack",
-      message: "you are a great man",
-      readed: readed,
-      // me: false,
-      id: JSON.stringify(divId),
-    },
-    {
-      icon: test3,
-      username: "Zoulikha",
-      message: "can you help me please",
-      readed: readed,
-      // me: false,
-      id: JSON.stringify(divId),
-    },
-    {
-      icon: test1,
-      username: "FRAG33R",
-      message: "anaaa ghadi ldar",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "sknahs",
-      message: "time to paint the tape",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "/API",
-      message: "oki by",
-      readed: readed,
-    },
-    {
-      icon: test1,
-      username: "MarOne",
-      message: "la na7tajo lmala",
-      readed: readed,
-    },
-  ];
+  const [storedToken, setToken] = useState("");
+  const [otherUserID, setOtherUserID] = useState("");
+  const [exploreOpen, setExploreOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [openSideBar, setOpenSideBar] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [flag, setFlag] = useState("");
+  const [response, setResponse] = useState<dataConversation[]>([]);
+  const [userId, setUserId] = useState("");
+  const [individual, setIndividual] = useState<dataSubSideBar[]>([]);
+  const [userName, setUserName] = useState("");
+  const userIdRef = useRef<string>();
+  // const chatContainerRef = useRef<HTMLDivElement>(null);
+  // const [currentMsg, setCurrentMsg] = useState("");
+  // const Router = useRouter();
+  // const [message, setMessage] = useState("");
+  // const [chatHistory, setChatHistory] = useState<string[]>([]);
 
-  const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number) => {
-    event.preventDefault();
-    setClicked(index);
+  // const handleMessage = (event: ChangeEvent<HTMLInputElement>) => {
+  //   event.preventDefault();
+  //   setCurrentMessage(event.target.value);
+  // };
+
+  // function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
+  //   if (event.key === "Enter") {
+
+  //     handleSendMessage(event);
+  //   }
+  // }
+
+  // const inputRef = useRef<HTMLInputElement>(null);
+  // useEffect(() => {
+  //   const conversationDiv: any = chatContainerRef.current;
+  //   if (conversationDiv) {
+  //     conversationDiv.scrollTop = conversationDiv.scrollHeight;
+  //   }
+  // }, [chatHistory.length]);
+
+  // useEffect(() => {
+  //   const handleKeyPress = (event: any) => {
+  //     event.preventDefault(); // Prevent the "/" key from being typed into the input
+  //     if (event.key === "/") {
+  //       if (inputRef.current) {
+  //         inputRef.current.focus();
+  //       }
+  //     }
+  //   };
+
+  //   document.addEventListener("keydown", (event) => handleKeyPress);
+  //   return () => {
+  //     document.removeEventListener("keydown", handleKeyPress);
+  //   };
+  // }, []);
+
+  // const emailInput = useCallback((inputElement: any) => {
+  //   if (inputElement) {
+  //     inputElement.focus();
+  //   }
+  // }, []);
+
+  // const sendMessage = (event: MouseEvent<HTMLButtonElement>) => {
+  //   event.preventDefault();
+  //   setMessageContent(currentMessage);
+  //   console.log("Message Content : ", messageContent);
+  // }
+  // interface IMsgDataTypes {
+  //   user: String;
+  //   msg: String;
+  //   time: String;
+  // }
+
+  // const [chat, setChat] = useState<IMsgDataTypes[]>([]);
+
+  // const handleSendMessage = (
+  //   event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
+  //   ) => {
+  // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5hdm9vcyIsInN1YiI6IjQ4YTRkNDI2LWZiMjEtNDE5NC04ZWQ2LTZiZjRhY2Y0M2I1NSIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk0ODA4OTM1LCJleHAiOjE2OTQ4OTUzMzV9.zsDFfyE2t1gLbQ9DDAJr92X88pegk7fOCt93rM2BH9A'
+  // const socket = io("e3r10p14.1337.ma:8001", {
+  //   extraHeaders: {
+  //     Authorization: `Bearer ${token}`,
+  //   },
+  // });
+  // socket.on("connect", () => {
+  //   console.log(parseJwt(token));
+  //   socket.on("pm", (data) => {console.log(data)});
+  //   socket.on("exception", (data) => {console.log(data)})
+  // });
+  //     event.preventDefault();
+  //     if (message.trim() !== "") {
+  //       socket.on("connect", () => {
+  //       console.log("socket connected");
+  //       const msgData: IMsgDataTypes = {
+  //         user: "ataji",
+  //         msg: currentMsg,
+  //         time:
+  //           new Date(Date.now()).getHours() +
+  //           ":" +
+  //           new Date(Date.now()).getMinutes(),
+  //       };
+  //       socket.emit("hello", msgData);
+  //     });
+  //     socket.on("hello", (data: IMsgDataTypes) => {
+  //       setChat((pre) => [...pre, data]);
+  //     });
+  //     setMessage("");
+  //   }
+  // };
+
+  // const socketInitializer = () => {
+  //   socket.on("connect", () => {
+  //     const msgData: IMsgDataTypes = {
+  //       user: "ataji",
+  //       msg: currentMsg,
+  //       time:
+  //         new Date(Date.now()).getHours() +
+  //         ":" +
+  //         new Date(Date.now()).getMinutes(),
+  //     };
+  //     socket.emit("hello", msgData);
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   socket.on("hello", (data: IMsgDataTypes) => {
+  //     setChat((pre) => [...pre, data]);
+  //   });
+  // }, [socket]);
+
+  // useEffect(() => socketInitializer(), []);
+
+
+
+  const ayoubToken =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiMGM0ZjQ0ODMtNDI5Ny00ZWFkLTg1NWYtOGVhNjcyOTIwYmRmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2MDAzMzMsImV4cCI6MTY5NjY4NjczM30.3JyzTZBDHdFfUMRwu11tNFLngGucY7nH1YpCl1KSnlI";
+  
+  const featchDataConversation = async (id: string, jwtTokenID: string) => {
+    try {
+      const result = await axios.get(
+        `http://e3r10p14.1337.ma:3001/chat/individual/${id}`, {
+          headers: {
+            Authorization: `Bearer ${ayoubToken}`,
+          },
+        params: {
+          page: 1,
+          limit: 5,
+          id: jwtTokenID,
+        }}
+      );
+      setResponse(result.data);
+      setUserId(jwtTokenID);
+      console.log("response from conversation: ", result.data);
+    } catch (error) {
+      console.log("error of fetching data fron conversation: ", error);
+    }
+  }
+
+  const fetchDataSubSideBar = async () => {
+    const jwtToken = parseJwt(ayoubToken);
+    console.log("JWTTOKEN: ", jwtToken);
+    try {
+      const res = await axios.get(`http://e3r10p14.1337.ma:3001/chat/all`, {
+        headers: {
+          Authorization: `Bearer ${ayoubToken}`,
+        },
+        params: {
+          id: jwtToken.sub,
+        },
+      });
+      console.log("response from subsidebar: ", res.data);
+      setIndividual((prev) => res.data.individual);
+      featchDataConversation(res.data.individual[0].other.id, jwtToken.sub);
+    } catch (error) {
+      console.log("error of fetching data from subsidebar: ", error);
+    }
   };
 
-  const Channel = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    console.log("hello world from the other side");
-  };
-
-  const handleMessage = (event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    console.log(event.target.value);
-    setMessageContent(event.target.value);
-  };
+  useEffect(() => {
+    fetchDataSubSideBar();
+  }, []);
 
   return (
-    <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start p-3 items-center flex-row">
+    <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 md:pl-3 pl-0 py-0 pr-0 items-center flex-row">
       <SideBar />
-      <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl xl:w-[570px] lg:w-[400px] w-[300px] space-y-8">
-        <div className="flex justify-center items-center flex-col w-full h-[130px]">
-          <div className="w-full h-[130px] flex-col px-6">
-            <div className="w-full  pt-5 flex flex-row space-x-3 h-[130px]">
-              <Image
-                src={messagesIcon}
-                alt="message icon"
-                className=" h-full xl:w-10 w-9"
-              />
-              <h1 className="flex  justify-center items-center font-Poppins text-pearl xl:text-4xl text-3xl font-bold h-full">
-                Messages
-              </h1>
-            </div>
-            <div className="w-full border border-pearl border-opacity-40"></div>
-          </div>
-        </div>
-        <div className="w-full flex justify-center items-center">
-          <div className="w-[90%] h-[45px] rounded-full">
-            <SearchInput />
-          </div>
-        </div>
-        <div className="w-[99%] xl:px-6 px-2 hover:overflow-auto overflow-hidden h-[900px] min-h-[100px]">
-          {data.map((data, index) => (
-            <button
-              onClick={(event) => clickChat(event, index)}
-              key={index}
-              className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
-                clicked == index ? "bg-very-dark-purple" : "bg-transparent"
-              }`}
-            >
-              <Image src={data.icon} alt="test" />
-              <div className="flex justify-start items-start space-y-1 flex-col">
-                <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
-                  {data.username}
-                </p>
-                <p
-                  className={`font-poopins text-pearl flex justify-start text-sm font-medium ${
-                    !data.readed ? "opacity-40" : "opacity-100"
-                  }`}
-                >
-                  {data.message}
-                </p>
-              </div>
-            </button>
-          ))}
-        </div>
-        <div className="flex justify-center items-end w-full py-5 h-[100px]">
-          <div className="w-1/2 h-10 pl-5 pr-2 flex justify-center items-center">
-            <IconButton
-              icon={CreateChannel}
-              content="Create channel"
-              onclick={Channel}
-            />
-          </div>
-          <div className="w-1/2 h-10 pr-5 pl-2 flex justify-center items-center">
-            <IconButton
-              icon={ExportChannels}
-              content="Export channel"
-              onclick={Channel}
-            />
-          </div>
-        </div>
-      </div>
-      <div className="bg-white/10 h-full rounded-2xl w-full border flex justify-between flex-col">
-        {/* <div className="h-[100px] w-full border bg-white/10 border-red-500"></div> */}
-        <div className="w-full md:h-[132px] h-[100px] flex justify-center flex-col items-center">
-          <div className="md:h-[132px] h-[100px] xl:px-20 md:px-10 sm:px-7 px-4 flex items-center justify-between space-x-3 w-full">
-            <div className="flex justify-center items-center space-x-2 flex-row">
-              <Image src={test1} alt="test1" className="md:w-[65px] w-[50px]" />
-              <div className="flex flex-col">
-                <p className="font-Poppins md:text-xl text-md text-pearl font-semibold">
-                  Navoos
-                </p>
-                <p className="font-Poppins md:text-lg text-sm text-pearl text-opacity-40 font-thin">
-                  Online
-                </p>
-              </div>
-            </div>
-            <DropDown />
-          </div>
-          <div className="w-[93%] border border-pearl border-opacity-40"></div>
-        </div>
-        <div className="border w-full xl:px-20 md:px-10 sm:px-7 px-4 h-[1070px] hover:overflow-hidden overflow-auto"></div>
-        <div className="w-full md:h-[132px] h-[100px] flex justify-start items-center flex-col space-y-8">
-          <div className="w-[93%] border border-pearl border-opacity-40"></div>
-          <div className="pr-5 pl-10 space-x-2 bg-very-dark-purple rounded-full w-[90%] h-14 flex justify-center items-center flex-row">
-            <div className="w-full h-14">
-              <input
-                placeholder="Type a message"
-                className="text-pearl w-full h-14 outline-none placeholder:text-pearl font-light placeholder:opacity-50 font-Poppins text-lg bg-transparent"
-                type="text"
-                value={messageContent}
-                onChange={(event) => handleMessage(event)}
-              />
-            </div>
-            <button>
-              <Image src={sendMessage} alt="search Input" className="w-10" />
-            </button>
-          </div>
-        </div>
-      </div>
+      {openSideBar && <MobileSideBar />}
+      <SubSideBar open={open} setOpen={setOpen} setFlag={setFlag} data={individual} />
+      {flag === "ExploreChannels" && (
+        <ExploreChannels open={open} setOpen={setOpen} />
+      )}
+      {flag === "CreateChannels" && (
+        <CreateChannels open={open} setOpen={setOpen} />
+      )}
+      <div className="w-full h-full">
+        <NavBar open={openSideBar} setOpen={setOpenSideBar} />
+        <Conversation data={response} userName={individual[0]?.other?.username} userId={userId} />
+       </div>
     </div>
   );
 };

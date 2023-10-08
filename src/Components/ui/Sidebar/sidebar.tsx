@@ -37,9 +37,8 @@ const SideBar = () => {
   const handleLogOut = () => {
     console.log("logout");
   }
-
   return (
-    <div className={`bg-white/10 rounded-2xl h-full flex-col hidden md:block lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px]`}>
+    <div className={`bg-white/10 rounded-2xl h-full md:flex flex-col hidden lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px] `}>
       <div className="w-full h-[10%] min-h-[100px] flex justify-center items-center flex-col">
         <div className="flex justify-center items-center h-full">
           <Image src={logoWhite} alt="white logo" className="h-[120px]" />
@@ -68,7 +67,7 @@ const SideBar = () => {
       </div>
       <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center relative">
         <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} className={`${hovered ? "opacity-10" : "opacity-100"} cursor-pointer`} src={test1} alt="test1" />
-        {hovered && <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={logout} alt="logout" className="absolute cursor-pointer" />}
+        {/* {hovered && <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={logout} alt="logout" className="absolute cursor-pointer" />} */}
       </div>
     </div>
   );

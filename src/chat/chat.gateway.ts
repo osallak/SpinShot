@@ -9,7 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { ChatService } from './chat.service';
-import { Logger, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
+import { Logger, ValidationPipe, UseGuards } from '@nestjs/common';
 import { WsBadRequestException } from './exceptions/ws-exceptions';
 import { ValidationError } from 'class-validator';
 import { SendMessageDto, sendRoomMessageDto } from './dtos/send-message.dto';
@@ -24,9 +24,8 @@ import {
 } from './chat.configuration';
 
 import { WsGuard } from './chat.guard';
-import { error } from 'console';
 
-@WebSocketGateway(CHAT_PORT, OPTIONS)
+@WebSocketGateway(OPTIONS)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   private readonly server: Server;
@@ -44,6 +43,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() body: SendMessageDto,
     @ConnectedSocket() socket: Socket,
   ) {
+		this.logger.debug('handlePrivateMessage: ' + JSON.stringify(body));
     return this.chatService.sendPrivateMessage(body);
   }
 

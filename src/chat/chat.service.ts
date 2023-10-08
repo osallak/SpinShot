@@ -182,10 +182,10 @@ export class ChatService {
       let obj = {};
       obj['sender'] = element.sender;
       obj['message'] = element.message;
-      if (element?.Sender) {
-        obj['other'] = element.Sender;
-      } else if (element?.Receiver) {
-        obj['other'] = element.Receiver;
+      if (element?.Sender.id === userId) {
+        obj['other'] = element?.Receiver;
+      } else if (element?.Receiver.id === userId) {
+        obj['other'] = element?.Sender;
       }
       obj['sentAt'] = element.sentAt;
       output.push(obj);
@@ -321,6 +321,36 @@ export class ChatService {
               receiverId: toFrom[1],
             },
           ],
+          Receiver: {
+            RightFriendship: {
+              some: {
+                rightUserId: toFrom[1],
+                OR: [
+                  {
+                    status: FriendshipStatus.ACCEPTED,
+                  },
+									{
+										status: FriendshipStatus.NOT_FOUND,
+									}
+                ],
+              },
+            },
+          },
+          Sender: {
+            LeftFriendship: {
+              some: {
+                leftUserId: toFrom[0],
+                OR: [
+                  {
+                    status: FriendshipStatus.ACCEPTED,
+                  },
+                  {
+                    status: FriendshipStatus.NOT_FOUND,
+                  },
+                ],
+              },
+            },
+          },
         },
         select: {
           sentAt: true,
@@ -343,7 +373,7 @@ export class ChatService {
   async sendGroupMessage(body: sendRoomMessageDto) {
     return new Promise(async (resolve, reject) => {
       try {
-				// TODO: check if the muted time has passed
+        // TODO: check if the muted time has passed
         const roomMembers = await this.roomService.getRoomMembers(
           body.roomName,
         );
@@ -353,10 +383,7 @@ export class ChatService {
               member?.userId,
             );
             memberSockets?.forEach((socket) => {
-              socket.emit(
-                GROUP_MESSAGE,
-                JSON.stringify(body),
-              );
+              socket.emit(GROUP_MESSAGE, JSON.stringify(body));
             });
           }
         });

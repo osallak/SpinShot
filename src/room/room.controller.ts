@@ -24,6 +24,7 @@ import { Response as CustomResponse } from 'src/global/interfaces';
 import { banUserDto } from './dtos/ban-user.dto';
 import { ProtectRoomDto } from './dtos/protect-room.dto';
 import { ElevateUserDto } from './dtos/elevate-user.dto';
+import { ConfigSource } from '@nestjs/microservices/external/kafka.interface';
 
 @ApiTags('room')
 @Controller('room')
@@ -164,7 +165,6 @@ export class RoomController {
         .json(e?.message ?? 'Internal Server Error');
     }
   }
-  // TODO: invite, makeAdmin
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
@@ -228,6 +228,17 @@ export class RoomController {
       return response
         .status(e?.status ?? 500)
         .json(e?.message ?? 'Internal Server Error');
+    }
+  }
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('explore')
+  async getAllAvailableRooms(@Res() response: ExpressResponse) {
+    try {
+      const res = await this.roomService.getAllAvailableRooms();
+      return response.status(res.status).json(res?.data);
+    } catch (e) {
+      return response.status(e.status).json(e.message);
     }
   }
 }

@@ -16,7 +16,7 @@ import { UserService } from 'src/user/user.service';
 import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import { serializePaginationResponse } from 'src/user/helpers';
-import { elementAt } from 'rxjs';
+import { async, elementAt } from 'rxjs';
 import { boolean, valid } from 'joi';
 import { join, resolve } from 'path';
 import { rejects } from 'assert';
@@ -137,7 +137,7 @@ export class RoomService {
     });
   }
 
-  async addRoom(
+		async addRoom(
     userId: string,
     createRoomDto: CreateRoomDto,
   ): Promise<Response> {
@@ -487,6 +487,7 @@ export class RoomService {
           },
           select: {
             id: true,
+            type: true,
             messages: {
               select: {
                 message: true,
@@ -823,6 +824,29 @@ export class RoomService {
       } catch (e) {
         console.log(e);
         reject([]);
+      }
+    });
+  }
+
+  async getAllAvailableRooms(): Promise<Response> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const rooms = await this.prismaService.roomChat.findMany({
+          select: {
+            id: true,
+            type: true,
+          },
+        });
+        return resolve({
+          status: 200,
+          message: 'All Rooms',
+          data: rooms,
+        });
+      } catch {
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
       }
     });
   }

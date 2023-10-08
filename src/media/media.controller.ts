@@ -9,12 +9,12 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { StorageService } from 'src/storage/storage.service';
-import { UserService } from 'src/user/user.service';
-import { Response } from 'src/global/interfaces';
+import { JwtPayload } from 'jsonwebtoken';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { UserDecorator } from 'src/global/decorators/global.decorators';
-import { JwtPayload } from 'jsonwebtoken';
+import { Response } from 'src/global/interfaces';
+import { StorageService } from 'src/storage/storage.service';
+import { UserService } from 'src/user/user.service';
 import { MediaDoc } from './swagger/media.swagger';
 
 @Controller('media')
@@ -51,7 +51,7 @@ export class MediaController {
     const path = `media/${user.id}.${file.mimetype.split('/')[1]}`;
     const ret: Response = this.storageService.save(path, file.buffer);
     this.userService.updateAvatar(
-      user.sub,
+      user.id,
       this.storageService.getPublicUrl(path),
     );
     return ret;

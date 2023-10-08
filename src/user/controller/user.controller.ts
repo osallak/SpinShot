@@ -1,25 +1,25 @@
 import {
+  Body,
   Controller,
   Get,
-  UseGuards,
   Param,
-  Query,
   Patch,
-  Body,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards';
-import { UserService } from '../user.service';
-import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SerialisedUser, User } from 'src/types';
-import { PaginationResponse } from 'src/global/interfaces';
+import { FriendsGuard } from 'src/friends/guards/friends.guard';
 import { UserDecorator } from 'src/global/decorators/global.decorators';
-import { JwtPayload } from 'jsonwebtoken';
+import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
+import { PaginationResponse } from 'src/global/interfaces';
+import { SerialisedUser, User } from 'src/types';
 import { SearchDto } from '../dto/search.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
 import { GetProfileDoc, GetUserGamesDoc, SearchDoc, UpdateUserDoc } from '../swagger/user.swagger';
+import { UserService } from '../user.service';
 
-@ApiTags('user')
+@ApiTags('users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -28,16 +28,15 @@ export class UserController {
   @Get()
   async search(
     @Query() query: SearchDto,
-    @UserDecorator() user: User,
   ): Promise<PaginationResponse<User[]>> {
     return await this.userService.search(query);
   }
 
   @GetProfileDoc()
-  @UseGuards(JwtAuthGuard)
-  @Get('/profile/:username')
-  async getUser(@Param('username') username: string): Promise<SerialisedUser> {
-    return await this.userService.getUser(username);
+  @UseGuards(JwtAuthGuard, FriendsGuard)
+  @Get('/profile/:id')
+  async getUser(@Param('id') id: string): Promise<SerialisedUser> {
+    return await this.userService.getUser(id);
   }
 
   @GetUserGamesDoc()

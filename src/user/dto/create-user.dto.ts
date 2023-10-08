@@ -1,10 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  Allow,
   IsEmail,
   IsNotEmpty,
   Matches,
-  MinLength,
+  MinLength
 } from 'class-validator';
 import { string } from 'joi';
 

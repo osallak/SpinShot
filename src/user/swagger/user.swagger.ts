@@ -1,6 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SerialisedUser } from 'src/types';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UpdateUserDto } from '../dto/update-user.dto';
 
 export const SearchDoc = () =>
@@ -55,26 +60,24 @@ export const GetProfileDoc = () =>
     }),
   );
 
-
-  export const GetUserGamesDoc = () =>
+export const GetUserGamesDoc = () =>
   applyDecorators(
     ApiTags('user'),
     ApiBearerAuth(),
     ApiResponse({
-        status: 200,
-        description: 'Get user games by username (pagination',
-    })
-);
-
+      status: 200,
+      description: 'Get user games by username (pagination',
+    }),
+  );
 
 export const UpdateUserDoc = () =>
-applyDecorators(
+  applyDecorators(
     ApiTags('user'),
     ApiBearerAuth(),
     ApiCreatedResponse({
-        description: 'Update user by username',
+      description: 'Update user by username',
     }),
     ApiBody({
-        type: UpdateUserDto,
+      type: UpdateUserDto,
     }),
-);
+  );

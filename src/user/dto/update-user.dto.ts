@@ -1,7 +1,6 @@
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { Allow, IsEmail, IsOptional, Matches, MinLength } from 'class-validator';
+import { IsOptional } from 'class-validator';
 import { CreateUserDto } from './create-user.dto';
 
 

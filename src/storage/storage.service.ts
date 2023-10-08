@@ -1,3 +1,4 @@
+import { Storage } from '@google-cloud/storage';
 import {
   Injectable,
   InternalServerErrorException,
@@ -5,9 +6,8 @@ import {
   LoggerService,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Storage } from '@google-cloud/storage';
-import { Response } from '../global/interfaces';
 import { Writable } from 'stream';
+import { Response } from '../global/interfaces';
 @Injectable()
 export class StorageService {
   private storage: Storage;

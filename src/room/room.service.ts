@@ -137,7 +137,7 @@ export class RoomService {
     });
   }
 
-		async addRoom(
+  async addRoom(
     userId: string,
     createRoomDto: CreateRoomDto,
   ): Promise<Response> {
@@ -843,6 +843,274 @@ export class RoomService {
           data: rooms,
         });
       } catch {
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    });
+  }
+
+  async deleteRoom(userId: string, roomName: string): Promise<Response> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!userId || !roomName) {
+          return reject({
+            status: 400,
+            message: 'userId and roomName are required',
+          });
+        }
+        const user = await this.prismaService.roomChatConversation.findUnique({
+          where: {
+            roomChatId_userId: {
+              roomChatId: roomName,
+              userId: userId,
+            },
+          },
+          select: {
+            userRole: true,
+          },
+        });
+        if (!user) {
+          return reject({
+            status: 404,
+            message: 'User Not A Member',
+          });
+        }
+        if (user.userRole !== UserRole.OWNER) {
+          return reject({
+            status: 403,
+            message: 'Unprivileged User Trying to Delete Room',
+          });
+        }
+        await this.prismaService.roomChat.delete({
+          where: {
+            id: roomName,
+          },
+        });
+        return resolve({
+          status: 200,
+          message: 'Room Deleted',
+        });
+      } catch (e) {
+        console.log(e);
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    });
+  }
+
+  async inviteUser(
+    admin: string,
+    userId: string,
+    roomName: string,
+  ): Promise<Response> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!userId || !roomName || !admin) {
+          return reject({
+            status: 400,
+            message: 'Missing values',
+          });
+        }
+        const u = await this.prismaService.roomChatConversation.findUnique({
+          where: {
+            roomChatId_userId: {
+              roomChatId: roomName,
+              userId: admin,
+            },
+          },
+          select: {
+            userRole: true,
+            RoomChat: {
+              select: {
+                type: true,
+              },
+            },
+          },
+        });
+        if (!u) {
+          return reject({
+            status: 404,
+            message: 'User Not A Member',
+          });
+        }
+        if (
+          u.userRole === UserRole.BASIC ||
+          u.RoomChat.type !== RoomType.PRIVATE
+        ) {
+          return reject({
+            status: 403,
+            message:
+              'Either the room is not private or the user is not privileged',
+          });
+        }
+        const uu = await this.prismaService.roomChatConversation.findUnique({
+          where: {
+            roomChatId_userId: {
+              roomChatId: roomName,
+              userId: userId,
+            },
+          },
+        });
+        if (uu) {
+          return reject({
+            status: 400,
+            message: 'User Already Member',
+          });
+        }
+        await this.prismaService.roomChatConversation.create({
+          data: {
+            User: {
+              connect: {
+                id: userId,
+              },
+            },
+            userRole: UserRole.BASIC,
+            userStatus: UserStatusGroup.INVITED,
+            RoomChat: {
+              connect: {
+                id: roomName,
+              },
+            },
+          },
+        });
+        return resolve({
+          status: 200,
+          message: 'User Invited',
+        });
+      } catch (e) {
+        console.log(e);
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    });
+  }
+
+  async leaveRoom(userId: string, roomName: string): Promise<Response> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!userId || !roomName) {
+          return reject({
+            status: 400,
+            message: 'Missing values',
+          });
+        }
+
+        const user = await this.prismaService.roomChatConversation.findUnique({
+          where: {
+            roomChatId_userId: {
+              roomChatId: roomName,
+              userId: userId,
+            },
+            OR: [
+              {
+                userStatus: null,
+              },
+              {
+                userStatus: UserStatusGroup.MUTED,
+              },
+            ],
+          },
+          select: {
+            userRole: true,
+          },
+        });
+        if (!user) {
+          return reject({
+            status: 404,
+            message: 'User Not A Member',
+          });
+        }
+        if (user.userRole === UserRole.OWNER) {
+          const admins = await this.prismaService.roomChatConversation.findMany(
+            {
+              where: {
+                roomChatId: roomName,
+                userRole: UserRole.ADMIN,
+                OR: [
+                  {
+                    userStatus: null,
+                  },
+                  {
+                    userStatus: UserStatusGroup.MUTED,
+                  },
+                ],
+              },
+            },
+          );
+          if (!admins || admins.length === 0) {
+            const basicMembers =
+              await this.prismaService.roomChatConversation.findMany({
+                where: {
+                  roomChatId: roomName,
+                  userRole: UserRole.BASIC,
+                  OR: [
+                    {
+                      userStatus: null,
+                    },
+                    {
+                      userStatus: UserStatusGroup.MUTED,
+                    },
+                  ],
+                },
+                select: {
+                  userId: true,
+                },
+              });
+            if (!basicMembers || basicMembers.length === 0) {
+              await this.prismaService.roomChat.delete({
+                where: {
+                  id: roomName,
+                },
+              });
+            } else {
+              const newOwner = basicMembers[0].userId;
+              await this.prismaService.roomChatConversation.update({
+                where: {
+                  roomChatId_userId: {
+                    roomChatId: roomName,
+                    userId: newOwner,
+                  },
+                },
+                data: {
+                  userRole: UserRole.OWNER,
+                },
+              });
+            }
+          } else {
+            const newOwner = admins[0].userId;
+            await this.prismaService.roomChatConversation.update({
+              where: {
+                roomChatId_userId: {
+                  roomChatId: roomName,
+                  userId: newOwner,
+                },
+              },
+              data: {
+                userRole: UserRole.OWNER,
+              },
+            });
+          }
+        } else {
+        await this.prismaService.roomChatConversation.delete({
+          where: {
+            roomChatId_userId: {
+              roomChatId: roomName,
+              userId: userId,
+            },
+          },
+        });
+				}
+        return resolve({
+          status: 200,
+          message: 'User Left',
+        });
+      } catch (e) {
         return reject({
           status: 500,
           message: 'Internal Server Error',

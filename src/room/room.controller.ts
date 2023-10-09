@@ -25,6 +25,8 @@ import { banUserDto } from './dtos/ban-user.dto';
 import { ProtectRoomDto } from './dtos/protect-room.dto';
 import { ElevateUserDto } from './dtos/elevate-user.dto';
 import { ConfigSource } from '@nestjs/microservices/external/kafka.interface';
+import { InviteDto } from './dtos/invite.dto';
+import { leaveRoomDto } from './dtos/leave-room.dto';
 
 @ApiTags('room')
 @Controller('room')
@@ -237,6 +239,64 @@ export class RoomController {
     try {
       const res = await this.roomService.getAllAvailableRooms();
       return response.status(res.status).json(res?.data);
+    } catch (e) {
+      return response.status(e.status).json(e.message);
+    }
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Delete('delete/:room')
+  async deleteRoom(
+    @Res() response: ExpressResponse,
+    @Req() request: Request,
+    @Param('room') roomName: string,
+  ) {
+    try {
+      const res = await this.roomService.deleteRoom(
+        (request as any)?.user?.id,
+        roomName,
+      );
+      return response.status(res.status).json(res.message);
+    } catch (e) {
+      return response.status(e.status).json(e.message);
+    }
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Post('invite')
+  async inviteUser(
+    @Res() response: ExpressResponse,
+    @Req() request: Request,
+    @Body() inviteDto: InviteDto,
+  ) {
+    try {
+      const res = await this.roomService.inviteUser(
+        (request as any)?.user?.id,
+        inviteDto.userId,
+        inviteDto.roomName,
+      );
+      return response.status(res.status).json(res.message);
+    } catch (e) {
+      return response.status(e.status).json(e.message);
+    }
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Patch('leave')
+  async leaveRoom(
+    @Res() response: ExpressResponse,
+    @Req() request: Request,
+    @Body() leaveRoomDto: leaveRoomDto,
+  ) {
+    try {
+      const res = await this.roomService.leaveRoom(
+        (request as any)?.user?.id,
+        leaveRoomDto.room,
+      );
+      return response.status(res.status).json(res.message);
     } catch (e) {
       return response.status(e.status).json(e.message);
     }

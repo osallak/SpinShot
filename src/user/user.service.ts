@@ -265,6 +265,40 @@ export class UserService {
         where: {
           OR: [{ userId: id }, { opponentId: id }],
         },
+        select: {
+          History: {
+            select: {
+              userScore: true,
+              opponentScore: true,
+            },
+          },
+          opponent: {
+            select: {
+              id: true,
+              username: true,
+              avatar: true,
+              country: true,
+              logs: {
+                select: {
+                  rank: true,
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              logs: {
+                select: {
+                  defeats: true,
+                  victories: true,
+                },
+              },
+            },
+          },
+          startedAt: true,
+          opponentId: true,
+          userId: true,
+        },
       }),
       this.prisma.game.count(),
     ]);
@@ -360,6 +394,4 @@ export class UserService {
 
     return user;
   }
-
-
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import camera from "../../../../public/cameraIcon.svg";
 import test1 from "../../../../public/test1.svg";
 import { ArrayAvatar } from "../../../Components/ui/DropDown/ArrayIcon";
@@ -12,25 +12,51 @@ import {
   Typography,
   Option,
 } from "@material-tailwind/react";
+import axios from "axios";
 
 
-const UploadImage = (props: {upload:boolean, setUpload:Function, open: boolean, Switch: Function, setMyImage:Function }) => {
+const UploadImage = (props: {upload:boolean, setUpload:Function, open: boolean, Switch: Function,}) => {
+
+  const [image, setMyImage] = useState<any | null>(null);
+  const imageRef = useRef(null);
+
   const handleOpen = () => {
     props.Switch(!open);
-    props.setUpload(!props.upload);
+    // props.setUpload(!props.upload);
   };
 
   const handleImage = (image:any) => {
-        props.setMyImage(image);
+        setMyImage(image);
   }
 
-  const uploadToClient = (event: any) => {
+  const uploadToClient =  (event: any) => {
     if (event.target.files && event.target.files[0]) {
-        props.setMyImage(event.target.files[0]);
-      // setUpload(true);
+      setMyImage((prev : any) => event.target.files[0])
     }
   };
 
+  const hendleUpdata = async () => {
+    props.Switch(!open);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        "http://34.95.172.25/media",
+        {
+         file :image,
+        },
+        {
+          headers: {
+            Authorization:
+            `Bearer ${token}`,
+            "Content-Type" : "multipart/form-data"
+          },
+        }
+        );
+        console.log("re ",response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="">
@@ -48,7 +74,7 @@ const UploadImage = (props: {upload:boolean, setUpload:Function, open: boolean, 
           <Typography className="font-normal flex flex-col items-start space-y-2 sm:space-y-5 ">
             <span>Chose your picture</span>
             <label className="flex items-center justify-center w-full">
-              <input type="file" className="  w-full h-9  hidden" onChange={uploadToClient}/>
+              <input type="file" className="  w-full h-9  hidden" onChange={uploadToClient}  accept="image/jpeg"/>
                 <span className=" font-Passion-One text-lg bg-peridot rounded-full flex items-center justify-center w-28 h-9  ">
                   Upload
                 </span>
@@ -70,7 +96,7 @@ const UploadImage = (props: {upload:boolean, setUpload:Function, open: boolean, 
         <DialogFooter className="space-x-3">
           <button
             className=" bg-peridot rounded-full w-28 h-9"
-            onClick={handleOpen}
+            onClick={hendleUpdata}
           >
             <span className="text-very-dark-purple font-Passion-One text-lg">
               Verify

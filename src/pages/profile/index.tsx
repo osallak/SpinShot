@@ -1,36 +1,142 @@
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import SubSidebar from "../../Components/ui/Subsidebar/SubSidebar";
+import ImageProfile from "./ImageProfile";
+import Levle from "./Levle";
+import PersonalInformation from "./PersonalInformation";
+import MatchHistory from "./MatchHistory";
+import Achievements from "./Achievements";
+import ResetPassword from "./ResetPassword";
+import { useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../redux_tool";
+import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
+import SideBar from "@/Components/ui/Sidebar/sidebar";
+import SubsidebarSecond from "../../Components/ui/Subsidebar/SubsidebarSecond";
+import SidebarM from "@/Components/ui/Sidebar/SidebarMobile";
+import NavbarMobile from "@/Components/ui/Navbar/NavbarMobile";
+import TowFactor from "@/Components/ui/TowFactorauth/TowFactor";
+import UploadImage from "@/Components/ui/UploadImage/UploadImage";
 
-const handlePostData = async (data:any) => {
-      try{
-        const response = await axios.patch('http://34.16.168.248:3001/users', 
-        {
-          username: "frex",
-          email: "frex2020@email.com",
-          password: "null",
-          firstName: "issam",
-          lastName: "Benmaina",
-          country: "Maroc"
-        }, {
-        headers: {
-          accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZyZXgiLCJzdWIiOiIxMmY5Mzg1MS1lNjM4LTQyMDUtOGRhOS1kMThhZWNmN2E0MGMiLCJpc3MiOiJzcGluc2hvdCIsImlhdCI6MTY5MzMxOTkzMCwiZXhwIjoxNjkzNDA2MzMwfQ.5ptJ_GG2QxKn6OA5ZCvwMCBd3706LiOY96Fe7ROY6lY',
-        },
-      })
-      console.log("send");
+const Profile = () => {
+  const [isopen, setMenu] = useState(false);
+  const [opened, setOpned] = useState(false);
+  const [content, setContent] = useState("Personal_Information");
+  const user = useSelector((state: any) => state.Data);
+  const [password, setPassword] = useState(false);
+  const [pages, setPages] = useState("profile");
+  const user1 = useSelector((state: any) => state.Data);
+  const dispatch = useAppDispatch();
+  const profile_data = useAppSelector((state) => state.Profile);
+  const [isActive, setisActive] = useState(false);
+  const [open, setOpenDialog] = useState(false);
+  const [upload, setUpload] = useState(false);
+  const [myImage, setMyImage] = useState<File | null>();
+  const [width, setWidth] = useState<number>();
+
+  useEffect(() => {
+    dispatch(getProfile());
+    handleResize();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
     }
-    catch (error){
-      console.error(error);
-    };
+  }, [dispatch]);
+
+  const handleClick = (a: boolean, route: string | undefined) => {
+    setOpned(a);
+    {
+      route ? setPages(route) : null;
+    }
   };
 
+  const handleMenu = () => {
+    setOpned(false);
+    setMenu(!isopen);
+  };
 
+  // useEffect(() => {
+  //   handleResize();
+  //   if (typeof window !== 'undefined') {
+  //     window.addEventListener('resize', handleResize);
+  //     return () => {
+  //       window.removeEventListener('resize', handleResize);
+  //     };
+  //   }
 
-  export default function MyComponent() {
-  
-    return (
-      <button className="bg-red-900 text-white" onClick={() => handlePostData({})}>
-        Post Data
-      </button>
-    );
-  }
+  // }, []);
+
+  const handleResize = () => {
+    setWidth(window.innerWidth);
+  };
+
+  return (
+    <div className={"bg-very-dark-purple w-full h-full c-gb:w-screen c-gb:h-screen font-semibold font-Poppins text-xs sm:text-lg overflow-auto  min-w-[280px]"}>
+      <div className={` flex flex-row p-2 w-full h-full `}>
+        <div className="fixed h-full pb-4 ">
+          <SideBar />
+        </div>
+        <SubSidebar setContent={setContent} setPassword={setPassword} isActive={isActive} setisActive={setisActive} />
+        {isopen && (
+          <SidebarM
+            handleClick={handleClick}
+            setOpned={setOpned}
+            opened={opened}
+            />
+        )}
+        <div
+          className={`  ${((isopen && !isActive && !open ) || (isopen && !open && !isActive )) ? (width! > 720 ? "" : "ml-[65px]")  : ""} w-full  rounded-[20px] c-gb:ml-3  `}
+        >
+          <NavbarMobile
+            setMenu={setMenu}
+            handleMenu={handleMenu}
+            isopen={isopen}
+            />
+          <div className="flex flex-col  c-gb:h-full   overflow-auto ml-0 md:ml-[105px] c-gb:ml-0 ">
+            <div className="rounded-[20px] c-gb:flex c-gb:flex-row  ">
+              <ImageProfile isopen={isopen} opne={opened} setOpenDialog={setOpenDialog} width={width}/>
+                {open ? (
+                  <UploadImage
+                    upload={upload}
+                    setUpload={setUpload}
+                    open={open}
+                    Switch={setOpenDialog}
+                    />
+                  ) : null}
+              <Levle opne={opened} width={width} />
+            </div>
+            <div
+              className={` ${
+                (opened && width! < 1024)
+                  ? "backdrop:blur  bg-white/10 opacity-10"
+                  : "backdrop:blur  bg-white/10"
+              } flex flex-auto flex-col rounded-[20px] w-full mt-2  h-[1200px] c-gb:h-[800px] `} 
+            >
+              {content == "Personal_Information" ? (
+                <PersonalInformation isopen={isopen} myImage={myImage}/>
+              ) : content == "Achievements" ? (
+                <Achievements />
+              ) : content == "Match_History" ? (
+                <MatchHistory />
+              ) : content == "Security" ? (
+                password == true ? (
+                  <ResetPassword />
+                ) : null
+              ) : null}
+            </div>
+          </div>
+        </div>
+        {(opened ) && pages == "/profile/profile" && (
+          <SubsidebarSecond isActive={isActive} setisActive={setisActive} setContent={setContent} setPassword={setPassword} />
+        )}
+        {isActive &&
+          <div className="z-50">
+            <TowFactor isActive={isActive} Switch={setisActive} />
+          </div>}
+
+      </div>
+    </div>
+  );
+};
+
+export default Profile;

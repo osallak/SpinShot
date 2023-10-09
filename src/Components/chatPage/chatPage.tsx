@@ -1,5 +1,4 @@
 "use client";
-<<<<<<< HEAD
 import Image from "next/image";
 import logoWhite from "../../../public/logoWhite.svg";
 import messagesIcon from "../../../public/messagesIcon.svg";
@@ -8,7 +7,6 @@ import test1 from "../../../public/test1.svg";
 import test2 from "../../../public/test2.svg";
 import test3 from "../../../public/test3.svg";
 import { ChangeEvent, MouseEvent, useState } from "react";
-import SideBar from "@/Components/ui/Sidebar/SideBar";
 import IconButton from "../ui/Buttons/IconButton";
 import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";
@@ -19,19 +17,15 @@ import message from "../../../public/message.svg";
 import profile from "../../../public/profile.svg";
 import game from "../../../public/game.svg";
 import sendMessage from "../../../public/sendMessage.svg";
-import { DropDown } from "../ui/DropDown/DropDown";
-=======
-import SideBar from "@/Components/ui/sideBar/sideBar";
+import SideBar from "../ui/Sidebar/sidebar";
+import MobileSideBar from "../ui/Sidebar/mobileSideBar";
+import NavBar from "../ui/Navbar/navBar";
 import axios from "axios";
->>>>>>> cb3d66ebfce8b831db17ca13ded614f1aec4dbc6
 import { useRouter } from "next/router";
 import {
   useEffect,
   useRef,
-  useState
 } from "react";
-import NavBar from "../ui/navBar/navBar";
-import MobileSideBar from "../ui/sideBar/mobileSideBar";
 import Conversation from "./conversation";
 import CreateChannels from "./createChannels";
 import ExploreChannels from "./exploreChannels";

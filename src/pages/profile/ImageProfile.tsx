@@ -9,13 +9,12 @@ import UploadImage from "../../Components/ui/UploadImage/UploadImage";
 const ImageProfile = (props: any) => {
 
   const [handelMous, setImage] = useState(false);
-  // const [open, setOpenDialog] = useState(false);
+
   const [upload, setUpload] = useState(false);
   const [image, setMyImage] = useState();
   const data = useAppSelector((state) => state.Profile);
   const [width, setWidth] = useState(null);
   const [height, setHeight] = useState(null);
-  const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
 
   const handleMouseEnter = () => {
     setImage(true);
@@ -60,7 +59,7 @@ const ImageProfile = (props: any) => {
         onMouseLeave={handleMouseLeave}
         className={` rounded-3xl  ${props.isopen ? "w-[80px]" :  "w-[120px]" } c-gb:w-[10rem] c-10xl:w-[15rem]  relative transition-all duration-300 bg-white hover:opacity-40 `}
       >
-        <input type="" className="hidden " accept={allowedExtensions.map((ext) => `.${ext}`).join(',')} onClick={Open} />
+        <input type="" className="hidden " onClick={Open} />
         <div className=" flex justify-center items-center bg-purple  rounded-3xl overflow-hidden">
           {image && (
             <picture>

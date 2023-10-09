@@ -67,11 +67,10 @@ export const SidbarIcon = [
   { icon: logo },
   { icon: line },
   { icon: search, route: "/search" },
-  { icon: profile, route: "/profile/profile" },
+  { icon: profile, route: "/profile" },
   { icon: message, route: "message" },
   { icon: friend, route: "friend" },
-  { icon: play, route: "/game/game" },
-  { icon: notification, route: "/notification"},
+  { icon: play, route: "/game" },
 ];
 
 export const resetPassword = [
@@ -88,11 +87,11 @@ export const Information = [
 ];
 
 export const logos = [
-  {id: 3, logo: grandMasterLogo, rank: "GRAND MASTER"},
+  {id: 1, logo: grandMasterLogo, rank: "GRAND MASTER"},
   {id: 2, logo: masterLogo, rank: "MASTER"},
-  {id: 4, logo: veteraneLogo, rank: "VETERAN"},
-  {id: 1, logo: proLogo, rank: "PRO"},
-  {id: 4, logo: eliteLogo, rank: "ELITE"},
+  {id: 3, logo: veteraneLogo, rank: "VETERAN"},
+  {id: 4, logo: proLogo, rank: "PRO"},
+  {id: 5, logo: eliteLogo, rank: "ELITE"},
 ];
 
 

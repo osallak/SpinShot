@@ -1,11 +1,15 @@
 import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import React, { useState } from "react";
 import PasswordButton from "@/Components/ui/Buttons/PasswordButton";
+import axios from "axios";
+import { useAppSelector } from "../../../redux_tool";
 
 const ResetPassword = () => {
   const [password0, setPassword0] = useState(false);
   const [password1, setPassword1] = useState(false);
   const [password2, setPassword2] = useState(false);
+  const profile_data = useAppSelector((state) => state.Profile);
+
 
   const [password, setPassword] = useState("");
   const [NewPassword, setNewPassword] = useState("");
@@ -20,6 +24,35 @@ const ResetPassword = () => {
         : e.target.name == "Confirm New Password"
         ? setConfermPassword(e.target.value)
         : null;
+    }""
+  };
+
+
+  const hendleUpdata = async () => {
+
+    try {
+      const token = localStorage.getItem('token');
+      console.log(token);
+      console.log(ConfirmPassword);
+      const response = await axios.patch(
+        "http://34.95.172.25/users",
+        {
+          password: ConfirmPassword,
+          username: "tow",
+          firstName: "issam",
+          lastName: "somo",
+          country: "maroc",
+        },
+        {
+          headers: {
+            Authorization:
+            `Bearer ${token}`,
+          },
+        }
+        );
+        console.log("re ",response);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -69,14 +102,9 @@ const ResetPassword = () => {
           />
         </div>
       </div>
-      {/* <div className="  flex items-end md:items-center md:justify-end md:right-0 mt-36 h-[10%]  justify-center px-10 sm:px-28 ">
-        <div className="w-">
-        <SimpleButton content="Save" onclick={() => ""} />
-        </div>
-      </div> */}
             <div className=" h-12 flex c-gb:justify-end  justify-center items-center sm:px-28 ">
         <div className={`  w-24 sm:w-32  h-full`}>
-        <SimpleButton content="Save" onclick={() => ""} />
+        <SimpleButton content="Save" onclick={hendleUpdata} />
         </div>
       </div>
     </div>

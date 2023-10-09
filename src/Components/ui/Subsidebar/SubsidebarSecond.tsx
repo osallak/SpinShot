@@ -8,7 +8,7 @@ import linechoose2 from "./../../../../public/linechoose2.svg";
 import ToggleButton from "./../Buttons/ToggleButton";
 import { buttons } from "@/Components/ui/DropDown/ArrayIcon";
 import { useRouter } from "next/router";
-import Profile from "@/pages/profile/profile";
+import Profile from "@/pages/profile";
 import { useContext } from "react";
 import { createContext } from "react";
 import ContentProfile from "@/pages/profile/PersonalInformation";
@@ -27,7 +27,7 @@ const SubsidebarSecond = (props: {isActive:boolean, setisActive:Function, setCon
     props.setPassword(true)
   };
   return (
-    <div className=" fixed top-[74px] md:top-2 md:ml-[105px] ml-[75px] w-[70%] z-50  h-full c-gb:h-full  backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] ">
+    <div className=" fixed top-[70px] md:top-2 md:ml-[105px] ml-[65px] w-[70%] z-50  h-full c-gb:h-full  backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] ">
         <div className=" text-[10px] sm:text-[20px] md:text-[35px] font-Poppins font-extrabold text-pearl p-6 space-y-3">
             <h1>Profile</h1>
             <div className=" w-[70%] opacity-40"> <div className="border"></div> </div>

@@ -64,7 +64,7 @@ const GameHard = () => {
 
     const paddle = Bodies.rectangle(325, 15, 150, 13, {
       isStatic: true,
-      chamfer: { radius: 10 },
+      chamfer: { radius: 6.5 },
       render: {
         fillStyle: "white",
         opacity: 0.9,
@@ -73,7 +73,7 @@ const GameHard = () => {
     
     const paddle1 = Bodies.rectangle(325, 735, 150, 13, {
       isStatic: true,
-      chamfer: { radius: 10 },
+      chamfer: { radius: 6.5 },
       render: {
         fillStyle: "white",
         opacity: 0.9,
@@ -94,7 +94,7 @@ const GameHard = () => {
     
     const center = Bodies.rectangle(325, 375, 620, 5, {
       isStatic: true,
-      chamfer: { radius: 10 },
+      chamfer: { radius: 3 },
       render: {
         fillStyle: "white",
         opacity: 0.9,

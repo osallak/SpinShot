@@ -5,20 +5,6 @@ import Maps from "./Maps";
 
 const SubSidebarGame = (props: any) => {
   const hendleUpdata = () => {};
-  const [backgroundmode, setBackgroundmode] = useState({
-    mode1: "",
-    mode2: "",
-  });
-
-  const changeBackgroundmode = (modeId: string, newColor: string) => {
-    const updatedBackgroundmode = {
-      mode1: "",
-      mode2: "",
-    };
-    props.setMode(modeId);
-    updatedBackgroundmode[modeId] = newColor;
-    setBackgroundmode(updatedBackgroundmode);
-  };
 
   const [backgroundmap, setBackgroundmap] = useState({
     map1: "",
@@ -38,9 +24,9 @@ const SubSidebarGame = (props: any) => {
   };
 
   return (
-    <div className=" c-gb:block hidden w-[30%]  text-pearl">
+    <div className=" c-gb:block hidden w-[30%]  text-pearl c-3xl:text-3xl">
       <div className="bg-white/10 rounded-2xl h-full flex flex-col w-[100%] px-[10%]  ">
-        <div className=" flex items-center text-3xl  h-[10%] ">
+        <div className=" flex items-center  h-[10%] ">
           <h1>Game</h1>
         </div>
         <div className="flex items-center justify-center ">
@@ -48,14 +34,8 @@ const SubSidebarGame = (props: any) => {
         </div>
         <div className="">
           <div className=" flex flex-col  space-y-20 py-12">
-            <div className=" text-3xl">Options</div>
+            <div className="">Options</div>
             <div className="space-y-36">
-              <div className="px-4 ">
-                <Mode
-                  changeBackgroundmode={changeBackgroundmode}
-                  backgroundmode={backgroundmode}
-                />
-              </div>
               <div className="px-4 ">
                 <Maps
                   changeBackgroundmap={changeBackgroundmap}
@@ -65,8 +45,10 @@ const SubSidebarGame = (props: any) => {
             </div>
           </div>
         </div>
-        <div className="absolute top-[85%] left-[13%]">
+        <div className="absolute h-[4%]  w-[17%] top-[85%] flex justify-center items-center ">
+          <div className="w-[150px] h-full">
           <SimpleButton content="Play" onclick={hendleUpdata} />
+          </div>
         </div>
       </div>
     </div>

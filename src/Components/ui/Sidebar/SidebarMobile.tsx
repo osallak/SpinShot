@@ -9,13 +9,13 @@ const SidebarM = (props: {
   opened: boolean;
 }) => {
   return (
-    <div className="bg-very-dark-purple block md:hidden  h-full w-[70px] top-0 fixed z-50 ">
-      <div className="   w-[70px] h-full c-gb:h-full  backdrop:blur   bg-white/10 md:hidden block rounded-[20px] mr-1 ">
+    <div className="bg-very-dark-purple block md:hidden  h-full w-[60px] top-0 fixed z-50 pb-4">
+      <div className="   w-[60px] h-full c-gb:h-full  backdrop:blur   bg-white/10 md:hidden block rounded-[20px] mr-1 ">
         <div className=" space-y-6 mt-2  ">
           {SidbarIcon.map((Icon, index) => (
             <div
               key={index}
-              className="flex justify-center items-center opacity-40 m-2"
+              className="flex justify-center items-center opacity-40  hover:opacity-100 m-2"
             >
               <button
                 className={``}

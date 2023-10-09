@@ -13,7 +13,7 @@ const PersonalInformation = (props: any) => {
   const [userName, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [country, setCountry] = useState("");
-  console.log("Image",props.myImage?.name);
+
   const hendleUpdata = async () => {
     const my_data = new FormData();
     my_data.append("firstName", firstName);
@@ -23,7 +23,6 @@ const PersonalInformation = (props: any) => {
 
     try {
       const token = localStorage.getItem('token');
-      console.log(token);
       const response = await axios.patch(
         "http://34.95.172.25/users",
         {
@@ -31,7 +30,6 @@ const PersonalInformation = (props: any) => {
           firstName: firstName,
           lastName: lastName,
           country: country,
-          avatar: props.myImage.name,
         },
         {
           headers: {
@@ -40,6 +38,7 @@ const PersonalInformation = (props: any) => {
           },
         }
       );
+      console.log(response);
     } catch (error) {
       console.error(error);
     }

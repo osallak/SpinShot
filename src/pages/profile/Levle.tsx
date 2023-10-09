@@ -30,7 +30,6 @@ const Levle = (props: any) => {
   };
 
   useEffect(() => {
-    // {my_levle > 99 ? setMyRank(rank + 1) : null}
     getMyRank(data.profile?.profile?.level);
   }, [data]);
 
@@ -61,11 +60,11 @@ const Levle = (props: any) => {
       </div>
       <div className=" flex items-center justify-center flex-col  rounded-[20px] w-full h-[100px] c-gb:h-[30%]">
         <div className=" text-xl flex  justify-between  text-pearl  opacity-40 w-[85%]">
-          <div className="flex flex-row space-x-1">
+          <div className="flex flex-row space-x-1 text-xs sm:text-lg">
             <Image className="" src={level} alt="" /> <span>level</span>{" "}
             <span>{rank}</span>
           </div>
-          <div className="">
+          <div className="text-xs sm:text-lg">
             <span>{my_levle}/100</span>
           </div>
         </div>

@@ -88,8 +88,20 @@ export class FriendsService {
         where,
       }),
     ]);
+
+    const friends = friendships.map((friendship) => {
+      const friend =
+        friendship.leftUser.id === user.id
+          ? friendship.rightUser
+          : friendship.leftUser;
+      return {
+        ...friend,
+        status: friendship.status,
+        sender: friendship.sender,
+      };
+    });
     return serializeService.serializePaginationResponse(
-      friendships,
+      friends,
       totalCount,
       query.limit,
     );

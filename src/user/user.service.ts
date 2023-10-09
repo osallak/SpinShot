@@ -12,11 +12,11 @@ import { DEFAULT_AVATAR } from 'src/global/constants/global.constants';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import { PaginationResponse } from 'src/global/interfaces/global.intefraces';
 import { serializeService } from 'src/global/services';
-import { JwtResponse, SerialisedUser, User } from 'src/types';
+import { SerialisedUser, User } from 'src/types';
 import { v4 as uuidv4 } from 'uuid';
+import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { achievements } from './constants';
-import { CreateUserDto } from './dto/create-user.dto';
 import { SearchDto } from './dto/search.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
@@ -24,6 +24,7 @@ import {
   serializePaginationResponse,
   serializeUser,
 } from './helpers';
+import { FortyTwoDto } from 'src/auth/dto/FortyTwo.dto';
 
 @Injectable()
 export class UserService {
@@ -248,7 +249,7 @@ export class UserService {
         },
       },
     });
-    if (!user) throw new NotFoundException('Invalid username');
+    if (!user) throw new NotFoundException('Resource not found');
     return serializeUser(user);
   }
 
@@ -326,12 +327,12 @@ export class UserService {
     );
   }
 
-  async registerFortyTwoUser(user: User): Promise<User> {
+  async registerFortyTwoUser(user: FortyTwoDto): Promise<User> {
     //add data validation
 
     const generatedUsername = 'user' + '_' + uuidv4().slice(0, 8);
 
-    await this.prisma.user.upsert({
+    user = await this.prisma.user.upsert({
       where: { email: user.email },
       update: {
         firstName: user.firstName,
@@ -359,4 +360,6 @@ export class UserService {
 
     return user;
   }
+
+
 }

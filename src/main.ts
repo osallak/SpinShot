@@ -1,7 +1,7 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
-import cookieParser from 'cookie-parser';
+import  cookieParser from 'cookie-parser';
 import { PrismaExceptionFilter } from 'src/prisma-client-exception/prisma-client-exception.filter';
 import { AppModule } from './app.module';
 
@@ -22,8 +22,9 @@ async function bootstrap(): Promise<void> {
   app.use(cookieParser());
 
   app.enableCors({
-    origin: '*', //todo: change to frontend url
-  }); //todo: add cors config
+    origin: "*",//todo: change to frontend url
+    credentials: true,
+  });//todo: add cors config
 
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaExceptionFilter(httpAdapter));

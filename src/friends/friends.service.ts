@@ -43,7 +43,7 @@ export class FriendsService {
         },
       });
     }
-    //todo: send notif to client
+    console.log('friendship', friendship);
     return {
       status: 201,
       message: 'Added successfully',

@@ -51,7 +51,7 @@ const SwitchButton = (props: {setType: Function, setName: Function, setPassword:
     props.setType(state.toUpperCase());
     props.setName(name);
     props.setPassword(password);
-  }, [state, name, password])
+  }, [props, state, name, password])
 
   return (
     <div className="w-full max-w-md space-y-3">

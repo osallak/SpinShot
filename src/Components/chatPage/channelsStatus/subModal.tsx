@@ -11,23 +11,23 @@ const SubModal = (props: {
 
   const [password, setPassword] = useState("");
   const [joinSuccess, setJoinSuccess] = useState(false);
-  const params: any = {
-    name: name,
-    type: type,
-  };
-  if (password.length >= 6) params["password"] = password;
+  // const params: any = {
+  //   name: name,
+  //   type: type,
+  // };
+  // if (password.length >= 6) params["password"] = password;
 
   function closeModal() {
     props.setOpen(false);
   }
 
-  const joinChannel = (type: string) => {
-    {
-      type === "PUBLIC" ? setJoinSuccess(true) : 
-    }
-  }
+  // const joinChannel = (type: string) => {
+  //   {
+  //     type === "PUBLIC" ? setJoinSuccess(true) : 
+  //   }
+  // }
 
-  const getPassword = (event: ChangeEvent<HTMLInputElement>) {
+  const getPassword = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setPassword(event.target.value);
   }
@@ -81,7 +81,7 @@ const SubModal = (props: {
                         />
                       </div>
                       <div className="w-full md:h-10 sm:h-9 h-8 flex justify-end items-center">
-                        <button onClick={joinChannel} className="flex justify-center items-center md:w-[100px] sm:w-[85px] w-[70px] h-full bg-peridot font-Passion-One text-very-dark-purple rounded-full lg:text-lg md:text-md sm:text-sm text-xs">
+                        <button className="flex justify-center items-center md:w-[100px] sm:w-[85px] w-[70px] h-full bg-peridot font-Passion-One text-very-dark-purple rounded-full lg:text-lg md:text-md sm:text-sm text-xs">
                           Confirme
                         </button>
                       </div>

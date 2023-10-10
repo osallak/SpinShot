@@ -46,11 +46,11 @@ const Conversation = (props: {
   //   setCurrentMessage(event.target.value);
   // };
 
-  function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.key === "Enter") {
-      handleSendMessage(event);
-    }
-  }
+  // function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
+  //   if (event.key === "Enter") {
+  //     handleSendMessage(event);
+  //   }
+  // }
 
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -223,12 +223,13 @@ const Conversation = (props: {
                   placeholder="Type a message"
                   className="text-pearl caret-peridot w-full h-full outline-none placeholder:text-pearl font-light placeholder:opacity-50 font-Poppins md:text-lg sm:text-md text-sm bg-transparent"
                   type="text"
-                  onKeyDown={handleKeyPress}
+                  // onKeyDown={handleKeyPress}
                   value={message}
                   onChange={(event) => setMessage(event.target.value)}
                 />
               </div>
-              <button onClick={(event) => handleSendMessage(event)}>
+              {/* add handle send message in the button in the buttom of this line */}
+              <button>
                 <Image
                   src={sendMessageIcon}
                   alt="send Message Input"

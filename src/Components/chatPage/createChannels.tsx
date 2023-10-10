@@ -13,7 +13,7 @@ import CreateChannelIcon from "../../../public/CreateChannel.svg";
 import SwitchButton from "../ui/Buttons/SwitchButton";
 
 const ayoubToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inlha2hvdWRyIiwic3ViIjoiOWI3MTQxMWYtNmYzMC00MDVhLTgyNTQtOGM5MWVlODBiZWZmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2NzAxODYsImV4cCI6MTY5Njc1NjU4Nn0.f2bnzH4gUoP5z-GpGs5eHthjgMsKh37aTm4Ynx_CExk";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiYzlkN2QzMmEtYTE2NC00OWUxLTk4YmYtNTE3YmQwZjBmMzYzIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY3OTU4NTksImV4cCI6MTY5Njg4MjI1OX0.QEAG6ZKAKzSLJ0hyrdRJQH65aWW_YKneTLCaN7XiWKU";
 
 const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
   const [type, setType] = useState("");

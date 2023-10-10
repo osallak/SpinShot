@@ -1,20 +1,15 @@
 import { Select, Option } from "@material-tailwind/react";
 import threePoint from "../../../../public/threePoint.svg";
 import Image from "next/image";
-import { useState, MouseEvent, MouseEventHandler, useEffect, useRef } from "react";
+import {
+  useState,
+  MouseEvent,
+  MouseEventHandler,
+  useEffect,
+  useRef,
+} from "react";
 
-type Content = {
-  content: string;
-  click: MouseEventHandler<HTMLButtonElement>;
-  icon: string;
-};
-
-type Array = {
-  data: Content[];
-};
-
-
-const DropDown: React.FC<Array> = ({data}) => {
+const DropDown = (props: {data: any}) => {
   const [isOpen, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -25,7 +20,7 @@ const DropDown: React.FC<Array> = ({data}) => {
 
   const closeDropdown = () => {
     setOpen(false);
-  }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -35,15 +30,14 @@ const DropDown: React.FC<Array> = ({data}) => {
     };
 
     const handleEscape = (event: any) => {
-      if (event.key === 'Escape')
-        closeDropdown();
-    }
+      if (event.key === "Escape") closeDropdown();
+    };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleEscape);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, []);
 
@@ -61,13 +55,17 @@ const DropDown: React.FC<Array> = ({data}) => {
           id="dropdownDotsHorizontal"
           className="z-10 md:p-3 sm:p-2 p-1 right-3  bg-very-dark-purple absolute rounded-l-2xl rounded-b-2xl md:w-[230px] w-[170px]"
         >
-          {data.map((content, index) => (
-            <button
-              onClick={content.click}
+          {props.data.map((content: any, index: number) => (
+            <button 
+              onClick={() => content.click}
               key={index}
               className="flex justify-start opacity-40 hover:opacity-100 space-x-2 items-center px-4 py-2 cursor-pointer text-pearl md:text-lg text-xs font-Passion-One"
             >
-              <Image src={content.icon} alt="add" className="md:w-[26px] w-[20px]"/>
+              <Image
+                src={content.icon}
+                alt="add"
+                className="md:w-[26px] w-[20px]"
+              />
               <span>{content.content}</span>
             </button>
           ))}
@@ -75,6 +73,6 @@ const DropDown: React.FC<Array> = ({data}) => {
       )}
     </div>
   );
-}
+};
 
 export default DropDown;

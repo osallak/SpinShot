@@ -11,6 +11,7 @@ import Image from "next/image";
 import axios, { AxiosError } from "axios";
 import { log } from "console";
 import { errorMonitor } from "events";
+import ip from "@/utils/endPoint";
 
 const Signin = () => {
   const [username, setUsername] = useState("");
@@ -56,7 +57,7 @@ const Signin = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://34.95.172.25/auth/signin/local",
+        `${ip}/auth/signin/local`,
         {
           username,
           password,
@@ -73,12 +74,12 @@ const Signin = () => {
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     Router.push("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2FMessages&response_type=code");
-    // try {
-    //   await axios.get("http://34.95.172.25/auth/42");
-    //   console.log("good");
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      await axios.get("http://34.95.172.25/auth/42");
+      alert("all good from continue with intra");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const redirection = (e: MouseEvent<HTMLButtonElement>) => {
@@ -185,7 +186,7 @@ const Signin = () => {
           {widthsc && widthsc <= 1024 && (
             <div className="w-full flex flex-row justify-center items-center space-x-1">
               <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-                Don't have an account?
+                Don&apost have an account?
               </p>
               <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign Up" />
             </div>
@@ -195,7 +196,7 @@ const Signin = () => {
       {widthsc && widthsc > 1024 && (
         <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center">
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-            Don't have an account?&nbsp;
+            Don&apost have an account?&nbsp;
           </p>
           <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign Up" />
         </div>

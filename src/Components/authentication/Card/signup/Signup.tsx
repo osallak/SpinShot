@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
 import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
 import axios from "axios";
+import ip from "@/utils/endPoint";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -78,7 +79,7 @@ const Signup = () => {
     e.preventDefault();
     if (isValid && isMatch) {
       try {
-        await axios.post("http://34.95.172.25/auth/signup/local", {
+        await axios.post(`${ip}/auth/signup/local`, {
           email,
           username,
           password,
@@ -86,6 +87,7 @@ const Signup = () => {
         Router.push(Path);
       } catch (error: any) {
         setErrorMessage(error.response.data.message);
+        console.log(error)
         setError(true);
       }
     }
@@ -107,7 +109,7 @@ const Signup = () => {
   useEffect(() => {
     if (!username || !email || !password || !ConfirmPassword || !isMatch)
       setisValid(false);
-  }, [isValid]);
+  }, [isValid, username , email , password , ConfirmPassword , isMatch]);
 
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex flex-col justify-center items-center ">

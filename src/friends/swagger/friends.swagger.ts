@@ -79,3 +79,17 @@ export const UnfriendDoc = () =>
       },
     }),
   );
+
+
+  export const RejectDoc = () =>
+    applyDecorators(
+      ApiBearerAuth(),
+      ApiResponse({
+        schema: {
+          example: {
+            status: 201,
+            description: 'request rejected'
+          }
+        }
+      }),
+    );

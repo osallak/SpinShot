@@ -12,6 +12,7 @@ import {
   AddFriendDoc,
   BlockFriendDoc,
   GetFriendsDoc,
+  RejectDoc,
   UnblockFriendDoc,
   UnfriendDoc,
 } from './swagger/friends.swagger';
@@ -79,5 +80,14 @@ export class FriendsController {
     @UserDecorator() user: User,
   ): Promise<Response> {
     return this.friendsService.unfriend(user.id, id);
+  }
+
+  @Post('/reject/:id')
+  @RejectDoc()
+  async reject(
+    @Param('id') id: string,
+    @UserDecorator() user: User,
+  ): Promise<Response> {
+    return this.friendsService.reject(user.id, id);
   }
 }

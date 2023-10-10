@@ -44,12 +44,12 @@ export class UserController {
 
   @GetUserGamesDoc()
   @UseGuards(JwtAuthGuard)
-  @Get('/games/:username')
+  @Get('/games/:id')
   async getUserGames(
-    @Param('username') username: string,
+    @Param('id') id: string,
     @Query() query: PaginationQueryDto,
   ): Promise<PaginationResponse<any>> {
-    return await this.userService.getUserGames(username, query);
+    return await this.userService.getUserGames(id, query);
   }
 
   @UpdateUserDoc()

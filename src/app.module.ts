@@ -9,7 +9,7 @@ import { MediaController } from './media/media.controller';
 import { MediaModule } from './media/media.module';
 import { PrismaService } from './prisma/prisma.service';
 import { StorageModule } from './storage/storage.module';
-import { UserController } from './user/controller/user.controller';
+import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
 
 @Module({

@@ -43,7 +43,7 @@ export class FriendsService {
         },
       });
     }
-    //todo: send notif to client
+    console.log('friendship', friendship);
     return {
       status: 201,
       message: 'Added successfully',
@@ -213,7 +213,7 @@ export class FriendsService {
     };
   }
 
-  async reject(userId: string, senderId): Promise<void> {
+  async reject(userId: string, senderId): Promise<Response> {
     const sortedIds: string[] = [userId, senderId].sort();
     const friendship = await this.prismaService.friendship.findUnique({
       where: {
@@ -238,5 +238,9 @@ export class FriendsService {
         status: FriendshipStatus.NOT_FOUND,
       },
     });
+    return {
+      status: 201,
+      message: 'request rejected'
+    }
   }
 }

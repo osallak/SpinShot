@@ -18,6 +18,7 @@ import { JwtResponse } from 'src/types/common.types';
 import { CreateUserDto } from 'src/user/dto';
 import { UserService } from 'src/user/user.service';
 import { JwtAuthPayload } from './interfaces/jwt.interface';
+import { FortyTwoDto } from './dto/FortyTwo.dto';
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger('AuthService');
@@ -121,11 +122,11 @@ export class AuthService {
   }
 
 
-  async registerFortyTwoUser(user: User): Promise<JwtResponse> {
-    await this.userService.registerFortyTwoUser(user);
+  async registerFortyTwoUser(user: FortyTwoDto): Promise<JwtResponse> {
+    const returnedUser = await this.userService.registerFortyTwoUser(user);
     return await this.generateToken({
-      username: user.username,
-      sub: user.id,
+      username: returnedUser.username,
+      sub: returnedUser.id,
     } as JwtAuthPayload);
   }
 }

@@ -3,7 +3,7 @@ import { SidbarIcon } from "../DropDown/ArrayIcon";
 import Image from "next/image";
 import test1 from "./../../../../public/test1.svg";
 
-const SidebarM = (props: {
+const SidebarMobile = (props: {
   handleClick: Function;
   setOpned: Function;
   opened: boolean;
@@ -38,4 +38,4 @@ const SidebarM = (props: {
   );
 };
 
-export default SidebarM;
+export default SidebarMobile;

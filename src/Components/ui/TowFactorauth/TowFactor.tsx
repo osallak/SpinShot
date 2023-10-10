@@ -162,7 +162,7 @@ const TowFactor = (props: { isActive: boolean; Switch: Function}) => {
           </span>
         </DialogHeader>
         <DialogBody className="sm:h-[35rem] overflow-hidden  flex flex-col items-center justify-center ">
-          <Typography className="font-normal flex flex-col items-center justify-center sm:space-y-10">
+          <div className="font-normal flex flex-col items-center justify-center sm:space-y-10">
             <div className="border-[15px] border-white rounded-2xl ">
               <QRCode value={generateRandomCode()}  size={size}/>
             </div>
@@ -193,7 +193,7 @@ const TowFactor = (props: { isActive: boolean; Switch: Function}) => {
                 regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
               />
             </div>
-          </Typography>
+          </div>
         </DialogBody>
         <DialogFooter className="space-x-3">
           <button

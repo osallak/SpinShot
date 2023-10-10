@@ -1,84 +1,50 @@
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import axios from "axios";
+import nextIcon from "../../../../public/nextIcon.svg";
+import previousIcon from "../../../../public/previousIcon.svg";
+import Image from "next/image";
+import parseJwt from "@/utils/parsJwt";
 
-const Pagination = () => {
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    fetchData();
-  }, [page]);
-
-  console.log(page);
-
-  const fetchData = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(
-        `http://34.95.172.25/users/games/land?page=${page}&limit=${5}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          }
-        },);
-      setPosts(response.data);
-      setTotalPages(response.data.totalPages);
-      console.log("match", response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
+const Pagination = (props: any) => {
   const nextPage = () => {
-    setPage(page + 1);
+    props.setPage(props.page + 1);
   };
 
   const prevPage = () => {
-    setPage(page - 1);
+    {
+      props.page >= 1
+        ? props.setPage(props.page - 1)
+        : props.setPage(props.page);
+    }
   };
 
   return (
-    <div className="space-x-10 text-sm sm:text-2xl flex flex-row w-full ">
-      <label className=" flex flex-row items-center rounded-xl p-1 space-x-2 bg-very-dark-purple hover:bg-peridot">
-          <svg
-            className="w-3.5 h-3.5 mr-2"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 10"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 5H1m0 0 4 4M1 5l4-4"
-            />
-          </svg>
-        <button onClick={prevPage}>
-          Previous
+    <div className="space-x-10 text-sm sm:text-xl flex bg-very-dark-purple flex-row justify-center items-center w-full rounded-full  ">
+      <label className="    ">
+        <button
+          className="flex flex-row items-center rounded-xl p-2 space-x-2  w-full"
+          onClick={prevPage}
+        >
+          <Image
+            className="bg-white rounded-full hover:bg-peridot hover:text-peridot"
+            src={previousIcon}
+            alt={""}
+          />
+          <h1>Previous</h1>
         </button>
       </label>
-      <label className=" flex flex-row items-center rounded-xl p-1 bg-very-dark-purple hover:bg-peridot">
-        <button onClick={nextPage}>
-          Next
+      <label className=" ">
+        <button
+          className=" flex flex-row items-center space-x-2 justify-end rounded-xl p-2   w-full"
+          onClick={nextPage}
+        >
+          <h1>Next</h1>
+          <Image
+            className="bg-white rounded-full hover:bg-peridot hover:text-peridot"
+            src={nextIcon}
+            alt={""}
+          />
         </button>
-          <svg
-            className="w-3.5 h-3.5 ml-2"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 10"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M1 5h12m0 0L9 1m4 4L9 9"
-            />
-          </svg>
       </label>
     </div>
   );

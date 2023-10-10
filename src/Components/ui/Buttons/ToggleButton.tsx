@@ -3,14 +3,13 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import active from "../../../../public/active.svg";
 import unactive from "../../../../public/unactive.svg";
-import TowFactor from "../TowFactorauth/TowFactor";
+import TowFactor from "../TowFactorauth/towFactor";
 
-const ToggleButton = (props: {isActive:boolean; setisActive:Function }) => {
-
+const ToggleButton = (props: { isActive: boolean; setisActive: Function }) => {
   const Switch = () => {
     props.setisActive(!props.isActive);
   };
-  
+
   return (
     <div className="bg-red md:h-6 md:w-10 h-4 w-7">
       <motion.button
@@ -37,7 +36,6 @@ const ToggleButton = (props: {isActive:boolean; setisActive:Function }) => {
           )}
         </motion.div>
       </motion.button>
-      
     </div>
   );
 };

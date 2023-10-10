@@ -3,15 +3,16 @@ import React, { useState } from "react";
 import securityIcon from "./../../../../public/securityIcon.svg";
 import securityIcon2 from "./../../../../public/securityIcon2.svg";
 import { buttons } from "@/Components/ui/DropDown/ArrayIcon";
-import { useRouter } from "next/router";
-import ChangPasswd from "../upDatePasswd/ChangPasswd";
+import ChangPasswd from "../upDatePasswd/changPasswd";
 
 const SubSidebar = (props:any) => {
-  const router = useRouter();
+
   const [isClick, setClick] = useState(false);
   const [background, setBackground] = useState(false);
   const [subbackground, setSubBackground] = useState<number>(1);
+
   const handle = (id: number, route: string) => {
+    {route != "Security" ? setClick(false) : null}
     setSubBackground(id);
      props.setContent(route);
      props.setPassword(true);

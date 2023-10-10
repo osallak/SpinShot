@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import SimpleButton from "../Buttons/SimpleButton";
 import Mode from "./Mode";
-import Maps from "./Maps";
+import Maps from "./maps";
 
 const SubSidebarGame = (props: any) => {
   const hendleUpdata = () => {};

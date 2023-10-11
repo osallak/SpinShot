@@ -2,13 +2,13 @@ import React, { useEffect, useRef } from "react";
 import { Engine, Render, World, Bodies, Body, Events } from "matter-js";
 
 const GameHard = () => {
-  const canvasRef = useRef<HTMLCanvasElement | any>();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const ballRef = useRef<any>(null);
 
   useEffect(() => {
     const engine = Engine.create();
     const render = Render.create({
-      canvas: canvasRef.current,
+      canvas: canvasRef.current!,
       engine: engine,
       options: {
         width: 650,

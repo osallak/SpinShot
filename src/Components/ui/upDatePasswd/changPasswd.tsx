@@ -12,7 +12,7 @@ const Security = (props: { handlePasswd: Function; background: boolean, isActive
           <Image src={linechoose} alt="" />
         </div>
         <div
-          className={`c-ml:text-xl 2xl:text-base xl:text-sm text-xs w-[60%] rounded-[12px] left-[33%] relative bottom-2 xl:bottom-3 2xl:bottom-4  ${
+          className={` c-ml:text-xl 2xl:text-[14px]  text-[10px]  w-[60%] rounded-[12px] left-[33%] relative bottom-2 lg:bottom-5 2xl:bottom-4  ${
             props.background ? "bg-very-dark-purple" : "bg-white/12"
           }`}
           onClick={() => props.handlePasswd(true, "ResetPassword")}
@@ -25,7 +25,7 @@ const Security = (props: { handlePasswd: Function; background: boolean, isActive
           <Image src={linechoose2} alt="" />
         </div>
         <div
-          className={` relative flex rounded-[12px] justify-between c-ml:text-xl 2xl:text-base xl:text-sm text-xs  w-[55%] left-[39%] bottom-[65px] xl:bottom-[65px] 2xl:bottom-[70px] `}
+          className={` relative flex rounded-[12px] justify-between items-center c-ml:text-xl 2xl:text-[14px]  lg:text-[10px]    w-[54%] left-[35%] bottom-[70px] lg:bottom-[75px] `}
         >
           <button>2FA</button>
           <div className="relative flex justify-end w-12 h-6 c-gb:w-9 c-xs:w-10 ">

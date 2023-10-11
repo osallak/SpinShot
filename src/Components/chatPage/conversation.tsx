@@ -13,7 +13,7 @@ import game from "../../../public/game.svg";
 import sendMessageIcon from "../../../public/sendMessage.svg";
 import test1 from "../../../public/test1.svg";
 import trash from "../../../public/trash.svg";
-import DropDown from "../ui/DropDown/Dropdown";
+import DropDown from "../ui/FolderDropDown/Dropdown";
 import dataConversation from "@/types/messagesArrays";
 import { io } from "socket.io-client";
 
@@ -46,11 +46,11 @@ const Conversation = (props: {
   //   setCurrentMessage(event.target.value);
   // };
 
-  function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
-    if (event.key === "Enter") {
-      // handleSendMessage(event);
-    }
-  }
+  // function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
+  //   if (event.key === "Enter") {
+  //     handleSendMessage(event);
+  //   }
+  // }
 
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -131,7 +131,7 @@ const Conversation = (props: {
 
   return (
     <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">
-      <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
+      {/* <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">
             <div className="flex justify-center items-center space-x-2 flex-row">
@@ -240,7 +240,7 @@ const Conversation = (props: {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

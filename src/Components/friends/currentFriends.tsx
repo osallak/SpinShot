@@ -1,10 +1,10 @@
 import Image from "next/image";
 import FriendsIcon from "../../../public/friend.svg";
-import test1 from "../../../public/test1.svg"
-import newMessage from "../../../public/newMessage.svg"
-import block from "../../../public/block.svg"
-import game from "../../../public/game.svg"
-import DropDown from "../ui/DropDown/Dropdown";
+import test1 from "../../../public/test1.svg";
+import newMessage from "../../../public/newMessage.svg";
+import block from "../../../public/block.svg";
+import game from "../../../public/game.svg";
+import DropDown from "../ui/FolderDropDown/Dropdown";
 import { useEffect } from "react";
 
 const CurrentFriends = () => {
@@ -79,7 +79,7 @@ const CurrentFriends = () => {
       email: "tajiayoub35@gmail.com",
       name: "PonPon",
     },
-  ]
+  ];
 
   const handleClick = () => {
     console.log("hello world from the other side");
@@ -93,7 +93,7 @@ const CurrentFriends = () => {
 
   const goToUser = () => {
     console.log("hello");
-  }
+  };
 
   return (
     <div className="w-[50%] h-full rounded-2xl bg-white/10 md:flex hidden justify-center items-center flex-col">
@@ -118,7 +118,7 @@ const CurrentFriends = () => {
         </h1>
       </div>
       <div className="h-[80%] flex flex-col items-center min-h-[100px] w-[98%] overflow-auto rounded-sm">
-      {array.map((items, index) => (
+        {array.map((items, index) => (
           <div key={index} className="w-full h-[90px] min-h-[80px]">
             <div className="w-full h-full flex items-center justify-center">
               <div className="w-[50%] h-full flex justify-start items-center space-x-2 ">
@@ -129,7 +129,9 @@ const CurrentFriends = () => {
                 />
                 <div className="h-[70%] flex justify-center flex-col">
                   <p className="font-Poppins text-pearl font-semibold xl:text-xl md:text-lg text-base">
-                    <span className="cursor-pointer" onClick={goToUser}>{items.name}</span>
+                    <span className="cursor-pointer" onClick={goToUser}>
+                      {items.name}
+                    </span>
                   </p>
                   <p className="font-Poppins text-pearl text-opacity-40 font-normal xl:text-base md:text-sm text-xs">
                     {items.email}

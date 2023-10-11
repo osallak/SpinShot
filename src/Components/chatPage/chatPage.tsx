@@ -17,9 +17,9 @@ import message from "../../../public/message.svg";
 import profile from "../../../public/profile.svg";
 import game from "../../../public/game.svg";
 import sendMessage from "../../../public/sendMessage.svg";
-import SideBar from "../ui/Sidebar/sidebar";
+import SideBar from "../ui//Sidebar/sideBar";
 import MobileSideBar from "../ui/Sidebar/mobileSideBar";
-import NavBar from "../ui/Navbar/navBar";
+import NavBar from "../ui/FolderNavbar/navBar";
 import axios from "axios";
 import { useRouter } from "next/router";
 import {
@@ -214,7 +214,7 @@ const Chat = () => {
 
   useEffect(() => {
     fetchDataSubSideBar();
-  }, []);
+  },);
 
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 md:pl-3 pl-0 py-0 pr-0 items-center flex-row">

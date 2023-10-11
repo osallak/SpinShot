@@ -1,13 +1,14 @@
-import SideBar from "@/Components/ui/Sidebar/sidebar";
+import SideBar from "@/Components/ui/Sidebar/sideBar";
 import React, { useState, useEffect } from "react";
-import SubSidebarGame from "@/Components/ui/Subsidebar/SubSidebar";
-import NavbarMobile from "@/Components/ui/Navbar/NavbarMobile";
-import NavGame from "@/Components/ui/Navbar/NavGame";
+import SubSidebarGame from "@/Components/ui/FolderSubsidebar/subSidebarGame";
+import NavbarMobile from "@/Components/ui/FolderNavbar/navbarMobile";
+import NavGame from "@/Components/ui/FolderNavbar/navGame";
 import SidebarM from "@/Components/ui/Sidebar/SidebarMobile";
 import GameNormal from "./GameNormal";
 import GameHard from "./GameHard";
 import GameExpert from "./GameExpert";
-import SubsidebarSecondGame from "@/Components/ui/Subsidebar/SubsidebarSecondGame";
+import SubsidebarSecondGame from "@/Components/ui/FolderSubsidebar/subsidebarSecondGame";
+
 const Game = () => {
   const [isopen, setMenu] = useState(false);
   const [opened, setOpned] = useState(false);

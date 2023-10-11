@@ -11,6 +11,7 @@ import Image from "next/image";
 import axios, { AxiosError } from "axios";
 import { log } from "console";
 import { errorMonitor } from "events";
+import ip from "@/endpoint/ip";
 
 const Signin = () => {
   const [username, setUsername] = useState("");
@@ -55,16 +56,20 @@ const Signin = () => {
   ) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://34.95.172.25/auth/signin/local", {
-        username,
-        password,
-      });
+      const res = await axios.post(
+        `${ip}/auth/local/signin`, 
+        {
+          username,
+          password,
+        }
+      );
       localStorage.setItem("token", res.data.token);
       console.log("token: " + localStorage.getItem("token"));
       Router.push(Path);
     } catch (error: any) {
       // setErrorMessage(error.response.data.message);
       setError(true);
+      console.log("error from signin: ", error);
     }
   };
 
@@ -153,11 +158,13 @@ const Signin = () => {
               <div className="w-full flex justify-center items-center flex-col sm:space-y-12 space-y-8">
                 <div className="w-full flex justify-center items-center rounded-full">
                   <div className="b-sm:w-40 w-3/4 c-md:h-10 sm:h-10 h-9 flex justify-center items-center rounded-full">
-                    <SimpleButton
-                      Type="submit"
-                      onclick={(e) => RedirectionFunction(e, "profile/profile")}
-                      content="Sign in"
-                    />
+                  <SimpleButton
+                    Type="submit"
+                    onclick={(e) =>
+                      RedirectionFunction(e, `profile/${username}`)
+                    }
+                    content="Sign in"
+                  />
                   </div>
                 </div>
                 <div className="flex flex-col justify-center items-center c-md:space-y-10 space-y-3 w-full">

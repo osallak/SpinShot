@@ -35,7 +35,7 @@ const SwitchButton = (props: {setType: Function, setName: Function, setPassword:
 
   useEffect(() => {
     props.setType(state.toUpperCase());
-  }, [state])
+  }, [props, state])
 
   return (
     <div className="w-full max-w-md px-2 py-16 sm:px-0">

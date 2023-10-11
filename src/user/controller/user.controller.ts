@@ -27,7 +27,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiBearerAuth()
-  @UseGuards(JwtTwoFactorGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('search')
   async search(
     @Query() query: SearchDto,
@@ -37,7 +37,7 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtTwoFactorGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Get user by username' })
   @Get('/profile/:username')
   async getUser(@Param('username') username: string): Promise<SerialisedUser> {
@@ -46,7 +46,7 @@ export class UserController {
 
   @ApiBearerAuth()
   @ApiResponse({ status: 200, description: 'Get user games by username' })
-  @UseGuards(JwtTwoFactorGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/games/:username')
   async getUserGames(
     @Param('username') username: string,
@@ -69,7 +69,7 @@ export class UserController {
     type: UpdateUserDto,
   })
   @ApiBearerAuth()
-  @UseGuards(JwtTwoFactorGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch()
   async updateUser(
     @UserDecorator() user: User,

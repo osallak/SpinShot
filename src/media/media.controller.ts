@@ -41,7 +41,7 @@ export class MediaController {
       'File size should not exceed 5m and should be of type jpeg or png',
   })
   @Post()
-  @UseGuards(JwtTwoFactorGuard)
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @UploadedFile(

@@ -24,7 +24,7 @@ export class FriendsController {
   })
   @ApiBearerAuth()
   @Post('add/:id')
-  @UseGuards(JwtTwoFactorGuard)
+  @UseGuards(JwtAuthGuard)
   async addFriend(
     @Param('id') id: string,
     @UserDecorator() user: User,
@@ -38,7 +38,7 @@ export class FriendsController {
     description:
       'an object holding an array of friends and  pagination metadata',
   })
-  @UseGuards(JwtTwoFactorGuard)
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getFriends(
     @UserDecorator() user: User,
@@ -57,7 +57,7 @@ export class FriendsController {
     },
   })
   @Post('/accept/:id')
-  @UseGuards(JwtTwoFactorGuard)
+  @UseGuards(JwtAuthGuard)
   accept(
     @Param('id') id: string,
     @UserDecorator() user: User,
@@ -74,7 +74,7 @@ export class FriendsController {
       },
     },
   })
-  @UseGuards(JwtTwoFactorGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('/block/:id')
   block(
     @Param('id') id: string,
@@ -93,7 +93,7 @@ export class FriendsController {
     },
   })
   @Post('/unblock/:id')
-  @UseGuards(JwtTwoFactorGuard)
+  @UseGuards(JwtAuthGuard)
   unblock(
     @Param('id') id: string,
     @UserDecorator() user: User,
@@ -110,7 +110,7 @@ export class FriendsController {
       },
     },
   })
-  @UseGuards(JwtTwoFactorGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('/unfriend/:id')
   async unfriend(@Param('id') id: string, @UserDecorator() user: User): Promise<Response> {
     return this.friendsService.unfriend(user.id, id);

@@ -1,8 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { objType } from "../../src/Components/profile/interfaces";
-import Levle from "@/Components/profile/level";
-import { get } from "http";
 import { getProfile } from "./profileThunk";
 
 export interface ProfileState {

@@ -4,9 +4,9 @@ import EmptyButton from "../ui/Buttons/EmptyButton";
 import SimpleButton from "../ui/Buttons/SimpleButton";
 import { MouseEvent } from "react";
 import { motion } from "framer-motion";
-import accept from "../../../public/active.svg"
-import refuse from "../../../public/unactive.svg"
-import DropDown from "../ui/DropDown/Dropdown";
+import accept from "../../../public/active.svg";
+import refuse from "../../../public/unactive.svg";
+import DropDown from "../ui/FolderDropDown/Dropdown";
 
 const FriendsRequest = () => {
   const array = [
@@ -133,7 +133,7 @@ const FriendsRequest = () => {
 
   const goToUser = () => {
     console.log("hello");
-  }
+  };
 
   return (
     <div className="w-[50%] h-full rounded-2xl bg-white/10 md:flex hidden justify-center items-center flex-col">
@@ -160,7 +160,9 @@ const FriendsRequest = () => {
                 />
                 <div className="h-[70%] flex justify-center flex-col">
                   <p className="font-Poppins text-pearl font-semibold xl:text-xl md:text-lg text-base">
-                    <span className="cursor-pointer" onClick={goToUser}>{items.name}</span>
+                    <span className="cursor-pointer" onClick={goToUser}>
+                      {items.name}
+                    </span>
                   </p>
                   <p className="font-Poppins text-pearl text-opacity-40 font-normal xl:text-base md:text-sm text-xs">
                     {items.email}

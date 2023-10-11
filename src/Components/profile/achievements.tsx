@@ -32,7 +32,7 @@ const Achievements = () => {
                 {achievement_data.profile?.achievements[0]?.Achiement?.name}
                 {/* SPINSHOT ROOKIE */}
               </h1>
-              <h1 className="text-pearl text-xs sm:text-md">
+              <h1 className="text-pearl text-[8px] sm:text-sm">
               {achievement_data.profile?.achievements[0]?.Achiement?.description}
                 {/* Win your first Match */}
               </h1>
@@ -47,7 +47,7 @@ const Achievements = () => {
               {achievement_data.profile?.achievements[1]?.Achiement?.name}
                 {/* SPINSHOT MARATHON */}
               </h1>
-              <h1 className="text-pearl text-xs sm:text-md">
+              <h1 className="text-pearl text-[8px] sm:text-sm">
               {achievement_data.profile?.achievements[1]?.Achiement?.description}
                 {/* Win your first Match */}
               </h1>
@@ -70,7 +70,7 @@ const Achievements = () => {
               {achievement_data.profile?.achievements[2]?.Achiement?.name}
                 {/* UNTOUCHABLE */}
               </h1>
-              <h1 className="text-pearl text-xs sm:text-md">
+              <h1 className="text-pearl text-[8px] sm:text-sm">
               {achievement_data.profile?.achievements[2]?.Achiement?.description}
                 {/* Win a match without your opponent scoring a single point */}
               </h1>
@@ -85,7 +85,7 @@ const Achievements = () => {
               {achievement_data.profile?.achievements[3]?.Achiement?.name}
                 {/* AMBASSADOR */}
               </h1>
-              <h1 className="text-pearl text-xs sm:text-md">
+              <h1 className="text-pearl text-[8px] sm:text-sm">
               {achievement_data.profile?.achievements[3]?.Achiement?.description}
                 {/* Play the First match with your friend */}
               </h1>

@@ -1,129 +1,129 @@
 import test1 from "../../../public/test1.svg";
 import Image from "next/image";
-import Example from "../ui/DropDown/menu";
-import accept from "../../../public/active.svg"
-import refuse from "../../../public/unactive.svg"
-import DropDown from "../ui/DropDown/Dropdown";
+import Example from "../ui/FolderDropDown/menu";
+import accept from "../../../public/active.svg";
+import refuse from "../../../public/unactive.svg";
+import DropDown from "../ui/FolderDropDown/Dropdown";
 
 const ContentFriendsRequests = () => {
-    const array = [
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "TeeJee",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "SKNAHS",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "FRAG33R",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "/API",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "l3zawa",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "Navoos",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "PonPon",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-        {
-          icon: test1,
-          email: "tajiayoub35@gmail.com",
-          name: "MAR1",
-        },
-      ];
+  const array = [
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "TeeJee",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "SKNAHS",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "FRAG33R",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "/API",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "l3zawa",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "Navoos",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "PonPon",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+    {
+      icon: test1,
+      email: "tajiayoub35@gmail.com",
+      name: "MAR1",
+    },
+  ];
 
-	const handleClick = () => {
+  const handleClick = () => {
     console.log("hello world from the other side");
   };
 
-	const menu = [
+  const menu = [
     { content: "Accept", click: handleClick, icon: accept },
     { content: "Refuse", click: handleClick, icon: refuse },
   ];

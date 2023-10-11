@@ -4,12 +4,12 @@ import grandMasterLogo from "./../../../public/grandMasterLogo.svg";
 import eliteLogo from "./../../../public/eliteLogo.svg";
 import veteraneLogo from "./../../../public/veteranLogo.svg";
 import level from "./../../../public/levleIcon.svg";
-import { SignOut } from "@/Components/ui/DropDown/ArrayIcon";
-import DropdownUser from "@/Components/ui/DropDown/DropdownUser";
+import { SignOut } from "@/Components/ui/FolderDropDown/ArrayIcon";
+import DropdownUser from "@/Components/ui/FolderDropDown/DropdownUser";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../../redux_tool";
-import { logos } from "@/Components/ui/DropDown/ArrayIcon";
+import { logos } from "@/Components/ui/FolderDropDown/ArrayIcon";
 
 const Levle = (props: any) => {
   const opned = props.opne;
@@ -19,9 +19,9 @@ const Levle = (props: any) => {
 
   const getMyRank = (rank: number) => {
     setRank(Math.floor(rank));
-    const nb:any = (rank % 1).toFixed(2);
-    const print:any = nb * 100;
-    setLevle(0);
+    const nb = (rank % 1).toFixed(2);
+    const print = parseInt(nb) * 100;
+    setLevle(print);
   };
 
   const setMyRank = (rank: number) => {

@@ -2,13 +2,13 @@ import React, { useEffect, useRef } from "react";
 import { Engine, Render, World, Bodies, Body, Events } from "matter-js";
 
 const GameExpert = () => {
-  const canvasRef = useRef<HTMLCanvasElement | any>();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const ballRef = useRef<any>(null);
 
   useEffect(() => {
     const engine = Engine.create();
     const render = Render.create({
-      canvas: canvasRef.current,
+      canvas: canvasRef.current!,
       engine: engine,
       options: {
         width: 650,
@@ -144,7 +144,7 @@ const GameExpert = () => {
 
     function handleMouseMove(event: any) {
       let mouseX;
-      let newX: number = 0;
+      let newX = 0;
       if (canvasRef.current) {
         mouseX = event.clientX - canvasRef.current.getBoundingClientRect().left;
         newX = Math.min(

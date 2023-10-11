@@ -1,6 +1,6 @@
-import SideBar from "../ui/Sidebar/sidebar";
+import SideBar from "../ui/Sidebar/sideBar";
 import Image from "next/image";
-import game from "../../../public/game.svg"
+import game from "../../../public/game.svg";
 
 const GamePage = () => {
   return (

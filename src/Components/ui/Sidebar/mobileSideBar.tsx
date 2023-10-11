@@ -5,7 +5,6 @@ import friend from "../../../../public/friend.svg";
 import message from "../../../../public/message.svg";
 import profile from "../../../../public/profile.svg";
 import game from "../../../../public/game.svg";
-import notification from "../../../../public/notification.svg";
 import test1 from "../../../../public/test1.svg";
 import { MouseEvent, useState } from "react";
 import { useRouter } from "next/router";

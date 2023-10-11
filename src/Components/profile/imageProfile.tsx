@@ -46,7 +46,7 @@ const ImageProfile = (props: any) => {
         <input type="" className="hidden " onClick={Open} />
         <div className=" flex justify-center items-center bg-purple  rounded-3xl ">
         {handelMous && (
-          <div className={` rounded-3xl  duration-300 hover:bg-white flex justify-center items-center flex-col  transition-all absolute `}>
+          <div className={` rounded-3xl  duration-300  flex justify-center items-center flex-col  transition-all absolute `}>
             <Image className={``} src={email} alt="" />
           </div>
         )}

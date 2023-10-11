@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
-import OtpVerification from "../Inputs/OtpVerification";
+import OtpVerification from "../inputs/otpVerification";
 import scanne from "../../../../public/scanne.svg";
 import CodeQR from "../../../../public/CodeQR.svg";
 import Image from "next/image";
@@ -42,7 +42,8 @@ const TowFactor = (props: { isActive: boolean; Switch: Function }) => {
       props.isActive == true ? props.Switch(false) : props.Switch(true);
     }
   };
-  const handleOpen1 = () => props.Switch(false);
+
+  const handleClosed = () => props.Switch(false);
 
   function generateRandomCode() {
     const min = 100000;
@@ -92,7 +93,7 @@ const TowFactor = (props: { isActive: boolean; Switch: Function }) => {
                   height: `${width}px`,
                 }}
                 inputFocusStyle={{ borderColor: "blue" }}
-                onComplete={(value, index) => {}}
+                // onComplete={(value, index) => {}}
                 autoSelect={true}
                 regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
               />
@@ -102,13 +103,13 @@ const TowFactor = (props: { isActive: boolean; Switch: Function }) => {
         <DialogFooter className="space-x-3">
           <button
             className="text-very-dark-purple border-none"
-            onClick={handleOpen1}
+            onClick={handleClosed}
           >
             <span className="font-Passion-One text-lg">close</span>
           </button>
           <button
             className=" bg-peridot rounded-full w-28 h-9"
-            onClick={handleOpen1}
+            onClick={handleClosed}
           >
             <span className="text-very-dark-purple font-Passion-One text-lg">
               Verify

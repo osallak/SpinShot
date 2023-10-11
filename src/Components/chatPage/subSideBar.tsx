@@ -1,4 +1,4 @@
-import SearchInput from "@/Components/ui/Inputs/searchInput";
+import SearchInput from "@/Components/ui/inputs/searchInput";
 import dataSubSideBar from "@/types/messagesArrays";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
@@ -6,11 +6,11 @@ import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";
 import messagesIcon from "../../../public/messagesIcon.svg";
 import test1 from "../../../public/test1.svg";
-import IconButton from "../ui/Buttons/IconButton";
+import IconButton from "../ui/buttons/IconButton";
 import axios from "axios";
 
 const ayoubToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiMGM0ZjQ0ODMtNDI5Ny00ZWFkLTg1NWYtOGVhNjcyOTIwYmRmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2MDAzMzMsImV4cCI6MTY5NjY4NjczM30.3JyzTZBDHdFfUMRwu11tNFLngGucY7nH1YpCl1KSnlI";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiMGM0ZjQ0ODMtNDI5Ny00ZWFkLTg1NWYtOGVhNjcyOTIwYmRmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2MDAzMzMsImV4cCI6MTY5NjY4NjczM30.3JyzTZBDHdFfUMRwu11tNFLngGucY7nH1YpCl1KSnlI";
 
 function SubSideBar(props: {
   open: boolean;
@@ -32,9 +32,9 @@ function SubSideBar(props: {
     try {
       const res = await axios.get(`http://e3r10p14.1337.ma:3001/room/all`, {
         headers: {
-          Authorization: `Bearer ${ayoubToken}`
-        }
-      })
+          Authorization: `Bearer ${ayoubToken}`,
+        },
+      });
       console.log("response from explore channel: ", res.data);
     } catch (error: any) {
       console.log("error from explore channel: ", error);
@@ -51,7 +51,7 @@ function SubSideBar(props: {
     //       Authorization: `Bearer ${ayoubToken}`
     //     },
     //     params: {
-    //       type: 
+    //       type:
     //     }
     //   })
     // }

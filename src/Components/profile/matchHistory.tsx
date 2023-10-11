@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Pagination from "../ui/FolderPagination/pagination";
+import Pagination from "../ui/folderPagination/pagination";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
-import ip from "@/endpoint/ip";
+import ip from "@/endpoint/api";
 import Matchs from "./matchs";
 
 const MatchHistory = () => {
@@ -16,7 +16,7 @@ const MatchHistory = () => {
   }
 
   const [totalPages, setTotalPages] = useState(0);
-  const [posts, setPosts] = useState<any>([]); //todo create interface type
+  const [posts, setPosts] = useState<any>([]);
   const [page, setPage] = useState<number>(1);
   const [country, setCountry] = useState(1);
 

@@ -13,7 +13,7 @@ import game from "../../../public/game.svg";
 import sendMessageIcon from "../../../public/sendMessage.svg";
 import test1 from "../../../public/test1.svg";
 import trash from "../../../public/trash.svg";
-import DropDown from "../ui/FolderDropDown/Dropdown";
+import DropDown from "../ui/folderDropDown/dropdown";
 import dataConversation from "@/types/messagesArrays";
 import { io } from "socket.io-client";
 

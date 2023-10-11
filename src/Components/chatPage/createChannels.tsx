@@ -10,17 +10,16 @@ import exportChannelsIcon from "../../../public/ExportChannels.svg";
 import { Dialog, Transition } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Fragment, MouseEvent, useState } from "react";
-import SimpleButton from "../ui/Buttons/SimpleButton";
+import SimpleButton from "../ui/buttons/simpleButton";
 import CreateChannelIcon from "../../../public/CreateChannel.svg";
 import SubModal from "./channelsStatus/subModal";
-import SwitchButton from "../ui/Buttons/SwitchButton";
+import SwitchButton from "../ui/buttons/switchButton";
 import axios from "axios";
 
 const ayoubToken =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiMGM0ZjQ0ODMtNDI5Ny00ZWFkLTg1NWYtOGVhNjcyOTIwYmRmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2MDAzMzMsImV4cCI6MTY5NjY4NjczM30.3JyzTZBDHdFfUMRwu11tNFLngGucY7nH1YpCl1KSnlI";
 
 const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
-
   const [type, setType] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -40,8 +39,8 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
           type: type,
           name: name,
           password: password,
-        }
-      })
+        },
+      });
     } catch (error: any) {
       console.log("error from create channels: ", error);
     }

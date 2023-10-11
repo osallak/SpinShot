@@ -1,6 +1,6 @@
 import Racket from "../../../public/racket.svg";
 import Image from "next/image";
-import SimpleButton from "../ui/Buttons/SimpleButton";
+import SimpleButton from "../ui/buttons/simpleButton";
 import RacketThreeD from "./RacketThreeD";
 import { MouseEvent, KeyboardEvent } from "react";
 import { useRouter } from "next/router";

@@ -1,11 +1,11 @@
-import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
+import SimpleButton from "@/Components/ui/buttons/simpleButton";
 import React, { useState } from "react";
-import PasswordButton from "@/Components/ui/Buttons/PasswordButton";
+import PasswordButton from "@/Components/ui/buttons/passwordButton";
 import axios from "axios";
 import { useAppSelector } from "../../../redux_tool";
 
 import toast, { Toaster } from "react-hot-toast";
-import ip from "@/endpoint/ip";
+import ip from "@/endpoint/api";
 
 const ResetPassword = () => {
   const [password0, setPassword0] = useState(false);
@@ -33,7 +33,9 @@ const ResetPassword = () => {
   const hendleChange = () => {
     const parss = /^.{6,}$/;
     {
-      (password == "1234567" && parss.test(ConfirmPassword)) ? hendleUpdata() : notify();
+      password == "1234567" && parss.test(ConfirmPassword)
+        ? hendleUpdata()
+        : notify();
     }
   };
 
@@ -60,9 +62,8 @@ const ResetPassword = () => {
   };
 
   const notify = () => {
-    toast.success("Password incorrect ");
+    toast.error("Password incorrect ");
   };
-
 
   return (
     <div className=" space-y-20 md:space-y-36  h-[910px] ">

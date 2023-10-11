@@ -1,16 +1,16 @@
-import InputBorder from "@/Components/ui/Inputs/InputBorder";
+import InputBorder from "@/Components/ui/inputs/InputBorder";
 import { useEffect, useState, MouseEvent } from "react";
 import Image from "next/image";
 import user from "../../../../../public/user.svg";
 import mail from "../../../../../public/email.svg";
 import lock from "../../../../../public/lock.svg";
 import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
-import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
+import SimpleButton from "@/Components/ui/buttons/simpleButton";
 import { useRouter } from "next/router";
-import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
-import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
+import ConfirmationPassword from "@/Components/ui/inputs/confirmationPassword";
+import EmptyButton from "@/Components/ui/buttons/emptyButton";
 import axios from "axios";
-import ip from "@/endpoint/ip";
+import ip from "@/endpoint/api";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -79,7 +79,7 @@ const Signup = () => {
     e.preventDefault();
     if (isValid && isMatch) {
       try {
-        await axios.post(`${ip}/auth/local/signup`, {
+        await axios.post(`${ip}/auth/signup/local`, {
           email,
           username,
           password,
@@ -88,7 +88,7 @@ const Signup = () => {
       } catch (error: any) {
         setErrorMessage(error?.response?.data?.message);
         setError(true);
-        console.log("error from signup: ", error)
+        console.log("error from signup: ", error);
       }
     }
   };

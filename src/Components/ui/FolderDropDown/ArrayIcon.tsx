@@ -137,6 +137,16 @@ export const ArrayAvatar = [
   {id: 28, icon: test1},
   {id: 29, icon: test1},
   {id: 30, icon: test1},
+  {id: 29, icon: test1},
+  {id: 30, icon: test1},
+  {id: 29, icon: test1},
+  {id: 30, icon: test1},
+  {id: 29, icon: test1},
+  {id: 30, icon: test1},
+  {id: 29, icon: test1},
+  {id: 30, icon: test1},
+  {id: 29, icon: test1},
+  {id: 30, icon: test1},
 ];
 
 export const SignOut = [{ icon: signout, name: "Sign out" }];

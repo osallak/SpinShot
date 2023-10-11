@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
-import SubSidebar from "../ui/FolderSubsidebar/subSidebar";
+import SubSidebar from "../ui/profileSubsidebar/subSidebar";
 import ImageProfile from "./imageProfile";
 import Levle from "./level";
 import PersonalInformation from "./personalInformation";
+import Achievements from "./userAchievements.tsx/achievements";
 import MatchHistory from "./matchHistory";
-import Achievements from "./achievements";
 import ResetPassword from "./resetPassword";
 import { useSelector } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../../../redux_tool";
 import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
-import SideBar from "../ui/Sidebar/sideBar";
-import SubsidebarSecond from "../ui/FolderSubsidebar/subsidebarSecond";
-import SidebarMobile from "../ui/Sidebar/sidebarMobile";
-import NavbarMobile from "../ui/FolderNavbar/navbarMobile";
+import SideBar from "../ui/folderSidebar/sideBar";
+import SubsidebarSecond from "../ui/profileSubsidebar/subsidebarSecond";
+import SidebarMobile from "../ui/folderSidebar/sidebarMobile";
+import NavbarMobile from "../ui/folderNavbar/navbarMobile";
 import TowFactor from "../ui/twoFactorauth/twoFactor";
-import UploadImage from "../ui/uploadImage/uploadImage";
+import UploadImage from "../ui/folderUploadImage/uploadImage";
 import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 
 const ProfilePage = () => {
   const [isopen, setMenu] = useState(false);
@@ -35,9 +36,10 @@ const ProfilePage = () => {
   const [width, setWidth] = useState<number>();
 
   const Router = useRouter();
-
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (token) {
       dispatch(getProfile());
       handleResize();

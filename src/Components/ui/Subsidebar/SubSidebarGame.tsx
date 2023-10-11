@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import SimpleButton from "../Buttons/SimpleButton";
 import Mode from "./Mode";
-import Maps from "./maps";
+import Maps from "./Maps";
 
 const SubSidebarGame = (props: any) => {
   const hendleUpdata = () => {};
@@ -13,7 +13,7 @@ const SubSidebarGame = (props: any) => {
   });
 
   const changeBackgroundmap = (mapId: string, newColor: string) => {
-    const updatedBackgroundmap = {
+    const updatedBackgroundmap: any = {
       map1: "",
       map2: "",
       map3: "",

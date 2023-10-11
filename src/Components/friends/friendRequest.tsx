@@ -6,7 +6,7 @@ import { MouseEvent } from "react";
 import { motion } from "framer-motion";
 import accept from "../../../public/active.svg"
 import refuse from "../../../public/unactive.svg"
-import DropDown from "../ui/dropDown/dropDown";
+import DropDown from "../ui/DropDown/Dropdown";
 
 const FriendsRequest = () => {
   const array = [

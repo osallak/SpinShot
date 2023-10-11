@@ -19,9 +19,9 @@ const Levle = (props: any) => {
 
   const getMyRank = (rank: number) => {
     setRank(Math.floor(rank));
-    const nb = (rank % 1).toFixed(2);
-    const print = nb * 100;
-    setLevle(print);
+    const nb:any = (rank % 1).toFixed(2);
+    const print:any = nb * 100;
+    setLevle(0);
   };
 
   const setMyRank = (rank: number) => {

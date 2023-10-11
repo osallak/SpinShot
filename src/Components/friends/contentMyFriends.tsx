@@ -1,6 +1,6 @@
 import test1 from "../../../public/test1.svg";
 import Image from "next/image";
-import DropDown from "../ui/dropDown/dropDown";
+import DropDown from "../ui/DropDown/Dropdown";
 import newMessage from "../../../public/newMessage.svg"
 import block from "../../../public/block.svg"
 import game from "../../../public/game.svg"

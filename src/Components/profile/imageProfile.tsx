@@ -4,7 +4,7 @@ import email from "./../../../public/Email.svg";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../../redux_tool";
-import UploadImage from "../ui/UploadImage/uploadImage";
+import UploadImage from "../ui/UploadImage/UploadImage";
 
 const ImageProfile = (props: any) => {
   const [handelMous, setImage] = useState(false);

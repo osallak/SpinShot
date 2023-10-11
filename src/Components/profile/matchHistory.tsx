@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import imagePlayer from "../../../public/imagePlayer.svg";
 import Image from "next/image";
-import Pagination from "../ui/pagination/pagination";
+import Pagination from "../ui/pagination/Pagination";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import Marquee from "react-fast-marquee";
@@ -58,8 +58,8 @@ const MatchHistory = () => {
     }
   };
 
-  const totalMatch =
-    posts[0]?.user?.logs?.victories + posts[0]?.user?.logs?.defeats;
+  const totalMatch = 0;
+    // posts[0]?.user?.logs?.victories + posts[0]?.user?.logs?.defeats;
 
   return (
     <div className="  h-[1100px] c-gb:h-[900px] relative space-y-5 text-[10px] sm:text-sm md:text-lg c-3xl:text-2xl text-pearl">
@@ -78,14 +78,16 @@ const MatchHistory = () => {
               <div className="w-[50%] flex-col flex  justify-center items-center">
                 <h1>Wins</h1>
                 <h1 className="text-peridot">
-                  {posts[0]?.user?.logs?.victories}
+									3
+                  {/* {posts[0]?.user?.logs?.victories} */}
                 </h1>
               </div>
               <div className="h-[70%]"></div>
               <div className="w-[50%] flex flex-col items-center">
                 <h1>Loses</h1>
                 <h1 className="text-red-900">
-                  {posts[0]?.user?.logs?.defeats}
+									4
+                  {/* {posts[0]?.user?.logs?.defeats} */}
                 </h1>
               </div>
             </div>

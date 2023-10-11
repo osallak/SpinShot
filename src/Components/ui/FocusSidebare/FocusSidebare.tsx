@@ -1,8 +1,14 @@
-import React from 'react'
+import Reac from 'react'
+import Image from 'next/image'
 
 export default function FocusSidebare() {
   return (
     <div className="backdrop:blur bg-white/10 space-y-4  w-[20%] relative sm:hidden flex justify-between items-center md:block rounded-[20px]">
+    </div>
+  )
+}
+
+{/*
       <div className="w-full flex flex-col space-y-14">
         <div className="flex justify-center items-center w-full h-full  text-[35px] font-Poppins font-extrabold text-pearl">
           <h1>Profile</h1>
@@ -12,9 +18,7 @@ export default function FocusSidebare() {
           </div>
         </div>
       </div>
-      {/* className={`font-Poppins width-[100%] text-white  mt-4 ml-5 mr-5`} */}
       <div className={`font-Poppins text-pearl border-green-500 text-[1.32rem] `} >
-        {/* className={`2xl:w-80  md:w-60 lg:text-[1.1rem] 2xl:text-[1.32rem] rounded-[20px] md:pt-3 md:pb-3 xl:pt-5 xl:pb-5 2xl:pt-7 2xl:pb-7 2xl:pl-12 xl:pl-7 md:pl-7  ${subbackground === button.id ? ' bg-very-dark-purple' : ''}`} onClick={() => changeSubBackground(button.id)} */}
         {buttons.map((button) => (
           <div key={button.id} className={`flex justify-center items-center rounded-2xl xl:text-xl lg:text-lg md:text-md sm:text-sm w-full h-20`}>
             <button className={`w-[90%] h-full rounded-2xl flex justify-center items-center ${subbackground === button.id ? ' bg-very-dark-purple' : ''}`} onClick={() => changeSubBackground(button.id)}>
@@ -28,7 +32,6 @@ export default function FocusSidebare() {
           <button className={` `} >Security</button>
           <button className="md:pl-24  2xl:pl-32" onClick={() => setClick(!isClick)}> <Image src={securityIcon} alt="" /> </button>
         </div>
-        {/* className={` 2xl:w-80 md:w-60 lg:text-[1.1rem] flex flex-row  items-center 2xl:text-[1.32rem] bg-${background}  rounded-[20px] xl:pt-5 xl:pb-5 md:pt-3 md:pb-3 pt-7 pb-7 2xl:pl-12 xl:pl-7 md:pl-8`} onClick={() => changeBackground} */}
         {isClick && (
           <div className="space-y-1">
             <div className="relative w-6 ml-20">
@@ -47,8 +50,5 @@ export default function FocusSidebare() {
               </div>
             </div>
           </div>
-        )}
       </div>
-    </div>
-  )
-}
+				*/}

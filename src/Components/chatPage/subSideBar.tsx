@@ -142,14 +142,16 @@ function SubSideBar(props: {
           <IconButton
             icon={CreateChannel}
             content="Create channel"
-            onclick={createChannels}
+						onclick={() => {}}
+            // onclick={createChannels}
           />
         </div>
         <div className="w-[45%] h-10 flex justify-center items-center">
           <IconButton
             icon={ExportChannels}
             content="Export channels"
-            onclick={exploreChannels}
+						onclick={() => {}}
+            // onclick={exploreChannels}
           />
         </div>
       </div>

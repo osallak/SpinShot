@@ -95,8 +95,8 @@ const SubsidebarSecond = (props: {
             <div
               className={` relative flex rounded-[12px] justify-between c-ml:text-xl 2xl:text-base xl:text-sm text-xs  w-[55%] left-[39%] bottom-[65px] xl:bottom-[65px] 2xl:bottom-[70px]  `}
             >
-              <button className="">Tow Factory</button>
-              <div className="relative flex justify-end w-12 h-6 c-gb:w-9 c-xs:w-10 ">
+              <button className="">Two Factor Auth</button>
+              <div className="relative flex justify-end w-12 h-6 c-gb:w-9 c-xs:w-1 ">
                 <ToggleButton
                   isActive={props.isActive}
                   setisActive={props.setisActive}

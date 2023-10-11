@@ -1,5 +1,5 @@
 import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
-import Country from "@/Components/ui/Buttons/country";
+import Country from "@/Components/ui/Buttons/Country";
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux_tool";
 import axios from "axios";

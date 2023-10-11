@@ -1,9 +1,9 @@
 import test1 from "../../../public/test1.svg";
 import Image from "next/image";
-import Example from "../ui/dropDown/menu";
+import Example from "../ui/DropDown/menu";
 import accept from "../../../public/active.svg"
 import refuse from "../../../public/unactive.svg"
-import DropDown from "../ui/dropDown/dropDown";
+import DropDown from "../ui/DropDown/Dropdown";
 
 const ContentFriendsRequests = () => {
     const array = [

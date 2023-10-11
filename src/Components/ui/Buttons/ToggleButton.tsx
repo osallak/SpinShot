@@ -3,9 +3,9 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import active from "../../../../public/active.svg";
 import unactive from "../../../../public/unactive.svg";
-import TowFactor from "../TowFactorauth/towFactor";
+import TowFactor from "../TowFactorauth/TowFactor";
 
-const ToggleButton = (props: { isActive: boolean; setisActive: Function }) => {
+const ToggleButton = (props: { isActive: boolean ; setisActive: Function }) => {
   const Switch = () => {
     props.setisActive(!props.isActive);
   };

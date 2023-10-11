@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import SubSidebar from "../ui/Subsidebar/subSidebar";
+import SubSidebar from "../ui/Subsidebar/SubSidebar";
 import ImageProfile from "./imageProfile";
 import Levle from "./level";
 import PersonalInformation from "./personalInformation";
@@ -10,11 +10,11 @@ import { useSelector } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../../../redux_tool";
 import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
 import SideBar from "../ui/Sidebar/sidebar";
-import SubsidebarSecond from "../ui/Subsidebar/subsidebarSecond";
+import SubsidebarSecond from "../ui/Subsidebar/SubsidebarSecond";
 import SidebarMobile from "../ui/Sidebar/SidebarMobile";
-import NavbarMobile from "../ui/Navbar/navbarMobile";
-import TowFactor from "../ui/TowFactorauth/towFactor";
-import UploadImage from "../ui/UploadImage/uploadImage";
+import NavbarMobile from "../ui/Navbar/NavbarMobile";
+import TowFactor from "@/Components/ui/TowFactorauth/TowFactor";
+import UploadImage from "../ui/UploadImage/UploadImage";
 
 const ProfilePage = () => {
   const [isopen, setMenu] = useState(false);
@@ -146,7 +146,7 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
-        {opened && pages == "/profile" && (
+        {opened && pages == "/Profile" && (
           <SubsidebarSecond
             isActive={isActive}
             setisActive={setisActive}
@@ -155,8 +155,8 @@ const ProfilePage = () => {
           />
         )}
         {isActive && (
-          <div className="z-50">
-            <TowFactor isActive={isActive} Switch={setisActive} />
+          <div className="z-5">
+            <TowFactor isActive={true} Switch={setisActive} />
           </div>
         )}
       </div>

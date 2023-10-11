@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import lock from "../../../../../public/lock.svg";
-import mail from "../../../../../public/email.svg";
+import mail from "../../../../../public/Email.svg";
 import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
 import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import InputBorder from "@/Components/ui/Inputs/InputBorder";
@@ -55,13 +55,10 @@ const Signin = () => {
   ) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        "http://34.95.172.25/auth/signin/local",
-        {
-          username,
-          password,
-        }
-      );
+      const res = await axios.post("http://34.95.172.25/auth/signin/local", {
+        username,
+        password,
+      });
       localStorage.setItem("token", res.data.token);
       console.log("token: " + localStorage.getItem("token"));
       Router.push(Path);
@@ -73,7 +70,9 @@ const Signin = () => {
 
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    Router.push("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2FMessages&response_type=code");
+    Router.push(
+      "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2FMessages&response_type=code"
+    );
     // try {
     //   await axios.get("http://34.95.172.25/auth/42");
     //   console.log("good");
@@ -125,42 +124,40 @@ const Signin = () => {
               }}
             >
               <div className=" flex justify-center items-center c-md:space-y-3 space-y-1 flex-col w-full h-full">
-              <div className="flex justify-center items-center w-full h-full flex-col c-md:space-y-5 space-y-3">
-                {SigninArray.map((SignIn, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]"
-                  >
-                    <InputBorder
-                      inputValue={SignIn.inputValue}
-                      setinputValue={SignIn.setinputValue}
-                      value={SignIn.Value}
-                      type={SignIn.type}
-                      PlaceHolder={SignIn.PlaceHolder}
-                      icon={SignIn.icon}
-                      Border={SignIn.Border}
-                      Color={SignIn.Color}
-                      BorderSize={2}
-                    />
-                  </div>
-                ))}
-              </div>
-              {error && (
-                <div className="text-red-900 h-[5px] font-Poppins text-sm">
-                  {errorMessage}
+                <div className="flex justify-center items-center w-full h-full flex-col c-md:space-y-5 space-y-3">
+                  {SigninArray.map((SignIn, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]"
+                    >
+                      <InputBorder
+                        inputValue={SignIn.inputValue}
+                        setinputValue={SignIn.setinputValue}
+                        value={SignIn.Value}
+                        type={SignIn.type}
+                        PlaceHolder={SignIn.PlaceHolder}
+                        icon={SignIn.icon}
+                        Border={SignIn.Border}
+                        Color={SignIn.Color}
+                        BorderSize={2}
+                      />
+                    </div>
+                  ))}
                 </div>
-              )}
+                {error && (
+                  <div className="text-red-900 h-[5px] font-Poppins text-sm">
+                    {errorMessage}
+                  </div>
+                )}
               </div>
               <div className="w-full flex justify-center items-center flex-col sm:space-y-12 space-y-8">
                 <div className="w-full flex justify-center items-center rounded-full">
                   <div className="b-sm:w-40 w-3/4 c-md:h-10 sm:h-10 h-9 flex justify-center items-center rounded-full">
-                  <SimpleButton
-                    Type="submit"
-                    onclick={(e) =>
-                      RedirectionFunction(e, "profile/profile")
-                    }
-                    content="Sign in"
-                  />
+                    <SimpleButton
+                      Type="submit"
+                      onclick={(e) => RedirectionFunction(e, "profile/profile")}
+                      content="Sign in"
+                    />
                   </div>
                 </div>
                 <div className="flex flex-col justify-center items-center c-md:space-y-10 space-y-3 w-full">
@@ -186,9 +183,13 @@ const Signin = () => {
           {widthsc && widthsc <= 1024 && (
             <div className="w-full flex flex-row justify-center items-center space-x-1">
               <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-                Don't have an account?
+                Don&apos;t have an account?
               </p>
-              <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign Up" />
+              <EmptyButton
+                flag="authentication"
+                onclick={(e) => redirection(e)}
+                content="Sign Up"
+              />
             </div>
           )}
         </div>
@@ -196,9 +197,13 @@ const Signin = () => {
       {widthsc && widthsc > 1024 && (
         <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center">
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-            Don't have an account?&nbsp;
+            Don&apos;t have an account?&nbsp;
           </p>
-          <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign Up" />
+          <EmptyButton
+            flag="authentication"
+            onclick={(e) => redirection(e)}
+            content="Sign Up"
+          />
         </div>
       )}
     </div>

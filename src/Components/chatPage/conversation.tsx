@@ -13,7 +13,7 @@ import game from "../../../public/game.svg";
 import sendMessageIcon from "../../../public/sendMessage.svg";
 import test1 from "../../../public/test1.svg";
 import trash from "../../../public/trash.svg";
-import DropDown from "../ui/dropDown/dropDown";
+import DropDown from "../ui/DropDown/Dropdown";
 import dataConversation from "@/types/messagesArrays";
 import { io } from "socket.io-client";
 
@@ -48,7 +48,7 @@ const Conversation = (props: {
 
   function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
-      handleSendMessage(event);
+      // handleSendMessage(event);
     }
   }
 
@@ -228,7 +228,9 @@ const Conversation = (props: {
                   onChange={(event) => setMessage(event.target.value)}
                 />
               </div>
-              <button onClick={(event) => handleSendMessage(event)}>
+              <button onClick={(event) => {
+								// handleSendMessage(event);
+							}}>
                 <Image
                   src={sendMessageIcon}
                   alt="send Message Input"

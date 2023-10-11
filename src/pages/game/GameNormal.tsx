@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Engine, Render, World, Bodies, Body, Events } from "matter-js";
 
 const GameHard = () => {
-  const canvasRef = useRef<HTMLCanvasElement | null>();
+  const canvasRef = useRef<HTMLCanvasElement | any>();
   const ballRef = useRef<any>(null);
 
   useEffect(() => {
@@ -110,7 +110,7 @@ const GameHard = () => {
 
     function handleMouseMove(event: any) {
       let mouseX;
-      let newX;
+      let newX = 0;
       if (canvasRef.current) {
         mouseX = event.clientX - canvasRef.current.getBoundingClientRect().left;
         newX = Math.min(

@@ -61,6 +61,7 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^8.0.1",
+    "@types/country-list": "^2.1.2",
     "@types/react-twemoji": "^0.4.1",
     "daisyui": "^3.6.4",
     "file-loader": "^6.2.0",

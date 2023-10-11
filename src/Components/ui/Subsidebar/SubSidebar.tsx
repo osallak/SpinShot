@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import securityIcon from "./../../../../public/securityIcon.svg";
 import securityIcon2 from "./../../../../public/securityIcon2.svg";
 import { buttons } from "@/Components/ui/DropDown/ArrayIcon";
-import ChangPasswd from "../upDatePasswd/changPasswd";
+import Security from "../upDatePasswd/changPasswd";
 
 const SubSidebar = (props:any) => {
 
@@ -67,7 +67,7 @@ const SubSidebar = (props:any) => {
           </div>
         ))}
           {isClick && (
-          <ChangPasswd handlePasswd={handlePasswd} background={true} isActive={props.isActive} setisActive={props.setisActive}/>
+          <Security handlePasswd={handlePasswd} background={true} isActive={props.isActive} setisActive={props.setisActive}/>
         )}
       </div>
     </div>

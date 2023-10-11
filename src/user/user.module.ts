@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { UserService } from './user.service';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
-import { UserController } from './controller/user.controller';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
 
 @Module({
   exports: [UserService, PrismaService],

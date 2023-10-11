@@ -1,18 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  Allow,
-  IsEmail,
-  IsNotEmpty,
-  Matches,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, Matches, MinLength } from 'class-validator';
 import { string } from 'joi';
 
 export class CreateUserDto {
-  @Matches(/^[a-zA-Z0-9_-]{3,16}$/, {
-    message:
-      'Username must be between 3 and 16 characters and can contain only letters, numbers, underscores and dashes',
-  })
   @ApiProperty({
     description: 'The username of the user',
     type: String,
@@ -21,14 +11,18 @@ export class CreateUserDto {
     example: 'john_doe',
   })
   @IsNotEmpty()
+  @Matches(/^[a-zA-Z0-9_-]{3,16}$/, {
+    message:
+      'Username must be between 3 and 16 characters and can contain only letters, numbers, underscores and dashes',
+  })
   username: string;
 
-  @IsEmail()
   @ApiProperty({
     description: 'The email of the user',
     type: String,
     example: 'valid@email.com',
   })
+  @IsEmail()
   @IsNotEmpty()
   email: string;
 

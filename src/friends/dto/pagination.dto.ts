@@ -11,5 +11,5 @@ export class FriendsQueryDto extends PaginationQueryDto {
     })
     @IsOptional()
     @IsEnum(FriendshipStatus)
-    state: FriendshipStatus;
+    status: FriendshipStatus;
 }

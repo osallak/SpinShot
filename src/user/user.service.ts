@@ -1,3 +1,4 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import {
   BadRequestException,
   ConflictException,
@@ -7,15 +8,9 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { UserStatus, haveAchievement } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { DEFAULT_AVATAR } from 'src/global/constants/global.constants';
-import { Prisma, UserStatus, haveAchievement } from '@prisma/client';
-import { initUserLogs } from './helpers';
-import { v4 as uuidv4 } from 'uuid';
-import { achievements } from './constants';
-import { serializePaginationResponse, serializeUser } from './helpers';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import {
   PaginationResponse,
@@ -25,8 +20,19 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import { SerialisedUser, User } from 'src/types';
 import { serializeService } from 'src/global/services';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { SerialisedUser, User } from 'src/types';
+import { v4 as uuidv4 } from 'uuid';
+import { CreateUserDto } from '../auth/dto/create-user.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { achievements } from './constants';
 import { SearchDto } from './dto/search.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  initUserLogs,
+  serializePaginationResponse,
+  serializeUser,
+} from './helpers';
+import { FortyTwoDto } from 'src/auth/dto/FortyTwo.dto';
 
 @Injectable()
 export class UserService {
@@ -167,7 +173,7 @@ export class UserService {
 
   async verifyEmail(email: string, reject: boolean): Promise<boolean> {
     const user: User = await this.findOneByEmail(email);
-    if (!user) throw new  NotFoundException('user not found');
+    if (!user) throw new NotFoundException('user not found');
 
     if (user.mailVerified) throw new BadRequestException('Link already used');
 
@@ -211,48 +217,48 @@ export class UserService {
   }
 
   async mergeAccounts(profile: any): Promise<User> {
-      return await this.prisma.user.update({
-        where: { email: profile.email },
-        data: {
-          is42User: true,
-          firstName: profile.firstName,
-          lastName: profile.lastName,
-          avatar: profile.avatar,
-          status: UserStatus.ONLINE, //todo: check this
-          country: profile.country,
-        },
-      });
+    return await this.prisma.user.update({
+      where: { email: profile.email },
+      data: {
+        is42User: true,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        avatar: profile.avatar,
+        status: UserStatus.ONLINE, //todo: check this
+        country: profile.country,
+      },
+    });
   }
 
-  async getUser(username: string): Promise<SerialisedUser> {
-      const user: User = await this.prisma.user.findUnique({
-        where: {
-          username,
-        },
-        include: {
-          logs: {
-            select: {
-              victories: true,
-              defeats: true,
-              level: true,
-              rank: true,
-            },
+  async getUser(id: string): Promise<SerialisedUser> {
+    const user: User = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        logs: {
+          select: {
+            victories: true,
+            defeats: true,
+            level: true,
+            rank: true,
           },
-          HaveAchievement: {
-            select: {
-              level: true,
-              Achiement: {
-                select: {
-                  name: true,
-                  description: true,
-                },
+        },
+        HaveAchievement: {
+          select: {
+            level: true,
+            Achiement: {
+              select: {
+                name: true,
+                description: true,
               },
             },
           },
         },
-      });
-      if (!user) throw new NotFoundException('Invalid username');
-      return serializeUser(user);
+      },
+    });
+    if (!user) throw new NotFoundException('Resource not found');
+    return serializeUser(user);
   }
 
   async getUserGames(
@@ -266,6 +272,40 @@ export class UserService {
         take: limit,
         where: {
           OR: [{ userId: id }, { opponentId: id }],
+        },
+        select: {
+          History: {
+            select: {
+              userScore: true,
+              opponentScore: true,
+            },
+          },
+          opponent: {
+            select: {
+              id: true,
+              username: true,
+              avatar: true,
+              country: true,
+              logs: {
+                select: {
+                  rank: true,
+                },
+              },
+            },
+          },
+          user: {
+            select: {
+              logs: {
+                select: {
+                  defeats: true,
+                  victories: true,
+                },
+              },
+            },
+          },
+          startedAt: true,
+          opponentId: true,
+          userId: true,
         },
       }),
       this.prisma.game.count(),
@@ -288,7 +328,7 @@ export class UserService {
     };
   }
 
-  async updateAvatar(id: string, publicUrl: string): Promise<User> {
+  async updateAvatar(id: string, publicUrl: string): Promise<any> {
     return await this.prisma.user.update({
       where: { id },
       data: { avatar: publicUrl },
@@ -350,5 +390,39 @@ export class UserService {
         });
       }
     });
+  }
+
+  async registerFortyTwoUser(user: FortyTwoDto): Promise<User> {
+    //add data validation
+
+    const generatedUsername = 'user' + '_' + uuidv4().slice(0, 8);
+
+    user = await this.prisma.user.upsert({
+      where: { email: user.email },
+      update: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        is42User: true,
+        username: generatedUsername,
+        avatar: user.avatar,
+        country: user.country,
+      },
+      create: {
+        username: generatedUsername,
+        email: user.email,
+        avatar: user.avatar,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        is42User: true,
+        status: UserStatus.OFFLINE,
+        country: user.country,
+        mailVerified: true,
+        logs: {
+          create: initUserLogs(),
+        },
+      },
+    });
+
+    return user;
   }
 }

@@ -28,7 +28,8 @@ model User {
   logs                 Logs?
   LeftFriendship       Friendship[]           @relation("left")
   RightFriendship      Friendship[]           @relation("right")
-  Game                 Game[]
+  User                 Game[]                 @relation("user")
+  Opponnent            Game[]                 @relation("opponent")
   HaveAchievement      haveAchievement[]
   RoomChatConversation RoomChatConversation[]
   Sent                 Conversation[]         @relation("sender")
@@ -66,24 +67,17 @@ model Friendship {
 }
 
 //Game
-model Opponent {
-  id       String @id @default(uuid())
-  username String @unique
-  Game     Game[]
-
-  @@map("opponent")
-}
 
 model Game {
   id         String   @id @default(uuid())
   userId     String   @map("user_id")
   opponentId String
-  mode       Mode
+  mode       Mode //! deprecated
   map        Map
   startedAt  DateTime @default(now()) @map("started_at")
 
-  opponent Opponent @relation(fields: [opponentId], references: [id])
-  user     User     @relation(fields: [userId], references: [id])
+  opponent User     @relation("opponent", fields: [opponentId], references: [id])
+  user     User     @relation("user", fields: [userId], references: [id])
   History  History?
   accepted Boolean
 

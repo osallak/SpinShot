@@ -1,11 +1,10 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { FriendshipStatus } from '@prisma/client';
-import { PaginationResponse } from 'src/global/interfaces';
+import { PaginationResponse, Response } from 'src/global/interfaces';
+import { serializeService } from 'src/global/services';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from 'src/types';
 import { FriendsQueryDto } from './dto/pagination.dto';
-import { serializeService } from 'src/global/services';
-import { Response } from 'src/global/interfaces';
 
 @Injectable()
 export class FriendsService {
@@ -34,17 +33,17 @@ export class FriendsService {
           status: FriendshipStatus.PENDING,
         },
       });
-   } else {
-    await this.prismaService.friendship.create({
-      data: {
-        leftUserId: sortedIds[0],
-        rightUserId: sortedIds[1],
-        status: FriendshipStatus.PENDING,
-        sender: userId,
-      }
-    });
-   }
-    //todo: send notif to client
+    } else {
+      await this.prismaService.friendship.create({
+        data: {
+          leftUserId: sortedIds[0],
+          rightUserId: sortedIds[1],
+          status: FriendshipStatus.PENDING,
+          sender: userId,
+        },
+      });
+    }
+    console.log('friendship', friendship);
     return {
       status: 201,
       message: 'Added successfully',
@@ -65,7 +64,7 @@ export class FriendsService {
           AND: [{ rightUserId: user.id }, { leftUserId: { lt: user.id } }],
         },
       ],
-      state: query.state,
+      status: query.status,
     };
     const select = {
       id: true,
@@ -89,8 +88,20 @@ export class FriendsService {
         where,
       }),
     ]);
+
+    const friends = friendships.map((friendship) => {
+      const friend =
+        friendship.leftUser.id === user.id
+          ? friendship.rightUser
+          : friendship.leftUser;
+      return {
+        ...friend,
+        status: friendship.status,
+        sender: friendship.sender,
+      };
+    });
     return serializeService.serializePaginationResponse(
-      friendships,
+      friends,
       totalCount,
       query.limit,
     );
@@ -126,6 +137,8 @@ export class FriendsService {
         },
       },
     });
+    if (!friendship)
+      throw new BadRequestException('No pending request to accept');
     if (
       (friendship.status in FriendshipStatus &&
         friendship.status !== 'PENDING') ||
@@ -167,7 +180,7 @@ export class FriendsService {
       where: {
         leftUserId_rightUserId,
       },
-      data: { status: FriendshipStatus.NOT_FOUND },
+      data: { status: FriendshipStatus.NOT_FOUND, blocker: null },
     });
     return {
       status: 201,
@@ -188,10 +201,11 @@ export class FriendsService {
     });
     if (friendship.status !== FriendshipStatus.ACCEPTED)
       throw new BadRequestException('cannot unfriend non-friend');
-    await this.prismaService.friendship.delete({
+    await this.prismaService.friendship.update({
       where: {
         leftUserId_rightUserId,
       },
+      data: { status: FriendshipStatus.NOT_FOUND },
     });
     return {
       status: 201,
@@ -199,7 +213,7 @@ export class FriendsService {
     };
   }
 
-  async reject(userId: string, senderId): Promise<void> {
+  async reject(userId: string, senderId): Promise<Response> {
     const sortedIds: string[] = [userId, senderId].sort();
     const friendship = await this.prismaService.friendship.findUnique({
       where: {
@@ -224,5 +238,9 @@ export class FriendsService {
         status: FriendshipStatus.NOT_FOUND,
       },
     });
+    return {
+      status: 201,
+      message: 'request rejected'
+    }
   }
 }

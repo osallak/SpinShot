@@ -76,6 +76,7 @@ export class TwoFactorAuthService {
   public async validateTwoFactorAuthCode(
     user: any,
     code: TwoFaAuthDto,
+		status: boolean,
   ): Promise<Response> {
     return new Promise(async (resolve, reject) => {
       try {
@@ -91,7 +92,7 @@ export class TwoFactorAuthService {
           secret: u?.twoFactorAuthSecret,
         });
         if (isValid) {
-          await this.userService.updateData(user?.id, { twoFactorAuth: true });
+          await this.userService.updateData(user?.id, { twoFactorAuth: status });
           return resolve({
             status: 200,
             message: '2FA code is valid',
@@ -138,8 +139,8 @@ export class TwoFactorAuthService {
         });
       } catch (e) {
         return reject({
-          status: e.status,
-          message: e.message,
+          status: 500,
+          message: "Internal Server Error",
         });
       }
     });

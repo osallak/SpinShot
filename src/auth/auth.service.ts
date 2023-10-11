@@ -36,7 +36,7 @@ export class AuthService {
   ): Promise<JwtResponse> {
     const payload: JwtAuthPayload = {
       isTwoFaAuthenticated,
-      isTwoFactorEnable: user.twoFactorAuth,
+      isTwoFactorEnabled: user.twoFactorAuth,
       username: user.username,
       sub: user.id,
       iss: this.configService.get('JWT_ISSUER'),

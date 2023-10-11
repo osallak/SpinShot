@@ -50,6 +50,7 @@ export class TwoFactorAuthController {
       const res = await this.twoFactorAuthService.validateTwoFactorAuthCode(
         request?.user,
         code,
+				true,
       );
       return response.status(res.status).send(res.message);
     } catch (e) {
@@ -57,6 +58,25 @@ export class TwoFactorAuthController {
     }
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Post('turn-off-qr')
+  async turnOffTwoFactorAuth(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Body() code: TwoFaAuthDto,
+  ) {
+    try {
+      const res = await this.twoFactorAuthService.validateTwoFactorAuthCode(
+        request?.user,
+        code,
+				false,
+      );
+      return response.status(res.status).send(res.message);
+    } catch (e) {
+      return response.status(e.status).send(e.message);
+    }
+  }
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post('authenticate')

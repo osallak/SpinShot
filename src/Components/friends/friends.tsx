@@ -1,16 +1,15 @@
-import SideBar from "../ui/sideBar/sideBar";
+import SideBar from "../ui/Sidebar/sideBar";
 import axios from "axios";
 import FriendsRequest from "./friendRequest";
 import CurrentFriends from "./currentFriends";
 import MobileFriends from "./mobileFriends";
 import { useState, useEffect } from "react";
-import MobileSideBar from "../ui/sideBar/mobileSideBar";
-import NavBar from "../ui/navBar/navBar";
+import MobileSideBar from "../ui/Sidebar/mobileSideBar";
+import NavBar from "../ui/FolderNavbar/navBar";
 
 const FriendsPage = () => {
-
   const fetchData = async () => {
-    console.log(localStorage.getItem("token"))
+    console.log(localStorage.getItem("token"));
     const token = localStorage.getItem("token");
     function parseJwt(token: string) {
       var base64Url = token.split(".")[1];
@@ -38,18 +37,17 @@ const FriendsPage = () => {
           state: "ACCEPTED",
           page: 1,
           limit: 5,
-        }
+        },
       });
       console.log("response from friends: ", res);
-    } catch (error: any){
+    } catch (error: any) {
       console.log("error: ", error);
     }
-  }
-  
+  };
+
   useEffect(() => {
     fetchData();
-  }, [])
-
+  }, []);
 
   const [openSideBar, setOpenSideBar] = useState(false);
   return (

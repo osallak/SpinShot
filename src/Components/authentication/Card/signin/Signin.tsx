@@ -11,6 +11,7 @@ import Image from "next/image";
 import axios, { AxiosError } from "axios";
 import { log } from "console";
 import { errorMonitor } from "events";
+import ip from "@/endpoint/ip";
 
 const Signin = () => {
   const [username, setUsername] = useState("");
@@ -56,7 +57,7 @@ const Signin = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://34.95.172.25/auth/signin/local",
+        `${ip}/auth/local/signin`, 
         {
           username,
           password,
@@ -68,6 +69,7 @@ const Signin = () => {
     } catch (error: any) {
       // setErrorMessage(error.response.data.message);
       setError(true);
+      console.log("error from signin: ", error);
     }
   };
 
@@ -157,7 +159,7 @@ const Signin = () => {
                   <SimpleButton
                     Type="submit"
                     onclick={(e) =>
-                      RedirectionFunction(e, "profile/profile")
+                      RedirectionFunction(e, `profile/${username}`)
                     }
                     content="Sign in"
                   />
@@ -186,7 +188,7 @@ const Signin = () => {
           {widthsc && widthsc <= 1024 && (
             <div className="w-full flex flex-row justify-center items-center space-x-1">
               <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-                Don't have an account?
+                Don{'\''}t have an account?
               </p>
               <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign Up" />
             </div>
@@ -196,7 +198,7 @@ const Signin = () => {
       {widthsc && widthsc > 1024 && (
         <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center">
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-            Don't have an account?&nbsp;
+            Don{'\''}t have an account?&nbsp;
           </p>
           <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign Up" />
         </div>

@@ -87,7 +87,7 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
                     </p>
                   </div>
                   <div className="h-[85%] overflow-auto flex items-start justify-center sm:flex-row flex-col py-3">
-                    <SwitchButton setType={setType} />
+                    {/* <SwitchButton setType={setType} /> */}
                   </div>
                 </div>
                 <div className="mt-7 rounded-full w-full lg:h-full md:h-[50px] sm:h-[30px] h-[20px] flex justify-end items-center md:p-5 sm:p-3 p-1">

@@ -139,18 +139,18 @@ function SubSideBar(props: {
       )}
       <div className="flex justify-around items-center w-full h-[10%] min-h-[60px]">
         <div className="w-[45%] h-10 flex justify-center items-center">
-          <IconButton
+          {/* <IconButton
             icon={CreateChannel}
             content="Create channel"
             onclick={createChannels}
-          />
+          /> */}
         </div>
         <div className="w-[45%] h-10 flex justify-center items-center">
-          <IconButton
+          {/* <IconButton
             icon={ExportChannels}
             content="Export channels"
             onclick={exploreChannels}
-          />
+          /> */}
         </div>
       </div>
     </div>

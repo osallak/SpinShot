@@ -1,9 +1,9 @@
 import test1 from "../../../public/test1.svg";
 import Image from "next/image";
-import DropDown from "../ui/dropDown/dropDown";
-import newMessage from "../../../public/newMessage.svg"
-import block from "../../../public/block.svg"
-import game from "../../../public/game.svg"
+import DropDown from "../ui/FolderDropDown/Dropdown";
+import newMessage from "../../../public/newMessage.svg";
+import block from "../../../public/block.svg";
+import game from "../../../public/game.svg";
 
 const ContentMyFriends = () => {
   const array = [
@@ -44,11 +44,11 @@ const ContentMyFriends = () => {
     },
   ];
 
-	const handleClick = () => {
+  const handleClick = () => {
     console.log("hello world from the other side");
   };
 
-	const menu = [
+  const menu = [
     { content: "Message", click: handleClick, icon: newMessage },
     { content: "Block", click: handleClick, icon: block },
     { content: "Let't Play", click: handleClick, icon: game },

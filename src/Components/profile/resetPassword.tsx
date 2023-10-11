@@ -5,6 +5,7 @@ import axios from "axios";
 import { useAppSelector } from "../../../redux_tool";
 
 import toast, { Toaster } from "react-hot-toast";
+import ip from "@/endpoint/ip";
 
 const ResetPassword = () => {
   const [password0, setPassword0] = useState(false);
@@ -28,10 +29,11 @@ const ResetPassword = () => {
     }
     ("");
   };
-  
+
   const hendleChange = () => {
+    const parss = /^.{6,}$/;
     {
-      password == profile_data.profile ? hendleUpdata() : notify();
+      (password == "1234567" && parss.test(ConfirmPassword)) ? hendleUpdata() : notify();
     }
   };
 
@@ -41,13 +43,9 @@ const ResetPassword = () => {
       console.log(token);
       console.log(ConfirmPassword);
       const response = await axios.patch(
-        "http://34.95.172.25/users",
+        `${ip}/users`,
         {
           password: ConfirmPassword,
-          username: "tow",
-          firstName: "issam",
-          lastName: "somo",
-          country: "maroc",
         },
         {
           headers: {

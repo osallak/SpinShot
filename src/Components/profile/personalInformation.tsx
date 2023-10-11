@@ -1,9 +1,12 @@
 import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import Country from "@/Components/ui/Buttons/country";
 import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../redux_tool";
+import { useAppSelector } from "../../../redux_tool";
 import axios from "axios";
 import FormInput from "@/Components/ui/formInput/FormInput";
+import ip from "@/endpoint/ip";
+import toast, { Toaster } from "react-hot-toast";
+import test from "node:test";
 
 const PersonalInformation = (props: any) => {
   // const dispatch = useAppDispatch();
@@ -14,30 +17,47 @@ const PersonalInformation = (props: any) => {
   const [email, setEmail] = useState("");
   const [country, setCountry] = useState("");
 
+  const parseinInput = () => {
+    const namePattern = /^[A-Za-z\s]+$/;
+    if (namePattern.test(firstName))
+      return 1;
+    else if (namePattern.test(lastName))
+      return 1;
+    else if (namePattern.test(userName))
+      return 1;
+    return 0;
+  }
+
   const hendleUpdata = async () => {
+
     const my_data = new FormData();
     my_data.append("firstName", firstName);
     my_data.append("lastName", lastName);
     my_data.append("username", userName);
     my_data.append("country", country);
 
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.patch(
-        "http://e3r10p13.1337.ma:3000/users",
-        {
-          my_data
-        },
-        {
-          headers: {
-            Authorization:
-              `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikplc3N5Y2FfTHluY2giLCJzdWIiOiIxYjIyNzk5My02ZmI3LTRmMDgtOGNmNC04OTliNzQ1YmZiMjYiLCJpc3MiOiJzcGluc2hvdCIsImlhdCI6MTY5Njg4MTcxNSwiZXhwIjoxNjk2OTY4MTE1fQ.BcphZxRWilg2GouIL5FzDEo4Tkayqx8L_bQfPicaPPQ`,
+    if (parseinInput())
+      notify();
+    else
+    {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.patch(
+          `${ip}/users`,
+          {
+            my_data
           },
-        }
-      );
-      console.log(response);
-    } catch (error) {
-      console.error(error);
+          {
+            headers: {
+              Authorization:
+                `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -53,6 +73,10 @@ const PersonalInformation = (props: any) => {
         ? setEmail(e.target.value)
         : null;
     }
+  };
+
+  const notify = () => {
+    toast.success("Input incorrect ");
   };
 
 
@@ -116,6 +140,9 @@ const PersonalInformation = (props: any) => {
         <SimpleButton content="Save" onclick={hendleUpdata} />
         </div>
       </div>
+      <div>
+          <Toaster position="top-center" reverseOrder={false} />
+        </div>
     </div>
   );
 };

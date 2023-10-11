@@ -21,7 +21,7 @@ const ChangePhoto = (props:{ isActive:boolean, Switch:Function}) => {
           <DialogBody divider>
             .
           </DialogBody>
-          <DialogFooter>
+          <div>
             {/* <Button
               variant="text"
               color="red"
@@ -33,7 +33,7 @@ const ChangePhoto = (props:{ isActive:boolean, Switch:Function}) => {
             <Button variant="gradient" color="green" onClick={handleOpen}>
               <span>Confirm</span>
             </Button>
-          </DialogFooter>
+          </div>
         </Dialog>
       </div>
     );

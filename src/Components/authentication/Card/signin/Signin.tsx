@@ -1,25 +1,24 @@
-import { useRouter } from "next/router";
-import lock from "../../../../../public/lock.svg";
-import mail from "../../../../../public/email.svg";
-import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
-import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
-import InputBorder from "@/Components/ui/Inputs/InputBorder";
-import { MouseEvent, useState, useEffect } from "react";
 import ContinueWithIntra from "@/Components/ui/Buttons/ContinueWithIntra";
 import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
-import Image from "next/image";
-import axios, { AxiosError } from "axios";
-import { log } from "console";
-import { errorMonitor } from "events";
+import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
+import InputBorder from "@/Components/ui/Inputs/InputBorder";
 import ip from "@/utils/endPoint";
+import parseJwt from "@/utils/parsJwt";
+import axios from "axios";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { MouseEvent, useEffect, useState } from "react";
+import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
+import mail from "../../../../../public/email.svg";
+import lock from "../../../../../public/lock.svg";
+
+// the last version of signin without authentication with intra
 
 const Signin = () => {
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isValid, setisValid] = useState(true);
   const [widthsc, setwidthsc] = useState<number | undefined>(undefined);
-  const [isEmail, setisEmail] = useState(true);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const Router = useRouter();
@@ -52,7 +51,6 @@ const Signin = () => {
 
   const RedirectionFunction = async (
     e: MouseEvent<HTMLButtonElement>,
-    Path: string
   ) => {
     e.preventDefault();
     try {
@@ -64,12 +62,10 @@ const Signin = () => {
         }
       );
       localStorage.setItem("token", res?.data?.token);
-      Router.push(Path);
+      Router.push(`/profile/${parseJwt(JSON.stringify(localStorage.getItem("token"))).username}`);
     } catch (error: any) {
-      Router.push("/Friends/find")
       setErrorMessage(error?.response?.data?.message);
       setError(true);
-      console.log("error from signin:  ", error);
     }
   };
 
@@ -153,7 +149,7 @@ const Signin = () => {
                   <SimpleButton
                     Type="submit"
                     onclick={(e) =>
-                      RedirectionFunction(e, "/Friends")
+                      RedirectionFunction(e)
                     }
                     content="Sign in"
                   />
@@ -182,7 +178,7 @@ const Signin = () => {
           {widthsc && widthsc <= 1024 && (
             <div className="w-full flex flex-row justify-center items-center space-x-1">
               <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-                Don&apost have an account?
+                Don&apos;t have an account?
               </p>
               <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign Up" />
             </div>
@@ -192,7 +188,7 @@ const Signin = () => {
       {widthsc && widthsc > 1024 && (
         <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center">
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-            Don&apost have an account?&nbsp;
+            Don&apos;t have an account?&nbsp;
           </p>
           <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign Up" />
         </div>

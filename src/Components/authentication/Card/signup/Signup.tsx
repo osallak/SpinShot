@@ -1,16 +1,18 @@
+import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
+import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
+import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
 import InputBorder from "@/Components/ui/Inputs/InputBorder";
-import { useEffect, useState, MouseEvent } from "react";
+import ip from "@/utils/endPoint";
+import axios from "axios";
 import Image from "next/image";
-import user from "../../../../../public/user.svg";
+import { useRouter } from "next/router";
+import { MouseEvent, useEffect, useState } from "react";
+import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
 import mail from "../../../../../public/email.svg";
 import lock from "../../../../../public/lock.svg";
-import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
-import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
-import { useRouter } from "next/router";
-import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
-import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
-import axios from "axios";
-import ip from "@/utils/endPoint";
+import user from "../../../../../public/user.svg";
+
+//this is the last version of signup
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -87,7 +89,6 @@ const Signup = () => {
         Router.push(Path);
       } catch (error: any) {
         setErrorMessage(error.response.data.message);
-        console.log(error)
         setError(true);
       }
     }

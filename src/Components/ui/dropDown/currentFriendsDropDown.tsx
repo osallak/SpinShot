@@ -1,23 +1,21 @@
-import { Select, Option } from "@material-tailwind/react";
-import threePoint from "../../../../public/threePoint.svg";
-import Image from "next/image";
-import {
-  useState,
-  MouseEvent,
-  MouseEventHandler,
-  useEffect,
-  useRef,
-} from "react";
-import { useRouter } from "next/router";
-import parseJwt from "@/utils/parsJwt";
-import axios from "axios";
-import ip from "@/utils/endPoint";
-import newMessage from "../../../../public/newMessage.svg";
-import block from "../../../../public/block.svg";
-import game from "../../../../public/game.svg";
-import { useRecoilState } from "recoil";
 import { currentFriendsAtom } from "@/Components/context/recoilContext";
 import dataFriends from "@/types/friendsType";
+import ip from "@/utils/endPoint";
+import axios from "axios";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import {
+  MouseEvent,
+  useEffect,
+  useRef,
+  useState
+} from "react";
+import { useRecoilState } from "recoil";
+import block from "../../../../public/block.svg";
+import game from "../../../../public/game.svg";
+import newMessage from "../../../../public/newMessage.svg";
+import threePoint from "../../../../public/threePoint.svg";
+import unfriend from "../../../../public/unfriend.svg";
 
 const CurrentFriendsDropDown = (props: { id: string }) => {
   const [isOpen, setOpen] = useState(false);
@@ -60,9 +58,8 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
       Router.push("/Signin");
       return ;
     }
-    const jwtToken = parseJwt(JSON.stringify(token));
     try {
-      const res = await axios.post(
+      await axios.post(
         `${ip}/friends/block/${props.id}`,
         { id: props.id },
         {
@@ -71,13 +68,34 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
           },
         }
       );
-      // console.log("the id from current friend: ", props.id);
       setCurrentFriends((prev: any) => {
         const newArray = prev.map((item: dataFriends) => item.id !== props.id);
-        console.log("new array from block button: ", newArray);
         return newArray;
       });
-      // console.log("response from handle accept : ", res);
+    } catch (error: any) {
+      console.log("error from accept a friend request: ", error);
+    }
+  };
+  const handleUnfriend = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      Router.push("/Signin");
+      return ;
+    }
+    try {
+      await axios.post(
+        `${ip}/friends/block/${props.id}`,
+        { id: props.id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setCurrentFriends((prev: any) => {
+        const newArray = prev.map((item: dataFriends) => item.id !== props.id);
+        return newArray;
+      });
     } catch (error: any) {
       console.log("error from accept a friend request: ", error);
     }
@@ -116,11 +134,18 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
             <span>Block</span>
           </button>
           <button
+            onClick={() => handleUnfriend()}
+            className="flex justify-start opacity-40 hover:opacity-100 space-x-2 items-center px-4 py-2 cursor-pointer text-pearl md:text-lg text-xs font-Passion-One"
+          >
+            <Image src={unfriend} alt="add" className="md:w-[26px] w-[20px]" />
+            <span>Unfriend</span>
+          </button>
+          <button
             // onClick={() => handleRefuse()}
             className="flex justify-start opacity-40 hover:opacity-100 space-x-2 items-center px-4 py-2 cursor-pointer text-pearl md:text-lg text-xs font-Passion-One"
           >
             <Image src={game} alt="add" className="md:w-[26px] w-[20px]" />
-            <span>Let&aposs play</span>
+            <span>Let&apos;s play</span>
           </button>
         </div>
       )}

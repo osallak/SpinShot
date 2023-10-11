@@ -1,31 +1,30 @@
-import test1 from "../../../public/test1.svg";
-import Image from "next/image";
-import Example from "../ui/dropDown/menu";
-import accept from "../../../public/active.svg"
-import refuse from "../../../public/unactive.svg"
-import FriendRequestsDropDown from "../ui/dropDown/friendsRequestsDropDown";
-import parseJwt from "@/utils/parsJwt";
-import axios from "axios";
-import ip from "@/utils/endPoint";
-import { useEffect, useState } from "react";
 import dataFriends from "@/types/friendsType";
+import ip from "@/utils/endPoint";
+import axios from "axios";
+import Image from "next/image";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import test1 from "../../../public/test1.svg";
+import FriendRequestsDropDown from "../ui/dropDown/friendsRequestsDropDown";
 
 const ContentFriendsRequests = () => {
-  const [response, setResponse] = useState<dataFriends[]>([]); 
+  const [response, setResponse] = useState<dataFriends[]>([]);
   const Router = useRouter();
 
-	const handleClick = () => {
+  const handleClick = () => {
     console.log("hello world from the other side");
+  };
+
+  const goToUser = (username: string) => {
+    Router.push(`/profile/${username}`);
   };
 
   const fetchData = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
       Router.push("/Signin");
-      return ;
+      return;
     }
-    const jwtToken = parseJwt(JSON.stringify(token));
     try {
       const res = await axios.get(`${ip}/friends`, {
         headers: {
@@ -36,7 +35,6 @@ const ContentFriendsRequests = () => {
         },
       });
       setResponse(res.data.data);
-      console.log("data from friend requests: ", res.data.data);
     } catch (error: any) {
       console.log("error from friends: ", error);
     }
@@ -59,12 +57,16 @@ const ContentFriendsRequests = () => {
             <div className="w-full h-full flex items-center justify-center">
               <div className="w-[50%] h-full flex justify-start items-center space-x-2">
                 <Image
+                  onClick={() => goToUser(items.username)}
                   src={test1}
                   alt="avatar"
-                  className="xl:w-16 md:w-14 w-10"
+                  className="xl:w-16 md:w-14 w-10 cursor-pointer"
                 />
                 <div className="h-[70%] flex justify-center flex-col">
-                  <p className="font-Poppins text-pearl font-semibold xl:text-xl md:text-lg text-base">
+                  <p
+                    onClick={() => goToUser(items.username)}
+                    className="font-Poppins text-pearl font-semibold xl:text-xl md:text-lg text-base"
+                  >
                     {items.username}
                   </p>
                   <p className="font-Poppins text-pearl text-opacity-40 font-normal xl:text-base md:text-sm text-xs sm:fixed hidden">

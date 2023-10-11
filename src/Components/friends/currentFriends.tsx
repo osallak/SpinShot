@@ -1,32 +1,27 @@
+import { currentFriendsAtom } from "@/Components/context/recoilContext";
+import dataFriends from "@/types/friendsType";
+import ip from "@/utils/endPoint";
+import axios from "axios";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import FriendsIcon from "../../../public/friend.svg";
 import test1 from "../../../public/test1.svg";
-import newMessage from "../../../public/newMessage.svg";
-import block from "../../../public/block.svg";
-import game from "../../../public/game.svg";
-import DropDown from "../ui/dropDown/dropDown";
-import dataFriends from "@/types/friendsType";
-import { useEffect, useState } from "react";
-import parseJwt from "@/utils/parsJwt";
-import axios from "axios";
-import ip from "@/utils/endPoint";
 import CurrentFriendsDropDown from "../ui/dropDown/currentFriendsDropDown";
-import { useRecoilState } from "recoil";
-import { currentFriendsAtom } from "@/Components/context/recoilContext";
-import { useRouter } from "next/router";
 
 const CurrentFriends = () => {
-  const [response, setResponse] = useState<dataFriends[]>([]);
   const [loaded, setIsLoaded] = useState<boolean>(false);
   const [currentFriends, setCurrentFriends] =
     useRecoilState(currentFriendsAtom);
   const Router = useRouter();
+
   const handleClick = () => {
     console.log("hello world from the other side");
   };
 
-  const goToUser = () => {
-    console.log("hello");
+  const goToUser = (username: string) => {
+    Router.push(`/profile/${username}`);
   };
 
   const fetchData = async () => {
@@ -35,8 +30,6 @@ const CurrentFriends = () => {
       Router.push("/Signin");
       return;
     }
-    const jwtToken = parseJwt(JSON.stringify(token));
-    // console.log("jwtToken: ", jwtToken);
     try {
       const res = await axios.get(`${ip}/friends`, {
         headers: {
@@ -47,8 +40,6 @@ const CurrentFriends = () => {
         },
       });
       setCurrentFriends(res.data.data);
-      // console.log("current friends from atom: ", currentFriends);
-      // console.log("data from current friends: ", res.data.data);
     } catch (error: any) {
       console.log("error from friends: ", error);
     }
@@ -91,13 +82,17 @@ const CurrentFriends = () => {
                   <div className="w-full h-full flex items-center justify-center">
                     <div className="w-[50%] h-full flex justify-start items-center space-x-2 ">
                       <Image
+                        onClick={() => goToUser(items.username)}
                         src={test1}
                         alt="avatar"
-                        className="xl:w-16 md:w-14 w-10"
+                        className="xl:w-16 md:w-14 w-10 cursor-pointer"
                       />
                       <div className="h-[70%] flex justify-center flex-col">
                         <p className="font-Poppins text-pearl font-semibold xl:text-xl md:text-lg text-base">
-                          <span className="cursor-pointer" onClick={goToUser}>
+                          <span
+                            className="cursor-pointer"
+                            onClick={() => goToUser(items.username)}
+                          >
                             {items.username}
                           </span>
                         </p>
@@ -116,7 +111,7 @@ const CurrentFriends = () => {
           )
         ) : (
           <div className="font-Poppins text-pearl text-opacity-40 w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden justify-center">
-            No chat Messages
+            theire is no friends
           </div>
         )}
       </div>

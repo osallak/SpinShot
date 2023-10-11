@@ -35,7 +35,9 @@ const SideBar = (props: {avatar: string}) => {
   }
 
   const handleLogOut = () => {
-    console.log("logout");
+    if (localStorage.getItem("token"))
+      localStorage.removeItem("token");
+    Router.push("/Signin");
   }
 
   return (
@@ -50,26 +52,26 @@ const SideBar = (props: {avatar: string}) => {
         {Icons.map((option, index) => (
           <div
             key={index}
-            className="w-full h-[60px] flex items-center justify-center opacity-40 hover:opacity-100"
+            className="w-full h-[60px] flex items-center justify-center"
           >
             {option.route != "/Search" ? (
               <button onClick={(event) => changePage(event, option.route)}>
                 {" "}
-                <Image src={option.icon} alt={option.icon} />{" "}
+                <Image src={option.icon} alt={option.icon} className="opacity-40 hover:opacity-100"/>{" "}
               </button>
             ) : (
               <button>
                 {" "}
-                <Image src={option.icon} alt="" />{" "}
+                <Image src={option.icon} alt="" className="opacity-40 hover:opacity-100"/>{" "}
               </button>
             )}
           </div>
         ))}
       </div>
-      {/* <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center relative">
-        <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} className={`${hovered ? "opacity-10" : "opacity-100"} cursor-pointer`} src={props.avatar} alt="profile pic" />
+      <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center relative">
+        <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} className={`${hovered ? "opacity-10" : "opacity-100"} cursor-pointer`} src={test1} alt="profile pic" />
         {hovered && <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={logout} alt="logout" className="absolute cursor-pointer" />}
-      </div> */}
+      </div>
     </div>
   );
 };

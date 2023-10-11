@@ -1,6 +1,7 @@
 "use client";
+import ip from "@/utils/endPoint";
 import SideBar from "@/Components/ui/sideBar/sideBar";
-import axios from "axios";
+import axios, { all } from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import NavBar from "../ui/navBar/navBar";
@@ -13,6 +14,10 @@ import dataConversation from "@/types/messagesArrays";
 import dataSubSideBar from "@/types/messagesArrays";
 import parseJwt from "@/utils/parsJwt";
 import dataExploreChannel from "@/types/exploreChannel";
+import { useRecoilState } from "recoil";
+import { chatAll } from "../context/recoilContext";
+import roomsDataType from "@/types/messagesArrays"
+import test1 from "../../../public/test1.svg"
 
 const Chat = () => {
   const Router = useRouter();
@@ -28,7 +33,9 @@ const Chat = () => {
   const [userId, setUserId] = useState("");
   const [individual, setIndividual] = useState<dataSubSideBar[]>([]);
   const [userName, setUserName] = useState("");
+  const [allMessages, setAllMessages] = useRecoilState(chatAll);
   const userIdRef = useRef<string>();
+  const [loaded, setIsLoaded] = useState(false);
   // const chatContainerRef = useRef<HTMLDivElement>(null);
   // const [currentMsg, setCurrentMsg] = useState("");
   // const Router = useRouter();
@@ -147,16 +154,20 @@ const Chat = () => {
 
   // useEffect(() => socketInitializer(), []);
 
-  const ayoubToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiYzlkN2QzMmEtYTE2NC00OWUxLTk4YmYtNTE3YmQwZjBmMzYzIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY3OTU4NTksImV4cCI6MTY5Njg4MjI1OX0.QEAG6ZKAKzSLJ0hyrdRJQH65aWW_YKneTLCaN7XiWKU";
+  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im91c3NhbWEiLCJzdWIiOiI3M2I4MzA2ZS02ZjVlLTQ3MzQtOGUyOC0wODRhYzg5ODI5OGYiLCJpc3MiOiJzcGluc2hvdCIsImlhdCI6MTY5NzAzNDQ2MSwiZXhwIjoxNjk3MTIwODYxfQ.pxcvA59yyx6MH-ix_ZH3uhGBPvCSr5IxNPkf0iE9aeQ"
 
   const featchDataConversation = async (id: string, jwtTokenID: string) => {
+    // const token = localStorage.getItem("token");
+    // if (!token) {
+    //   Router.push("/Signin");
+    //   return;
+    // }
     try {
       const result = await axios.get(
-        `http://e3r10p14.1337.ma:3001/chat/individual/${id}`,
+        `${ip}/chat/individual/${id}`,
         {
           headers: {
-            Authorization: `Bearer ${ayoubToken}`,
+            Authorization: `Bearer ${token}`,
           },
           params: {
             page: 1,
@@ -174,19 +185,27 @@ const Chat = () => {
   };
 
   const fetchDataSubSideBar = async () => {
-    const jwtToken = parseJwt(ayoubToken);
+    // const token = localStorage.getItem("token");
+    console.log("token from chat Page: ", token);
+    // if (!token) {
+      //   Router.push("/Signin");
+      //   return;
+      // }
+    const jwtToken = parseJwt(token);
     console.log("JWTTOKEN: ", jwtToken);
     try {
-      const res = await axios.get(`http://e3r10p14.1337.ma:3001/chat/all`, {
+      const res = await axios.get(`${ip}/chat/all`, {
         headers: {
-          Authorization: `Bearer ${ayoubToken}`,
+          Authorization: `Bearer ${token}`,
         },
         params: {
           id: jwtToken.sub,
         },
       });
       console.log("response from subsidebar: ", res.data);
-      setIndividual((prev) => res.data.individual);
+      // setIndividual((prev) => res.data.individual);
+      setAllMessages(res.data);
+      console.log("res.data: ", res.data);
       featchDataConversation(res.data.individual[0].other.id, jwtToken.sub);
     } catch (error) {
       console.log("error of fetching data from subsidebar: ", error);
@@ -194,12 +213,16 @@ const Chat = () => {
   };
 
   const fetchDataExploreChannel = async () => {
+    // const token = localStorage.getItem("token");
+    // if (!token) {
+    //   Router.push("/Signin");
+    //   return;
+    // }
     if (open === true) {
-      console.log("hello");
       try {
-        const res = await axios.get(`http://e3r10p14.1337.ma:3001/room/explore`, {
+        const res = await axios.get(`${ip}/room/explore`, {
           headers: {
-            Authorization: `Bearer ${ayoubToken}`,
+            Authorization: `Bearer ${token}`,
           },
         });
         setExploreChannel(res.data);
@@ -213,22 +236,23 @@ const Chat = () => {
 
   useEffect(() => {
     fetchDataSubSideBar();
-  });
+    setIsLoaded(true)
+  }, []);
 
   useEffect(() => {
     fetchDataExploreChannel();
-  });
+  }, []);
 
-  const code = Router.query.code;
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 md:pl-3 pl-0 py-0 pr-0 items-center flex-row">
-      <SideBar avatar={individual[0]?.other?.avatar} />
+      <SideBar avatar={test1} />
       {openSideBar && <MobileSideBar />}
       <SubSideBar
         open={open}
         setOpen={setOpen}
         setFlag={setFlag}
-        data={individual}
+        loaded={loaded}
+        // data={individual}
       />
       {flag === "ExploreChannels" && (
         <ExploreChannels open={open} setOpen={setOpen} data={exploreChannel} />

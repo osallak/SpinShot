@@ -11,10 +11,9 @@ import Image from "next/image";
 import { Fragment, useState, KeyboardEvent, MouseEvent } from "react";
 import CreateChannelIcon from "../../../public/CreateChannel.svg";
 import SwitchButton from "../ui/Buttons/SwitchButton";
+import ip from "@/utils/endPoint";
 
-const ayoubToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiYzlkN2QzMmEtYTE2NC00OWUxLTk4YmYtNTE3YmQwZjBmMzYzIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY3OTU4NTksImV4cCI6MTY5Njg4MjI1OX0.QEAG6ZKAKzSLJ0hyrdRJQH65aWW_YKneTLCaN7XiWKU";
-
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im91c3NhbWEiLCJzdWIiOiI3M2I4MzA2ZS02ZjVlLTQ3MzQtOGUyOC0wODRhYzg5ODI5OGYiLCJpc3MiOiJzcGluc2hvdCIsImlhdCI6MTY5NzAzNDQ2MSwiZXhwIjoxNjk3MTIwODYxfQ.pxcvA59yyx6MH-ix_ZH3uhGBPvCSr5IxNPkf0iE9aeQ"
 const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
   const [type, setType] = useState("");
   const [name, setName] = useState("");
@@ -33,11 +32,11 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
       if (password.length >= 6) params["password"] = password;
       try {
         const res = await axios.post(
-          `http://e3r10p14.1337.ma:3001/room/add`,
+          `${ip}/room/add`,
           params,
           {
             headers: {
-              Authorization: `Bearer ${ayoubToken}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -58,11 +57,11 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
     if (password.length >= 6) params["password"] = password;
     try {
       const res = await axios.post(
-        `http://e3r10p14.1337.ma:3001/room/add`,
+        `${ip}/room/add`,
         params,
         {
           headers: {
-            Authorization: `Bearer ${ayoubToken}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

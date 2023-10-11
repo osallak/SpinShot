@@ -61,6 +61,7 @@ const Signin = () => {
           password,
         }
       );
+      console.log(parseJwt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc1R3b0ZhQXV0aGVudGljYXRlZCI6ZmFsc2UsImlzVHdvRmFjdG9yRW5hYmxlZCI6ZmFsc2UsInVzZXJuYW1lIjoidXNlcjEiLCJzdWIiOiJlNzQ5NTAzMi1jNmFlLTQ1N2YtOTZiOC1iMDgzNTQ5ZWQ2Y2QiLCJpc3MiOiJzcGluc2hvdCIsImlhdCI6MTY5NzA1NDQyMiwiZXhwIjoxNjk3MTQwODIyfQ.nhnHlup9YYxkH-QuOwtinCwjg8S8Q0Uw4RvwX-V2PeY"));
       localStorage.setItem("token", res?.data?.token);
       Router.push(`/profile/${parseJwt(JSON.stringify(localStorage.getItem("token"))).username}`);
     } catch (error: any) {

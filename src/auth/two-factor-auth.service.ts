@@ -76,7 +76,7 @@ export class TwoFactorAuthService {
   public async validateTwoFactorAuthCode(
     user: any,
     code: TwoFaAuthDto,
-		status: boolean,
+    status: boolean,
   ): Promise<Response> {
     return new Promise(async (resolve, reject) => {
       try {
@@ -87,12 +87,31 @@ export class TwoFactorAuthService {
             message: 'User not found',
           });
         }
-        const isValid = authenticator.verify({
-          token: code.code,
-          secret: u?.twoFactorAuthSecret,
-        });
+        if (status && u.twoFactorAuth) {
+          return reject({
+            status: 400,
+            message: '2FA is already enabled',
+          });
+        }
+        if (!status && !u.twoFactorAuth) {
+          return reject({
+            status: 400,
+            message: '2FA is already disabled',
+          });
+        }
+        let isValid = false;
+        if (u?.twoFactorAuthSecret) {
+          isValid = authenticator.verify({
+            token: code.code,
+            secret: u.twoFactorAuthSecret,
+          });
+        }
+        let update = { twoFactorAuth: status };
+        if (status === false) {
+          update['twoFactorAuthSecret'] = null;
+        }
         if (isValid) {
-          await this.userService.updateData(user?.id, { twoFactorAuth: status });
+          await this.userService.updateData(user?.id, update);
           return resolve({
             status: 200,
             message: '2FA code is valid',
@@ -104,6 +123,7 @@ export class TwoFactorAuthService {
           });
         }
       } catch (e) {
+        console.log(e);
         return reject({
           status: 500,
           message: 'Internal Server Error',
@@ -133,14 +153,12 @@ export class TwoFactorAuthService {
         resolve({
           status: 200,
           message: '2FA code is valid',
-          data: {
-            accessToken,
-          },
+          data: accessToken,
         });
       } catch (e) {
         return reject({
           status: 500,
-          message: "Internal Server Error",
+          message: 'Internal Server Error',
         });
       }
     });

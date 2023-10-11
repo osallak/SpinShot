@@ -15,11 +15,16 @@ import ip from "@/utils/endPoint";
 import newMessage from "../../../../public/newMessage.svg";
 import block from "../../../../public/block.svg";
 import game from "../../../../public/game.svg";
+import { useRecoilState } from "recoil";
+import { currentFriendsAtom } from "@/Components/context/recoilContext";
+import dataFriends from "@/types/friendsType";
 
 const CurrentFriendsDropDown = (props: { id: string }) => {
   const [isOpen, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-	const Router = useRouter();
+  const [currentFriends, setCurrentFriends] = useRecoilState(currentFriendsAtom);
+
+  const Router = useRouter();
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -51,9 +56,11 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
 
   const handleBlock = async () => {
     const token = localStorage.getItem("token");
-    console.log("id from handle accept: ", props.id);
+    if (!token) {
+      Router.push("/Signin");
+      return ;
+    }
     const jwtToken = parseJwt(JSON.stringify(token));
-    console.log("token: ", jwtToken);
     try {
       const res = await axios.post(
         `${ip}/friends/block/${props.id}`,
@@ -64,7 +71,13 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
           },
         }
       );
-      console.log("response from handle accept : ", res);
+      // console.log("the id from current friend: ", props.id);
+      setCurrentFriends((prev: any) => {
+        const newArray = prev.map((item: dataFriends) => item.id !== props.id);
+        console.log("new array from block button: ", newArray);
+        return newArray;
+      });
+      // console.log("response from handle accept : ", res);
     } catch (error: any) {
       console.log("error from accept a friend request: ", error);
     }

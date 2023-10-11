@@ -11,19 +11,19 @@ import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import ip from "@/utils/endPoint";
 import CurrentFriendsDropDown from "../ui/dropDown/currentFriendsDropDown";
+import { useRecoilState } from "recoil";
+import { currentFriendsAtom } from "@/Components/context/recoilContext";
+import { useRouter } from "next/router";
 
 const CurrentFriends = () => {
   const [response, setResponse] = useState<dataFriends[]>([]);
-
+  const [loaded, setIsLoaded] = useState<boolean>(false);
+  const [currentFriends, setCurrentFriends] =
+    useRecoilState(currentFriendsAtom);
+  const Router = useRouter();
   const handleClick = () => {
     console.log("hello world from the other side");
   };
-
-  const menu = [
-    { content: "Message", click: handleClick, icon: newMessage },
-    { content: "Block", click: handleClick, icon: block },
-    { content: "Let't Play", click: handleClick, icon: game },
-  ];
 
   const goToUser = () => {
     console.log("hello");
@@ -31,27 +31,33 @@ const CurrentFriends = () => {
 
   const fetchData = async () => {
     const token = localStorage.getItem("token");
+    if (!token) {
+      Router.push("/Signin");
+      return;
+    }
     const jwtToken = parseJwt(JSON.stringify(token));
-    console.log("jwtToken: ", jwtToken);
+    // console.log("jwtToken: ", jwtToken);
     try {
       const res = await axios.get(`${ip}/friends`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         params: {
-          status: 'ACCEPTED'
-        }
+          status: "ACCEPTED",
+        },
       });
-      setResponse(res.data.data);
-      console.log("data from current friends: ", res.data.data);
-    } catch (error: any){
+      setCurrentFriends(res.data.data);
+      // console.log("current friends from atom: ", currentFriends);
+      // console.log("data from current friends: ", res.data.data);
+    } catch (error: any) {
       console.log("error from friends: ", error);
     }
-  }
+  };
 
   useEffect(() => {
     fetchData();
-  }, [])
+    setIsLoaded(true);
+  }, [currentFriends]);
 
   return (
     <div className="w-[50%] h-full rounded-2xl bg-white/10 md:flex hidden justify-center items-center flex-col">
@@ -76,34 +82,38 @@ const CurrentFriends = () => {
         </h1>
       </div>
       <div className="h-[80%] flex flex-col items-center min-h-[100px] w-[98%] overflow-auto rounded-sm">
-        {response.length > 0 ? (
-          response.map((items, index) => (
-            <div key={index} className="w-full h-[90px] min-h-[80px]">
-              {items.status === "ACCEPTED" &&
-              <div className="w-full h-full flex items-center justify-center">
-                <div className="w-[50%] h-full flex justify-start items-center space-x-2 ">
-                  <Image
-                    src={test1}
-                    alt="avatar"
-                    className="xl:w-16 md:w-14 w-10"
-                  />
-                  <div className="h-[70%] flex justify-center flex-col">
-                    <p className="font-Poppins text-pearl font-semibold xl:text-xl md:text-lg text-base">
-                      <span className="cursor-pointer" onClick={goToUser}>
-                        {items.username}
-                      </span>
-                    </p>
-                    <p className="font-Poppins text-pearl text-opacity-40 font-normal xl:text-base md:text-sm text-xs">
-                    {items.email}
-                    </p>
+        {currentFriends.length > 0 ? (
+          loaded === true &&
+          (currentFriends as dataFriends[]).map(
+            (items: dataFriends, index: number) => (
+              <div key={index} className="w-full h-[90px] min-h-[80px]">
+                {items.status === "ACCEPTED" && (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="w-[50%] h-full flex justify-start items-center space-x-2 ">
+                      <Image
+                        src={test1}
+                        alt="avatar"
+                        className="xl:w-16 md:w-14 w-10"
+                      />
+                      <div className="h-[70%] flex justify-center flex-col">
+                        <p className="font-Poppins text-pearl font-semibold xl:text-xl md:text-lg text-base">
+                          <span className="cursor-pointer" onClick={goToUser}>
+                            {items.username}
+                          </span>
+                        </p>
+                        <p className="font-Poppins text-pearl text-opacity-40 font-normal xl:text-base md:text-sm text-xs">
+                          {items.email}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="w-[50%] h-full flex justify-end items-center xl:space-x-3 md:space-x-2 space-x-1 xl:pr-3 pr-1">
+                      <CurrentFriendsDropDown id={items.id} />
+                    </div>
                   </div>
-                </div>
-                <div className="w-[50%] h-full flex justify-end items-center xl:space-x-3 md:space-x-2 space-x-1 xl:pr-3 pr-1">
-                  <CurrentFriendsDropDown id={items.id} />
-                </div>
-              </div>}
-            </div>
-          ))
+                )}
+              </div>
+            )
+          )
         ) : (
           <div className="font-Poppins text-pearl text-opacity-40 w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden justify-center">
             No chat Messages

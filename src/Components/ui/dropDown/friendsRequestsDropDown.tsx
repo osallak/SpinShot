@@ -14,9 +14,15 @@ import ip from "@/utils/endPoint";
 import accept from "../../../../public/active.svg";
 import refuse from "../../../../public/unactive.svg";
 import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
+import { friendRequestsAtom, currentFriendsAtom } from "@/Components/context/recoilContext";
+import dataFriends from "@/types/friendsType";
 
 const FriendRequestsDropDown = (props: { id: string }) => {
   const [isOpen, setOpen] = useState(false);
+  const [friends, setFriends] = useRecoilState(friendRequestsAtom);
+  const [friendStatus, setFriendStatus] = useRecoilState(currentFriendsAtom);
+
   const ref = useRef<HTMLDivElement>(null);
   const Router = useRouter();
 
@@ -50,16 +56,24 @@ const FriendRequestsDropDown = (props: { id: string }) => {
 
   const handleAccept = async () => {
     const token = localStorage.getItem("token");
-    console.log("id from handle accept: ", props.id);
+    if (!token) {
+      Router.push("/Signin");
+      return ;
+    }
+    // console.log("id from handle accept: ", props.id);
     const jwtToken = parseJwt(JSON.stringify(token));
-		console.log("token: ", jwtToken);
     try {
       const res = await axios.post(`${ip}/friends/accept/${props.id}`, {id: props.id}, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("response from handle accept : ", res);
+      console.log("response from accept button: ", res);
+      setFriends((prev :  any) => {
+        const newArray = prev.map((item: dataFriends) => item.id != props.id);
+        return newArray;
+      })
+      // console.log("response from handle accept : ", res);
     } catch (error: any) {
       console.log("error from accept a friend request: ", error);
     }
@@ -67,7 +81,7 @@ const FriendRequestsDropDown = (props: { id: string }) => {
 
   const handleRefuse = async () => {
     const token = localStorage.getItem("token");
-    console.log("id from handle refuse: ", props.id);
+    // console.log("id from handle refuse: ", props.id);
     const jwtToken = parseJwt(JSON.stringify(token));
     try {
       const res = await axios.post(`${ip}/friends/reject/${props.id}`, {id: props.id}, {
@@ -75,7 +89,7 @@ const FriendRequestsDropDown = (props: { id: string }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("response from handle refuse : ", res);
+      // console.log("response from handle refuse : ", res);
     } catch (error: any) {
       console.log("error from refuse a friend request: ", error);
     }

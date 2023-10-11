@@ -1,14 +1,11 @@
-import SideBar from "../ui/sideBar/sideBar";
-import axios from "axios";
-import FriendsRequest from "./friendRequest";
-import CurrentFriends from "./currentFriends";
-import MobileFriends from "./mobileFriends";
-import { useState, useEffect } from "react";
-import MobileSideBar from "../ui/sideBar/mobileSideBar";
+import { useState } from "react";
+import test1 from "../../../public/test1.svg";
 import NavBar from "../ui/navBar/navBar";
-import parseJwt from "@/utils/parsJwt";
-import test1 from "../../../public/test1.svg"
-import dataFriends from "@/types/friendsType";
+import MobileSideBar from "../ui/sideBar/mobileSideBar";
+import SideBar from "../ui/sideBar/sideBar";
+import CurrentFriends from "./currentFriends";
+import FriendsRequest from "./friendRequest";
+import MobileFriends from "./mobileFriends";
 
 const FriendsPage = () => {
 

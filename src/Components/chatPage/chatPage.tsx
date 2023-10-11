@@ -219,6 +219,7 @@ const Chat = () => {
     fetchDataExploreChannel();
   });
 
+  const code = Router.query.code;
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 md:pl-3 pl-0 py-0 pr-0 items-center flex-row">
       <SideBar avatar={individual[0]?.other?.avatar} />

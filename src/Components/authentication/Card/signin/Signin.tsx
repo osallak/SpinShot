@@ -57,29 +57,25 @@ const Signin = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `${ip}/auth/signin/local`,
+        `${ip}/auth/local/signin`,
         {
           username,
           password,
         }
       );
-      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("token", res?.data?.token);
       Router.push(Path);
     } catch (error: any) {
-      setErrorMessage(error.response.data.message);
+      Router.push("/Friends/find")
+      setErrorMessage(error?.response?.data?.message);
       setError(true);
+      console.log("error from signin:  ", error);
     }
   };
 
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    Router.push("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2FMessages&response_type=code");
-    try {
-      await axios.get("http://34.95.172.25/auth/42");
-      alert("all good from continue with intra");
-    } catch (error) {
-      console.log(error);
-    }
+    Router.push("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth%2F42%2Fcb&response_type=code");
   };
 
   const redirection = (e: MouseEvent<HTMLButtonElement>) => {
@@ -157,7 +153,7 @@ const Signin = () => {
                   <SimpleButton
                     Type="submit"
                     onclick={(e) =>
-                      RedirectionFunction(e, "Profile/PersonalInformation")
+                      RedirectionFunction(e, "/Friends")
                     }
                     content="Sign in"
                   />

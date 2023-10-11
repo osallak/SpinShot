@@ -79,7 +79,7 @@ const Signup = () => {
     e.preventDefault();
     if (isValid && isMatch) {
       try {
-        await axios.post(`${ip}/auth/signup/local`, {
+        await axios.post(`${ip}/auth/local/signup`, {
           email,
           username,
           password,

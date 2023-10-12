@@ -49,21 +49,35 @@ const Signin = () => {
     },
   ];
 
-  const RedirectionFunction = async (
-    e: MouseEvent<HTMLButtonElement>,
-  ) => {
+  // {
+  //   "isTwoFaAuthenticated": false,
+  //   "isTwoFactorEnabled": false,
+  //   "username": "user1",
+  //   "sub": "e7495032-c6ae-457f-96b8-b083549ed6cd",
+  //   "iss": "spinshot",
+  //   "iat": 1697054422,
+  //   "exp": 1697140822
+  // }
+
+  const RedirectionFunction = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        `${ip}/auth/local/signin`,
-        {
-          username,
-          password,
-        }
-      );
-      console.log(parseJwt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc1R3b0ZhQXV0aGVudGljYXRlZCI6ZmFsc2UsImlzVHdvRmFjdG9yRW5hYmxlZCI6ZmFsc2UsInVzZXJuYW1lIjoidXNlcjEiLCJzdWIiOiJlNzQ5NTAzMi1jNmFlLTQ1N2YtOTZiOC1iMDgzNTQ5ZWQ2Y2QiLCJpc3MiOiJzcGluc2hvdCIsImlhdCI6MTY5NzA1NDQyMiwiZXhwIjoxNjk3MTQwODIyfQ.nhnHlup9YYxkH-QuOwtinCwjg8S8Q0Uw4RvwX-V2PeY"));
+      const res = await axios.post(`${ip}/auth/local/signin`, {
+        username,
+        password,
+      });
+      const token = parseJwt(res?.data?.token);
+      console.log("response from signin: ", res);
       localStorage.setItem("token", res?.data?.token);
-      Router.push(`/profile/${parseJwt(JSON.stringify(localStorage.getItem("token"))).username}`);
+      if (token.isTwoFactorEnabled === true) {
+        Router.push("/twoFactorAuthentication");
+      } else if (token.isTwoFactorEnabled === false) {
+        Router.push(
+          `/profile/${
+            parseJwt(JSON.stringify(localStorage.getItem("token"))).username
+          }`
+        );
+      }
     } catch (error: any) {
       setErrorMessage(error?.response?.data?.message);
       setError(true);
@@ -72,7 +86,9 @@ const Signin = () => {
 
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    Router.push("https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth%2F42%2Fcb&response_type=code");
+    Router.push(
+      "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2FWaiting&response_type=code"
+    );
   };
 
   const redirection = (e: MouseEvent<HTMLButtonElement>) => {
@@ -118,42 +134,40 @@ const Signin = () => {
               }}
             >
               <div className=" flex justify-center items-center c-md:space-y-3 space-y-1 flex-col w-full h-full">
-              <div className="flex justify-center items-center w-full h-full flex-col c-md:space-y-5 space-y-3">
-                {SigninArray.map((SignIn, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]"
-                  >
-                    <InputBorder
-                      inputValue={SignIn.inputValue}
-                      setinputValue={SignIn.setinputValue}
-                      value={SignIn.Value}
-                      type={SignIn.type}
-                      PlaceHolder={SignIn.PlaceHolder}
-                      icon={SignIn.icon}
-                      Border={SignIn.Border}
-                      Color={SignIn.Color}
-                      BorderSize={2}
-                    />
-                  </div>
-                ))}
-              </div>
-              {error && (
-                <div className="text-red-900 h-[5px] font-Poppins text-sm">
-                  {errorMessage}
+                <div className="flex justify-center items-center w-full h-full flex-col c-md:space-y-5 space-y-3">
+                  {SigninArray.map((SignIn, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]"
+                    >
+                      <InputBorder
+                        inputValue={SignIn.inputValue}
+                        setinputValue={SignIn.setinputValue}
+                        value={SignIn.Value}
+                        type={SignIn.type}
+                        PlaceHolder={SignIn.PlaceHolder}
+                        icon={SignIn.icon}
+                        Border={SignIn.Border}
+                        Color={SignIn.Color}
+                        BorderSize={2}
+                      />
+                    </div>
+                  ))}
                 </div>
-              )}
+                {error && (
+                  <div className="text-red-900 h-[5px] font-Poppins text-sm">
+                    {errorMessage}
+                  </div>
+                )}
               </div>
               <div className="w-full flex justify-center items-center flex-col sm:space-y-12 space-y-8">
                 <div className="w-full flex justify-center items-center rounded-full">
                   <div className="b-sm:w-40 w-3/4 c-md:h-10 sm:h-10 h-9 flex justify-center items-center rounded-full">
-                  <SimpleButton
-                    Type="submit"
-                    onclick={(e) =>
-                      RedirectionFunction(e)
-                    }
-                    content="Sign in"
-                  />
+                    <SimpleButton
+                      Type="submit"
+                      onclick={(e) => RedirectionFunction(e)}
+                      content="Sign in"
+                    />
                   </div>
                 </div>
                 <div className="flex flex-col justify-center items-center c-md:space-y-10 space-y-3 w-full">
@@ -181,7 +195,11 @@ const Signin = () => {
               <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
                 Don&apos;t have an account?
               </p>
-              <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign Up" />
+              <EmptyButton
+                flag="authentication"
+                onclick={(e) => redirection(e)}
+                content="Sign Up"
+              />
             </div>
           )}
         </div>
@@ -191,7 +209,11 @@ const Signin = () => {
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
             Don&apos;t have an account?&nbsp;
           </p>
-          <EmptyButton flag="authentication" onclick={(e) => redirection(e)} content="Sign Up" />
+          <EmptyButton
+            flag="authentication"
+            onclick={(e) => redirection(e)}
+            content="Sign Up"
+          />
         </div>
       )}
     </div>

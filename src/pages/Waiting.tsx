@@ -11,16 +11,12 @@ const Waiting = () => {
   
   const code = router.query.code;
   const fetchData = async () => {
+    console.log("token from continue with intra: ", code);
+    if (!code) return;
     try {
-      const res = await axios.get(`${ip}/auth/42?code=${codec}`, {
-        // headers: {
-        //   'Access-Control-Allow-Origin' : '*',
-        //   'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-        //   'Access-Control-Request-Headers': 'Content-Type, Authorization',
-        // }
-      });
-      console.log("token from continue with intra: ", codec);
+      const res = await axios.get(`http://localhost:3001/auth/42?code=${code}`  );
       console.log("response from waiting page: ", res);
+      console.log("token from waiting page: ", res?.data?.token);
     } catch (error) {
       console.log("error from waiting page: ", error);
     }

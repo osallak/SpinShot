@@ -92,7 +92,7 @@ const SubSideBar = (props: {
           <motion.button
             onClick={setIndividual}
             whileTap={{ scale: 0.9 }}
-            className="font-Passion-One text-pearl xl:text-4xl text-3xl"
+            className="font-Passion-One text-pearl xl:text-2xl text-xl"
           >
             Individual
           </motion.button>
@@ -107,7 +107,7 @@ const SubSideBar = (props: {
           <motion.button
             onClick={setChannels}
             whileTap={{ scale: 0.9 }}
-            className="font-Passion-One text-pearl xl:text-4xl text-3xl"
+            className="font-Passion-One text-pearl xl:text-2xl text-xl"
           >
             Channels
           </motion.button>

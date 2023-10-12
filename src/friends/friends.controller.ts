@@ -5,6 +5,8 @@ import { UserDecorator } from 'src/global/decorators/global.decorators';
 import { PaginationResponse, Response } from 'src/global/interfaces';
 import { User } from 'src/types/user.types';
 import { FriendsQueryDto } from './dto/pagination.dto';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtTwoFactorGuard } from 'src/auth/guards/jwt-2fa.guard';
 import { FriendsService } from './friends.service';
 import { FriendsGuard } from './guards/friends.guard';
 import {

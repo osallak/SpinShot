@@ -140,7 +140,7 @@ const PersonalInformation = (props: any) => {
         <SimpleButton content="Save" onclick={hendleUpdata} />
         </div>
       </div>
-      <div>
+      <div className="z-50">
           <Toaster position="top-center" reverseOrder={false} />
         </div>
     </div>

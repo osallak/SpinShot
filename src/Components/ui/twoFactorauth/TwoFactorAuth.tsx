@@ -108,7 +108,7 @@ import CodeQR from "../../../../public/CodeQR.svg";
 import Image from "next/image";
 import PinInput from "react-pin-input";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import {
   Button,
   Dialog,
@@ -118,6 +118,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { url } from "inspector";
+import ip from "@/endpoint/ip";
 
 const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
   const [size, setSize] = useState<number>();
@@ -125,7 +126,12 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
   const [submittedCode, setSubmittedCode] = useState<string>("");
   const [qrCode, setQrCode] = useState<any>(undefined);
   let ele: any = useRef();
-
+  const token = localStorage.getItem("token");
+  const myOverlay = {
+    style: {
+      zIndex: 99999,
+    },
+  };
   useEffect(() => {
     handleResize();
     fetchQrCode();
@@ -140,11 +146,11 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
   const fetchQrCode = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:3001/2fa/generate-qr",
+        `${ip}/2fa/generate-qr`,
         {},
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
           },
           responseType: "blob",
         }
@@ -170,13 +176,13 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
   const handleVerify = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:3001/2fa/turn-on-qr",
+        `${ip}/2fa/turn-on-qr`,
         {
           code: submittedCode,
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -184,11 +190,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
       props.Switch(!open);
     } catch (e: any) {
       ele.clear();
-      toast.error(e.response.data, {
-				style: {
-					zIndex: 99999,
-				}
-			});
+      toast.error(e?.data ?? "Invalid Operation");
     }
   };
   return (
@@ -199,7 +201,6 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
         size="xs"
         className="bg-pearl"
       >
-        {/* <Toaster position="top-right" reverseOrder={true} /> */}
         <DialogHeader className="flex flex-col items-center justify-center sm:space-y-5 ">
           <span className="text-3xl sm:text-3xl text-very-dark-purple ">
             Authenticate your account

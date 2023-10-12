@@ -33,7 +33,9 @@ const ResetPassword = () => {
   const hendleChange = () => {
     const parss = /^.{6,}$/;
     {
-      (password == "1234567" && parss.test(ConfirmPassword)) ? hendleUpdata() : notify();
+      password == "1234567" && parss.test(ConfirmPassword)
+        ? hendleUpdata()
+        : notify();
     }
   };
 
@@ -62,7 +64,6 @@ const ResetPassword = () => {
   const notify = () => {
     toast.success("Password incorrect ");
   };
-
 
   return (
     <div className=" space-y-20 md:space-y-36  h-[910px] ">
@@ -114,9 +115,18 @@ const ResetPassword = () => {
         <div className={`  w-24 sm:w-32  h-full`}>
           <SimpleButton content="Save" onclick={hendleChange} />
         </div>
-        <div>
-          <Toaster position="top-center" reverseOrder={false} />
-        </div>
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+          containerStyle={{
+            zIndex: 9999,
+          }}
+					toastOptions={{
+						style: {
+							zIndex: 9999,
+						}
+					}}
+        />
       </div>
     </div>
   );

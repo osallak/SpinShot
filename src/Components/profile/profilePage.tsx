@@ -13,7 +13,7 @@ import SideBar from "../ui/Sidebar/sideBar";
 import SubsidebarSecond from "../ui/FolderSubsidebar/subsidebarSecond";
 import SidebarMobile from "../ui/Sidebar/SidebarMobile";
 import NavbarMobile from "../ui/FolderNavbar/navbarMobile";
-import TowFactor from "../ui/twoFactorauth/twoFactor";
+import TwoFactor from "../ui/TwoFactorAuth/TwoFactorAuth"; 
 import UploadImage from "../ui/UploadImage/UploadImage";
 import { useRouter } from "next/router";
 
@@ -168,8 +168,8 @@ const ProfilePage = () => {
               />
             )}
             {isActive && (
-              <div className="z-50">
-                <TowFactor isActive={isActive} Switch={setisActive} />
+              <div >
+                <TwoFactor isActive={isActive} Switch={setisActive} />
               </div>
             )}
           </div>

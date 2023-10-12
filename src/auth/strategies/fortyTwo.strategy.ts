@@ -8,11 +8,10 @@ import { FortyTwoProfile } from '../interfaces';
 @Injectable()
 export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
   constructor(configService: ConfigService) {
-    console.log(HOST);
     super({
       clientID: configService.get('INTRA_CLIENT_ID'),
       clientSecret: configService.get('INTRA_APP_SECRET'),
-      callbackURL: `${HOST}:${configService.get('PORT') || 3000}/auth/42/cb`,
+      callbackURL: configService.get('INTRA_CALLBACK_URL'),
     });
   }
 
@@ -37,7 +36,6 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
       avatar: image.link,
       country: country,
     } as User;
-    console.log(user);
     return user;
   }
 }

@@ -1,11 +1,7 @@
-import Signin from "@/Components/authentication/Card/signin/Signin";
+import React from 'react'
 
-const SigninPage = () => {
+export default function SignIn() {
   return (
-    <>
-      <Signin />
-    </>
+    <div>SignIn</div>
   )
 }
-
-export default SigninPage

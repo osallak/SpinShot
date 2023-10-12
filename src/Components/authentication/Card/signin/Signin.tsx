@@ -190,7 +190,7 @@ const Signin = () => {
           {widthsc && widthsc <= 1024 && (
             <div className="w-full flex flex-row justify-center items-center space-x-1">
               <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-                Don{'\''}t have an account?
+                Don&apos;t have an account?
               </p>
               <EmptyButton
                 flag="authentication"
@@ -204,7 +204,7 @@ const Signin = () => {
       {widthsc && widthsc > 1024 && (
         <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center">
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-            Don{'\''}t have an account?&nbsp;
+            Don&apos;t have an account?&nbsp;
           </p>
           <EmptyButton
             flag="authentication"

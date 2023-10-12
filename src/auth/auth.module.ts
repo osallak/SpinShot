@@ -11,6 +11,7 @@ import { FortyTwoStrategy } from './strategies/fortyTwo.strategy';
 import { TwoFactorAuthService } from './two-factor-auth.service';
 import { TwoFactorAuthController } from './two-factor-auth.controller';
 import { JwtTwoFaStrategy } from './strategies/jwt-2fa.strategy';
+import { JwtStrategy, LocalStrategy } from './strategies';
 
 @Module({
   imports: [

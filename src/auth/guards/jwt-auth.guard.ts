@@ -1,28 +1,18 @@
 import {
-    ExecutionContext,
-    Injectable,
-    Logger,
-    UnauthorizedException,
+  ExecutionContext,
+  Injectable,
+  Logger,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-
-    private readonly logger: Logger = new Logger(JwtAuthGuard.name);
-
   handleRequest<TUser = any>(
     err: any,
-    user: any,
-    info: any,
-    context: ExecutionContext,
-    status?: any,
+    user: TUser,
   ): TUser {
-    if (err || !user) {
-        this.logger.error(err);
-        this.logger.error(user);
-      throw err || new UnauthorizedException();
-    }
+    if (err || !user) throw err || new UnauthorizedException('jwt auth failed');
     return user;
   }
 }

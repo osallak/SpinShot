@@ -1,4 +1,4 @@
-import SearchInput from "@/components/ui/Inputs/searchInput";
+import SearchInput from "@/components/ui/inputs/searchInput";
 import dataSubSideBar from "@/types/messagesArrays";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";

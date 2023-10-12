@@ -1,8 +1,8 @@
-import Racket from "../../../public/racket.svg";
 import Image from "next/image";
 import SimpleButton from "../ui/buttons/simpleButton";
 import { MouseEvent, KeyboardEvent } from "react";
 import { useRouter } from "next/router";
+import Racket from "../../../public/racket.svg"
 
 const LandingPage = () => {
   const Router = useRouter();

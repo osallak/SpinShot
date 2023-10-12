@@ -1,4 +1,4 @@
-import SearchInput from "@/components/ui/Inputs/searchInput";
+import SearchInput from "@/components/ui/inputs/searchInput";
 import allMessagesType from "@/types/messagesArrays";
 import { motion } from "framer-motion";
 import Image from "next/image";

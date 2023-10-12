@@ -1,16 +1,16 @@
 import ContinueWithIntra from "@/components/ui/buttons/continueWithIntra";
 import EmptyButton from "@/components/ui/buttons/emptyButton";
 import SimpleButton from "@/components/ui/buttons/simpleButton";
-import InputBorder from "@/components/ui/Inputs/inputBorder";
+import InputBorder from "@/components/ui/inputs/inputBorder";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { MouseEvent, useEffect, useState } from "react";
-import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
-import mail from "../../../../../public/email.svg";
-import lock from "../../../../../public/lock.svg";
+import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
+import mail from "../../../../public/email.svg";
+import lock from "../../../../public/lock.svg";
 
 // the last version of signin without authentication with intra
 

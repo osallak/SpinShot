@@ -1,16 +1,16 @@
 import EmptyButton from "@/components/ui/buttons/emptyButton";
 import SimpleButton from "@/components/ui/buttons/simpleButton";
-import ConfirmationPassword from "@/components/ui/Inputs/confirmationPassword";
-import InputBorder from "@/components/ui/Inputs/inputBorder";
+import ConfirmationPassword from "@/components/ui/inputs/confirmationPassword";
+import InputBorder from "@/components/ui/inputs/inputBorder";
 import ip from "@/utils/endPoint";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { MouseEvent, useEffect, useState } from "react";
-import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
-import mail from "../../../../../public/email.svg";
-import lock from "../../../../../public/lock.svg";
-import user from "../../../../../public/user.svg";
+import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
+import mail from "../../../../public/email.svg";
+import lock from "../../../../public/lock.svg";
+import user from "../../../../public/user.svg";
 
 //this is the last version of signup
 

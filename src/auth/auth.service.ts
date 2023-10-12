@@ -138,6 +138,6 @@ export class AuthService {
     return await this.generateToken({
       username: returnedUser.username,
       sub: returnedUser.id,
-    } as JwtAuthPayload);
+    } as JwtAuthPayload, false);
   }
 }

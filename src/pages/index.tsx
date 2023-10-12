@@ -1,6 +1,6 @@
 "use client";
 
-import LandingPage from "@/Components/LandingPage/LandingPage";
+import LandingPage from "@/components/landingPage/landingPage";
 
 const Home = () => {
   return (

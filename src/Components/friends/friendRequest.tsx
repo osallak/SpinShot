@@ -21,7 +21,7 @@ const FriendsRequest = () => {
   const fetchData = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/Signin");
+      router.push("/signin");
       return;
     }
     try {

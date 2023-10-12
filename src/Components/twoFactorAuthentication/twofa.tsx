@@ -5,24 +5,23 @@ import ip from "@/utils/endPoint";
 import { useState } from "react";
 
 const Twofa = () => {
-  // const [value, setValue] = useState("")
   const Router = useRouter();
 
   const sendCode = async (entredValue: string) => {
     try {
+      const oldToken = localStorage.getItem("token");
       const res = await axios.post(`${ip}/2fa/authenticate`, {code: entredValue}, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
+          Authorization: `Bearer ${oldToken}`
         }
       });
       localStorage.removeItem("token");
       localStorage.setItem("token", res?.data?.token)
       const token = localStorage.getItem("token");
       if (!token) {
-        Router.push("/Signin");
+        Router.push("/signin");
         return;
       }
-
       console.log("response from two factore authentication: ", res);
     } catch (error: any) {
       console.log("error from two factor authentication: ", error);

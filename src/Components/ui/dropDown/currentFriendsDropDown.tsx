@@ -1,4 +1,4 @@
-import { currentFriendsAtom } from "@/Components/context/recoilContext";
+import { currentFriendsAtom } from "@/components/context/recoilContext";
 import dataFriends from "@/types/friendsType";
 import ip from "@/utils/endPoint";
 import axios from "axios";
@@ -55,7 +55,7 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
   const handleBlock = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      Router.push("/Signin");
+      Router.push("/signin");
       return ;
     }
     try {
@@ -79,7 +79,7 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
   const handleUnfriend = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      Router.push("/Signin");
+      Router.push("/signin");
       return ;
     }
     try {

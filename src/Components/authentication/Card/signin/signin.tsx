@@ -1,7 +1,7 @@
-import ContinueWithIntra from "@/Components/ui/Buttons/ContinueWithIntra";
-import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
-import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
-import InputBorder from "@/Components/ui/Inputs/InputBorder";
+import ContinueWithIntra from "@/components/ui/buttons/continueWithIntra";
+import EmptyButton from "@/components/ui/buttons/emptyButton";
+import SimpleButton from "@/components/ui/buttons/simpleButton";
+import InputBorder from "@/components/ui/Inputs/inputBorder";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
@@ -49,16 +49,6 @@ const Signin = () => {
     },
   ];
 
-  // {
-  //   "isTwoFaAuthenticated": false,
-  //   "isTwoFactorEnabled": false,
-  //   "username": "user1",
-  //   "sub": "e7495032-c6ae-457f-96b8-b083549ed6cd",
-  //   "iss": "spinshot",
-  //   "iat": 1697054422,
-  //   "exp": 1697140822
-  // }
-
   const RedirectionFunction = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
@@ -72,11 +62,7 @@ const Signin = () => {
       if (token.isTwoFactorEnabled === true) {
         Router.push("/twoFactorAuthentication");
       } else if (token.isTwoFactorEnabled === false) {
-        Router.push(
-          `/profile/${
-            parseJwt(JSON.stringify(localStorage.getItem("token"))).username
-          }`
-        );
+        Router.push(`/profile/${token.username}`);
       }
     } catch (error: any) {
       setErrorMessage(error?.response?.data?.message);
@@ -93,7 +79,7 @@ const Signin = () => {
 
   const redirection = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    Router.push("/Signup");
+    Router.push("/signup");
   };
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { KeyboardEvent } from "react";
 import { InputsProps} from "@/types/InputsProps";
 import { ChangeEvent, FocusEvent, useState } from "react";
-import PasswordButton from "../Buttons/PasswordButton";
+import PasswordButton from "@/components/ui/buttons/passwordButton";
 
 const InputBorder: React.FC<InputsProps> = ({
   inputValue,

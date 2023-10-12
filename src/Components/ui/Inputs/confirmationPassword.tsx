@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ConfirmProps } from "@/types/InputsProps";
 import { FocusEvent, ChangeEvent, useState, KeyboardEvent } from "react";
-import PasswordButton from "../Buttons/PasswordButton";
+import PasswordButton from "../buttons/passwordButton";
 
 const ConfirmationPassword: React.FC<ConfirmProps> = ({
   Password,

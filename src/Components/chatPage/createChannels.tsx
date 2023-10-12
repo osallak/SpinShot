@@ -10,10 +10,10 @@ import axios from "axios";
 import Image from "next/image";
 import { Fragment, useState, KeyboardEvent, MouseEvent } from "react";
 import CreateChannelIcon from "../../../public/CreateChannel.svg";
-import SwitchButton from "../ui/Buttons/SwitchButton";
+import SwitchButton from "../ui/buttons/switchButton";
 import ip from "@/utils/endPoint";
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im91c3NhbWEiLCJzdWIiOiI3M2I4MzA2ZS02ZjVlLTQ3MzQtOGUyOC0wODRhYzg5ODI5OGYiLCJpc3MiOiJzcGluc2hvdCIsImlhdCI6MTY5NzAzNDQ2MSwiZXhwIjoxNjk3MTIwODYxfQ.pxcvA59yyx6MH-ix_ZH3uhGBPvCSr5IxNPkf0iE9aeQ"
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiYjRiMWZjNGYtYjkwMC00NDgxLTliMWMtNDIyMjc5OTU2Yjg5IiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTcxMjc3OTEsImV4cCI6MTY5NzIxNDE5MX0.J4IbTkFPsZLYEjoD7G0q5fMslp_-_XZ6R8Is8y4QDkk"
 const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
   const [type, setType] = useState("");
   const [name, setName] = useState("");

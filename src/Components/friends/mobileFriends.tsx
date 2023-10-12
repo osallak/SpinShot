@@ -23,7 +23,7 @@ const MobileCurrentFriends = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      Router.push("/Signin");
+      Router.push("/signin");
       return;
     }
   })

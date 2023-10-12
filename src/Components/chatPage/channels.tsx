@@ -15,6 +15,12 @@ const Channels = (props: { searchValue: string; loaded: boolean }) => {
     setClicked(index);
   };
 
+  const sp = (name: string) => {
+    const res = name.split(" ");
+    if (res.length > 2) for (let i = 0; i < res.length; i++) res.pop();
+    return res;
+  };
+
   return (
     <div className="w-[99%] xl:px-4 px-2 hover:overflow-auto overflow-hidden flex items-center h-[68%] min-h-[100px]">
       {props.searchValue?.length === 0 ? (
@@ -33,7 +39,17 @@ const Channels = (props: { searchValue: string; loaded: boolean }) => {
                           : "bg-transparent"
                       }`}
                     >
-                      <Image src={test1} alt="test" />
+                      <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] h-full flex justify-center items-center">
+                        <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] lg:h-[70px] md:h-[60px] sm:h-[50px] h-[40px] md:rounded-2xl rounded-xl bg-white/20 flex justify-center items-center">
+                          <div className="font-Poppins md:text-4xl sm:text-3xl text-2xl font-thin text-very-dark-purple flex justify-center items-center">
+                            {sp(items.id).map((charName, index) => (
+                              <p key={index} className="uppercase">
+                                {charName[0]}
+                              </p>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
                       <div className="flex justify-start items-start space-y-1 flex-col">
                         <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
                           {items.id}
@@ -76,7 +92,17 @@ const Channels = (props: { searchValue: string; loaded: boolean }) => {
                           : "bg-transparent"
                       }`}
                     >
-                      <Image src={test1} alt="test" />
+                      <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] h-full flex justify-center items-center">
+                        <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] lg:h-[70px] md:h-[60px] sm:h-[50px] h-[40px] md:rounded-2xl rounded-xl bg-white/20 flex justify-center items-center">
+                          <div className="font-Poppins md:text-4xl sm:text-3xl text-2xl font-thin text-very-dark-purple flex justify-center items-center">
+                            {sp(items.id).map((charName, index) => (
+                              <p key={index} className="uppercase">
+                                {charName[0]}
+                              </p>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
                       <div className="flex justify-start items-start space-y-1 flex-col">
                         <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
                           {items.id}

@@ -1,4 +1,4 @@
-import SearchInput from "@/Components/ui/Inputs/searchInput";
+import SearchInput from "@/components/ui/Inputs/searchInput";
 import allMessagesType from "@/types/messagesArrays";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";
 import messagesIcon from "../../../public/messagesIcon.svg";
 import { chatAll } from "../context/recoilContext";
-import IconButton from "../ui/Buttons/IconButton";
+import IconButton from "../ui/buttons/iconButton";
 import Channels from "./channels";
 import Individual from "./individual";
 

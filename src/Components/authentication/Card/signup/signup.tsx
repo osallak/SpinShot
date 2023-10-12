@@ -1,7 +1,7 @@
-import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
-import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
-import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
-import InputBorder from "@/Components/ui/Inputs/InputBorder";
+import EmptyButton from "@/components/ui/buttons/emptyButton";
+import SimpleButton from "@/components/ui/buttons/simpleButton";
+import ConfirmationPassword from "@/components/ui/Inputs/confirmationPassword";
+import InputBorder from "@/components/ui/Inputs/inputBorder";
 import ip from "@/utils/endPoint";
 import axios from "axios";
 import Image from "next/image";
@@ -71,7 +71,7 @@ const Signup = () => {
 
   const redirection = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    Router.push("/Signin");
+    Router.push("/signin");
   };
 
   const RedirectionFunction = async (
@@ -190,7 +190,7 @@ const Signup = () => {
                 <div className="b-sm:w-40 w-3/4 c-md:h-10 sm:h-10 h-9 flex justify-center items-center rounded-full">
                   <SimpleButton
                     Type="submit"
-                    onclick={(e) => RedirectionFunction(e, "/Signin")}
+                    onclick={(e) => RedirectionFunction(e, "/signin")}
                     content="Sign up"
                   />
                 </div>

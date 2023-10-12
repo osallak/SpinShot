@@ -22,7 +22,7 @@ const ContentFriendsRequests = () => {
   const fetchData = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      Router.push("/Signin");
+      Router.push("/signin");
       return;
     }
     try {

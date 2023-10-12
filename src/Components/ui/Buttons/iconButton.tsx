@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ButtonProps } from "../../../types/ButtonProps";
+import { ButtonProps } from "../../../types/buttonProps";
 
 const IconButton: React.FC<ButtonProps> = ({ icon, content, onclick }) => {
   return (

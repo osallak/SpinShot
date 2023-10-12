@@ -1,7 +1,6 @@
 import Racket from "../../../public/racket.svg";
 import Image from "next/image";
-import SimpleButton from "../ui/Buttons/SimpleButton";
-import RacketThreeD from "./RacketThreeD";
+import SimpleButton from "../ui/buttons/simpleButton";
 import { MouseEvent, KeyboardEvent } from "react";
 import { useRouter } from "next/router";
 
@@ -10,11 +9,11 @@ const LandingPage = () => {
 
   const redirect = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    Router.push("/Signin");
+    Router.push("/signin");
   };
   const handleKeyPress = (e: KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === "Enter") {
-      Router.push("/Signin");
+      Router.push("/signin");
     }
   };
   return (
@@ -66,9 +65,6 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
-      </div>
-      <div className="fl:flex hidden justify-center items-center w-1/2 h-full ">
-        <RacketThreeD />
       </div>
     </div>
   );

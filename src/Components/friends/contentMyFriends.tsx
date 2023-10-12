@@ -1,4 +1,4 @@
-import { currentFriendsAtom } from "@/Components/context/recoilContext";
+import { currentFriendsAtom } from "@/components/context/recoilContext";
 import dataFriends from "@/types/friendsType";
 import ip from "@/utils/endPoint";
 import axios from "axios";
@@ -26,7 +26,7 @@ const ContentMyFriends = () => {
   const fetchData = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      Router.push("/Signin");
+      Router.push("/signin");
       return;
     }
     try {

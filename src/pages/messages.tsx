@@ -1,6 +1,6 @@
 "use client"
 
-import Chat from "../Components/chatPage/chatPage";
+import Chat from "../components/chatPage/chatPage";
 
 const Messages = () => {
   return <Chat />;

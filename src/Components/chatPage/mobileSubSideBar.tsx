@@ -1,4 +1,4 @@
-import SearchInput from "@/Components/ui/Inputs/searchInput";
+import SearchInput from "@/components/ui/Inputs/searchInput";
 import dataSubSideBar from "@/types/messagesArrays";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
@@ -6,11 +6,11 @@ import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";
 import messagesIcon from "../../../public/messagesIcon.svg";
 import test1 from "../../../public/test1.svg";
-import IconButton from "../ui/Buttons/IconButton";
+import IconButton from "../ui/buttons/iconButton";
 import axios from "axios";
 
 const ayoubToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiYzlkN2QzMmEtYTE2NC00OWUxLTk4YmYtNTE3YmQwZjBmMzYzIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY3OTU4NTksImV4cCI6MTY5Njg4MjI1OX0.QEAG6ZKAKzSLJ0hyrdRJQH65aWW_YKneTLCaN7XiWKU";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiYjRiMWZjNGYtYjkwMC00NDgxLTliMWMtNDIyMjc5OTU2Yjg5IiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTcxMjc3OTEsImV4cCI6MTY5NzIxNDE5MX0.J4IbTkFPsZLYEjoD7G0q5fMslp_-_XZ6R8Is8y4QDkk";
 
 function MobileSubSideBar(props: {
   open: boolean;

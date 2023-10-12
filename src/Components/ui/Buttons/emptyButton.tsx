@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { OthersProps } from "../../../types/ButtonProps";
+import { OthersProps } from "../../../types/buttonProps";
 
 const EmptyButton: React.FC<OthersProps> = ({ flag, onclick, content }) => {
   return (

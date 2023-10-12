@@ -7,14 +7,20 @@ import { useRouter } from "next/router";
 
 const Waiting = () => {
   const router = useRouter();
-  const [codec, setCode] = useState<any>("");
   
   const code = router.query.code;
   const fetchData = async () => {
     console.log("token from continue with intra: ", code);
     if (!code) return;
     try {
-      const res = await axios.get(`http://localhost:3001/auth/42?code=${code}`  );
+      const res = await axios.get(`http://localhost:3001/auth/42?code=${code}`);
+      const token = parseJwt(res?.data?.token);
+      localStorage.setItem("token", res?.data?.token);
+      if (token.isTwoFactorEnabled === true) {
+        router.push("/twoFactorAuthentication");
+      } else if (token.isTwoFactorEnabled === false) {
+        router.push(`/profile/${token.username}`);
+      }
       console.log("response from waiting page: ", res);
       console.log("token from waiting page: ", res?.data?.token);
     } catch (error) {
@@ -26,14 +32,10 @@ const Waiting = () => {
   //   console.log("jwtToke: ", parseJwt(JSON.stringify(localStorage.getItem("token"))))
   // }
   useEffect(() => {
-    if (!code) console.log("theire is no code");
-    else {
-      console.log("tokenized");
-      setCode(code);
-    }
+    if (!code) return;
     fetchData();
   }, [code])
-  
+
   return <div>Waiting</div>;
 };
 

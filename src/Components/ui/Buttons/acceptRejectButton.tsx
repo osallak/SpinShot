@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { OthersProps } from "@/types/ButtonProps";
+import { OthersProps } from "@/types/buttonProps";
 
 const AcceptRejectButton: React.FC<OthersProps> = ({ onclick, content }) => {
   return (

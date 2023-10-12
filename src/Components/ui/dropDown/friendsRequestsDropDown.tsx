@@ -15,7 +15,7 @@ import accept from "../../../../public/active.svg";
 import refuse from "../../../../public/unactive.svg";
 import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
-import { friendRequestsAtom, currentFriendsAtom } from "@/Components/context/recoilContext";
+import { friendRequestsAtom, currentFriendsAtom } from "@/components/context/recoilContext";
 import dataFriends from "@/types/friendsType";
 
 const FriendRequestsDropDown = (props: { id: string }) => {
@@ -57,7 +57,7 @@ const FriendRequestsDropDown = (props: { id: string }) => {
   const handleAccept = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      Router.push("/Signin");
+      Router.push("/signin");
       return ;
     }
     // console.log("id from handle accept: ", props.id);

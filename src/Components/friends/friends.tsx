@@ -17,7 +17,7 @@ const FriendsPage = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/Signin");
+      router.push("/signin");
       return;
     }
   });

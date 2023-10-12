@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ConfirmProps } from "@/types/InputsProps";
 import { FocusEvent, ChangeEvent, useState } from "react";
-import PasswordButton from "../Buttons/PasswordButton";
+import PasswordButton from "../buttons/passwordButton";
 
 const ConfirmationPassword: React.FC<ConfirmProps> = ({
   Password,
@@ -19,38 +19,37 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
   Reg,
 }) => {
   const [ShowPassword, setShowPassword] = useState(false);
-  const [ValidReg, setValidReg] = useState(true)
-  
+  const [ValidReg, setValidReg] = useState(true);
+
   const HandleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault()
-    const value = event.target.value
-    setinputValue(value)
-    const isReg = value.match(Reg)
-    console.log("value: |" + value + "| Password: |" + Password + "|")
-    if (!isReg) {
-      setValidReg(false)
-      setisValid(false)
-    } else {
-      setValidReg(true)
-    }
+    event.preventDefault();
+    const value = event.target.value;
+    setinputValue(value);
+    // const isReg = value.match(Reg)
+    // if (!isReg) {
+    //   setValidReg(false)
+    //   setisValid(false)
+    // } else {
+    //   setValidReg(true)
+    // }
     if (value !== Password) {
-      setisMatch(false)
+      setisMatch(false);
     } else {
-      setisMatch(true)
+      setisMatch(true);
     }
-  }
-  
+  };
+
   const HandleBlur = (event: FocusEvent<HTMLInputElement>) => {
-    event.preventDefault()
-    const isReg = inputValue.match(Reg)
+    event.preventDefault();
+    const isReg = inputValue.match(Reg);
     if (!isReg) {
-      setValidReg(false)
-      setisValid(false)
+      setValidReg(false);
+      setisValid(false);
     } else {
-      setValidReg(true)
-      setisValid(true)
+      setValidReg(true);
+      setisValid(true);
     }
-  }
+  };
 
   return (
     <div
@@ -70,10 +69,10 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
           className={`w-full bg-transparent pl-3 h-full focus:outline-none placeholder:opacity-40 placeholder:font-Poppins, font-thin text-pearl focus:placeholder:opacity-0`}
         />
       </div>
-        <PasswordButton
-          ShowPassword={ShowPassword}
-          setShowPassword={setShowPassword}
-        />
+      <PasswordButton
+        ShowPassword={ShowPassword}
+        setShowPassword={setShowPassword}
+      />
     </div>
   );
 };

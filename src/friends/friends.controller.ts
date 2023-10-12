@@ -1,29 +1,30 @@
-import { Controller, Get, Post, Param, UseGuards, Query } from '@nestjs/common';
-import { FriendsService } from './friends.service';
+import { Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { UserDecorator } from 'src/global/decorators/global.decorators';
 import { PaginationResponse, Response } from 'src/global/interfaces';
 import { User } from 'src/types/user.types';
 import { FriendsQueryDto } from './dto/pagination.dto';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FriendsService } from './friends.service';
+import { FriendsGuard } from './guards/friends.guard';
+import {
+  AcceptFriendDoc,
+  AddFriendDoc,
+  BlockFriendDoc,
+  GetFriendsDoc,
+  RejectDoc,
+  UnblockFriendDoc,
+  UnfriendDoc,
+} from './swagger/friends.swagger';
 
 @ApiTags('friends')
 @Controller('friends')
 export class FriendsController {
   constructor(private readonly friendsService: FriendsService) {}
 
-  @ApiResponse({
-    status: 201,
-    schema: {
-      example: {
-        status: 201,
-        message: 'Added successfully',
-      },
-    },
-  })
-  @ApiBearerAuth()
-  @Post('add/:id')
-  @UseGuards(JwtAuthGuard)
+  @AddFriendDoc()
+  @Post('/:id')
+  @UseGuards(JwtAuthGuard, FriendsGuard)
   async addFriend(
     @Param('id') id: string,
     @UserDecorator() user: User,
@@ -31,12 +32,7 @@ export class FriendsController {
     return await this.friendsService.addFriend(id, user.id);
   }
 
-  @ApiBearerAuth()
-  @ApiResponse({
-    status: 200,
-    description:
-      'an object holding an array of friends and  pagination metadata',
-  })
+  @GetFriendsDoc()
   @UseGuards(JwtAuthGuard)
   @Get()
   async getFriends(
@@ -46,17 +42,9 @@ export class FriendsController {
     return await this.friendsService.getAll(user, query);
   }
 
-  @ApiBearerAuth()
-  @ApiResponse({
-    schema: {
-      example: {
-        status: 201,
-        description: 'friend request accepted',
-      },
-    },
-  })
-  @Post('/accept/:id')
-  @UseGuards(JwtAuthGuard)
+  @AcceptFriendDoc()
+  @Put('/:id/accept')
+  @UseGuards(JwtAuthGuard, FriendsGuard)
   accept(
     @Param('id') id: string,
     @UserDecorator() user: User,
@@ -64,17 +52,9 @@ export class FriendsController {
     return this.friendsService.accept(user.id, id);
   }
 
-  @ApiBearerAuth()
-  @ApiResponse({
-    schema: {
-      example: {
-        status: 201,
-        message: 'user blocked successfully',
-      },
-    },
-  })
-  @UseGuards(JwtAuthGuard)
-  @Post('/block/:id')
+  @BlockFriendDoc()
+  @UseGuards(JwtAuthGuard, FriendsGuard)
+  @Put('/:id/block')
   block(
     @Param('id') id: string,
     @UserDecorator() user: User,
@@ -82,16 +62,8 @@ export class FriendsController {
     return this.friendsService.block(user.id, id);
   }
 
-  @ApiBearerAuth()
-  @ApiResponse({
-    schema: {
-      example: {
-        status: 201,
-        message: 'user unblocked successfully',
-      },
-    },
-  })
-  @Post('/unblock/:id')
+  @UnblockFriendDoc()
+  @Put('/:id/unblock')
   @UseGuards(JwtAuthGuard)
   unblock(
     @Param('id') id: string,
@@ -100,19 +72,24 @@ export class FriendsController {
     return this.friendsService.unblock(user.id, id);
   }
 
-  @ApiBearerAuth()
-  @ApiResponse({
-    schema: {
-      example: {
-        status: 201,
-        message: 'friend removed successfully',
-      },
-    },
-  })
-  @UseGuards(JwtAuthGuard)
-  @Post('/unfriend/:id')
-  async unfriend(@Param('id') id: string, @UserDecorator() user: User): Promise<Response> {
+  @UnfriendDoc()
+  @UseGuards(JwtAuthGuard, FriendsGuard)
+  @Put('/:id/unfriend')
+
+  async unfriend(
+    @Param('id') id: string,
+    @UserDecorator() user: User,
+  ): Promise<Response> {
     return this.friendsService.unfriend(user.id, id);
-    
+  }
+
+  @Put('/:id/reject')
+  @RejectDoc()
+  @UseGuards(JwtAuthGuard, FriendsGuard)
+  async reject(
+    @Param('id') id: string,
+    @UserDecorator() user: User,
+  ): Promise<Response> {
+    return this.friendsService.reject(user.id, id);
   }
 }

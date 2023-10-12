@@ -1,32 +1,49 @@
-import {
-  BadRequestException,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { FriendshipStatus } from '@prisma/client';
-import { PaginationResponse } from 'src/global/interfaces';
+import { PaginationResponse, Response } from 'src/global/interfaces';
+import { serializeService } from 'src/global/services';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from 'src/types';
 import { FriendsQueryDto } from './dto/pagination.dto';
-import { serializeService } from 'src/global/services';
-import { Response } from 'src/global/interfaces';
 
 @Injectable()
 export class FriendsService {
-  private readonly logger = new Logger('FriendService');
   constructor(private readonly prismaService: PrismaService) {}
+
   async addFriend(friendId: string, userId: string): Promise<Response> {
     const sortedIds: string[] = [userId, friendId].sort();
     if (userId === friendId) throw new BadRequestException();
-    await this.prismaService.friendship.create({
-      data: {
-        leftUserId: sortedIds[0],
-        rightUserId: sortedIds[1],
-        state: 'PENDING',
-        sender: userId,
+    const friendship = await this.prismaService.friendship.findUnique({
+      where: {
+        leftUserId_rightUserId: {
+          leftUserId: sortedIds[0],
+          rightUserId: sortedIds[1],
+        },
       },
     });
-    //todo: send notif to client
+    if (friendship && friendship.status === FriendshipStatus.NOT_FOUND) {
+      await this.prismaService.friendship.update({
+        where: {
+          leftUserId_rightUserId: {
+            leftUserId: sortedIds[0],
+            rightUserId: sortedIds[1],
+          },
+        },
+        data: {
+          status: FriendshipStatus.PENDING,
+        },
+      });
+    } else {
+      await this.prismaService.friendship.create({
+        data: {
+          leftUserId: sortedIds[0],
+          rightUserId: sortedIds[1],
+          status: FriendshipStatus.PENDING,
+          sender: userId,
+        },
+      });
+    }
+    console.log('friendship', friendship);
     return {
       status: 201,
       message: 'Added successfully',
@@ -47,7 +64,7 @@ export class FriendsService {
           AND: [{ rightUserId: user.id }, { leftUserId: { lt: user.id } }],
         },
       ],
-      state: query.state,
+      status: query.status,
     };
     const select = {
       id: true,
@@ -61,7 +78,7 @@ export class FriendsService {
         select: {
           leftUser: { select },
           rightUser: { select },
-          state: true,
+          status: true,
           sender: true,
         },
         skip: query.getSkip(),
@@ -71,8 +88,20 @@ export class FriendsService {
         where,
       }),
     ]);
+
+    const friends = friendships.map((friendship) => {
+      const friend =
+        friendship.leftUser.id === user.id
+          ? friendship.rightUser
+          : friendship.leftUser;
+      return {
+        ...friend,
+        status: friendship.status,
+        sender: friendship.sender,
+      };
+    });
     return serializeService.serializePaginationResponse(
-      friendships,
+      friends,
       totalCount,
       query.limit,
     );
@@ -88,7 +117,7 @@ export class FriendsService {
         },
       },
       data: {
-        state: FriendshipStatus.BLOCKED,
+        status: FriendshipStatus.BLOCKED,
         blocker: userId,
       },
     });
@@ -108,9 +137,11 @@ export class FriendsService {
         },
       },
     });
+    if (!friendship)
+      throw new BadRequestException('No pending request to accept');
     if (
-      (friendship.state in FriendshipStatus &&
-        friendship.state !== 'PENDING') ||
+      (friendship.status in FriendshipStatus &&
+        friendship.status !== 'PENDING') ||
       friendship.sender === userId
     )
       throw new BadRequestException('No pending request to accept');
@@ -121,7 +152,7 @@ export class FriendsService {
           rightUserId: sortedIds[1],
         },
       },
-      data: { state: FriendshipStatus.ACCEPTED },
+      data: { status: FriendshipStatus.ACCEPTED },
     });
     //todo: notification
     return {
@@ -141,14 +172,15 @@ export class FriendsService {
         leftUserId_rightUserId,
       },
     });
-    if (friendship.state !== FriendshipStatus.BLOCKED)
+    if (friendship.status !== FriendshipStatus.BLOCKED)
       throw new BadRequestException('no user to unblock');
     if (friendship.blocker !== userId)
       throw new BadRequestException('user must be the blocker');
-    await this.prismaService.friendship.delete({
+    await this.prismaService.friendship.update({
       where: {
         leftUserId_rightUserId,
       },
+      data: { status: FriendshipStatus.NOT_FOUND, blocker: null },
     });
     return {
       status: 201,
@@ -167,16 +199,48 @@ export class FriendsService {
         leftUserId_rightUserId,
       },
     });
-    if (friendship.state !== FriendshipStatus.ACCEPTED)
+    if (friendship.status !== FriendshipStatus.ACCEPTED)
       throw new BadRequestException('cannot unfriend non-friend');
-    await this.prismaService.friendship.delete({
+    await this.prismaService.friendship.update({
       where: {
         leftUserId_rightUserId,
       },
+      data: { status: FriendshipStatus.NOT_FOUND },
     });
     return {
       status: 201,
       message: 'friend removed successfully',
     };
+  }
+
+  async reject(userId: string, senderId: string): Promise<Response> {
+    const sortedIds: string[] = [userId, senderId].sort();
+    const friendship = await this.prismaService.friendship.findUnique({
+      where: {
+        leftUserId_rightUserId: {
+          leftUserId: sortedIds[0],
+          rightUserId: sortedIds[1],
+        },
+      },
+    });
+    if (friendship?.status !== FriendshipStatus.PENDING)
+      throw new BadRequestException('No Pending Requests To Reject');
+    if (friendship?.sender !== senderId)
+      throw new BadRequestException('Invalid Sender Id');
+    await this.prismaService.friendship.update({
+      where: {
+        leftUserId_rightUserId: {
+          leftUserId: sortedIds[0],
+          rightUserId: sortedIds[1],
+        },
+      },
+      data: {
+        status: FriendshipStatus.NOT_FOUND,
+      },
+    });
+    return {
+      status: 201,
+      message: 'request rejected'
+    }
   }
 }

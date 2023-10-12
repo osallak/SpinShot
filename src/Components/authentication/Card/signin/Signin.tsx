@@ -56,7 +56,7 @@ const Signin = () => {
   ) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${ip}/auth/signin/local`, {
+      const res = await axios.post(`${ip}/auth/local/signin`, {
         username,
         password,
       });
@@ -64,7 +64,7 @@ const Signin = () => {
       console.log("token: " + localStorage.getItem("token"));
       Router.push(Path);
     } catch (error: any) {
-      setErrorMessage(error.response.data.message);
+      setErrorMessage(error?.response?.data?.message);
       setError(true);
       console.log("error from signin: ", error);
     }

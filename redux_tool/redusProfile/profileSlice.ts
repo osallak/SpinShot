@@ -4,12 +4,10 @@ import { getProfile } from "./profileThunk";
 
 export interface ProfileState {
   profile: any;
-  isLoading: boolean;
 }
 
 const initialState: ProfileState = {
   profile: {},
-  isLoading: false,
 };
 
 export const ProfileSlice = createSlice({

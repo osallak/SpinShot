@@ -8,9 +8,9 @@ import toast, { Toaster } from "react-hot-toast";
 import ip from "@/endpoint/api";
 
 const ResetPassword = () => {
-  const [password0, setPassword0] = useState(false);
-  const [password1, setPassword1] = useState(false);
-  const [password2, setPassword2] = useState(false);
+  const [showPasswd, setShowPasswd] = useState(false);
+  const [showNewPasswd, setShowNewPasswd] = useState(false);
+  const [showConfPassw, setShowConfPassw] = useState(false);
   const profile_data = useAppSelector((state) => state.Profile);
 
   const [password, setPassword] = useState("");
@@ -31,39 +31,40 @@ const ResetPassword = () => {
   };
 
   const hendleChange = () => {
-    const parss = /^.{6,}$/;
-    {
-      password == "1234567" && parss.test(ConfirmPassword)
-        ? hendleUpdata()
-        : notify();
-    }
+    hendleUpdata()
+    // const parss = /^.{6,}$/;
+    // {
+    //   password == "123456" && parss.test(ConfirmPassword)
+    //     ? hendleUpdata()
+    //     : notify();
+    // }
   };
 
   const hendleUpdata = async () => {
     try {
       const token = localStorage.getItem("token");
-      console.log(token);
-      console.log(ConfirmPassword);
-      const response = await axios.patch(
-        `${ip}/users`,
-        {
-          password: ConfirmPassword,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      if (token)
+      {
+        const response = await axios.patch(
+          `${ip}/users`,
+          {
+            password: ConfirmPassword,
           },
-        }
-      );
-      console.log("re ", response);
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+          );
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const notify = () => {
-    toast.error("Password incorrect ");
-  };
+  // const notify = () => {
+  //   toast.error("Password incorrect ");
+  // };
 
   return (
     <div className=" space-y-20 md:space-y-36  h-[910px] ">
@@ -76,12 +77,12 @@ const ResetPassword = () => {
             name={"Password"}
             onChange={handleChange}
             className=" bg-very-dark-purple w-[100%] rounded-[20px] px-7 h-14 opacity-40"
-            type={password0 ? "text" : "password"}
+            type={showPasswd ? "text" : "password"}
             placeholder={"Password"}
           />
           <PasswordButton
-            ShowPassword={password0}
-            setShowPassword={setPassword0}
+            ShowPassword={showPasswd}
+            setShowPassword={setShowPasswd}
           />
         </div>
         <div className=" bg-very-dark-purple w-[100%] md:w-[550px] rounded-[20px] flex flex-row justify-center items-center">
@@ -89,12 +90,12 @@ const ResetPassword = () => {
             name={"New Password"}
             onChange={handleChange}
             className=" bg-very-dark-purple w-[100%] rounded-[20px] px-7 h-14 opacity-40"
-            type={password1 ? "text" : "password"}
+            type={showNewPasswd ? "text" : "password"}
             placeholder={"New Password"}
           />
           <PasswordButton
-            ShowPassword={password1}
-            setShowPassword={setPassword1}
+            ShowPassword={showNewPasswd}
+            setShowPassword={setShowNewPasswd}
           />
         </div>
         <div className=" bg-very-dark-purple w-[100%] md:w-[550px] rounded-[20px] flex flex-row justify-center items-center">
@@ -102,12 +103,12 @@ const ResetPassword = () => {
             name={"Confirm New Password"}
             onChange={handleChange}
             className=" bg-very-dark-purple w-[100%] rounded-[20px] px-7 h-14 opacity-40"
-            type={password2 ? "text" : "password"}
+            type={showConfPassw ? "text" : "password"}
             placeholder={"Confirm New Password"}
           />
           <PasswordButton
-            ShowPassword={password2}
-            setShowPassword={setPassword2}
+            ShowPassword={showConfPassw}
+            setShowPassword={setShowConfPassw}
           />
         </div>
       </div>
@@ -115,9 +116,9 @@ const ResetPassword = () => {
         <div className={`  w-24 sm:w-32  h-full`}>
           <SimpleButton content="Save" onclick={hendleChange} />
         </div>
-        <div>
+        {/* <div>
           <Toaster position="top-center" reverseOrder={false} />
-        </div>
+        </div> */}
       </div>
     </div>
   );

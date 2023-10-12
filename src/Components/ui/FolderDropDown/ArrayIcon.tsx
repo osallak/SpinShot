@@ -67,7 +67,7 @@ export const SidbarIcon = [
   { icon: logo },
   { icon: line },
   { icon: search, route: "/search" },
-  { icon: profile, route: "/Profile" },
+  { icon: profile, route: "/profile" },
   { icon: message, route: "message" },
   { icon: friend, route: "friend" },
   { icon: play, route: "/game" },

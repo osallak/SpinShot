@@ -7,9 +7,7 @@ import Image from "next/image";
 import parseJwt from "@/utils/parsJwt";
 
 const Pagination = (props:any) => {
-
-  console.log( "ls ",props.totalPages);
-  console.log( "ls ",props.page);
+  
   const nextPage = () => {
     {
       props.page < props.totalPages 

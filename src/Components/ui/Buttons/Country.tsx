@@ -104,7 +104,7 @@ const Country = (props:{setCountry:Function}) => {
         <Twemoji options={{ className: "twemoji"}}>
           <motion.div className="  flex flex-row space-x-6 items-center  ">
               { isFlag && <h1>{isFlag}</h1>}
-              <h1> {isCountry.length > 30 ? isCountry.slice(0, 20) + '...' : isCountry}</h1>
+              <h1> {isCountry.length > 25 ? isCountry.slice(0, 20) + '...' : isCountry}</h1>
           </motion.div>
         </Twemoji>
       </motion.button>

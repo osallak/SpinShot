@@ -8,8 +8,8 @@ import untouchableWin from "../../../../public/untouchableLose.svg";
 const Untouchable = () => {
     const achievement_data = useAppSelector((state) => state.Profile);
   return (
-    <div className=" bg-very-dark-purple h-[150px] sm:h-[200px] c-gb:h-[300px] rounded-[20px] w-[85%] c-gb:w-full  flex flex-row  justify-between">
-    <div className="p-4 sm:p-10 space-y-[20%]">
+    <div className={`  bg-very-dark-purple h-[150px] sm:h-[200px] c-gb:h-[300px] rounded-[20px] w-[85%] c-gb:w-full  flex flex-row  justify-between`}>
+    <div className={` ${1 ? "text-pearl opacity-40" : "text-pearl "} p-4 sm:p-10 space-y-[20%]`}>
       <h1 className="text-pearl text-sm sm:text-2xl">
         {achievement_data.profile?.achievements[2]?.Achiement?.name}
       </h1>

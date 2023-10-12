@@ -42,8 +42,7 @@ const Game = () => {
   const handleResize = () => {
     setWidth(window.innerWidth);
   };
-
-  console.log(opened);
+  
   return (
     <div
       className={

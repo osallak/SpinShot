@@ -1,5 +1,4 @@
 import Image from "next/image";
-import ibenmain from "../../../../public/ibenmain.jpeg"
 import menu from "../../../../public/menu.svg"
 import React from "react";
 import { useAppSelector } from "../../../../redux_tool";
@@ -32,7 +31,7 @@ const NavbarMobile = (props: {setMenu: Function, handleMenu: Function, isopen: b
                   <span>{data.profile?.email}</span>
                 </div>
               </div>
-              <Image className=" rounded-lg md:rounded-2xl w-[35px] md:w-[50px]" src={ibenmain} alt="" />
+              <Image className=" rounded-lg md:rounded-2xl w-[35px] md:w-[50px]" src={""} alt="" />
             </div>
           </div>
         </div>

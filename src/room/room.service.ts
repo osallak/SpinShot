@@ -818,6 +818,8 @@ export class RoomService {
             select: {
               userId: true,
               userStatus: true,
+							muteDuration: true,
+							mutedAt: true,
             },
           });
         resolve(roomMembers);

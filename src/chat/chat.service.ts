@@ -329,9 +329,9 @@ export class ChatService {
                   {
                     status: FriendshipStatus.ACCEPTED,
                   },
-									{
-										status: FriendshipStatus.NOT_FOUND,
-									}
+                  {
+                    status: FriendshipStatus.NOT_FOUND,
+                  },
                 ],
               },
             },
@@ -373,10 +373,29 @@ export class ChatService {
   async sendGroupMessage(body: sendRoomMessageDto) {
     return new Promise(async (resolve, reject) => {
       try {
-        // TODO: check if the muted time has passed
         const roomMembers = await this.roomService.getRoomMembers(
           body.roomName,
         );
+        const sender = await this.prismaService.roomChatConversation.findUnique(
+          {
+            where: {
+              roomChatId_userId: {
+                roomChatId: body.roomName,
+                userId: body.from,
+              },
+            },
+          },
+        );
+        if (sender) {
+          if (
+            sender?.mutedAt &&
+            sender?.muteDuration &&
+            BigInt(Date.now()) - BigInt(sender?.mutedAt) <=
+              BigInt(sender?.muteDuration)
+          ) {
+            return reject('muted');
+          }
+        }
         roomMembers?.forEach((member) => {
           if (member?.userId !== body.from) {
             let memberSockets = this.getSocketsAssociatedWithUser(
@@ -387,9 +406,35 @@ export class ChatService {
             });
           }
         });
+        if (sender) {
+          await this.prismaService.message.create({
+            data: {
+              message: body.content,
+              sentAt: body.timestamp,
+              RoomChatConversation: {
+                connect: {
+                  roomChatId_userId: {
+                    roomChatId: body.roomName,
+                    userId: body.from,
+                  },
+                },
+              },
+              RoomChat: {
+                connect: {
+                  id: body.roomName,
+                },
+              },
+              user: {
+                connect: {
+                  id: body.from,
+                },
+              },
+            },
+          });
+        }
       } catch (e) {
         console.log(e);
-        reject(null);
+        reject('Internal Server Error');
       }
     });
   }

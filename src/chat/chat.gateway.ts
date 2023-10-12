@@ -71,8 +71,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     try {
       return await this.chatService.sendGroupMessage(body);
     } catch (e) {
-      this.logger.error(e);
-      throw new WsBadRequestException(INTERNAL_SERVER_ERROR_MESSAGE);
+      throw new WsBadRequestException(e);
     }
   }
 }

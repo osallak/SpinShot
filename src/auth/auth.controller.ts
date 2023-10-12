@@ -68,25 +68,32 @@ export class AuthController {
     @Req() req: Request,
     @Res() res: Response,
     @UserDecorator() user: FortyTwoDto,
-  ): Promise<void> {
-    const { token } = await this.authService.registerFortyTwoUser(user);
-    res.cookie('access-token', token);
-    res.redirect(this.configService.get('FRONTEND_ORIGIN'));
+  ): Promise<any> {
+    try {
+      const { token } = await this.authService.registerFortyTwoUser(user);
+      return res.status(200).json({token: token});
+    } catch {
+      return res.status(500).send("Internal Server Error");
+    }
+    // res.cookie('access-token', token);
+    // res.redirect(this.configService.get('FRONTEND_ORIGIN'));
+
+    // return {token};
   }
 
-  @ApiExcludeEndpoint()
-  @Get('42/cb')
-  @UseGuards(FortyTwoAuthGuard)
-  async login42Callback(
-    @Req() req: Request,
-    @Res() res: Response,
-    @UserDecorator() user: FortyTwoDto,
-  ): Promise<void> {
-    const { token } = await this.authService.registerFortyTwoUser(user);
-    console.log(token);
-    res.cookie('jwt', 'test'); //todo: replace with jwt token
-    res.redirect(this.configService.get('FRONTEND_ORIGIN'));
-  }
+  // @ApiExcludeEndpoint()
+  // @Get('42/cb')
+  // @UseGuards(FortyTwoAuthGuard)
+  // async login42Callback(
+  //   @Req() req: Request,
+  //   @Res() res: Response,
+  //   @UserDecorator() user: FortyTwoDto,
+  // ): Promise<void> {
+  //   const { token } = await this.authService.registerFortyTwoUser(user);
+  //   console.log(token);
+  //   res.cookie('jwt', 'test'); //todo: replace with jwt token
+  //   res.redirect(this.configService.get('FRONTEND_ORIGIN'));
+  // }
 
 
 

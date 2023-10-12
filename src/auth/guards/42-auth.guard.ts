@@ -5,7 +5,6 @@ export class FortyTwoAuthGuard extends AuthGuard('42') {
   
   handleRequest(err: unknown, user: unknown): any {
     if (err || !user) throw new UnauthorizedException();
-    console.log(user);
     return user;
   }
 }

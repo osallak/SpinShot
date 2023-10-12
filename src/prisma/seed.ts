@@ -87,7 +87,6 @@ const createRandomGame = async (user: User, users: User[]): Promise<void> => {
   const opponentId =
     users[faker.number.int({ min: 0, max: users.length - 1 })].id;
 
-    console.log(opponentId);
   await prisma.game.create({
     data: {
       userId: user.id,

@@ -43,7 +43,6 @@ export class FriendsService {
         },
       });
     }
-    console.log('friendship', friendship);
     return {
       status: 201,
       message: 'Added successfully',

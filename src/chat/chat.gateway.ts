@@ -6,6 +6,7 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  WsException,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { ChatService } from './chat.service';
@@ -43,7 +44,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() body: SendMessageDto,
     @ConnectedSocket() socket: Socket,
   ) {
-		this.logger.debug('handlePrivateMessage: ' + JSON.stringify(body));
     return this.chatService.sendPrivateMessage(body);
   }
 
@@ -71,7 +71,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     try {
       return await this.chatService.sendGroupMessage(body);
     } catch (e) {
-      throw new WsBadRequestException(e);
+      socket.emit(
+        e.event,
+        JSON.stringify({
+          status: e.status,
+          message: e.message,
+        }),
+      );
     }
   }
 }

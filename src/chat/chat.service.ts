@@ -4,6 +4,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { FriendshipStatus } from '@prisma/client';
 import { Socket } from 'socket.io';
 import {
+  ANONYMOUS_USER_MESSAGE,
+  BAD_REQUEST,
   EXCEPTION,
   GROUP_MESSAGE,
   INTERNAL_SERVER_ERROR_MESSAGE,
@@ -165,11 +167,29 @@ export class ChatService {
           body.from,
         );
         if (!sender || sender.length === 0) return;
-        event.event = EXCEPTION;
-        event.content = INTERNAL_SERVER_ERROR_MESSAGE;
         for (let i = 0; i < sender.length; ++i) {
-          sender[i].emit(event.event, JSON.stringify(event.content));
+          sender[i].emit(
+            EXCEPTION,
+            JSON.stringify({
+              status: INTERNAL_SERVER_ERROR_MESSAGE,
+              message: INTERNAL_SERVER_ERROR_MESSAGE,
+            }),
+          );
         }
+      }
+    } else {
+      const sender: Array<Socket> = this.getSocketsAssociatedWithUser(
+        body.from,
+      );
+      if (!sender || sender.length === 0) return;
+      for (let i = 0; i < sender.length; ++i) {
+        sender[i].emit(
+          EXCEPTION,
+          JSON.stringify({
+            status: BAD_REQUEST,
+            message: ANONYMOUS_USER_MESSAGE,
+          }),
+        );
       }
     }
   }
@@ -393,7 +413,11 @@ export class ChatService {
             BigInt(Date.now()) - BigInt(sender?.mutedAt) <=
               BigInt(sender?.muteDuration)
           ) {
-            return reject('muted');
+            return reject({
+              event: EXCEPTION,
+              status: BAD_REQUEST,
+              message: 'You are muted',
+            });
           }
         }
         roomMembers?.forEach((member) => {
@@ -434,7 +458,11 @@ export class ChatService {
         }
       } catch (e) {
         console.log(e);
-        reject('Internal Server Error');
+        reject({
+          event: EXCEPTION,
+          status: INTERNAL_SERVER_ERROR_MESSAGE,
+          message: INTERNAL_SERVER_ERROR_MESSAGE,
+        });
       }
     });
   }

@@ -10,7 +10,6 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 
 export const SearchDoc = () =>
   applyDecorators(
-    ApiTags('user'),
     ApiBearerAuth(),
     ApiResponse({
       status: 200,
@@ -36,7 +35,6 @@ export const SearchDoc = () =>
 
 export const GetProfileDoc = () =>
   applyDecorators(
-    ApiTags('user'),
     ApiBearerAuth(),
     ApiResponse({
       status: 200,
@@ -62,7 +60,6 @@ export const GetProfileDoc = () =>
 
 export const GetUserGamesDoc = () =>
   applyDecorators(
-    ApiTags('user'),
     ApiBearerAuth(),
     ApiResponse({
       status: 200,
@@ -72,7 +69,6 @@ export const GetUserGamesDoc = () =>
 
 export const UpdateUserDoc = () =>
   applyDecorators(
-    ApiTags('user'),
     ApiBearerAuth(),
     ApiCreatedResponse({
       description: 'Update user by username',

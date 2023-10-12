@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { UserDecorator } from 'src/global/decorators/global.decorators';
@@ -23,7 +23,7 @@ export class FriendsController {
   constructor(private readonly friendsService: FriendsService) {}
 
   @AddFriendDoc()
-  @Post('add/:id')
+  @Post('/:id')
   @UseGuards(JwtAuthGuard, FriendsGuard)
   async addFriend(
     @Param('id') id: string,
@@ -43,7 +43,7 @@ export class FriendsController {
   }
 
   @AcceptFriendDoc()
-  @Post('/accept/:id')
+  @Put('/:id/accept')
   @UseGuards(JwtAuthGuard, FriendsGuard)
   accept(
     @Param('id') id: string,
@@ -54,7 +54,7 @@ export class FriendsController {
 
   @BlockFriendDoc()
   @UseGuards(JwtAuthGuard, FriendsGuard)
-  @Post('/block/:id')
+  @Put('/:id/block')
   block(
     @Param('id') id: string,
     @UserDecorator() user: User,
@@ -63,7 +63,7 @@ export class FriendsController {
   }
 
   @UnblockFriendDoc()
-  @Post('/unblock/:id')
+  @Put('/:id/unblock')
   @UseGuards(JwtAuthGuard)
   unblock(
     @Param('id') id: string,
@@ -74,7 +74,8 @@ export class FriendsController {
 
   @UnfriendDoc()
   @UseGuards(JwtAuthGuard, FriendsGuard)
-  @Post('/unfriend/:id')
+  @Put('/:id/unfriend')
+
   async unfriend(
     @Param('id') id: string,
     @UserDecorator() user: User,
@@ -82,8 +83,9 @@ export class FriendsController {
     return this.friendsService.unfriend(user.id, id);
   }
 
-  @Post('/reject/:id')
+  @Put('/:id/reject')
   @RejectDoc()
+  @UseGuards(JwtAuthGuard, FriendsGuard)
   async reject(
     @Param('id') id: string,
     @UserDecorator() user: User,

@@ -213,19 +213,19 @@ export class FriendsService {
     };
   }
 
-  async reject(userId: string, senderId): Promise<Response> {
+  async reject(userId: string, senderId: string): Promise<Response> {
     const sortedIds: string[] = [userId, senderId].sort();
     const friendship = await this.prismaService.friendship.findUnique({
       where: {
         leftUserId_rightUserId: {
           leftUserId: sortedIds[0],
-          rightUserId: senderId[1],
+          rightUserId: sortedIds[1],
         },
       },
     });
-    if (friendship.status !== FriendshipStatus.PENDING)
+    if (friendship?.status !== FriendshipStatus.PENDING)
       throw new BadRequestException('No Pending Requests To Reject');
-    if (friendship.sender !== senderId)
+    if (friendship?.sender !== senderId)
       throw new BadRequestException('Invalid Sender Id');
     await this.prismaService.friendship.update({
       where: {

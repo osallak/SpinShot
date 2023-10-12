@@ -268,7 +268,11 @@ export class UserService {
           OR: [{ userId: id }, { opponentId: id }],
         },
       }),
-      this.prisma.game.count(),
+      this.prisma.game.count({
+        where: {
+          OR: [{ userId: id }, { opponentId: id }],
+        }
+      }),
     ]);
     return serializePaginationResponse(games, totalCount, limit);
   }

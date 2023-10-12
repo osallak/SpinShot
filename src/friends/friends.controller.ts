@@ -1,5 +1,4 @@
 import { Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { UserDecorator } from 'src/global/decorators/global.decorators';
 import { PaginationResponse, Response } from 'src/global/interfaces';

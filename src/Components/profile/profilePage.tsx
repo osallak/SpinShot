@@ -12,10 +12,10 @@ import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
 import SideBar from "../ui/folderSidebar/sideBar";
 import SubsidebarSecond from "../ui/profileSubsidebar/subsidebarSecond";
 import SidebarMobile from "../ui/folderSidebar/sidebarMobile";
-import NavbarMobile from "../ui/folderNavbar/navbarMobile";
-import TowFactor from "../ui/twoFactorauth/twoFactor";
+import NavbarMobile from "../ui/FolderNavbar/navbarMobile";
 import UploadImage from "../ui/folderUploadImage/uploadImage";
 import { useRouter } from "next/router";
+import TwoFactor from "../ui/twoFactorauth/TwoFactorAuth"
 import { usePathname } from "next/navigation";
 
 const ProfilePage = () => {
@@ -162,8 +162,8 @@ const ProfilePage = () => {
               />
             )}
             {isActive && (
-              <div className="z-50">
-                <TowFactor isActive={isActive} Switch={setisActive} />
+              <div >
+                <TwoFactor isActive={isActive} Switch={setisActive} />
               </div>
             )}
           </div>

@@ -5,7 +5,7 @@ import CurrentFriends from "./currentFriends";
 import MobileFriends from "./mobileFriends";
 import { useState, useEffect } from "react";
 import MobileSideBar from "../ui/folderSidebar/mobileSideBar";
-import NavBar from "../ui/folderNavbar/navBar";
+import NavBar from "../ui/FolderNavbar/navBar";
 
 const FriendsPage = () => {
   const fetchData = async () => {

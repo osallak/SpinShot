@@ -1,14 +1,14 @@
-import InputBorder from "@/Components/ui/inputs/InputBorder";
+import InputBorder from "@/Components/ui/Inputs/InputBorder";
 import { useEffect, useState, MouseEvent } from "react";
 import Image from "next/image";
 import user from "../../../../../public/user.svg";
 import mail from "../../../../../public/email.svg";
 import lock from "../../../../../public/lock.svg";
 import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
-import SimpleButton from "@/Components/ui/buttons/simpleButton";
+import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import { useRouter } from "next/router";
-import ConfirmationPassword from "@/Components/ui/inputs/confirmationPassword";
-import EmptyButton from "@/Components/ui/buttons/emptyButton";
+import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
+import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
 import axios from "axios";
 import ip from "@/endpoint/api";
 

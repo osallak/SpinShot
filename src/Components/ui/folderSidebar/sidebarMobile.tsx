@@ -1,5 +1,5 @@
 import React from "react";
-import { SidbarIcon } from "../folderDropDown/arrayIcon";
+import { SidbarIcon } from "../FolderDropDown/ArrayIcon";
 import Image from "next/image";
 import test1 from "./../../../../public/test1.svg";
 

@@ -3,7 +3,11 @@ import menu from "../../../../public/menu.svg"
 import React from "react";
 import { useAppSelector } from "../../../../redux_tool";
 
-const NavbarMobile = (props: {setMenu: Function, handleMenu: Function, isopen: boolean}) => {
+const NavbarMobile = (props: {
+  setMenu: Function;
+  handleMenu: Function;
+  isopen: boolean;
+}) => {
   const data = useAppSelector((state) => state.Profile);
   return (
 
@@ -36,7 +40,6 @@ const NavbarMobile = (props: {setMenu: Function, handleMenu: Function, isopen: b
           </div>
         </div>
       </div>
-
   );
 };
 

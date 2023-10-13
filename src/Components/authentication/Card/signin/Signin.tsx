@@ -1,12 +1,12 @@
 import { useRouter } from "next/router";
 import lock from "../../../../../public/lock.svg";
-import mail from "../../../../../public/email.svg";
+import mail from "../../../../../public/Email.svg";
 import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
-import SimpleButton from "@/Components/ui/buttons/simpleButton";
-import InputBorder from "@/Components/ui/inputs/InputBorder";
+import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
+import InputBorder from "@/Components/ui/Inputs/InputBorder";
 import { MouseEvent, useState, useEffect } from "react";
-import ContinueWithIntra from "@/Components/ui/buttons/continueWithIntra";
-import EmptyButton from "@/Components/ui/buttons/emptyButton";
+import ContinueWithIntra from "@/Components/ui/Buttons/ContinueWithIntra";
+import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
 import Image from "next/image";
 import axios, { AxiosError } from "axios";
 import { log } from "console";

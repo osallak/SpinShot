@@ -1,4 +1,4 @@
-import SearchInput from "@/Components/ui/inputs/searchInput";
+import SearchInput from "@/Components/ui/Inputs/searchInput";
 import dataSubSideBar from "@/types/messagesArrays";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
@@ -6,7 +6,7 @@ import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";
 import messagesIcon from "../../../public/messagesIcon.svg";
 import test1 from "../../../public/test1.svg";
-import IconButton from "../ui/buttons/IconButton";
+import IconButton from "../ui/Buttons/IconButton";
 import axios from "axios";
 
 const ayoubToken =

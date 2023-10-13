@@ -2,8 +2,8 @@ import chatMenu from "../../../../public/chatmenu.svg";
 import React, { useState } from "react";
 import Image from "next/image";
 import flechIcon from "../../../../public/flechIcon.svg";
-import { ArrayChat } from "./arrayIcon";
-import { ArrayMute } from "./arrayIcon";
+import { ArrayChat } from "./ArrayIcon";
+import { ArrayMute } from "./ArrayIcon";
 import { select } from "@material-tailwind/react";
 import { Divider } from "@nextui-org/react";
 

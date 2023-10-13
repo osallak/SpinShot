@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import camera from "../../../../public/cameraIcon.svg";
 import test1 from "../../../../public/test1.svg";
-import { ArrayAvatar } from "../folderDropDown/arrayIcon";
+import { ArrayAvatar } from "../FolderDropDown/ArrayIcon";
 import Image from "next/image";
 import {
   Button,

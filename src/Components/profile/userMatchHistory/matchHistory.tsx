@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Pagination from "../../ui/folderPagination/pagination";
+import Pagination from "../../ui/FolderPagination/pagination";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import ip from "@/endpoint/api";
@@ -69,14 +69,16 @@ const MatchHistory = () => {
               <div className="w-[50%] flex-col flex  justify-center items-center">
                 <h1>Wins</h1>
                 <h1 className="text-peridot">
-                  {posts[0]?.user?.logs?.victories}
+									3
+                  {/* {posts[0]?.user?.logs?.victories} */}
                 </h1>
               </div>
               <div className="h-[70%]"></div>
               <div className="w-[50%] flex flex-col items-center">
                 <h1>Loses</h1>
                 <h1 className="text-red-900">
-                  {posts[0]?.user?.logs?.defeats}
+									4
+                  {/* {posts[0]?.user?.logs?.defeats} */}
                 </h1>
               </div>
             </div>

@@ -19,38 +19,31 @@ const PersonalInformation = (props: any) => {
 
   const parseinInput = () => {
     const namePattern = /^[A-Za-z\s]+$/;
-    if (namePattern.test(firstName))
-      return 1;
-    else if (namePattern.test(lastName))
-      return 1;
-    else if (namePattern.test(userName))
-      return 1;
+    if (namePattern.test(firstName)) return 1;
+    else if (namePattern.test(lastName)) return 1;
+    else if (namePattern.test(userName)) return 1;
     return 0;
-  }
+  };
 
   const hendleUpdata = async () => {
-
     const my_data = new FormData();
     my_data.append("firstName", firstName);
     my_data.append("lastName", lastName);
     my_data.append("username", userName);
     my_data.append("country", country);
 
-    if (parseinInput())
-      notify();
-    else
-    {
+    if (parseinInput()) notify();
+    else {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         const response = await axios.patch(
           `${ip}/users`,
           {
-            my_data
+            my_data,
           },
           {
             headers: {
-              Authorization:
-                `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -78,7 +71,6 @@ const PersonalInformation = (props: any) => {
   const notify = () => {
     toast.success("Input incorrect ");
   };
-
 
   return (
     <div className="space-y-40  md:space-y-10 h-[910px]  ">
@@ -137,12 +129,10 @@ const PersonalInformation = (props: any) => {
       </div>
       <div className=" h-12 flex md:justify-end  justify-center items-center sm:px-28 ">
         <div className={`  w-24 sm:w-32  h-full`}>
-        <SimpleButton content="Save" onclick={hendleUpdata} />
+          <SimpleButton content="Save" onclick={hendleUpdata} />
         </div>
       </div>
-      <div className="z-50">
-          <Toaster position="top-center" reverseOrder={false} />
-        </div>
+      <Toaster position="top-left" reverseOrder={false} containerClassName="z-[50]"/>
     </div>
   );
 };

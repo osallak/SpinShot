@@ -1,4 +1,4 @@
-import SideBar from "../ui/Sidebar/sideBar";
+import SideBar from "../ui/Sidebar/sidebar";
 import axios from "axios";
 import FriendsRequest from "./friendRequest";
 import CurrentFriends from "./currentFriends";

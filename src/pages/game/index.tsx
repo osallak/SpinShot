@@ -1,4 +1,4 @@
-import SideBar from "@/Components/ui/Sidebar/sideBar";
+import SideBar from "@/Components/ui/Sidebar/sidebar";
 import React, { useState, useEffect } from "react";
 import SubSidebarGame from "@/Components/ui/FolderSubsidebar/subSidebarGame";
 import NavbarMobile from "@/Components/ui/FolderNavbar/navbarMobile";

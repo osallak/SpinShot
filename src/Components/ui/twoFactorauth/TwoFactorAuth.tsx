@@ -108,7 +108,7 @@ import CodeQR from "../../../../public/CodeQR.svg";
 import Image from "next/image";
 import PinInput from "react-pin-input";
 import axios from "axios";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import {
   Button,
   Dialog,
@@ -127,11 +127,6 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
   const [qrCode, setQrCode] = useState<any>(undefined);
   let ele: any = useRef();
   const token = localStorage.getItem("token");
-  const myOverlay = {
-    style: {
-      zIndex: 99999,
-    },
-  };
   useEffect(() => {
     handleResize();
     fetchQrCode();
@@ -190,7 +185,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
       props.Switch(!open);
     } catch (e: any) {
       ele.clear();
-      toast.error(e?.data ?? "Invalid Operation");
+      toast.error(e?.data ?? "Invalid 2FA");
     }
   };
   return (
@@ -201,6 +196,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
         size="xs"
         className="bg-pearl"
       >
+				<Toaster reverseOrder={false} ></Toaster>
         <DialogHeader className="flex flex-col items-center justify-center sm:space-y-5 ">
           <span className="text-3xl sm:text-3xl text-very-dark-purple ">
             Authenticate your account

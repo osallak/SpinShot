@@ -9,7 +9,7 @@ import ResetPassword from "./resetPassword";
 import { useSelector } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../../../redux_tool";
 import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
-import SideBar from "../ui/Sidebar/sideBar";
+import SideBar from "../ui/Sidebar/sidebar";
 import SubsidebarSecond from "../ui/FolderSubsidebar/subsidebarSecond";
 import SidebarMobile from "../ui/Sidebar/SidebarMobile";
 import NavbarMobile from "../ui/FolderNavbar/navbarMobile";

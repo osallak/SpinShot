@@ -17,7 +17,7 @@ import message from "../../../public/message.svg";
 import profile from "../../../public/profile.svg";
 import game from "../../../public/game.svg";
 import sendMessage from "../../../public/sendMessage.svg";
-import SideBar from "../ui//Sidebar/sideBar";
+import SideBar from "../ui/Sidebar/sidebar";
 import MobileSideBar from "../ui/Sidebar/mobileSideBar";
 import NavBar from "../ui/FolderNavbar/navBar";
 import axios from "axios";

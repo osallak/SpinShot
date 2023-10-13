@@ -8,9 +8,7 @@ import messagesIcon from "../../../public/messagesIcon.svg";
 import test1 from "../../../public/test1.svg";
 import IconButton from "../ui/buttons/iconButton";
 import axios from "axios";
-
-const ayoubToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiYjRiMWZjNGYtYjkwMC00NDgxLTliMWMtNDIyMjc5OTU2Yjg5IiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTcxMjc3OTEsImV4cCI6MTY5NzIxNDE5MX0.J4IbTkFPsZLYEjoD7G0q5fMslp_-_XZ6R8Is8y4QDkk";
+import token from "@/utils/token";
 
 function MobileSubSideBar(props: {
   open: boolean;
@@ -32,7 +30,7 @@ function MobileSubSideBar(props: {
     try {
       const res = await axios.get(`http://e3r10p14.1337.ma:3001/room/all`, {
         headers: {
-          Authorization: `Bearer ${ayoubToken}`
+          Authorization: `Bearer ${token}`
         }
       })
       console.log("response from explore channel: ", res.data);

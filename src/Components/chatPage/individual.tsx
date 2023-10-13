@@ -7,7 +7,7 @@ import { chatAll } from "../context/recoilContext";
 
 const Individual = (props: { searchValue: string; loaded: boolean }) => {
   const [allMessages, setAllMessages] = useRecoilState(chatAll);
-  const [clicked, setClicked] = useState<number>();
+  const [clicked, setClicked] = useState<number>(0);
 
   const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number) => {
     event.preventDefault();

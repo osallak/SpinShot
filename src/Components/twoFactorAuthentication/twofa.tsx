@@ -1,32 +1,42 @@
 import PinInput from "react-pin-input";
+import parseJwt from "@/utils/parsJwt";
 import Router, { useRouter } from "next/router";
 import axios from "axios";
 import ip from "@/utils/endPoint";
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { globalToken } from "../context/recoilContext";
 
 const Twofa = () => {
   const Router = useRouter();
+  const [error, setError] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [tmpToken, setTmpToken] = useRecoilState(globalToken);
 
   const sendCode = async (entredValue: string) => {
     try {
-      const oldToken = localStorage.getItem("token");
-      const res = await axios.post(`${ip}/2fa/authenticate`, {code: entredValue}, {
-        headers: {
-          Authorization: `Bearer ${oldToken}`
+      const res = await axios.post(
+        `${ip}/2fa/authenticate`,
+        { code: entredValue },
+        {
+          headers: {
+            Authorization: `Bearer ${tmpToken}`,
+          },
         }
-      });
-      localStorage.removeItem("token");
-      localStorage.setItem("token", res?.data?.token)
+      );
+      localStorage.setItem("token", res?.data?.token);
       const token = localStorage.getItem("token");
       if (!token) {
         Router.push("/signin");
         return;
       }
-      console.log("response from two factore authentication: ", res);
+      const jwtToken = parseJwt(token);
+      Router.push(`/profile/${jwtToken.username}`);
     } catch (error: any) {
-      console.log("error from two factor authentication: ", error);
+      setErrorMessage(error?.response?.data);
+      setError(false);
     }
-  }
+  };
 
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex flex-col justify-center items-center ">
@@ -49,10 +59,12 @@ const Twofa = () => {
         }}
         inputFocusStyle={{ borderColor: "transparent" }}
         onComplete={(entredValue, index) => {
-          sendCode(entredValue)}}
+          sendCode(entredValue);
+        }}
         autoSelect={true}
         regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
       />
+      {error === false && <p className="font-Poppins text-red-900 text-base">{errorMessage}</p>}
     </div>
   );
 };

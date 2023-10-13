@@ -88,7 +88,7 @@ const Signup = () => {
         });
         Router.push(Path);
       } catch (error: any) {
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error?.response?.data?.message);
         setError(true);
       }
     }

@@ -18,6 +18,8 @@ import { useRecoilState } from "recoil";
 import { chatAll } from "../context/recoilContext";
 import roomsDataType from "@/types/messagesArrays"
 import test1 from "../../../public/test1.svg"
+import token from "@/utils/token"
+import { exploreChannelAtom } from "../context/recoilContext";
 
 const Chat = () => {
   const Router = useRouter();
@@ -29,11 +31,12 @@ const Chat = () => {
   const [open, setOpen] = useState(false);
   const [flag, setFlag] = useState("");
   const [response, setResponse] = useState<dataConversation[]>([]);
-  const [exploreChannel, setExploreChannel] = useState<dataExploreChannel[]>([]);
+  // const [exploreChannel, setExploreChannel] = useState<dataExploreChannel[]>([]);
   const [userId, setUserId] = useState("");
   const [individual, setIndividual] = useState<dataSubSideBar[]>([]);
   const [userName, setUserName] = useState("");
   const [allMessages, setAllMessages] = useRecoilState(chatAll);
+  const [exploreChannel, setExploreChannel] = useRecoilState(exploreChannelAtom);
   const userIdRef = useRef<string>();
   const [loaded, setIsLoaded] = useState(false);
   // const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -154,8 +157,6 @@ const Chat = () => {
 
   // useEffect(() => socketInitializer(), []);
 
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiYjRiMWZjNGYtYjkwMC00NDgxLTliMWMtNDIyMjc5OTU2Yjg5IiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTcxMjc3OTEsImV4cCI6MTY5NzIxNDE5MX0.J4IbTkFPsZLYEjoD7G0q5fMslp_-_XZ6R8Is8y4QDkk"
-
   const featchDataConversation = async (id: string, jwtTokenID: string) => {
     // const token = localStorage.getItem("token");
     // if (!token) {
@@ -170,15 +171,13 @@ const Chat = () => {
             Authorization: `Bearer ${token}`,
           },
           params: {
-            page: 1,
-            limit: 5,
             id: jwtTokenID,
           },
         }
       );
       setResponse(result.data);
       setUserId(jwtTokenID);
-      console.log("response from conversation: ", result.data);
+      console.log("response from conversation here: ", result.data);
     } catch (error) {
       console.log("error of fetching data fron conversation: ", error);
     }
@@ -186,11 +185,11 @@ const Chat = () => {
 
   const fetchDataSubSideBar = async () => {
     // const token = localStorage.getItem("token");
-    console.log("token from chat Page: ", token);
+    // console.log("token from chat Page: ", token);
     // if (!token) {
-      //   Router.push("/Signin");
-      //   return;
-      // }
+    //     Router.push("/Signin");
+    //     return;
+    //   }
     const jwtToken = parseJwt(token);
     console.log("JWTTOKEN: ", jwtToken);
     try {
@@ -202,7 +201,7 @@ const Chat = () => {
           id: jwtToken.sub,
         },
       });
-      console.log("response from subsidebar: ", res.data);
+      // console.log("response from subsidebar: ", res.data);
       // setIndividual((prev) => res.data.individual);
       setAllMessages(res.data);
       console.log("res.data: ", res.data);
@@ -218,6 +217,7 @@ const Chat = () => {
     //   Router.push("/Signin");
     //   return;
     // }
+    // console.log("hello world from the other side");
     if (open === true) {
       try {
         const res = await axios.get(`${ip}/room/explore`, {
@@ -226,7 +226,7 @@ const Chat = () => {
           },
         });
         setExploreChannel(res.data);
-        console.log("response from explore channel in chat page: ", res)
+        // console.log("response from explore channel in chat page: ", res)
         console.log("response from explore channel: ", res.data);
       } catch (error: any) {
         console.log("error from explore channel: ", error);
@@ -241,7 +241,7 @@ const Chat = () => {
 
   useEffect(() => {
     fetchDataExploreChannel();
-  }, []);
+  }, [open]);
 
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 md:pl-3 pl-0 py-0 pr-0 items-center flex-row">
@@ -252,10 +252,9 @@ const Chat = () => {
         setOpen={setOpen}
         setFlag={setFlag}
         loaded={loaded}
-        // data={individual}
       />
       {flag === "ExploreChannels" && (
-        <ExploreChannels open={open} setOpen={setOpen} data={exploreChannel} />
+        <ExploreChannels open={open} setOpen={setOpen} />
       )}
       {flag === "CreateChannels" && (
         <CreateChannels open={open} setOpen={setOpen} />

@@ -63,7 +63,7 @@ const FriendRequestsDropDown = (props: { id: string }) => {
     // console.log("id from handle accept: ", props.id);
     const jwtToken = parseJwt(JSON.stringify(token));
     try {
-      const res = await axios.post(`${ip}/friends/accept/${props.id}`, {id: props.id}, {
+      const res = await axios.put(`${ip}/friends/${props.id}/accept`, {id: props.id}, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -84,11 +84,15 @@ const FriendRequestsDropDown = (props: { id: string }) => {
     // console.log("id from handle refuse: ", props.id);
     const jwtToken = parseJwt(JSON.stringify(token));
     try {
-      const res = await axios.post(`${ip}/friends/reject/${props.id}`, {id: props.id}, {
+      const res = await axios.put(`${ip}/friends/${props.id}/reject`, {id: props.id}, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      setFriends((prev :  any) => {
+        const newArray = prev.map((item: dataFriends) => item.id != props.id);
+        return newArray;
+      })
       // console.log("response from handle refuse : ", res);
     } catch (error: any) {
       console.log("error from refuse a friend request: ", error);

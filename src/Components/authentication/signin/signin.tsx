@@ -7,11 +7,12 @@ import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
 import mail from "../../../../public/email.svg";
 import lock from "../../../../public/lock.svg";
-
+import { globalToken } from "@/components/context/recoilContext";
+import { useRecoilState } from "recoil";
 // the last version of signin without authentication with intra
 
 const Signin = () => {
@@ -48,6 +49,7 @@ const Signin = () => {
       BorderSize: 2,
     },
   ];
+  const [tmpToken, setTmpToken] = useRecoilState(globalToken);
 
   const RedirectionFunction = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -57,15 +59,18 @@ const Signin = () => {
         password,
       });
       const token = parseJwt(res?.data?.token);
-      console.log("response from signin: ", res);
-      localStorage.setItem("token", res?.data?.token);
+      console.log("res.data.token: ", res.data.token)
+      setTmpToken(res?.data?.token);
       if (token.isTwoFactorEnabled === true) {
         Router.push("/twoFactorAuthentication");
       } else if (token.isTwoFactorEnabled === false) {
-        Router.push(`/profile/${token.username}`);
+        localStorage.setItem("token", res?.data?.token);
+        Router.push(`/friends`);
       }
     } catch (error: any) {
       setErrorMessage(error?.response?.data?.message);
+      if (error?.response?.status === 404)
+        setErrorMessage("User not Found");
       setError(true);
     }
   };
@@ -73,7 +78,7 @@ const Signin = () => {
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     Router.push(
-      "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2FWaiting&response_type=code"
+      "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fwaiting&response_type=code"
     );
   };
 

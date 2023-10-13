@@ -15,6 +15,9 @@ import test1 from "../../../public/test1.svg";
 import trash from "../../../public/trash.svg";
 import DropDown from "../ui/dropDown/dropDown";
 import dataConversation from "@/types/messagesArrays";
+import { useRecoilState } from "recoil";
+import { chatAll } from "../context/recoilContext";
+import allMessagesType from '@/types/messagesArrays';
 import { io } from "socket.io-client";
 
 const Conversation = (props: {
@@ -31,6 +34,7 @@ const Conversation = (props: {
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
   const [test, setTest] = useState<string>("");
   const [message, setMessage] = useState("");
+  const [conversation, setConversation] = useRecoilState(chatAll);
 
   const handleClick = () => {
     console.log("hello world from the other side");
@@ -153,17 +157,17 @@ const Conversation = (props: {
           </div>
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
         </div>
-        {props.data.length ? (
+        {/* {conversation.individual.length ? ( */}
           <div
             ref={chatContainerRef}
             className={`w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden `}
           >
             <div className="w-[94%] space-y-1">
-              {props.data.map((items, index) => (
+              {(conversation as allMessagesType).individual?.map((items, index: number) => (
                 <div
                   key={index}
                   className={`flex ${
-                    items.sender != props.userId
+                    items.other.id != props.userId
                       ? "flex-row-reverse space-x-reverse space-x-5"
                       : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
                   } justify-end`}
@@ -208,11 +212,11 @@ const Conversation = (props: {
               ))}
             </div>
           </div>
-        ) : (
+        {/* ) : (
           <div className="font-Poppins text-pearl text-opacity-40 w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden justify-center">
             No chat Messages
           </div>
-        )}
+        )} */}
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[60px] flex justify-center items-center flex-col">
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
           <div className="w-[90%] h-full flex justify-center items-center flex-row">

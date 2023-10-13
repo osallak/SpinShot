@@ -5,23 +5,25 @@
 //   DialogBody,
 //   DialogFooter,
 // } from "@material-tailwind/react";
-import Image from "next/image";
-import exportChannelsIcon from "../../../public/ExportChannels.svg";
-import { Dialog, Transition } from "@headlessui/react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Fragment, MouseEvent, useState } from "react";
-import SimpleButton from "../ui/buttons/simpleButton";
-import pearlLock from "../../../public/pearlLock.svg";
-import SubModal from "./channelsStatus/subModal";
 import dataExploreChannel from "@/types/exploreChannel";
+import { Dialog, Transition } from "@headlessui/react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { Fragment, MouseEvent, useEffect, useState } from "react";
+import exportChannelsIcon from "../../../public/ExportChannels.svg";
+import SubModal from "./channelsStatus/subModal";
+import { useRecoilState } from "recoil";
+import { exploreChannelAtom } from "../context/recoilContext";
+import exploreChannelType from "@/types/channelsType";
 
 const ExploreChannels = (props: {
   open: boolean;
   setOpen: Function;
-  data: dataExploreChannel[];
 }) => {
   const [subOpen, setSubOpen] = useState(false);
   const [status, setStatus] = useState("");
+  const [name, setName] = useState("");
+  const [exploreChannel, setExploreChannel] = useRecoilState(exploreChannelAtom);
 
   const sp = (name: string) => {
     const res = name.split(" ");
@@ -50,16 +52,18 @@ const ExploreChannels = (props: {
   };
 
   const joinChannel =
-    (status: string) => (event: MouseEvent<HTMLButtonElement>) => {
+    (status: string, id: string) => (event: MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       setSubOpen(true);
       setStatus(status);
+      setName(id);
+      console.log("explorechannel: ", exploreChannel);
     };
 
   return (
     <>
       {subOpen && (
-        <SubModal open={subOpen} setOpen={setSubOpen} type={status} />
+        <SubModal open={subOpen} setOpen={setSubOpen} type={status} name={name} />
       )}
       <Transition appear show={props.open} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -99,7 +103,7 @@ const ExploreChannels = (props: {
                       </p>
                     </div>
                     <div className="h-[85%] overflow-auto flex items-center sm:flex-wrap flex-nowrap sm:flex-row flex-col py-3">
-                      {props.data.map((items, index) => (
+                      {(exploreChannel as exploreChannelType[]).map((items: exploreChannelType, index: number) => (
                         <div
                           key={index}
                           className="sm:w-1/2 w-full flex justify-center items-center lg:px-3 sm:px-2 px-1 md:py-5 sm:py-4 py-2"
@@ -142,7 +146,7 @@ const ExploreChannels = (props: {
                                   className="md:w-16 sm:w-12 w-10 h-5 rounded-full flex justify-center items-center bg-peridot"
                                 >
                                     <button
-                                      onClick={joinChannel(items.type)}
+                                      onClick={joinChannel(items.type, items.id)}
                                       className={`"bg-peridot" focus:outline-none outline-none rounded-full text-lg sm:text-xl w-full h-full font-Passion-One text-very-dark-purple`}
                                     >
                                       <p className="font-Passion-One text-very-dark-purple text-sm">

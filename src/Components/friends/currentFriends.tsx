@@ -15,10 +15,8 @@ const CurrentFriends = () => {
   const [currentFriends, setCurrentFriends] =
     useRecoilState(currentFriendsAtom);
   const Router = useRouter();
-
-  const handleClick = () => {
-    console.log("hello world from the other side");
-  };
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const goToUser = (username: string) => {
     Router.push(`/profile/${username}`);
@@ -41,6 +39,8 @@ const CurrentFriends = () => {
       });
       setCurrentFriends(res.data.data);
     } catch (error: any) {
+      setError(true);
+      setErrorMessage(error?.response?.data?.message);
       console.log("error from friends: ", error);
     }
   };
@@ -111,7 +111,7 @@ const CurrentFriends = () => {
           )
         ) : (
           <div className="font-Poppins text-pearl text-opacity-40 w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden justify-center">
-            theire is no friends
+            {error ? errorMessage : "theire is no friends"}
           </div>
         )}
       </div>

@@ -59,8 +59,8 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
       return ;
     }
     try {
-      await axios.post(
-        `${ip}/friends/block/${props.id}`,
+      await axios.put(
+        `${ip}/friends/${props.id}/block`,
         { id: props.id },
         {
           headers: {
@@ -83,8 +83,8 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
       return ;
     }
     try {
-      await axios.post(
-        `${ip}/friends/block/${props.id}`,
+      await axios.put(
+        `${ip}/friends/${props.id}/unfriend`,
         { id: props.id },
         {
           headers: {

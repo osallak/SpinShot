@@ -14,10 +14,8 @@ const ContentMyFriends = () => {
     useRecoilState(currentFriendsAtom);
   const [loaded, setIsLoaded] = useState<boolean>(false);
   const Router = useRouter();
-
-  const handleClick = () => {
-    console.log("hello world from the other side");
-  };
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const goToUser = (username: string) => {
     Router.push(`/profile/${username}`);
@@ -39,6 +37,8 @@ const ContentMyFriends = () => {
         },
       });
     } catch (error: any) {
+      setError(true);
+      setErrorMessage(error?.response?.data?.message);
       console.log("error from friends: ", error);
     }
   };
@@ -72,7 +72,7 @@ const ContentMyFriends = () => {
                     <div className="h-[70%] flex justify-center flex-col">
                       <p
                         onClick={() => goToUser(items.username)}
-                        className="font-Poppins text-pearl font-semibold xl:text-xl md:text-lg text-base"
+                        className="font-Poppins text-pearl font-semibold xl:text-xl md:text-lg text-base cursor-pointer"
                       >
                         {items.username}
                       </p>
@@ -90,7 +90,7 @@ const ContentMyFriends = () => {
           )
         ) : (
           <div className="font-Poppins text-pearl text-opacity-40 w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden justify-center">
-            No chat Messages
+            {error ? errorMessage : "theire is no friends"}
           </div>
         )}
       </div>

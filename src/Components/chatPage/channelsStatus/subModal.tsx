@@ -1,36 +1,62 @@
+import ip from "@/utils/endPoint";
+import token from "@/utils/token";
 import { Dialog, Transition } from "@headlessui/react";
-import { ChangeEvent, Fragment, useState } from "react";
+import axios from "axios";
 import Image from "next/image";
+import { ChangeEvent, Fragment, useState } from "react";
 import lock from "../../../../public/lock.svg";
 
 const SubModal = (props: {
   open: boolean;
   setOpen: Function;
   type: string;
+  name: string;
 }) => {
-
   const [password, setPassword] = useState("");
-  const [joinSuccess, setJoinSuccess] = useState(false);
-  // const params: any = {
-  //   name: name,
-  //   type: type,
-  // };
-  // if (password.length >= 6) params["password"] = password;
 
   function closeModal() {
     props.setOpen(false);
   }
 
-  // const joinChannel = (type: string) => {
-  //   {
-  //     type === "PUBLIC" ? setJoinSuccess(true) : 
-  //   }
-  // }
+  const joinChannel = async (type: string) => {
+    if (type === "PUBLIC") {
+      try {
+        const res = await axios.post(
+          `${ip}/room/join`,
+          { type, name: props.name },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("res from room join : ", res);
+        props.setOpen(false);
+      } catch (error: any) {
+        console.log("error from room join : ", error);
+      }
+    } else if (type === "PROTECTED")
+    try {
+      const res = await axios.post(
+        `${ip}/room/join`,
+        { type, name: props.name, password },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+        );
+        console.log("res from room join : ", res);
+        props.setOpen(false);
+    } catch (error: any) {
+      console.log("error from room join : ", error);
+    }
+  };
 
   const getPassword = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setPassword(event.target.value);
-  }
+  };
 
   console.log("status", props.type);
 
@@ -81,7 +107,10 @@ const SubModal = (props: {
                         />
                       </div>
                       <div className="w-full md:h-10 sm:h-9 h-8 flex justify-end items-center">
-                        <button className="flex justify-center items-center md:w-[100px] sm:w-[85px] w-[70px] h-full bg-peridot font-Passion-One text-very-dark-purple rounded-full lg:text-lg md:text-md sm:text-sm text-xs">
+                        <button
+                          onClick={() => joinChannel(props.type)}
+                          className="flex justify-center items-center md:w-[100px] sm:w-[85px] w-[70px] h-full bg-peridot font-Passion-One text-very-dark-purple rounded-full lg:text-lg md:text-md sm:text-sm text-xs"
+                        >
                           Confirme
                         </button>
                       </div>
@@ -93,9 +122,12 @@ const SubModal = (props: {
                         welcome to this channel
                       </span>
                       <div className="w-full md:h-10 sm:h-9 h-8 flex justify-center items-center">
-                      <button className="flex justify-center items-center md:w-[100px] sm:w-[85px] w-[70px] h-full bg-peridot font-Passion-One text-very-dark-purple rounded-full lg:text-lg md:text-md sm:text-sm text-xs focus:outline-none outline-none">
-                        Confirme
-                      </button>
+                        <button
+                          onClick={() => joinChannel(props.type)}
+                          className="flex justify-center items-center md:w-[100px] sm:w-[85px] w-[70px] h-full bg-peridot font-Passion-One text-very-dark-purple rounded-full lg:text-lg md:text-md sm:text-sm text-xs focus:outline-none outline-none"
+                        >
+                          Confirme
+                        </button>
                       </div>
                     </div>
                   )}

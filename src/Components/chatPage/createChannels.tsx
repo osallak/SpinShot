@@ -12,12 +12,16 @@ import { Fragment, useState, KeyboardEvent, MouseEvent } from "react";
 import CreateChannelIcon from "../../../public/CreateChannel.svg";
 import SwitchButton from "../ui/buttons/switchButton";
 import ip from "@/utils/endPoint";
+import token from "@/utils/token";
+import { useRecoilState } from "recoil";
+import { createChannelAtom } from "../context/recoilContext";
+import createChannelType from "@/types/channelsType"
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiYjRiMWZjNGYtYjkwMC00NDgxLTliMWMtNDIyMjc5OTU2Yjg5IiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTcxMjc3OTEsImV4cCI6MTY5NzIxNDE5MX0.J4IbTkFPsZLYEjoD7G0q5fMslp_-_XZ6R8Is8y4QDkk"
 const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
   const [type, setType] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [createChannel, setCreateChannel] = useRecoilState<any>(createChannelAtom);
 
   const closeModal = () => {
     props.setOpen(false);
@@ -41,6 +45,7 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
           }
         );
         setPassword("");
+        setCreateChannel(params);
         props.setOpen(false);
         console.log(params);
         console.log("res from create channel: ", res);
@@ -64,11 +69,12 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
             Authorization: `Bearer ${token}`,
           },
         }
-      );
-      setPassword("");
-      props.setOpen(false);
-      console.log(params);
-      console.log("res from create channel: ", res);
+        );
+        setPassword("");
+        setCreateChannel([...createChannel, params]);
+        props.setOpen(false);
+        console.log(params);
+        console.log("res from create channel: ", res);
     } catch (error: any) {
       console.log("error from create channels: ", error);
     }

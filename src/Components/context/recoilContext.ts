@@ -35,7 +35,7 @@ export const exploreChannelAtom = atom({
 // export const createChannel = createContext<createChannelType[] | []> ([]);
 
 export const createChannelAtom = atom({
-	key: `createChannel`,
+	key: `createChannel-${Math.random()}`,
 	default: [],
 })
 

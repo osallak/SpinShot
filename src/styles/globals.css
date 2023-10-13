@@ -6,29 +6,37 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: #260323;
+  --background-start-rgb: #260323;
+  --background-end-rgb: #260323;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb: #260323;
+    --background-start-rgb: #260323;
+    --background-end-rgb: #260323;
   }
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: #260323;
 }
+/* 
+.pincode-input-container {
 
+} */
+
+/* @media screen and (max-width: 540px) {
+  .pincode-input-container{
+
+  }  
+} */
+
+.twemoji {
+  height: 50px;
+}
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

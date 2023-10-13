@@ -3,9 +3,7 @@
 import LandingPage from "@/components/landingPage/landingPage";
 
 const Home = () => {
-  return (
-    <LandingPage />
-  );
+  return <LandingPage />;
 };
 
 export default Home;

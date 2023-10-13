@@ -1,7 +1,7 @@
 import { MouseEvent, KeyboardEvent } from "react";
 
 export type ButtonProps = {
-  onclick: (event: MouseEvent<HTMLButtonElement>) => void;
+  onclick: () => void;
   content: string;
   icon: string;
 };
@@ -13,3 +13,9 @@ export type OthersProps = {
   content: string;
   onkeydown?: (event: KeyboardEvent<HTMLButtonElement>) => void;
 };
+
+export type PasswordProps = {
+  onclick: () => void;
+  icon: string;
+  isState: boolean;
+}

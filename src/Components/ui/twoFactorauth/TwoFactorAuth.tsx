@@ -118,7 +118,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { url } from "inspector";
-import ip from "@/endpoint/ip";
+import ip from "@/endpoint/api";
 
 const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
   const [size, setSize] = useState<number>();

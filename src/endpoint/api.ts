@@ -1,2 +1,2 @@
-const ip = "http://e3r10p13.1337.ma:3000"
+const ip = "http://34.163.83.11:3001"
 export default ip;

@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import test1 from "../../../public/test1.svg";

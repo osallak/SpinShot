@@ -1,8 +1,9 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import Pagination from "../../ui/FolderPagination/pagination";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
-import ip from "@/endpoint/api";
+import ip from "@/utils/endPoint";
 import Matchs from "./matchs";
 
 const MatchHistory = () => {

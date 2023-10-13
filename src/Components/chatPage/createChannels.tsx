@@ -10,7 +10,7 @@ import axios from "axios";
 import Image from "next/image";
 import { Fragment, useState, KeyboardEvent, MouseEvent } from "react";
 import CreateChannelIcon from "../../../public/CreateChannel.svg";
-import SwitchButton from "../ui/buttons/SwitchButton";
+import SwitchButton from "../ui/Buttons/SwitchButton";
 import ip from "@/utils/endPoint";
 import token from "@/utils/token";
 import { useRecoilState } from "recoil";

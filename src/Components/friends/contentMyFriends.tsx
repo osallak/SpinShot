@@ -1,4 +1,5 @@
-import { currentFriendsAtom } from "@/components/context/recoilContext";
+"use client";
+import { currentFriendsAtom } from "@/Components/context/recoilContext";
 import dataFriends from "@/types/friendsType";
 import ip from "@/utils/endPoint";
 import axios from "axios";

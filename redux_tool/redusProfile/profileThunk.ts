@@ -1,7 +1,8 @@
+"use client";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import {parseJwt} from "../extractToken"
-import ip from "@/endpoint/api";
+import ip from "@/utils/endPoint";
 import { Router, useRouter } from "next/router";
 
 export const getProfile = createAsyncThunk(

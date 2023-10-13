@@ -1,6 +1,6 @@
 "use client";
 import ip from "@/utils/endPoint";
-import SideBar from "@/components/ui/folderSidebar/sideBar";
+import SideBar from "@/Components/ui/folderSidebar/sideBar";
 import axios, { all } from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";

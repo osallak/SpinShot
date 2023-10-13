@@ -2,7 +2,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import securityIcon from "./../../../../public/securityIcon.svg";
 import securityIcon2 from "./../../../../public/securityIcon2.svg";
-import { buttons } from "@/components/ui/FolderDropDown/ArrayIcon";
+import { buttons } from "@/Components/ui/FolderDropDown/ArrayIcon";
 import Security from "../upDatePasswd/security";
 
 const SubSidebar = (props: any) => {

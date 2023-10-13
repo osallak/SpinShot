@@ -1,5 +1,5 @@
 import Image from "next/image";
-import SimpleButton from "../ui/buttons/simpleButton";
+import SimpleButton from "../ui/Buttons/simpleButton";
 import { MouseEvent, KeyboardEvent } from "react";
 import { useRouter } from "next/router";
 import Racket from "../../../public/racket.svg"

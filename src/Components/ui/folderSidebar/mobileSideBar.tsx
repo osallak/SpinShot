@@ -1,3 +1,4 @@
+"use client";
 import logoWhite from "../../../../public/logoWhite.svg";
 import Image from "next/image";
 import search from "../../../../public/search.svg";

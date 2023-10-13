@@ -1,3 +1,4 @@
+"use client";
 import React, { useRef, useState } from "react";
 import camera from "../../../../public/cameraIcon.svg";
 import test1 from "../../../../public/test1.svg";
@@ -13,7 +14,7 @@ import {
   Option,
 } from "@material-tailwind/react";
 import axios from "axios";
-import ip from "@/endpoint/api";
+import ip from "@/utils/endPoint";
 
 const UploadImage = (props: {
   upload: boolean;

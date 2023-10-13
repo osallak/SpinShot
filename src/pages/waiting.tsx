@@ -1,4 +1,4 @@
-import WaitingPage from "@/components/waiting/waiting";
+import WaitingPage from "@/Components/waiting/waiting";
 
 const Waiting = () => {
   return <WaitingPage />;

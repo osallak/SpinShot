@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SimpleButton from "../buttons/simpleButton";
+import SimpleButton from "../Buttons/simpleButton";
 import Maps from "./maps";
 
 const SubSidebarGame = (props: any) => {

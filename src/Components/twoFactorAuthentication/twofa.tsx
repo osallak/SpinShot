@@ -1,3 +1,4 @@
+"use client";
 import PinInput from "react-pin-input";
 import parseJwt from "@/utils/parsJwt";
 import Router, { useRouter } from "next/router";

@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import SubSidebar from "../ui/profileSubsidebar/subSidebar";
 import ImageProfile from "./imageProfile";

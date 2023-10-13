@@ -1,3 +1,4 @@
+"use client";
 import { Select, Option } from "@material-tailwind/react";
 import threePoint from "../../../../public/threePoint.svg";
 import Image from "next/image";
@@ -15,7 +16,7 @@ import accept from "../../../../public/active.svg";
 import refuse from "../../../../public/unactive.svg";
 import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
-import { friendRequestsAtom, currentFriendsAtom } from "@/components/context/recoilContext";
+import { friendRequestsAtom, currentFriendsAtom } from "@/Components/context/recoilContext";
 import dataFriends from "@/types/friendsType";
 
 const FriendRequestsDropDown = (props: { id: string }) => {

@@ -1,6 +1,6 @@
-import SimpleButton from "@/Components/ui/buttons/simpleButton";
+import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import Country from "@/Components/ui/Buttons/Country";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAppSelector } from "../../../redux_tool";
 import axios from "axios";
 import FormInput from "@/Components/ui/formInput/FormInput";

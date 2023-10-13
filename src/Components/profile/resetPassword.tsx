@@ -1,6 +1,6 @@
-import SimpleButton from "@/Components/ui/buttons/simpleButton";
+import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import React, { useState } from "react";
-import PasswordButton from "@/Components/ui/buttons/passwordButton";
+import PasswordButton from "@/Components/ui/Buttons/PasswordButton";
 import axios from "axios";
 import { useAppSelector } from "../../../redux_tool";
 
@@ -120,6 +120,10 @@ const ResetPassword = () => {
           <Toaster position="top-center" reverseOrder={false} />
         </div> */}
       </div>
+        {/* <Toaster
+          position="top-right"
+          reverseOrder={false}
+        /> */}
     </div>
   );
 };

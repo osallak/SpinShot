@@ -10,10 +10,10 @@ import exportChannelsIcon from "../../../public/ExportChannels.svg";
 import { Dialog, Transition } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Fragment, MouseEvent, useState } from "react";
-import SimpleButton from "../ui/buttons/simpleButton";
+import SimpleButton from "../ui/Buttons/SimpleButton";
 import CreateChannelIcon from "../../../public/CreateChannel.svg";
 import SubModal from "./channelsStatus/subModal";
-import SwitchButton from "../ui/buttons/switchButton";
+import SwitchButton from "../ui/Buttons/SwitchButton";
 import axios from "axios";
 
 const ayoubToken =

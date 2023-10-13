@@ -4,7 +4,7 @@ import test1 from "../../../public/test1.svg";
 import newMessage from "../../../public/newMessage.svg";
 import block from "../../../public/block.svg";
 import game from "../../../public/game.svg";
-import DropDown from "../ui/folderDropDown/dropdown";
+import DropDown from "../ui/FolderDropDown/Dropdown";
 import { useEffect } from "react";
 
 const CurrentFriends = () => {

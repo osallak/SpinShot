@@ -1,12 +1,12 @@
 import Image from "next/image";
 import test1 from "../../../public/test1.svg";
-import EmptyButton from "../ui/buttons/emptyButton";
-import SimpleButton from "../ui/buttons/simpleButton";
+import EmptyButton from "../ui/Buttons/EmptyButton";
+import SimpleButton from "../ui/Buttons/SimpleButton";
 import { MouseEvent } from "react";
 import { motion } from "framer-motion";
 import accept from "../../../public/active.svg";
 import refuse from "../../../public/unactive.svg";
-import DropDown from "../ui/folderDropDown/dropdown";
+import DropDown from "../ui/FolderDropDown/Dropdown";
 
 const FriendsRequest = () => {
   const array = [

@@ -10,7 +10,7 @@ import exportChannelsIcon from "../../../public/ExportChannels.svg";
 import { Dialog, Transition } from "@headlessui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Fragment, MouseEvent, useState } from "react";
-import SimpleButton from "../ui/buttons/simpleButton";
+import SimpleButton from "../ui/Buttons/SimpleButton";
 import pearlLock from "../../../public/pearlLock.svg";
 import SubModal from "./channelsStatus/subModal";
 

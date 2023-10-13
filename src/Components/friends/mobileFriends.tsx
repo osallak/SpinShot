@@ -2,10 +2,10 @@ import Image from "next/image";
 import FriendsIcon from "../../../public/friend.svg";
 import test1 from "../../../public/test1.svg";
 
-import SimpleButton from "../ui/buttons/simpleButton";
+import SimpleButton from "../ui/Buttons/SimpleButton";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import EmptyButton from "../ui/buttons/emptyButton";
+import EmptyButton from "../ui/Buttons/EmptyButton";
 import ContentMyFriends from "./contentMyFriends";
 import ContentFriendsRequests from "./contentFriendsRequest";
 

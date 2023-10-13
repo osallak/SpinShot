@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import lock from "../../../../../public/lock.svg";
-import mail from "../../../../../public/email.svg";
+import mail from "../../../../../public/Email.svg";
 import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
-import SimpleButton from "@/Components/ui/buttons/simpleButton";
+import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
 import InputBorder from "@/Components/ui/Inputs/InputBorder";
 import { MouseEvent, useState, useEffect } from "react";
 import ContinueWithIntra from "@/Components/ui/Buttons/ContinueWithIntra";

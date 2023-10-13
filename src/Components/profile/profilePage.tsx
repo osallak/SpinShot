@@ -13,9 +13,10 @@ import SideBar from "../ui/folderSidebar/sideBar";
 import SubsidebarSecond from "../ui/profileSubsidebar/subsidebarSecond";
 import SidebarMobile from "../ui/folderSidebar/sidebarMobile";
 import NavbarMobile from "../ui/FolderNavbar/navbarMobile";
-import TowFactor from "../ui/twoFactorauth/twoFactor";
 import UploadImage from "../ui/folderUploadImage/uploadImage";
 import { useRouter } from "next/router";
+import TwoFactor from "../ui/twoFactorauth/TwoFactorAuth";
+import { usePathname } from "next/navigation";
 
 const ProfilePage = () => {
   const [isopen, setMenu] = useState(false);
@@ -32,7 +33,7 @@ const ProfilePage = () => {
   const [myImage, setMyImage] = useState<File | null>();
   const [width, setWidth] = useState<number>();
   const [chosUesrname, setChose] = useState("");
-console.log("my usernamre ", chosUesrname);
+  console.log("my usernamre ", chosUesrname);
   const Router = useRouter();
 
   useEffect(() => {
@@ -57,10 +58,9 @@ console.log("my usernamre ", chosUesrname);
 
   const handleClick = (route: string) => {
     {
-      route == "/profile" ? 
-      setOpned(true):Router.push(route);
+      route == "/profile" ? setOpned(true) : Router.push(route);
     }
-    setPages(route)
+    setPages(route);
   };
 
   const handleMenu = () => {
@@ -138,7 +138,11 @@ console.log("my usernamre ", chosUesrname);
                   } flex flex-auto flex-col rounded-[20px] w-full mt-2  h-[1200px] c-gb:h-[800px] `}
                 >
                   {content == "Personal_Information" ? (
-                    <PersonalInformation isopen={isopen} myImage={myImage} setChose={setChose}/>
+                    <PersonalInformation
+                      isopen={isopen}
+                      myImage={myImage}
+                      setChose={setChose}
+                    />
                   ) : content == "Achievements" ? (
                     <Achievements />
                   ) : content == "Match_History" ? (
@@ -151,8 +155,7 @@ console.log("my usernamre ", chosUesrname);
                 </div>
               </div>
             </div>
-            <div className="bg-white flex items-center">
-            </div>
+            <div className="bg-white flex items-center"></div>
             {opened && pages == "/profile" && (
               <SubsidebarSecond
                 isActive={isActive}
@@ -162,8 +165,8 @@ console.log("my usernamre ", chosUesrname);
               />
             )}
             {isActive && (
-              <div className="z-50">
-                <TowFactor isActive={isActive} Switch={setisActive} />
+              <div>
+                <TwoFactor isActive={isActive} Switch={setisActive} />
               </div>
             )}
           </div>

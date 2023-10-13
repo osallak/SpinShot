@@ -1,3 +1,4 @@
+"use client";
 import dataFriends from "@/types/friendsType";
 import ip from "@/utils/endPoint";
 import axios from "axios";
@@ -7,7 +8,7 @@ import { useEffect, useState } from "react";
 import test1 from "../../../public/test1.svg";
 import FriendRequestsDropDown from "../ui/FolderDropDown/friendsRequestsDropDown";
 import { useRecoilState } from "recoil";
-import { friendRequestsAtom } from "@/components/context/recoilContext";
+import { friendRequestsAtom } from "@/Components/context/recoilContext";
 
 const ContentFriendsRequests = () => {
   const [currentFriends, setCurrentFriends] =
@@ -46,7 +47,7 @@ const ContentFriendsRequests = () => {
   useEffect(() => {
     fetchData();
     setIsLoaded(true);
-  }, []);
+  });
 
   return (
     <>

@@ -1,7 +1,8 @@
-import ContinueWithIntra from "@/components/ui/buttons/continueWithIntra";
-import EmptyButton from "@/components/ui/buttons/emptyButton";
-import SimpleButton from "@/components/ui/buttons/simpleButton";
-import InputBorder from "@/components/ui/Inputs/inputBorder";
+"use client";
+import ContinueWithIntra from "@/Components/ui/Buttons/continueWithIntra";
+import EmptyButton from "@/Components/ui/Buttons/emptyButton";
+import SimpleButton from "@/Components/ui/Buttons/simpleButton";
+import InputBorder from "@/Components/ui/Inputs/inputBorder";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
@@ -11,7 +12,7 @@ import { MouseEvent, useEffect, useRef, useState } from "react";
 import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
 import mail from "../../../../public/email.svg";
 import lock from "../../../../public/lock.svg";
-import { globalToken } from "@/components/context/recoilContext";
+import { globalToken } from "@/Components/context/recoilContext";
 import { useRecoilState } from "recoil";
 // the last version of signin without authentication with intra
 

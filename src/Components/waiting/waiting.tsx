@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ip from "@/utils/endPoint";
@@ -20,10 +21,11 @@ const WaitingPage = () => {
       const token = parseJwt(res?.data?.token);
       if (token.isTwoFactorEnabled === true) {
         router.push("/twoFactorAuthentication");
-      } else if (token.isTwoFactorEnabled === false) {
+      } else {
+				console.log("token from waiting page: ", token);
         localStorage.setItem("token", res?.data?.token);
         router.push(`/profile/${token.username}`);
-      }
+      } 
     } catch (error: any) {
       router.push("/signin");
     }

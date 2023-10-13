@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import test1 from "../../../public/test1.svg";
 import {
@@ -11,7 +12,7 @@ import {
 
 import Image from "next/image";
 import axios from "axios";
-import ip from "@/endpoint/api";
+import ip from "@/utils/endPoint";
 
 const Search = (props: { isSearch: boolean }) => {
   const [user, setUser] = useState("");

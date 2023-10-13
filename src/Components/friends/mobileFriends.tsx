@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import FriendsIcon from "../../../public/friend.svg";
 import { motion } from "framer-motion";

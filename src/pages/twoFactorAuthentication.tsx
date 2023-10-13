@@ -1,4 +1,4 @@
-import Twofa from "@/components/twoFactorAuthentication/twofa"
+import Twofa from "@/Components/twoFactorAuthentication/twofa"
 
 const TwoFactorAuthentication = () => {
   return (

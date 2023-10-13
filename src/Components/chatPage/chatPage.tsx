@@ -2,12 +2,10 @@
 import Image from "next/image";
 import logoWhite from "../../../public/logoWhite.svg";
 import messagesIcon from "../../../public/messagesIcon.svg";
-import SearchInput from "@/Components/ui/Inputs/searchInput";
 import test1 from "../../../public/test1.svg";
 import test2 from "../../../public/test2.svg";
 import test3 from "../../../public/test3.svg";
 import { ChangeEvent, MouseEvent, useState } from "react";
-import IconButton from "../ui/Buttons/IconButton";
 import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";
 import friend from "../../../public/friend.svg";
@@ -17,15 +15,12 @@ import message from "../../../public/message.svg";
 import profile from "../../../public/profile.svg";
 import game from "../../../public/game.svg";
 import sendMessage from "../../../public/sendMessage.svg";
-import SideBar from "../ui/Sidebar/sidebar";
-import MobileSideBar from "../ui/Sidebar/mobileSideBar";
+import SideBar from "../ui/folderSidebar/sideBar";
+import MobileSideBar from "../ui/folderSidebar/mobileSideBar";
 import NavBar from "../ui/FolderNavbar/navBar";
 import axios from "axios";
 import { useRouter } from "next/router";
-import {
-  useEffect,
-  useRef,
-} from "react";
+import { useEffect, useRef } from "react";
 import Conversation from "./conversation";
 import CreateChannels from "./createChannels";
 import ExploreChannels from "./exploreChannels";
@@ -166,23 +161,23 @@ const Chat = () => {
 
   // useEffect(() => socketInitializer(), []);
 
-
-
   const ayoubToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiMGM0ZjQ0ODMtNDI5Ny00ZWFkLTg1NWYtOGVhNjcyOTIwYmRmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2MDAzMzMsImV4cCI6MTY5NjY4NjczM30.3JyzTZBDHdFfUMRwu11tNFLngGucY7nH1YpCl1KSnlI";
-  
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiMGM0ZjQ0ODMtNDI5Ny00ZWFkLTg1NWYtOGVhNjcyOTIwYmRmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2MDAzMzMsImV4cCI6MTY5NjY4NjczM30.3JyzTZBDHdFfUMRwu11tNFLngGucY7nH1YpCl1KSnlI";
+
   const featchDataConversation = async (id: string, jwtTokenID: string) => {
     try {
       const result = await axios.get(
-        `http://e3r10p14.1337.ma:3001/chat/individual/${id}`, {
+        `http://e3r10p14.1337.ma:3001/chat/individual/${id}`,
+        {
           headers: {
             Authorization: `Bearer ${ayoubToken}`,
           },
-        params: {
-          page: 1,
-          limit: 5,
-          id: jwtTokenID,
-        }}
+          params: {
+            page: 1,
+            limit: 5,
+            id: jwtTokenID,
+          },
+        }
       );
       setResponse(result.data);
       setUserId(jwtTokenID);
@@ -190,7 +185,7 @@ const Chat = () => {
     } catch (error) {
       console.log("error of fetching data fron conversation: ", error);
     }
-  }
+  };
 
   const fetchDataSubSideBar = async () => {
     const jwtToken = parseJwt(ayoubToken);
@@ -214,13 +209,18 @@ const Chat = () => {
 
   useEffect(() => {
     fetchDataSubSideBar();
-  },);
+  });
 
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 md:pl-3 pl-0 py-0 pr-0 items-center flex-row">
       <SideBar />
       {openSideBar && <MobileSideBar />}
-      <SubSideBar open={open} setOpen={setOpen} setFlag={setFlag} data={individual} />
+      <SubSideBar
+        open={open}
+        setOpen={setOpen}
+        setFlag={setFlag}
+        data={individual}
+      />
       {flag === "ExploreChannels" && (
         <ExploreChannels open={open} setOpen={setOpen} />
       )}
@@ -229,8 +229,12 @@ const Chat = () => {
       )}
       <div className="w-full h-full">
         <NavBar open={openSideBar} setOpen={setOpenSideBar} />
-        <Conversation data={response} userName={individual[0]?.other?.username} userId={userId} />
-       </div>
+        <Conversation
+          data={response}
+          userName={individual[0]?.other?.username}
+          userId={userId}
+        />
+      </div>
     </div>
   );
 };

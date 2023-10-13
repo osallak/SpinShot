@@ -4,12 +4,10 @@ import { getProfile } from "./profileThunk";
 
 export interface ProfileState {
   profile: any;
-  isLoading: boolean;
 }
 
 const initialState: ProfileState = {
   profile: {},
-  isLoading: false,
 };
 
 export const ProfileSlice = createSlice({
@@ -22,15 +20,9 @@ export const ProfileSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getProfile.pending, (state, action) => {
-        state.isLoading = true;
-      })
       .addCase(getProfile.fulfilled, (state, action) => {
         state.profile = action.payload;
       })
-      .addCase(getProfile.rejected, (state, action) => {
-        state.isLoading = false;
-      });
   },
 });
 

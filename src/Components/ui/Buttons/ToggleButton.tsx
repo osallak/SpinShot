@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import active from "../../../../public/active.svg";
 import unactive from "../../../../public/unactive.svg";
-import TwoFactor from "../TwoFactorAuth/TwoFactorAuth";
+import TwoFactor from "../twoFactorauth/TwoFactorAuth";
 
 const ToggleButton = (props: { isActive: boolean ; setisActive: Function }) => {
   const Switch = () => {

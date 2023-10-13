@@ -199,7 +199,7 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
 
   const closeModaltwo = () => {
     props.setOpen(false);
-  }
+  };
 
   const joinChannel =
     (status: string) => (event: MouseEvent<HTMLButtonElement>) => {
@@ -313,7 +313,9 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
                       className="rounded-full bg-peridot px-4 py-2 text-very-dark-purple lg:w-24 md:w-20 sm:w-16 w-14 lg:h-9 md:h-8 sm:h-7 h-6 focus:outline-none flex justify-center items-center"
                       onClick={closeModaltwo}
                     >
-                      <span className="font-Passion-One text-very-dark-purple flex justify-center items-center">Exit</span>
+                      <span className="font-Passion-One text-very-dark-purple flex justify-center items-center">
+                        Exit
+                      </span>
                     </button>
                   </div>
                 </Dialog.Panel>

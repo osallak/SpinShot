@@ -2,10 +2,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import securityIcon from "./../../../../public/securityIcon.svg";
 import securityIcon2 from "./../../../../public/securityIcon2.svg";
-import linechoose from "./../../../../public/linechoose.svg";
-import linechoose2 from "./../../../../public/linechoose2.svg";
-import ToggleButton from "../Buttons/ToggleButton";
 import { buttons } from "@/Components/ui/FolderDropDown/ArrayIcon";
+import Security from  "../upDatePasswd/security"
 
 const SubsidebarSecond = (props: {
   isActive: boolean;
@@ -13,6 +11,7 @@ const SubsidebarSecond = (props: {
   setContent: Function;
   setPassword: Function;
 }) => {
+
   const [isClick, setClick] = useState(false);
   const [background, setBackground] = useState(false);
   const [subbackground, setSubBackground] = useState<number>(0);
@@ -74,35 +73,12 @@ const SubsidebarSecond = (props: {
           </div>
         ))}
         {isClick && (
-          <div className="text-[10px] sm:text-[20px] ">
-            <div className=" w-6 relative left-[30%] flex flex-row">
-              <Image src={linechoose} alt="" />
-            </div>
-            <div
-              className={` w-[60%] rounded-[12px] left-[33%] relative bottom-2  ${
-                background ? "bg-very-dark-purple" : "bg-white/12"
-              }`}
-              onClick={() => handlePasswd(true, "ResetPassword")}
-            >
-              <button className="left-[10%] relative">
-                <button>Reset Password</button>
-              </button>
-            </div>
-            <div className=" w-6 relative left-[30%] bottom-14 flex flex-row">
-              <Image src={linechoose2} alt="" />
-            </div>
-            <div
-              className={` relative flex rounded-[12px] justify-between   w-[55%] left-[39%] bottom-[65px]  `}
-            >
-              <button className="">Two Factor Auth</button>
-              <div className="relative flex justify-end w-12 h-6 c-gb:w-9 c-xs:w-1 ">
-                <ToggleButton
-                  isActive={props.isActive}
-                  setisActive={props.setisActive}
-                />
-              </div>
-            </div>
-          </div>
+          <Security
+            handlePasswd={handlePasswd}
+            background={true}
+            isActive={props.isActive}
+            setisActive={props.setisActive}
+          />
         )}
       </div>
     </div>

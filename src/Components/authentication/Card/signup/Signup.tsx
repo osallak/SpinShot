@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
 import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
 import axios from "axios";
-import ip from "@/endpoint/ip";
+import ip from "@/endpoint/api";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -88,7 +88,7 @@ const Signup = () => {
       } catch (error: any) {
         setErrorMessage(error?.response?.data?.message);
         setError(true);
-        console.log("error from signup: ", error)
+        console.log("error from signup: ", error);
       }
     }
   };

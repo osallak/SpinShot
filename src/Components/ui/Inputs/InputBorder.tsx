@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { InputsProps} from "@/types/InputsProps";
+import { InputsProps } from "@/types/InputsProps";
 import { ChangeEvent, FocusEvent, useState } from "react";
 import PasswordButton from "../Buttons/PasswordButton";
 
@@ -12,7 +12,7 @@ const InputBorder: React.FC<InputsProps> = ({
   ConfirmPassword,
   type,
   PlaceHolder,
-  icon, 
+  icon,
   Border,
   Color,
   BorderSize,
@@ -27,9 +27,8 @@ const InputBorder: React.FC<InputsProps> = ({
     setinputValue(value);
     if (setisMatch !== undefined) {
       if (ConfirmPassword!) {
-        if (ConfirmPassword !== value)
-          setisMatch(false)
-        else setisMatch(true)
+        if (ConfirmPassword !== value) setisMatch(false);
+        else setisMatch(true);
       }
     }
   };
@@ -40,12 +39,10 @@ const InputBorder: React.FC<InputsProps> = ({
     if (Reg) {
       if (!isReg) {
         setValidReg(false);
-        if (setisValid !== undefined)
-          setisValid(false);
+        if (setisValid !== undefined) setisValid(false);
       } else {
         setValidReg(true);
-        if (setisValid !== undefined)
-          setisValid(true);
+        if (setisValid !== undefined) setisValid(true);
       }
     }
   };

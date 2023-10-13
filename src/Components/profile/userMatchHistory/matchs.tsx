@@ -1,10 +1,12 @@
 import React from "react";
-import { useAppSelector } from "../../../redux_tool";
+import { useAppSelector } from "../../../../redux_tool";
+import { textLimit } from "./textLimit";
+import { formatDate } from "./date";
 
 const Matchs = (props: { option: any }) => {
   const data_user = useAppSelector((state) => state.Profile);
   return (
-    <div className="w-full h-full flex flex-row justify-around items-center  ">
+    <div className="w-full h-full flex flex-row justify-between items-center  ">
       <div>
         <picture>
           <img
@@ -17,16 +19,9 @@ const Matchs = (props: { option: any }) => {
       <div className="flex flex-col ">
         <div className="flex flex-row ">
           <h1 className="">
-            {props.option.content?.opponent?.username.length > 8
-              ? props.option.content?.opponent?.username.slice(0, 8) + "..."
-              : props.option.content?.opponent?.username}
+            {textLimit(props.option.content?.opponent?.username, 8)}
           </h1>
           <h1 className="">({props.option.content?.opponent?.logs?.rank})</h1>
-          <h1 className="w-[20%]">
-            {props.option.content?.opponent?.country?.length > 8
-              ? props.option.content?.opponent?.country.slice(0, 8) + "..."
-              : props.option.content?.opponent?.country}
-          </h1>
         </div>
         <div className="flex flex-row ">
           <h1 className="">{data_user?.profile?.username}</h1>
@@ -43,7 +38,7 @@ const Matchs = (props: { option: any }) => {
       </div>
       <div className="flex flex-col">
         <div className="flex flex-row">
-          <h1 className="">Time</h1>
+          <h1 className="">{formatDate(props.option.content?.startedAt)}</h1>
         </div>
       </div>
       <div className="flex flex-col">

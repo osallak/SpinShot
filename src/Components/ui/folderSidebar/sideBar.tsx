@@ -9,14 +9,16 @@ import notification from "../../../../public/notification.svg";
 import test1 from "../../../../public/test1.svg";
 import { MouseEvent, useState } from "react";
 import { useRouter } from "next/router";
+import Search from "@/Components/search/userSearch";
 // import logout from "../../../../public/logout.svg"
 
 const SideBar = () => {
   const Router = useRouter()
   const [hovered, setHovered] = useState(false);
+  const [isSearch, setSearch] = useState(false);
   const Icons = [
     { icon: search, route: "/Search" },
-    { icon: profile, route: "/Profile" },
+    { icon: profile, route: "/profile" },
     { icon: message, route: "/Messages" },
     { icon: friend, route: "/Friends" },
     { icon: game, route: "/Game" },
@@ -30,6 +32,7 @@ const SideBar = () => {
   const handleHover = () => {
     setHovered(true);
   }
+
   const handleHoverOut = () => {
     setHovered(false);
   }
@@ -37,6 +40,8 @@ const SideBar = () => {
   const handleLogOut = () => {
     console.log("logout");
   }
+
+
   return (
     <div className={`bg-white/10 rounded-2xl h-full md:flex flex-col hidden lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px] `}>
       <div className="w-full h-[10%] min-h-[100px] flex justify-center items-center flex-col">
@@ -57,8 +62,9 @@ const SideBar = () => {
                 <Image src={option.icon} alt={option.icon} />{" "}
               </button>
             ) : (
-              <button>
+              <button onClick={() => setSearch(!isSearch)}>
                 {" "}
+                <Search isSearch={isSearch}/> 
                 <Image src={option.icon} alt="" />{" "}
               </button>
             )}

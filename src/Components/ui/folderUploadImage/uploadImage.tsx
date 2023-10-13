@@ -13,6 +13,7 @@ import {
   Option,
 } from "@material-tailwind/react";
 import axios from "axios";
+import ip from "@/endpoint/api";
 
 const UploadImage = (props: {
   upload: boolean;
@@ -44,7 +45,7 @@ const UploadImage = (props: {
       const token = localStorage.getItem("token");
       if (token) {
         const response = await axios.post(
-          "http://e3r10p13.1337.ma:3000/media",
+          `${ip}/media`,
           {
             file: image,
           },
@@ -55,7 +56,6 @@ const UploadImage = (props: {
             },
           }
         );
-        console.log("re ", response);
       }
     } catch (error) {
       console.error(error);
@@ -90,7 +90,7 @@ const UploadImage = (props: {
             </label>
             <span>Use avatar</span>
             <div className="  overflow-y-auto h-32 sm:h-52 w-[100%]  rounded-[20px] ">
-              <div className="flex  flex-wrap  bg-very-dark-purple items-center px-2">
+              <div className="flex  flex-wrap justify-center  bg-very-dark-purple items-center px-2">
                 {ArrayAvatar.map((option: any) => (
                   <label
                     key={option.id}

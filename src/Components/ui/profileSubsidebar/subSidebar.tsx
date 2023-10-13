@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import securityIcon from "./../../../../public/securityIcon.svg";
 import securityIcon2 from "./../../../../public/securityIcon2.svg";
 import { buttons } from "@/Components/ui/FolderDropDown/ArrayIcon";
-import ChangPasswd from "../upDatePasswd/changPasswd";
+import Security from "../upDatePasswd/security";
 
 const SubSidebar = (props: any) => {
   const [isClick, setClick] = useState(false);
@@ -18,9 +18,11 @@ const SubSidebar = (props: any) => {
     props.setContent(route);
     props.setPassword(true);
   };
+
   const handlePasswd = (id: boolean, route: string) => {
     setBackground(true);
   };
+
   return (
     <div className=" backdrop:blur  bg-white/10 space-y-10 w-[30%] hidden c-gb:block rounded-[20px]  ml-[110px]">
       <div className="w-full flex flex-col h-[132px]">
@@ -68,7 +70,7 @@ const SubSidebar = (props: any) => {
           </div>
         ))}
         {isClick && (
-          <ChangPasswd
+          <Security
             handlePasswd={handlePasswd}
             background={true}
             isActive={props.isActive}

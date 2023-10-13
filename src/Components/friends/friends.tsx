@@ -1,10 +1,10 @@
-import SideBar from "../ui/Sidebar/sidebar";
+import SideBar from "../ui/folderSidebar/sideBar";
 import axios from "axios";
 import FriendsRequest from "./friendRequest";
 import CurrentFriends from "./currentFriends";
 import MobileFriends from "./mobileFriends";
 import { useState, useEffect } from "react";
-import MobileSideBar from "../ui/Sidebar/mobileSideBar";
+import MobileSideBar from "../ui/folderSidebar/mobileSideBar";
 import NavBar from "../ui/FolderNavbar/navBar";
 
 const FriendsPage = () => {

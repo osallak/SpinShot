@@ -11,7 +11,7 @@ import Image from "next/image";
 import axios, { AxiosError } from "axios";
 import { log } from "console";
 import { errorMonitor } from "events";
-import ip from "@/endpoint/ip";
+import ip from "@/endpoint/api";
 
 const Signin = () => {
   const [username, setUsername] = useState("");
@@ -56,18 +56,15 @@ const Signin = () => {
   ) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        `${ip}/auth/local/signin`, 
-        {
-          username,
-          password,
-        }
-      );
+      const res = await axios.post(`${ip}/auth/local/signin`, {
+        username,
+        password,
+      });
       localStorage.setItem("token", res.data.token);
       console.log("token: " + localStorage.getItem("token"));
       Router.push(Path);
     } catch (error: any) {
-      // setErrorMessage(error.response.data.message);
+      setErrorMessage(error?.response?.data?.message);
       setError(true);
       console.log("error from signin: ", error);
     }
@@ -158,13 +155,13 @@ const Signin = () => {
               <div className="w-full flex justify-center items-center flex-col sm:space-y-12 space-y-8">
                 <div className="w-full flex justify-center items-center rounded-full">
                   <div className="b-sm:w-40 w-3/4 c-md:h-10 sm:h-10 h-9 flex justify-center items-center rounded-full">
-                  <SimpleButton
-                    Type="submit"
-                    onclick={(e) =>
-                      RedirectionFunction(e, `profile/${username}`)
-                    }
-                    content="Sign in"
-                  />
+                    <SimpleButton
+                      Type="submit"
+                      onclick={(e) =>
+                        RedirectionFunction(e, `profile/${username}`)
+                      }
+                      content="Sign in"
+                    />
                   </div>
                 </div>
                 <div className="flex flex-col justify-center items-center c-md:space-y-10 space-y-3 w-full">
@@ -190,7 +187,7 @@ const Signin = () => {
           {widthsc && widthsc <= 1024 && (
             <div className="w-full flex flex-row justify-center items-center space-x-1">
               <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-                Don&apos;t have an account?
+                Don{"'"}t have an account?
               </p>
               <EmptyButton
                 flag="authentication"
@@ -204,7 +201,7 @@ const Signin = () => {
       {widthsc && widthsc > 1024 && (
         <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center">
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-            Don&apos;t have an account?&nbsp;
+            Don{"'"}t have an account?&nbsp;
           </p>
           <EmptyButton
             flag="authentication"

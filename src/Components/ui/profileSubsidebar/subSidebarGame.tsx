@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import SimpleButton from "../Buttons/SimpleButton";
-import Mode from "./Mode";
 import Maps from "./maps";
 
 const SubSidebarGame = (props: any) => {
@@ -52,7 +51,7 @@ const SubSidebarGame = (props: any) => {
         </div>
         <div className="absolute h-[4%]  w-[17%] top-[85%] flex justify-center items-center ">
           <div className="w-[150px] h-full">
-          <SimpleButton content="Play" onclick={hendleUpdata} />
+            <SimpleButton content="Play" onclick={hendleUpdata} />
           </div>
         </div>
       </div>

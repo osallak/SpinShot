@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
-import SubSidebar from "../ui/FolderSubsidebar/subSidebar";
+import SubSidebar from "../ui/profileSubsidebar/subSidebar";
 import ImageProfile from "./imageProfile";
 import Levle from "./level";
 import PersonalInformation from "./personalInformation";
-import MatchHistory from "./matchHistory";
-import Achievements from "./achievements";
+import Achievements from "./userAchievements.tsx/achievements";
+import MatchHistory from "./userMatchHistory/matchHistory";
 import ResetPassword from "./resetPassword";
 import { useSelector } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../../../redux_tool";
 import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
-import SideBar from "../ui/Sidebar/sidebar";
-import SubsidebarSecond from "../ui/FolderSubsidebar/subsidebarSecond";
-import SidebarMobile from "../ui/Sidebar/SidebarMobile";
+import SideBar from "../ui/folderSidebar/sideBar";
+import SubsidebarSecond from "../ui/profileSubsidebar/subsidebarSecond";
+import SidebarMobile from "../ui/folderSidebar/sidebarMobile";
 import NavbarMobile from "../ui/FolderNavbar/navbarMobile";
-import TwoFactor from "../ui/TwoFactorAuth/TwoFactorAuth"; 
-import UploadImage from "../ui/UploadImage/UploadImage";
+import UploadImage from "../ui/folderUploadImage/uploadImage";
 import { useRouter } from "next/router";
+import TwoFactor from "../ui/twoFactorauth/TwoFactorAuth"
+import { usePathname } from "next/navigation";
 
 const ProfilePage = () => {
   const [isopen, setMenu] = useState(false);
@@ -24,10 +25,10 @@ const ProfilePage = () => {
   const [content, setContent] = useState("Personal_Information");
   const user = useSelector((state: any) => state.Data);
   const [password, setPassword] = useState(false);
-  const [pages, setPages] = useState("profile");
+  const [pages, setPages] = useState("");
   const user1 = useSelector((state: any) => state.Data);
   const dispatch = useAppDispatch();
-  const profile_data = useAppSelector((state) => state.Profile);
+  const data = useAppSelector((state) => state.Profile);
   const [isActive, setisActive] = useState(false);
   const [open, setOpenDialog] = useState(false);
   const [upload, setUpload] = useState(false);
@@ -38,6 +39,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (token) {
       dispatch(getProfile());
       handleResize();
@@ -54,28 +56,18 @@ const ProfilePage = () => {
     }
   }, [dispatch]);
 
-  const handleClick = (route: string | undefined) => {
-    setOpned(true);
+  const handleClick = (route: string) => {
     {
-      route ? setPages(route) : null;
+      route == "/profile" ? 
+      setOpned(true):Router.push(route);
     }
+    setPages(route)
   };
 
   const handleMenu = () => {
     setOpned(false);
     setMenu(!isopen);
   };
-
-  // useEffect(() => {
-  //   handleResize();
-  //   if (typeof window !== 'undefined') {
-  //     window.addEventListener('resize', handleResize);
-  //     return () => {
-  //       window.removeEventListener('resize', handleResize);
-  //     };
-  //   }
-
-  // }, []);
 
   const handleResize = () => {
     setWidth(window.innerWidth);
@@ -159,7 +151,9 @@ const ProfilePage = () => {
                 </div>
               </div>
             </div>
-            {opened && pages == "/Profile" && (
+            <div className="bg-white flex items-center">
+            </div>
+            {opened && pages == "/profile" && (
               <SubsidebarSecond
                 isActive={isActive}
                 setisActive={setisActive}

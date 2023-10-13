@@ -4,9 +4,10 @@ import React, { useState } from "react";
 import { useAppSelector } from "../../../redux_tool";
 import axios from "axios";
 import FormInput from "@/Components/ui/formInput/FormInput";
-import ip from "@/endpoint/ip";
+import ip from "@/endpoint/api";
 import toast, { Toaster } from "react-hot-toast";
 import test from "node:test";
+import { json } from "stream/consumers";
 
 const PersonalInformation = (props: any) => {
   // const dispatch = useAppDispatch();
@@ -14,66 +15,54 @@ const PersonalInformation = (props: any) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [country, setCountry] = useState("");
 
-  const parseinInput = () => {
-    const namePattern = /^[A-Za-z\s]+$/;
-    if (namePattern.test(firstName)) return 1;
-    else if (namePattern.test(lastName)) return 1;
-    else if (namePattern.test(userName)) return 1;
-    return 0;
-  };
+  // const parseinInput = () => {
+  //   const namePattern = /^[A-Za-z\s]+$/;
+  //   if (!namePattern.test(firstName)) return 1;
+  //   else if (!namePattern.test(lastName)) return 1;
+  //   else if (!namePattern.test(userName)) return 1;
+  //   return 0;
+  // };
+
+  const [form, setForm] = useState<any>({
+    firstName: null,
+    lasetName: null,
+    username: null,
+    country: null,
+  });
 
   const hendleUpdata = async () => {
-    const my_data = new FormData();
-    my_data.append("firstName", firstName);
-    my_data.append("lastName", lastName);
-    my_data.append("username", userName);
-    my_data.append("country", country);
-
-    if (parseinInput()) notify();
-    else {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.patch(
-          `${ip}/users`,
-          {
-            my_data,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      }
+    try {
+      const token = localStorage.getItem("token");
+      country ? form["country"] = country : form["country"] = null ;
+      Object.keys(form).forEach(key => {
+        if (!form[key])
+          delete(form[key]);
+      });
+      const response = await axios.patch(`${ip}/users`, form, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    } catch (error) {
+      console.error(error);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    {
-      e.target.name == "firstName"
-        ? setFirstName(e.target.value)
-        : e.target.name == "lastName"
-        ? setLastName(e.target.value)
-        : e.target.name == "username"
-        ? setUsername(e.target.value)
-        : e.target.name == "email"
-        ? setEmail(e.target.value)
-        : null;
-    }
+    setForm((prev: any) => {
+      prev[e.target.name] = e.target.value == "" ? null : e.target.value;
+      return prev;
+    });
   };
 
-  const notify = () => {
-    toast.success("Input incorrect ");
-  };
+  // const notify = () => {
+  //   toast.error("Input incorrect ");
+  // };
 
   return (
-    <div className="space-y-40  md:space-y-10 h-[910px]  ">
+    <div className="space-y-52  md:space-y-14 h-[910px]  ">
       <div className=" ">
         <div className="text-pearl text-[15px] sm:text-2xl md:h-52 h-32 flex items-center c-10xl:px-24 px-8 sm:px-14">
           <span>Personal information</span>
@@ -132,7 +121,9 @@ const PersonalInformation = (props: any) => {
           <SimpleButton content="Save" onclick={hendleUpdata} />
         </div>
       </div>
-      <Toaster position="top-left" reverseOrder={false} containerClassName="z-[50]"/>
+      {/* <div>
+        <Toaster position="top-center" reverseOrder={false} />
+      </div> */}
     </div>
   );
 };

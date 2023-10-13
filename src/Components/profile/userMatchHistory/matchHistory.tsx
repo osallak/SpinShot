@@ -1,26 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Pagination from "../ui/FolderPagination/pagination";
+import Pagination from "../../ui/FolderPagination/pagination";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
-import ip from "@/endpoint/ip";
+import ip from "@/endpoint/api";
 import Matchs from "./matchs";
 
 const MatchHistory = () => {
-  interface objType {
-    data: [];
-    pagination: {
-      pageCount: number;
-      totalCount: number;
-      pageSize: number;
-    };
-  }
 
   const [totalPages, setTotalPages] = useState(0);
-  const [posts, setPosts] = useState<any>([]); //todo create interface type
+  const [posts, setPosts] = useState<any>([]);
   const [page, setPage] = useState<number>(1);
   const [country, setCountry] = useState(1);
 
-  console.log("total ", totalPages);
 
   const array = [
     { id: 0, content: posts[0] },
@@ -32,7 +23,7 @@ const MatchHistory = () => {
 
   useEffect(() => {
     fetchData();
-  });
+  },[page]);
 
   const fetchData = async () => {
     try {
@@ -48,7 +39,7 @@ const MatchHistory = () => {
             },
           }
         );
-
+        console.log("data", response);
         setPosts(response.data.data);
         setTotalPages(response.data.pagination.pageCount);
       }

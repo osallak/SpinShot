@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import test1 from "../../../public/test1.svg";
-import NavBar from "../ui/navBar/navBar";
-import MobileSideBar from "../ui/sideBar/mobileSideBar";
-import SideBar from "../ui/sideBar/sideBar";
+import NavBar from "../ui/FolderNavbar/navBar";
+import MobileSideBar from "../ui/folderSidebar/mobileSideBar";
+import SideBar from "../ui/folderSidebar/sideBar";
 import CurrentFriends from "./currentFriends";
 import FriendsRequest from "./friendRequest";
 import MobileFriends from "./mobileFriends";

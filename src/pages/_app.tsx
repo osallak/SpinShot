@@ -12,14 +12,11 @@ import {
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <>
     <RecoilRoot>
+      <Provider  store={store} >
       <Component {...pageProps} />
+      </Provider>
     </RecoilRoot>
-    <Provider store={store}>
-      <Component {...pageProps} />
-    </Provider>
-    </>
   )
 }
 

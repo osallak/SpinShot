@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import test1 from "../../../public/test1.svg";
-import CurrentFriendsDropDown from "../ui/dropDown/currentFriendsDropDown";
+import CurrentFriendsDropDown from "../ui/FolderDropDown/currentFriendsDropDown";
 
 const ContentMyFriends = () => {
   const [currentFriends, setCurrentFriends] =

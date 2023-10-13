@@ -1,4 +1,4 @@
-import SearchInput from "@/components/ui/inputs/searchInput";
+import SearchInput from "@/components/ui/Inputs/searchInput";
 import dataSubSideBar from "@/types/messagesArrays";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
@@ -82,12 +82,12 @@ function MobileSubSideBar(props: {
               <Image src={test1} alt="test" />
               <div className="flex justify-start items-start space-y-1 flex-col">
                 <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
-                  {items.other.username}
+                  {/* {items.other.username} */}
                 </p>
                 <p
                   className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
                 >
-                  {items.message}
+                  {/* {items.message} */}
                 </p>
               </div>
             </button>
@@ -100,7 +100,7 @@ function MobileSubSideBar(props: {
               key={index}
               className="w-full flex justify-center items-center outline-none rounded-2xl"
             >
-              {items.other.username.startsWith(searchValue) && (
+              {/* {items.other.username.startsWith(searchValue) && (
                 <button
                   onClick={(event) => clickChat(event, index)}
                   key={index}
@@ -120,7 +120,7 @@ function MobileSubSideBar(props: {
                     </p>
                   </div>
                 </button>
-              )}
+              )} */}
             </div>
           ))}
         </div>
@@ -130,14 +130,16 @@ function MobileSubSideBar(props: {
           <IconButton
             icon={CreateChannel}
             content="Create channel"
-            onclick={createChannels}
+            // onclick={createChannels} TODO: correct this one
+            onclick={() => {}}
           />
         </div>
         <div className="w-[45%] h-10 flex justify-center items-center">
           <IconButton
             icon={ExportChannels}
             content="Export channels"
-            onclick={exploreChannels}
+            // onclick={exploreChannels}
+            onclick={() => {}}
           />
         </div>
       </div>

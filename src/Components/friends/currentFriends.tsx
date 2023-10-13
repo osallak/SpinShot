@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import FriendsIcon from "../../../public/friend.svg";
 import test1 from "../../../public/test1.svg";
-import CurrentFriendsDropDown from "../ui/dropDown/currentFriendsDropDown";
+import CurrentFriendsDropDown from "../ui/FolderDropDown/currentFriendsDropDown";
 
 const CurrentFriends = () => {
   const [loaded, setIsLoaded] = useState<boolean>(false);

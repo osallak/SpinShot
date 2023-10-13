@@ -1,6 +1,6 @@
 import level from "./../../../public/levleIcon.svg";
-import { SignOut, logos } from "@/Components/ui/FolderDropDown/ArrayIcon";
-import DropdownUser from "@/Components/ui/FolderDropDown/DropdownUser";
+import { SignOut, logos } from "@/components/ui/FolderDropDown/ArrayIcon";
+import DropdownUser from "@/components/ui/FolderDropDown/DropdownUser";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../../redux_tool";

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import test1 from "../../../public/test1.svg";
-import FriendRequestsDropDown from "../ui/dropDown/friendsRequestsDropDown";
+import FriendRequestsDropDown from "../ui/FolderDropDown/friendsRequestsDropDown";
 import { useRecoilState } from "recoil";
 import { friendRequestsAtom } from "@/components/context/recoilContext";
 

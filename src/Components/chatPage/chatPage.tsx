@@ -1,11 +1,11 @@
 "use client";
 import ip from "@/utils/endPoint";
-import SideBar from "@/components/ui/sideBar/sideBar";
+import SideBar from "@/components/ui/folderSidebar/sideBar";
 import axios, { all } from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import NavBar from "../ui/navBar/navBar";
-import MobileSideBar from "../ui/sideBar/mobileSideBar";
+import NavBar from "../ui/FolderNavbar/navBar";
+import MobileSideBar from "../ui/folderSidebar/mobileSideBar";
 import Conversation from "./conversation";
 import CreateChannels from "./createChannels";
 import ExploreChannels from "./exploreChannels";
@@ -261,11 +261,11 @@ const Chat = () => {
       )}
       <div className="w-full h-full">
         <NavBar open={openSideBar} setOpen={setOpenSideBar} />
-        <Conversation
+        {/* <Conversation
           data={response}
-          userName={individual[0]?.other?.username}
+        //   userName={individual[0]?.other?.username}
           userId={userId}
-        />
+        /> */}
       </div>
     </div>
   );

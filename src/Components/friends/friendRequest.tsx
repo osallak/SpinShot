@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import test1 from "../../../public/test1.svg";
 import { friendRequestsAtom } from "../context/recoilContext";
-import FriendRequestsDropDown from "../ui/dropDown/friendsRequestsDropDown";
+import FriendRequestsDropDown from "../ui/FolderDropDown/friendsRequestsDropDown";
 
 const FriendsRequest = () => {
   const [friendRequets, setFriendRequets] = useRecoilState(friendRequestsAtom);

@@ -123,7 +123,6 @@ export class TwoFactorAuthService {
           });
         }
       } catch (e) {
-        console.log(e);
         return reject({
           status: 500,
           message: 'Internal Server Error',
@@ -149,7 +148,10 @@ export class TwoFactorAuthService {
             message: '2FA code is invalid',
           });
         }
-        const accessToken = await this.authService.generateToken(u, true);
+        await this.userService.updateData(user?.id, {
+          isTwoFactorAuthenticated: true,
+        });
+        const accessToken = await this.authService.generateToken(u);
         resolve({
           status: 200,
           message: '2FA code is valid',

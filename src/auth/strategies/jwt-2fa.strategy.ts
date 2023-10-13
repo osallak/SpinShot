@@ -19,7 +19,7 @@ export class JwtTwoFaStrategy extends PassportStrategy(Strategy, 'jwt-2fa') {
   }
 
   async validate(
-    payload: JwtAuthPayload,
+    payload: any,
   ): Promise<{ id: string; username: string; email: string }> {
     const { iat, exp, sub } = payload;
 
@@ -39,7 +39,7 @@ export class JwtTwoFaStrategy extends PassportStrategy(Strategy, 'jwt-2fa') {
       };
     }
 
-    if (payload.isTwoFaAuthenticated) {
+    if (payload.isTwoFactorAuthenticated) {
       return {
         id: user.id,
         username: user.username,

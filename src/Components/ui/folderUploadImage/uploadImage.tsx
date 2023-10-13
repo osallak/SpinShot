@@ -82,7 +82,7 @@ const UploadImage = (props: {
                 type="file"
                 className="  w-full h-9  hidden"
                 onChange={uploadToClient}
-                accept="image/jpeg"
+                accept="image/jpeg, image/png"
               />
               <span className=" font-Passion-One text-lg bg-peridot rounded-full flex items-center justify-center w-28 h-9  ">
                 Upload

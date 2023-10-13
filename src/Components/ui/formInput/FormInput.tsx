@@ -1,6 +1,11 @@
 import React from "react";
 
-const FormInput = (props: { handleChange(e: React.ChangeEvent<HTMLInputElement>): void, name: string, placehold: string }) => {
+const FormInput = (props: {
+  handleChange(e: React.ChangeEvent<HTMLInputElement>): void;
+  name: string;
+  placehold: string;
+}) => {
+
   return (
     <div className="  ">
         <input
@@ -11,7 +16,8 @@ const FormInput = (props: { handleChange(e: React.ChangeEvent<HTMLInputElement>)
           required
           placeholder={props.placehold}
         />
-      </div>
+
+    </div>
   );
 };
 

@@ -15,7 +15,7 @@ import SidebarMobile from "../ui/folderSidebar/sidebarMobile";
 import NavbarMobile from "../ui/FolderNavbar/navbarMobile";
 import UploadImage from "../ui/folderUploadImage/uploadImage";
 import { useRouter } from "next/router";
-import TwoFactor from "../ui/twoFactorauth/TwoFactorAuth"
+import TwoFactor from "../ui/twoFactorauth/TwoFactorAuth";
 import { usePathname } from "next/navigation";
 
 const ProfilePage = () => {
@@ -23,10 +23,8 @@ const ProfilePage = () => {
   const [valid, setValid] = useState(false);
   const [opened, setOpned] = useState(false);
   const [content, setContent] = useState("Personal_Information");
-  const user = useSelector((state: any) => state.Data);
   const [password, setPassword] = useState(false);
   const [pages, setPages] = useState("");
-  const user1 = useSelector((state: any) => state.Data);
   const dispatch = useAppDispatch();
   const data = useAppSelector((state) => state.Profile);
   const [isActive, setisActive] = useState(false);
@@ -34,7 +32,8 @@ const ProfilePage = () => {
   const [upload, setUpload] = useState(false);
   const [myImage, setMyImage] = useState<File | null>();
   const [width, setWidth] = useState<number>();
-
+  const [chosUesrname, setChose] = useState("");
+  console.log("my usernamre ", chosUesrname);
   const Router = useRouter();
 
   useEffect(() => {
@@ -42,6 +41,7 @@ const ProfilePage = () => {
 
     if (token) {
       dispatch(getProfile());
+      setChose(data?.profile?.username);
       handleResize();
       setValid(true);
       if (typeof window !== "undefined") {
@@ -58,10 +58,9 @@ const ProfilePage = () => {
 
   const handleClick = (route: string) => {
     {
-      route == "/profile" ? 
-      setOpned(true):Router.push(route);
+      route == "/profile" ? setOpned(true) : Router.push(route);
     }
-    setPages(route)
+    setPages(route);
   };
 
   const handleMenu = () => {
@@ -119,6 +118,7 @@ const ProfilePage = () => {
                     opne={opened}
                     setOpenDialog={setOpenDialog}
                     width={width}
+                    username={chosUesrname}
                   />
                   {open ? (
                     <UploadImage
@@ -138,7 +138,11 @@ const ProfilePage = () => {
                   } flex flex-auto flex-col rounded-[20px] w-full mt-2  h-[1200px] c-gb:h-[800px] `}
                 >
                   {content == "Personal_Information" ? (
-                    <PersonalInformation isopen={isopen} myImage={myImage} />
+                    <PersonalInformation
+                      isopen={isopen}
+                      myImage={myImage}
+                      setChose={setChose}
+                    />
                   ) : content == "Achievements" ? (
                     <Achievements />
                   ) : content == "Match_History" ? (
@@ -151,8 +155,7 @@ const ProfilePage = () => {
                 </div>
               </div>
             </div>
-            <div className="bg-white flex items-center">
-            </div>
+            <div className="bg-white flex items-center"></div>
             {opened && pages == "/profile" && (
               <SubsidebarSecond
                 isActive={isActive}
@@ -162,7 +165,7 @@ const ProfilePage = () => {
               />
             )}
             {isActive && (
-              <div >
+              <div>
                 <TwoFactor isActive={isActive} Switch={setisActive} />
               </div>
             )}

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Intra from "../../../../public/Intra.svg";
-import { OthersProps } from "../../../types/buttonProps";
+import { OthersProps } from "@/types/ButtonProps";
 
 const ContinueWithIntra: React.FC<OthersProps> = ({ onclick, content }) => {
   return (

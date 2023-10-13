@@ -7,9 +7,9 @@ import profile from "../../../../public/profile.svg";
 import game from "../../../../public/game.svg";
 import notification from "../../../../public/notification.svg";
 import test1 from "../../../../public/test1.svg";
+import logout from "../../../../public/logout.svg"
 import { MouseEvent, useState } from "react";
 import { useRouter } from "next/router";
-import Search from "@/Components/search/userSearch";
 // import logout from "../../../../public/logout.svg"
 
 const SideBar = (props: {avatar: string}) => {

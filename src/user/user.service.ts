@@ -224,10 +224,10 @@ export class UserService {
       });
   }
 
-  async getUser(username: string): Promise<SerialisedUser> {
+  async getUser(id: string): Promise<SerialisedUser> {
       const user: User = await this.prisma.user.findUnique({
         where: {
-          username,
+          id,
         },
         include: {
           logs: {
@@ -251,7 +251,7 @@ export class UserService {
           },
         },
       });
-      if (!user) throw new NotFoundException('Invalid username');
+      if (!user) throw new NotFoundException('record not found !');
       return serializeUser(user);
   }
 
@@ -301,11 +301,7 @@ export class UserService {
 
   async search(query: SearchDto): Promise<PaginationResponse<User[]>> {
     const where = {
-      OR: [
-        { username: { contains: query.keyword } },
-        { firstName: { contains: query.keyword } },
-        { lastName: { contains: query.keyword } },
-      ],
+         username: { startsWith: query.keyword },
     };
     const [users, totalCount] = await this.prisma.$transaction([
       this.prisma.user.findMany({

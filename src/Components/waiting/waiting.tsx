@@ -21,10 +21,10 @@ const WaitingPage = () => {
       const token = parseJwt(res?.data?.token);
       if (token.isTwoFactorEnabled === true) {
         router.push("/twoFactorAuthentication");
-      } else if (token.isTwoFactorEnabled === false) {
+      } else {
         localStorage.setItem("token", res?.data?.token);
         router.push(`/profile/${token.username}`);
-      }
+      } 
     } catch (error: any) {
       router.push("/signin");
     }

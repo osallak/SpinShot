@@ -237,7 +237,7 @@ const Chat = () => {
   useEffect(() => {
     fetchDataSubSideBar();
     setIsLoaded(true)
-  }, []);
+  });
 
   useEffect(() => {
     fetchDataExploreChannel();

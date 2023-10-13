@@ -47,7 +47,7 @@ const ContentFriendsRequests = () => {
   useEffect(() => {
     fetchData();
     setIsLoaded(true);
-  }, []);
+  });
 
   return (
     <>

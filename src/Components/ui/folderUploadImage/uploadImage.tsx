@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import camera from "../../../../public/cameraIcon.svg";
 import test1 from "../../../../public/test1.svg";
-import { ArrayAvatar } from "../folderDropDown/arrayIcon";
+import { ArrayAvatar } from "../FolderDropDown/ArrayIcon";
 import Image from "next/image";
 import {
   Button,
@@ -82,7 +82,7 @@ const UploadImage = (props: {
                 type="file"
                 className="  w-full h-9  hidden"
                 onChange={uploadToClient}
-                accept="image/jpeg"
+                accept="image/jpeg, image/png"
               />
               <span className=" font-Passion-One text-lg bg-peridot rounded-full flex items-center justify-center w-28 h-9  ">
                 Upload

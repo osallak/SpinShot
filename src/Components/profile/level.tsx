@@ -4,12 +4,12 @@ import grandMasterLogo from "./../../../public/grandMasterLogo.svg";
 import eliteLogo from "./../../../public/eliteLogo.svg";
 import veteraneLogo from "./../../../public/veteranLogo.svg";
 import level from "./../../../public/levleIcon.svg";
-import { SignOut } from "@/Components/ui/folderDropDown/arrayIcon";
-import DropdownUser from "@/Components/ui/folderDropDown/dropdownUser";
+import { SignOut } from "@/Components/ui/FolderDropDown/ArrayIcon";
+import DropdownUser from "@/Components/ui/FolderDropDown/DropdownUser";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../../redux_tool";
-import { logos } from "@/Components/ui/folderDropDown/arrayIcon";
+import { logos } from "@/Components/ui/FolderDropDown/ArrayIcon";
 
 const Levle = (props: any) => {
   const opned = props.opne;

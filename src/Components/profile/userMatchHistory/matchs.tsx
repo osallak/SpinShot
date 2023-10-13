@@ -11,7 +11,7 @@ const Matchs = (props: { option: any }) => {
         <picture>
           <img
             className=" w-[30px] h-[30px] sm:w-[50px] sm:h-[50px] c-3xl:w-[80px] c-3xl:h-[80px] rounded-2xl"
-            src={props.option.content?.opponent.avatar}
+            src={props.option.content?.opponent?.avatar}
             alt=""
           />
         </picture>
@@ -25,7 +25,7 @@ const Matchs = (props: { option: any }) => {
         </div>
         <div className="flex flex-row ">
           <h1 className="">{data_user?.profile?.username}</h1>
-          <h1 className="">({data_user?.profile?.profile.rank})</h1>
+          <h1 className="">({data_user?.profile?.profile?.rank})</h1>
         </div>
       </div>
       <div className="flex flex-col ">

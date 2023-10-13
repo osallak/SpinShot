@@ -12,21 +12,18 @@ import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
 import SideBar from "../ui/folderSidebar/sideBar";
 import SubsidebarSecond from "../ui/profileSubsidebar/subsidebarSecond";
 import SidebarMobile from "../ui/folderSidebar/sidebarMobile";
-import NavbarMobile from "../ui/folderNavbar/navbarMobile";
+import NavbarMobile from "../ui/FolderNavbar/navbarMobile";
 import TowFactor from "../ui/twoFactorauth/twoFactor";
 import UploadImage from "../ui/folderUploadImage/uploadImage";
 import { useRouter } from "next/router";
-import { usePathname } from "next/navigation";
 
 const ProfilePage = () => {
   const [isopen, setMenu] = useState(false);
   const [valid, setValid] = useState(false);
   const [opened, setOpned] = useState(false);
   const [content, setContent] = useState("Personal_Information");
-  const user = useSelector((state: any) => state.Data);
   const [password, setPassword] = useState(false);
   const [pages, setPages] = useState("");
-  const user1 = useSelector((state: any) => state.Data);
   const dispatch = useAppDispatch();
   const data = useAppSelector((state) => state.Profile);
   const [isActive, setisActive] = useState(false);
@@ -34,7 +31,8 @@ const ProfilePage = () => {
   const [upload, setUpload] = useState(false);
   const [myImage, setMyImage] = useState<File | null>();
   const [width, setWidth] = useState<number>();
-
+  const [chosUesrname, setChose] = useState("");
+console.log("my usernamre ", chosUesrname);
   const Router = useRouter();
 
   useEffect(() => {
@@ -42,6 +40,7 @@ const ProfilePage = () => {
 
     if (token) {
       dispatch(getProfile());
+      setChose(data?.profile?.username);
       handleResize();
       setValid(true);
       if (typeof window !== "undefined") {
@@ -119,6 +118,7 @@ const ProfilePage = () => {
                     opne={opened}
                     setOpenDialog={setOpenDialog}
                     width={width}
+                    username={chosUesrname}
                   />
                   {open ? (
                     <UploadImage
@@ -138,7 +138,7 @@ const ProfilePage = () => {
                   } flex flex-auto flex-col rounded-[20px] w-full mt-2  h-[1200px] c-gb:h-[800px] `}
                 >
                   {content == "Personal_Information" ? (
-                    <PersonalInformation isopen={isopen} myImage={myImage} />
+                    <PersonalInformation isopen={isopen} myImage={myImage} setChose={setChose}/>
                   ) : content == "Achievements" ? (
                     <Achievements />
                   ) : content == "Match_History" ? (

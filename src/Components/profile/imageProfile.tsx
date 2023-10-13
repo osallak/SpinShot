@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../../redux_tool";
 
 const ImageProfile = (props: any) => {
+  const data = useAppSelector((state) => state.Profile);
   const [handelMous, setImage] = useState(false);
   const [image, setMyImage] = useState();
-  const data = useAppSelector((state) => state.Profile);
 
   const handleMouseEnter = () => {
     setImage(true);
@@ -44,28 +44,25 @@ const ImageProfile = (props: any) => {
         } c-gb:w-[10rem] c-10xl:w-[15rem]  relative transition-all duration-300 bg-white hover:opacity-40  `}
         >
         <input type="" className="hidden " onClick={Open} />
-        <div className=" flex justify-center items-center bg-purple  rounded-3xl ">
+        <div className=" flex justify-center items-center bg-purple  rounded-3xl h-32 	c-14xl:w-64 c-14xl:h-64 ">
         {handelMous && (
-          <div className={`  rounded-3xl  duration-300  flex justify-center items-center flex-col  transition-all absolute  `}>
+          <div className={` overline rounded-3xl  duration-300  flex justify-center items-center flex-col  transition-all absolute  `}>
             <Image className={``} src={email} alt="" />
           </div>
         )}
-          {image && (
-            <picture>
-              <img
-                className={`bg-cover  rounded-[20px] `}
-                src={image}
-                width={500}
-                sizes="(max-width: 768px) 100vw"
-                height={50}
-                alt=""
-                />
-            </picture>
-          )}
+         {image && (
+  <picture className="bg-cover ">
+    <img
+      className=" h-32 w-44	c-14xl:w-64 c-14xl:h-64  rounded-2xl"
+      src={image}
+      alt=""
+    />
+  </picture>
+)}
           </div>
       </label>
       <div className="flex flex-col items-center  py-4 ">
-        <span>{data.profile?.username}</span>
+        <span>{props.username} </span>
         <span>{data.profile?.email}</span>
       </div>
     </div>

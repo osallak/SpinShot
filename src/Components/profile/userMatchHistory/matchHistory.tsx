@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Pagination from "../../ui/folderPagination/pagination";
+import Pagination from "../../ui/FolderPagination/pagination";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import ip from "@/endpoint/api";
@@ -28,6 +28,7 @@ const MatchHistory = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
+      console.log(token);
       if (token) {
         const my_token = parseJwt(token);
         const id = my_token.sub;
@@ -39,7 +40,7 @@ const MatchHistory = () => {
             },
           }
         );
-        console.log("data", response);
+        console.log("data ld", response);
         setPosts(response.data.data);
         setTotalPages(response.data.pagination.pageCount);
       }
@@ -47,6 +48,8 @@ const MatchHistory = () => {
       console.error(error);
     }
   };
+
+  // console.log("data ", posts);
 
   const totalMatch =
     (posts[0]?.user?.logs?.victories ?? 0) +

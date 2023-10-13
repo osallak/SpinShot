@@ -14,11 +14,11 @@ const MobileSideBar = () => {
   const Router = useRouter();
   const [hovered, setHovered] = useState(false);
   const Icons = [
-    { icon: search, route: "/Search" },
-    { icon: profile, route: "/Profile" },
-    { icon: message, route: "/Messages" },
-    { icon: friend, route: "/Friends" },
-    { icon: game, route: "/Game" },
+    { icon: search, route: "/search" },
+    { icon: profile, route: "/profile" },
+    { icon: message, route: "/messages" },
+    { icon: friend, route: "/friends" },
+    { icon: game, route: "/game" },
   ];
 
   const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {
@@ -34,7 +34,9 @@ const MobileSideBar = () => {
   }
 
   const handleLogOut = () => {
-    console.log("logout");
+    if (localStorage.getItem("token"))
+      localStorage.removeItem("token");
+    Router.push("/signin");
   }
 
   return (
@@ -70,7 +72,7 @@ const MobileSideBar = () => {
         </div>
         <div className="w-full h-[6%] min-h-[60px] py-2 flex justify-center items-center">
           <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={test1} alt="test1" className={`w-9 ${hovered ? "opacity-10" : "opacity-100"}`} />
-          {hovered && <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={logout} alt="logout" className="absolute cursor-pointer" />}
+          {hovered && <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={logout} alt="logout" className="absolute cursor-pointer w-4" />}
         </div>
       </div>
     </div>

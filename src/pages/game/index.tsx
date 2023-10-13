@@ -1,13 +1,13 @@
-import SideBar from "@/Components/ui/folderSidebar/sideBar";
+import SideBar from "@/components/ui/folderSidebar/sideBar";
 import React, { useState, useEffect } from "react";
-import SubSidebarGame from "@/Components/ui/profileSubsidebar/subSidebarGame";
-import NavbarMobile from "@/Components/ui/FolderNavbar/navbarMobile";
-import NavGame from "@/Components/ui/FolderNavbar/navGame";
-import SidebarM from "@/Components/ui/folderSidebar/sidebarMobile";
+import SubSidebarGame from "@/components/ui/profileSubsidebar/subSidebarGame";
+import NavbarMobile from "@/components/ui/FolderNavbar/navbarMobile";
+import NavGame from "@/components/ui/FolderNavbar/navGame";
+import SidebarM from "@/components/ui/folderSidebar/sidebarMobile";
 import GameNormal from "./GameNormal";
 import GameHard from "./GameHard";
 import GameExpert from "./GameExpert";
-import SubsidebarSecondGame from "@/Components/ui/profileSubsidebar/subsidebarSecondGame";
+import SubsidebarSecondGame from "@/components/ui/profileSubsidebar/subsidebarSecondGame";
 
 const Game = () => {
   const [isopen, setMenu] = useState(false);
@@ -57,7 +57,7 @@ const Game = () => {
         />
       </div>
       <div className={` flex flex-row c-gb:space-x-3 p-2 w-full  h-full `}>
-        <SideBar />
+        <SideBar avatar=""/>
         <SubSidebarGame setMode={setMode} setMap={setMap} />
 
         {isopen && (

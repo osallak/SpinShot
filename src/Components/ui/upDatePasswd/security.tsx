@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import ToggleButton from "../Buttons/ToggleButton";
+import ToggleButton from "../buttons/ToggleButton";
 import linechoose from "../../../../public/linechoose.svg";
 import linechoose2 from "../../../../public/linechoose2.svg";
 

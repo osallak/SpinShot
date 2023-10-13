@@ -1,25 +1,25 @@
-import { useRouter } from "next/router";
-import lock from "../../../../../public/lock.svg";
-import mail from "../../../../../public/Email.svg";
-import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
-import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
-import InputBorder from "@/Components/ui/Inputs/InputBorder";
-import { MouseEvent, useState, useEffect } from "react";
-import ContinueWithIntra from "@/Components/ui/Buttons/ContinueWithIntra";
-import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
+import ContinueWithIntra from "@/components/ui/buttons/continueWithIntra";
+import EmptyButton from "@/components/ui/buttons/emptyButton";
+import SimpleButton from "@/components/ui/buttons/simpleButton";
+import InputBorder from "@/components/ui/Inputs/inputBorder";
+import ip from "@/utils/endPoint";
+import parseJwt from "@/utils/parsJwt";
+import axios from "axios";
 import Image from "next/image";
-import axios, { AxiosError } from "axios";
-import { log } from "console";
-import { errorMonitor } from "events";
-import ip from "@/endpoint/api";
+import { useRouter } from "next/router";
+import { MouseEvent, useEffect, useRef, useState } from "react";
+import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
+import mail from "../../../../public/email.svg";
+import lock from "../../../../public/lock.svg";
+import { globalToken } from "@/components/context/recoilContext";
+import { useRecoilState } from "recoil";
+// the last version of signin without authentication with intra
 
 const Signin = () => {
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isValid, setisValid] = useState(true);
   const [widthsc, setwidthsc] = useState<number | undefined>(undefined);
-  const [isEmail, setisEmail] = useState(true);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const Router = useRouter();
@@ -49,43 +49,42 @@ const Signin = () => {
       BorderSize: 2,
     },
   ];
+  const [tmpToken, setTmpToken] = useRecoilState(globalToken);
 
-  const RedirectionFunction = async (
-    e: MouseEvent<HTMLButtonElement>,
-    Path: string
-  ) => {
+  const RedirectionFunction = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       const res = await axios.post(`${ip}/auth/local/signin`, {
         username,
         password,
       });
-      localStorage.setItem("token", res.data.token);
-      console.log("token: " + localStorage.getItem("token"));
-      Router.push(Path);
+      const token = parseJwt(res?.data?.token);
+      console.log("res.data.token: ", res.data.token)
+      setTmpToken(res?.data?.token);
+      if (token.isTwoFactorEnabled === true) {
+        Router.push("/twoFactorAuthentication");
+      } else if (token.isTwoFactorEnabled === false) {
+        localStorage.setItem("token", res?.data?.token);
+        Router.push(`/friends`);
+      }
     } catch (error: any) {
       setErrorMessage(error?.response?.data?.message);
+      if (error?.response?.status === 404)
+        setErrorMessage("User not Found");
       setError(true);
-      console.log("error from signin: ", error);
     }
   };
 
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     Router.push(
-      "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2FMessages&response_type=code"
+      "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fwaiting&response_type=code"
     );
-    // try {
-    //   await axios.get("http://34.95.172.25/auth/42");
-    //   console.log("good");
-    // } catch (error) {
-    //   console.log(error);
-    // }
   };
 
   const redirection = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    Router.push("/Signup");
+    Router.push("/signup");
   };
 
   useEffect(() => {
@@ -157,9 +156,7 @@ const Signin = () => {
                   <div className="b-sm:w-40 w-3/4 c-md:h-10 sm:h-10 h-9 flex justify-center items-center rounded-full">
                     <SimpleButton
                       Type="submit"
-                      onclick={(e) =>
-                        RedirectionFunction(e, `profile/${username}`)
-                      }
+                      onclick={(e) => RedirectionFunction(e)}
                       content="Sign in"
                     />
                   </div>
@@ -187,7 +184,7 @@ const Signin = () => {
           {widthsc && widthsc <= 1024 && (
             <div className="w-full flex flex-row justify-center items-center space-x-1">
               <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-                Don{"'"}t have an account?
+                Don&apos;t have an account?
               </p>
               <EmptyButton
                 flag="authentication"
@@ -201,7 +198,7 @@ const Signin = () => {
       {widthsc && widthsc > 1024 && (
         <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center">
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
-            Don{"'"}t have an account?&nbsp;
+            Don&apos;t have an account?&nbsp;
           </p>
           <EmptyButton
             flag="authentication"

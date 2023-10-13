@@ -5,175 +5,25 @@
 //   DialogBody,
 //   DialogFooter,
 // } from "@material-tailwind/react";
-import Image from "next/image";
-import exportChannelsIcon from "../../../public/ExportChannels.svg";
+import dataExploreChannel from "@/types/exploreChannel";
 import { Dialog, Transition } from "@headlessui/react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Fragment, MouseEvent, useState } from "react";
-import SimpleButton from "../ui/Buttons/SimpleButton";
-import pearlLock from "../../../public/pearlLock.svg";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { Fragment, MouseEvent, useEffect, useState } from "react";
+import exportChannelsIcon from "../../../public/ExportChannels.svg";
 import SubModal from "./channelsStatus/subModal";
+import { useRecoilState } from "recoil";
+import { exploreChannelAtom } from "../context/recoilContext";
+import exploreChannelType from "@/types/channelsType";
 
-const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
-  const content = [
-    {
-      name: "spinshot Game",
-      members: 50,
-      status: "private",
-    },
-    {
-      name: "spinshot Game",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot Game",
-      members: 20,
-      status: "protected",
-    },
-    {
-      name: "spinshot Game",
-      members: 50,
-      status: "public",
-    },
-    {
-      name: "spinshot Game",
-      members: 50,
-      status: "private",
-    },
-    {
-      name: "l3asker",
-      members: 50,
-      status: "public",
-    },
-    {
-      name: "english learning",
-      members: 20,
-      status: "protected",
-    },
-    {
-      name: "foot Channel for kora",
-      members: 50,
-      status: "private",
-    },
-    {
-      name: "chat game",
-      members: 100,
-      status: "protected",
-    },
-    {
-      name: "Game",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot 3D",
-      members: 50,
-      status: "private",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "public",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "public",
-    },
-    {
-      name: "spinshot",
-      members: 100,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 90,
-      status: "public",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "public",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "private",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "public",
-    },
-    {
-      name: "spinshot",
-      members: 90,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 2,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 299100,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 2,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 299100,
-      status: "protected",
-    },
-    {
-      name: "spinshot",
-      members: 50,
-      status: "protected",
-    },
-  ];
+const ExploreChannels = (props: {
+  open: boolean;
+  setOpen: Function;
+}) => {
   const [subOpen, setSubOpen] = useState(false);
   const [status, setStatus] = useState("");
+  const [name, setName] = useState("");
+  const [exploreChannel, setExploreChannel] = useRecoilState(exploreChannelAtom);
 
   const sp = (name: string) => {
     const res = name.split(" ");
@@ -202,15 +52,18 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
   };
 
   const joinChannel =
-    (status: string) => (event: MouseEvent<HTMLButtonElement>) => {
+    (status: string, id: string) => (event: MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       setSubOpen(true);
       setStatus(status);
+      setName(id);
+      console.log("explorechannel: ", exploreChannel);
     };
+
   return (
     <>
       {subOpen && (
-        <SubModal open={subOpen} setOpen={setSubOpen} type={status} />
+        <SubModal open={subOpen} setOpen={setSubOpen} type={status} name={name} />
       )}
       <Transition appear show={props.open} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -250,7 +103,7 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
                       </p>
                     </div>
                     <div className="h-[85%] overflow-auto flex items-center sm:flex-wrap flex-nowrap sm:flex-row flex-col py-3">
-                      {content.map((content, index) => (
+                      {(exploreChannel as exploreChannelType[]).map((items: exploreChannelType, index: number) => (
                         <div
                           key={index}
                           className="sm:w-1/2 w-full flex justify-center items-center lg:px-3 sm:px-2 px-1 md:py-5 sm:py-4 py-2"
@@ -260,7 +113,7 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
                               <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] h-full flex justify-center items-center">
                                 <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] lg:h-[70px] md:h-[60px] sm:h-[50px] h-[40px] rounded-xl bg-pearl bg-opacity-40 flex justify-center items-center">
                                   <div className="font-Poppins md:text-4xl sm:text-3xl text-2xl font-thin text-very-dark-purple flex justify-center items-center">
-                                    {sp(content.name).map((charName, index) => (
+                                    {sp(items.id).map((charName, index) => (
                                       <p key={index} className="uppercase">
                                         {charName[0]}
                                       </p>
@@ -271,7 +124,7 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
                               <div className=" h-full lg:w-[200px] md:w-[170px] w-[140px] flex flex-col">
                                 <div className=" h-[50%] flex flex-row justify-start items-center space-x-2">
                                   <div className=" font-Poppins lg:text-lg md:text-md text-[10px] text-pearl flex flex-row space-x-1">
-                                    {splitThreePoint(content.name).map(
+                                    {splitThreePoint(items.id).map(
                                       (channelName, index) => (
                                         <p key={index}>{channelName}</p>
                                       )
@@ -283,24 +136,26 @@ const ExploreChannels = (props: { open: boolean; setOpen: any }) => {
                             <div className="h-full w-[30%] px-1">
                               <div className="h-[50%] flex justify-center items-center">
                                 <p className="font-Poppins text-[10px] text-pearl text-opacity-40">
-                                  {content.status}
+                                  {items.type}
                                 </p>
                               </div>
+                              {items.type !== "PRIVATE" && (
                               <div className="h-[50%] flex justify-center items-center outline-none">
                                 <motion.div
                                   whileTap={{ scale: 0.9 }}
                                   className="md:w-16 sm:w-12 w-10 h-5 rounded-full flex justify-center items-center bg-peridot"
                                 >
-                                  <button
-                                    onClick={joinChannel(content.status)}
-                                    className={`"bg-peridot" focus:outline-none outline-none rounded-full text-lg sm:text-xl w-full h-full font-Passion-One text-very-dark-purple`}
-                                  >
-                                    <p className="font-Passion-One text-very-dark-purple text-sm">
-                                      Join
-                                    </p>
-                                  </button>
+                                    <button
+                                      onClick={joinChannel(items.type, items.id)}
+                                      className={`"bg-peridot" focus:outline-none outline-none rounded-full text-lg sm:text-xl w-full h-full font-Passion-One text-very-dark-purple`}
+                                    >
+                                      <p className="font-Passion-One text-very-dark-purple text-sm">
+                                        Join
+                                      </p>
+                                    </button>
                                 </motion.div>
                               </div>
+                                  )}
                             </div>
                           </div>
                         </div>

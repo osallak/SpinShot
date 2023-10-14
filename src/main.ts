@@ -21,6 +21,8 @@ async function bootstrap(): Promise<void> {
   );
   app.use(cookieParser());
 
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new PrismaExceptionFilter(httpAdapter));
   const config = new DocumentBuilder()
     .setTitle('SpinShot API')
     .setDescription('SpinShot API description')

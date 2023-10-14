@@ -9,24 +9,23 @@ import {
   Option,
 } from "@material-tailwind/react";
 
-import Image from "next/image";
 import axios from "axios";
 import ip from "@/endpoint/api";
 import { textLimit } from "../profile/userMatchHistory/textLimit";
+import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
+import { useAppDispatch } from "../../../redux_tool";
+import { useRouter } from "next/router";
 
-const Search = (props: { setSearch: Function; isSearch: boolean }) => {
+const Search = (props: { isSearch: boolean }) => {
   const [user, setUser] = useState("");
   const [resulta, setSearchResults] = useState<any>([]);
-  // const [isOpen, setOpen] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [width, setWidth] = useState<any>();
-
-  const getUsers = (event: any) => {
-    setUser(event.target.value);
-  };
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const handleSearch = async () => {
     const token = localStorage.getItem("token");
-    console.log(token);
     try {
       const response = await axios.get(`${ip}/users?keyword=${user}`, {
         headers: {
@@ -34,25 +33,29 @@ const Search = (props: { setSearch: Function; isSearch: boolean }) => {
         },
       });
       setSearchResults(response.data);
-      console.log("here ", response.data);
     } catch (error) {
-      console.error("error:", error);
+      console.error(error);
     }
   };
 
   const handleChange = (e: any) => {
     setUser(e.target.value);
+    setSearchTerm(e.target.value);
     handleSearch();
   };
 
   const handelClear = () => {
     setUser("");
     setSearchResults([]);
-    props.setSearch(!props.isSearch);
   };
 
   const handleResize = () => {
     setWidth(window.innerWidth);
+  };
+
+  const getInformation = (item: any) => {
+    dispatch(getProfile(item));
+    router.push(`/profile/${item}`);
   };
 
   useEffect(() => {
@@ -62,15 +65,13 @@ const Search = (props: { setSearch: Function; isSearch: boolean }) => {
         window.removeEventListener("resize", handleResize);
       };
     }
-  });
+  }, [width, searchTerm]);
 
   return (
     <div className="">
       <Dialog
         open={props.isSearch}
-        handler={
-          props.isSearch ? handelClear : props.setSearch(!props.isSearch)
-        }
+        handler={() => {}}
         size="xs"
         className="bg-pearl"
       >
@@ -90,22 +91,29 @@ const Search = (props: { setSearch: Function; isSearch: boolean }) => {
             {resulta?.data?.length > 0 && user !== "" ? (
               resulta?.data.map((index: any) => (
                 <div
-                  key={index.username}
-                  className="flex flex-row justify-between items-center px-4 text-xs"
+                  key={index?.username}
+                  className="flex flex-row justify-between items-center px-4 text-xs sm:text-lg"
                 >
                   <div className="flex flex-row justify-center items-center ">
-                    <picture>
+                    <picture className="text-xs">
                       <img
                         className=" w-10 h-10 sm:w-14 sm:h-14 p-2 rounded-xl"
                         src={index?.avatar}
-                        alt="image not found"
+                        alt="Oops"
                       />
                     </picture>
                   </div>
-                  {width < 640 ? (
-                    <h1 className="text-white">{textLimit(index?.username, 3)}</h1>
-                  ) : null}
-                  <button className="border  sm:p-2 rounded-full bg-peridot text-very-dark-purple ">
+                  {width < 450 ? (
+                    <h1 className="text-white">
+                      {textLimit(index?.username, 3)}
+                    </h1>
+                  ) : (
+                    <h1 className="text-white">{index?.username}</h1>
+                  )}
+                  <button
+                    onClick={() => getInformation(index.id)}
+                    className="border  sm:p-2 rounded-full bg-peridot text-very-dark-purple "
+                  >
                     profile
                   </button>
                 </div>

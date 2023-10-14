@@ -108,6 +108,9 @@ const Signin = () => {
           <div className="flex fl:pb-14 flex-col justify-center fl:space-y-5 space-y-3 items-center">
             <div className="flex justify-center items-center">
               <Image
+                width={500}
+                height={500}
+                priority={true}
                 className="c-md:w-[75px] w-[60px] c-md:h-[120px] h-[105px]"
                 src={SpinShotlogo}
                 alt="SpinShot logo"

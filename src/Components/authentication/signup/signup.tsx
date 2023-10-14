@@ -110,7 +110,7 @@ const Signup = () => {
   useEffect(() => {
     if (!username || !email || !password || !ConfirmPassword || !isMatch)
       setisValid(false);
-  }, [isValid, username , email , password , ConfirmPassword , isMatch]);
+  }, [isValid, username, email, password, ConfirmPassword, isMatch]);
 
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex flex-col justify-center items-center ">
@@ -120,7 +120,14 @@ const Signup = () => {
         <div className="w-full flex items-center justify-center flex-col fl:space-y-5 space-y-6">
           <div className="flex fl:pb-16 flex-col justify-center fl:space-y-5 space-y-3 items-center">
             <div className="flex justify-center items-center">
-              <Image src={SpinShotlogo} alt="SpinShot logo" />
+              <Image
+                width={200}
+                height={200}
+                priority={true}
+                src={SpinShotlogo}
+                className="c-md:w-[75px] w-[60px] c-md:h-[120px] h-[105px]"
+                alt="SpinShot logo"
+              />
             </div>
             <div className="font-Poppins font-semibold text-pearl fl:text-2xl sm:text-lg text-md text-opacity-40">
               Welcome!

@@ -12,29 +12,31 @@ datasource db {
 
 //User
 model User {
-  id                   String                 @id @default(uuid())
-  firstName            String?                @map("first_name")
-  lastName             String?                @map("last_name")
-  email                String                 @unique
-  username             String                 @unique
-  avatar               String?
-  password             String?
-  country              String?
-  mailVerified         Boolean                @default(false) @map("mail_verified")
-  twoFactorAuth        Boolean                @default(false) @map("two_factor_auth")
-  is42User             Boolean                @map("is_42_user")
-  status               UserStatus
-  logs                 Logs?
-  LeftFriendship       Friendship[]           @relation("left")
-  RightFriendship      Friendship[]           @relation("right")
-  Game                 Game[]
-  HaveAchievement      haveAchievement[]
-  RoomChatConversation RoomChatConversation[]
-  Sent                 Conversation[]         @relation("sender")
-  Received             Conversation[]         @relation("receiver")
-  SentNotif            Notification[]         @relation("sent")
-  ReceivedNotif        Notification[]         @relation("received")
-  messages             Message[]              @relation("messages")
+  id                       String                 @id @default(uuid())
+  firstName                String?                @map("first_name")
+  lastName                 String?                @map("last_name")
+  email                    String                 @unique
+  username                 String                 @unique
+  avatar                   String?
+  password                 String?
+  country                  String?
+  mailVerified             Boolean                @default(false) @map("mail_verified")
+  twoFactorAuth            Boolean                @default(false) @map("two_factor_auth")
+  twoFactorAuthSecret      String?                @default("") @map("two_factor_auth_secret")
+  isTwoFactorAuthenticated Boolean                @default(false) @map("is_two_factor_authen")
+  is42User                 Boolean                @map("is_42_user")
+  status                   UserStatus
+  logs                     Logs?
+  LeftFriendship           Friendship[]           @relation("left")
+  RightFriendship          Friendship[]           @relation("right")
+  User                     Game[]                 @relation("user")
+  Opponnent                Game[]                 @relation("opponent")
+  HaveAchievement          haveAchievement[]
+  RoomChatConversation     RoomChatConversation[]
+  Sent                     Conversation[]         @relation("sender")
+  Received                 Conversation[]         @relation("receiver")
+  SentNotif                Notification[]         @relation("sent")
+  ReceivedNotif            Notification[]         @relation("received")
 
   @@map("user")
 }
@@ -66,24 +68,17 @@ model Friendship {
 }
 
 //Game
-model Opponent {
-  id       String @id @default(uuid())
-  username String @unique
-  Game     Game[]
-
-  @@map("opponent")
-}
 
 model Game {
   id         String   @id @default(uuid())
   userId     String   @map("user_id")
   opponentId String
-  mode       Mode
+  mode       Mode //! deprecated
   map        Map
   startedAt  DateTime @default(now()) @map("started_at")
 
-  opponent Opponent @relation(fields: [opponentId], references: [id], onDelete: Cascade)
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  opponent User     @relation("opponent", fields: [opponentId], references: [id], onDelete: Cascade)
+  user     User     @relation("user", fields: [userId], references: [id], onDelete: Cascade)
   History  History?
   accepted Boolean
 
@@ -126,29 +121,25 @@ model haveAchievement {
 
 //Chat
 model RoomChat {
-  id                   String                 @id
+  id                   String                 @id @default(uuid())
   type                 RoomType
   password             String?
   RoomChatConversation RoomChatConversation[]
-  messages             Message[]
 
   @@map("room_chat")
 }
 
 model RoomChatConversation {
-  id           String           @id @default(uuid())
-  roomChatId   String           @map("room_chat_id")
-  userId       String           @map("user_id")
-  userStatus   UserStatusGroup? @map("user_status")
-  muteDuration String?
-  mutedAt      String?
-  userRole     UserRole
+  id         String          @id @default(uuid())
+  roomChatId String          @map("room_chat_id")
+  userId     String          @map("user_id")
+  userStatus UserStatusGroup @map("user_status")
+  userRole   UserRole
 
   User     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   RoomChat RoomChat  @relation(fields: [roomChatId], references: [id], onDelete: Cascade)
   Message  Message[]
 
-  @@unique([roomChatId, userId])
   @@map("room_chat_conversation")
 }
 
@@ -158,11 +149,9 @@ model Message {
   senderId String @map("sender_id")
 
   RoomChatConversation   RoomChatConversation @relation(fields: [roomChatConversationId], references: [id], onDelete: Cascade)
-  user                   User                 @relation("messages", fields: [senderId], references: [id], onDelete: Cascade)
   roomChatConversationId String               @map("room_chat_conversation_id")
-  sentAt                 String
-  RoomChat               RoomChat?            @relation(fields: [roomChatId], references: [id], onDelete: Cascade)
-  roomChatId             String?
+  Conversation           Conversation         @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId         String               @map("conversation_id")
 
   @@map("message")
 }
@@ -172,11 +161,9 @@ model Conversation {
   senderId   String @map("sender_id")
   receiverId String @map("reciever_id")
 
-  Sender   User   @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
-  Receiver User   @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
-  sentAt   String
-  message  String
-  sender   String
+  Sender   User      @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+  Receiver User      @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  Messages Message[]
 
   @@map("conversation")
 }
@@ -205,7 +192,6 @@ enum UserStatus {
 enum UserStatusGroup {
   MUTED
   BANNED
-  INVITED
 
   @@map("user_status_group")
 }
@@ -221,7 +207,6 @@ enum RoomType {
 enum UserRole {
   BASIC
   ADMIN
-  OWNER
 
   @@map("user_role")
 }

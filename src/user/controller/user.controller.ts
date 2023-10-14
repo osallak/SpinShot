@@ -6,6 +6,7 @@ import {
   Param,
   Query,
   Patch,
+  Post,
   Body,
   ConsoleLogger,
 } from '@nestjs/common';

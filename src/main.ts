@@ -21,21 +21,14 @@ async function bootstrap(): Promise<void> {
   );
   app.use(cookieParser());
 
-  app.enableCors({
-    origin: "*",//todo: change to frontend url
-    credentials: true,
-  });//todo: add cors config
-
-  const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new PrismaExceptionFilter(httpAdapter));
-  const config: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()
+  const config = new DocumentBuilder()
     .setTitle('SpinShot API')
     .setDescription('SpinShot API description')
     .setVersion('1.0')
     .addTag('SpinShot')
     .addBearerAuth()
     .build();
-  const document: OpenAPIObject = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
   await app.listen(process.env.PORT);
 }

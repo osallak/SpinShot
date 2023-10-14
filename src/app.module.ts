@@ -6,6 +6,8 @@ import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { FriendsModule } from './friends/friends.module';
 import { MediaController } from './media/media.controller';
+import { ChatModule } from './chat/chat.module';
+import { RoomModule } from './room/room.module';
 import { MediaModule } from './media/media.module';
 import { PrismaService } from './prisma/prisma.service';
 import { StorageModule } from './storage/storage.module';
@@ -37,6 +39,8 @@ import { UserModule } from './user/user.module';
     UserModule,
     StorageModule,
     MediaModule,
+    ChatModule,
+    RoomModule,
     FriendsModule,
   ],
   controllers: [AuthController, UserController, MediaController],

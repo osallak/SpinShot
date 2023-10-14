@@ -7,8 +7,18 @@ export type PaginationResponse<T> = {
   };
 };
 
-export type Response = {
+export class Response {
   status: number;
   message: string;
   data?: any;
-};
+}
+
+// this is for bigInt because it cannot be serialized
+export function toObject() {
+  return JSON.parse(
+    JSON.stringify(
+      this,
+      (_, value) => (typeof value === 'bigint' ? value.toString() : value), // return everything else unchanged
+    ),
+  );
+}

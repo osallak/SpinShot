@@ -37,6 +37,7 @@ model User {
   Received                 Conversation[]         @relation("receiver")
   SentNotif                Notification[]         @relation("sent")
   ReceivedNotif            Notification[]         @relation("received")
+  messages                 Message[]              @relation("messages")
 
   @@map("user")
 }
@@ -121,25 +122,29 @@ model haveAchievement {
 
 //Chat
 model RoomChat {
-  id                   String                 @id @default(uuid())
+  id                   String                 @id
   type                 RoomType
   password             String?
   RoomChatConversation RoomChatConversation[]
+  messages             Message[]
 
   @@map("room_chat")
 }
 
 model RoomChatConversation {
-  id         String          @id @default(uuid())
-  roomChatId String          @map("room_chat_id")
-  userId     String          @map("user_id")
-  userStatus UserStatusGroup @map("user_status")
-  userRole   UserRole
+  id           String           @id @default(uuid())
+  roomChatId   String           @map("room_chat_id")
+  userId       String           @map("user_id")
+  userStatus   UserStatusGroup? @map("user_status")
+  muteDuration String?
+  mutedAt      String?
+  userRole     UserRole
 
   User     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   RoomChat RoomChat  @relation(fields: [roomChatId], references: [id], onDelete: Cascade)
   Message  Message[]
 
+  @@unique([roomChatId, userId])
   @@map("room_chat_conversation")
 }
 
@@ -149,9 +154,11 @@ model Message {
   senderId String @map("sender_id")
 
   RoomChatConversation   RoomChatConversation @relation(fields: [roomChatConversationId], references: [id], onDelete: Cascade)
+  user                   User                 @relation("messages", fields: [senderId], references: [id], onDelete: Cascade)
   roomChatConversationId String               @map("room_chat_conversation_id")
-  Conversation           Conversation         @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  conversationId         String               @map("conversation_id")
+  sentAt                 String
+  RoomChat               RoomChat?            @relation(fields: [roomChatId], references: [id], onDelete: Cascade)
+  roomChatId             String?
 
   @@map("message")
 }
@@ -161,9 +168,11 @@ model Conversation {
   senderId   String @map("sender_id")
   receiverId String @map("reciever_id")
 
-  Sender   User      @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
-  Receiver User      @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
-  Messages Message[]
+  Sender   User   @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+  Receiver User   @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  sentAt   String
+  message  String
+  sender   String
 
   @@map("conversation")
 }
@@ -192,6 +201,7 @@ enum UserStatus {
 enum UserStatusGroup {
   MUTED
   BANNED
+  INVITED
 
   @@map("user_status_group")
 }
@@ -207,6 +217,7 @@ enum RoomType {
 enum UserRole {
   BASIC
   ADMIN
+  OWNER
 
   @@map("user_role")
 }

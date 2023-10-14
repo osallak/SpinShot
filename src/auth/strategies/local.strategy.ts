@@ -18,7 +18,6 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     const accessToken: JwtResponse = await this.authService.signIn(
       username,
       pass,
-      false,
     );
     if (!accessToken) throw new UnauthorizedException();
 

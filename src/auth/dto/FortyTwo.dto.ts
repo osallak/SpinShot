@@ -1,7 +1,9 @@
 import {
+	IsBoolean,
     IsEmail,
     IsNotEmpty,
     IsString,
+    IsUUID,
     IsUrl,
     Matches
 } from 'class-validator';
@@ -30,4 +32,13 @@ export class FortyTwoDto {
 
   @IsString()
   country: string;
+
+	@IsUUID()
+	id: string;
+
+	@IsBoolean()
+	isTwoFaAuthenticated: boolean;
+
+	@IsBoolean()
+	twoFactorAuth: boolean;
 }

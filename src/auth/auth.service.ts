@@ -3,7 +3,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
-  Logger
+  Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -32,11 +32,10 @@ export class AuthService {
 
   async generateToken(
     user: any,
-    isTwoFaAuthenticated: boolean,
   ): Promise<JwtResponse> {
     const payload: JwtAuthPayload = {
-      isTwoFaAuthenticated,
       isTwoFactorEnabled: user.twoFactorAuth,
+      isTwoFaAuthenticated: user.isTwoFactorAuthenticated,
       username: user.username,
       sub: user.id,
       iss: this.configService.get('JWT_ISSUER'),
@@ -100,11 +99,10 @@ export class AuthService {
   async signIn(
     username: string,
     pass: string,
-    isTwoFaAuthenticated: boolean,
   ): Promise<JwtResponse> {
     try {
       const user: User = await this.userService.signIn(username, pass);
-      return await this.generateToken(user, isTwoFaAuthenticated);
+      return await this.generateToken(user);
     } catch (e) {
       this.logger.error(e.message);
       throw e;
@@ -132,12 +130,16 @@ export class AuthService {
     }
   }
 
-
   async registerFortyTwoUser(user: FortyTwoDto): Promise<JwtResponse> {
     const returnedUser = await this.userService.registerFortyTwoUser(user);
-    return await this.generateToken({
-      username: returnedUser.username,
-      sub: returnedUser.id,
-    } as JwtAuthPayload, false);
+    const token: any = await this.generateToken(
+      {
+        id: returnedUser?.id,
+        twoFactorAuth: returnedUser?.twoFactorAuth,
+        isTwoFactorAuthenticated: returnedUser?.isTwoFactorAuthenticated,
+        username: returnedUser.username,
+      } as any,
+    );
+    return token;
   }
 }

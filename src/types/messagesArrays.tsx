@@ -1,15 +1,15 @@
-// export default interface dataConversation {
-//   sentAt: string;
-//   sender: string;
-//   message: string;
-// }
+export default interface dataConversation {
+  sentAt: string;
+  sender: string;
+  message: string;
+}
 
-// export default interface dataSubSideBar {
-//   message: string;
-//   other: user;
-//   sender: string;
-//   sentAt: string;
-// }
+export default interface dataSubSideBar {
+  message: string;
+  other: user;
+  sender: string;
+  sentAt: string;
+}
 
 
 // -------------------individual Object----------------------
@@ -19,7 +19,7 @@ interface user {
   username: string;
 }
 
-interface individualData {
+export interface individualData {
   message: string;
   other: user;
   sender: string;
@@ -42,7 +42,7 @@ interface roomMessage {
   sentAt: string;
 }
 
-interface roomsData {
+export interface roomsData {
   id: string;
   type: string;
   messages: roomMessage;
@@ -52,7 +52,7 @@ interface roomsData {
 
 
 // --------------------------all Objects----------------------------
-export default interface roomsDataallMessagesType {
+export default interface allMessagesType {
   individual: individualData[];
   room: roomsData[];
 }

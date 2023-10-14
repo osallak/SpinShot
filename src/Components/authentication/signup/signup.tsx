@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { MouseEvent, useEffect, useState } from "react";
 import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
-import mail from "../../../../public/email.svg";
+import mail from "../../../../public/mail.svg";
 import lock from "../../../../public/lock.svg";
 import user from "../../../../public/user.svg";
 

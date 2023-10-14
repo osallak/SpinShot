@@ -10,7 +10,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
-import mail from "../../../../public/email.svg";
+import mail from "../../../../public/mail.svg";
 import lock from "../../../../public/lock.svg";
 import { globalToken } from "@/Components/context/recoilContext";
 import { useRecoilState } from "recoil";
@@ -66,7 +66,7 @@ const Signin = () => {
         Router.push("/twoFactorAuthentication");
       } else if (token.isTwoFactorEnabled === false) {
         localStorage.setItem("token", res?.data?.token);
-        Router.push(`/friends`);
+        Router.push(`/profile/${token.sub}`);
       }
     } catch (error: any) {
       setErrorMessage(error?.response?.data?.message);

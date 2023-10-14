@@ -1,9 +1,9 @@
 import React from 'react'
-
 import rookieLose from "../../../../public/ rookieLose.svg";
 import rookieWin from "../../../../public/rookieWin.svg";
 import Image from 'next/image';
 import { useAppSelector } from '../../../../redux_tool';
+
 const Rookie = () => {
     const achievement_data = useAppSelector((state) => state.Profile);
   return (

@@ -1,3 +1,4 @@
+import { Storage } from '@google-cloud/storage';
 import {
   Injectable,
   InternalServerErrorException,
@@ -5,7 +6,7 @@ import {
   LoggerService,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Storage } from '@google-cloud/storage';
+import { Writable } from 'stream';
 import { Response } from '../global/interfaces';
 @Injectable()
 export class StorageService {
@@ -25,10 +26,8 @@ export class StorageService {
 
   save(path: string, media: Buffer): Response {
     try {
-      if (this.getPublicUrl(path)) {
-      }
       const file = this.storage.bucket(this.bucket).file(path);
-      const stream = file.createWriteStream();
+      const stream: Writable = file.createWriteStream();
       stream.end(media);
       return {
         status: 201,
@@ -58,7 +57,12 @@ export class StorageService {
   }
 
   async makePublic(path: string): Promise<void> {
-    const file = this.storage.bucket(this.bucket).file(path);
-    await file.makePublic();
+    try {
+      const file = this.storage.bucket(this.bucket).file(path);
+      await file.makePublic();
+    } catch(error) {
+      this.logger.error(error.message);
+      throw new InternalServerErrorException('failed to make file public');
+    }
   }
 }

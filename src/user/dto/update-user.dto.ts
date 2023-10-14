@@ -1,17 +1,28 @@
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
-import { PartialType } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { Allow, IsEmail, Matches, MinLength } from 'class-validator';
-import { CreateUserDto } from './create-user.dto';
+import { IsNotEmpty, IsOptional, MinLength } from 'class-validator';
+import { CreateUserDto } from '../../auth/dto/create-user.dto';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
-  @Allow()
+  @ApiProperty({
+    description: 'first name of the user',
+    example: 'oussama',
+  })
+  @IsOptional()
+  @MinLength(3)
   firstName: string;
 
-  @Allow()
+  @ApiProperty({
+    description: 'last name of the user',
+    example: 'sallak',
+  })
+  @IsOptional()
+  @MinLength(3)
   lastName: string;
 
-  @Allow()
+  @ApiProperty()
+  @IsOptional()
+  @IsNotEmpty()
   country: string;
 
   @Exclude()

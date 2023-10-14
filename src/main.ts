@@ -1,13 +1,13 @@
-import { NestFactory } from '@nestjs/core';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
+import  cookieParser from 'cookie-parser';
+import { PrismaExceptionFilter } from 'src/prisma-client-exception/prisma-client-exception.filter';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
-import * as cookieParser from 'cookie-parser';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+async function bootstrap(): Promise<void> {
+  const app: INestApplication<any> = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'debug', 'log', 'verbose'],
-    cors: true,
   });
   app.useGlobalPipes(
     new ValidationPipe({

@@ -1,27 +1,24 @@
 import {
-  Controller,
-  Post,
-  Get,
-  Req,
   Body,
-  UseGuards,
-  Res,
-  HttpStatus,
+  Controller,
+  Get,
+  Post,
   Query,
+  Req,
+  Res,
+  UseGuards,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { CreateUserDto, SignInUserDto } from 'src/user/dto';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { FortyTwoAuthGuard } from './guards/42-auth.guard';
 import { ConfigService } from '@nestjs/config';
-import { Response, Request } from 'express';
-import {
-  ApiExcludeEndpoint,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Sign } from 'crypto';
-import { JwtResponse } from 'src/types';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
+import { Request, Response } from 'express';
+import { UserDecorator } from 'src/global/decorators/global.decorators';
+import { JwtResponse, User } from 'src/types';
+import { CreateUserDto } from 'src/user/dto';
+import { AuthService } from './auth.service';
+import { FortyTwoAuthGuard } from './guards/42-auth.guard';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { SigninDoc, SignupDoc } from './swagger/auth.swagger';
+import { FortyTwoDto } from './dto/FortyTwo.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -30,33 +27,18 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
-  @ApiResponse({
-    status: 201,
-    description: 'object with user mail and username',
-  })
-  @ApiTags('local auth')
-  @Post('/signup/local')
+  @SignupDoc()
+  @Post('/local/signup')
   async signupLocal(
     @Body() userDto: CreateUserDto,
     @Res() res: Response,
   ): Promise<void> {
-    const ret = await this.authService.signUp(userDto);
-    res.status(HttpStatus.CREATED).send(ret);
+    const user: User = await this.authService.signUp(userDto);
+    res.json(user).send();
   }
 
-  @ApiTags('local auth')
-  @ApiResponse({
-    status: 201,
-    description: 'object with jwt token',
-    content: {
-      schema: {
-        example: {
-          token: 'jwt token',
-        },
-      },
-    },
-  })
-  @Post('/signin/local')
+  @SigninDoc()
+  @Post('/local/signin')
   @UseGuards(LocalAuthGuard)
   async signinLocal(@Req() req: Request): Promise<JwtResponse> {
     return (<any>req).user;
@@ -79,20 +61,22 @@ export class AuthController {
   ) {
     await this.authService.verifyOrReject(token as string, res, true);
   }
-
   @ApiTags('42')
   @Get('42')
   @UseGuards(FortyTwoAuthGuard)
-  login42(): void {}
-
-  @ApiExcludeEndpoint()
-  @Get('42/cb')
-  @UseGuards(FortyTwoAuthGuard)
-  async login42Callback(
+  async login42(
     @Req() req: Request,
     @Res() res: Response,
-  ): Promise<void> {
-    res.cookie('jwt', 'test'); //TODO: replace with jwt token
-    res.redirect(this.configService.get('FRONTEND_ORIGIN'));
+    @UserDecorator() user: FortyTwoDto,
+  ): Promise<any> {
+    try {
+      const { token } = await this.authService.registerFortyTwoUser(user);
+      return res.status(200).json({ token: token });
+    } catch (e) {
+      return res.status(500).send('Internal Server Error');
+    }
+
   }
+
+
 }

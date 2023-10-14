@@ -1,17 +1,18 @@
+import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
 import * as Joi from 'joi';
-import { PrismaService } from './prisma/prisma.service';
 import { AuthController } from './auth/auth.controller';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { UserController } from './user/controller/user.controller';
-import { UserModule } from './user/user.module';
-import { StorageModule } from './storage/storage.module';
-import { MediaModule } from './media/media.module';
+import { AuthModule } from './auth/auth.module';
+import { FriendsModule } from './friends/friends.module';
 import { MediaController } from './media/media.controller';
 import { ChatModule } from './chat/chat.module';
 import { RoomModule } from './room/room.module';
+import { MediaModule } from './media/media.module';
+import { PrismaService } from './prisma/prisma.service';
+import { StorageModule } from './storage/storage.module';
+import { UserController } from './user/user.controller';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { RoomModule } from './room/room.module';
     MediaModule,
     ChatModule,
     RoomModule,
+    FriendsModule,
   ],
   controllers: [AuthController, UserController, MediaController],
   providers: [PrismaService],

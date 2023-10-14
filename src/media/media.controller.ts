@@ -4,24 +4,18 @@ import {
   HttpStatus,
   ParseFilePipeBuilder,
   Post,
-  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtPayload } from 'jsonwebtoken';
+import { JwtAuthGuard } from 'src/auth/guards';
+import { UserDecorator } from 'src/global/decorators/global.decorators';
+import { Response } from 'src/global/interfaces';
 import { StorageService } from 'src/storage/storage.service';
 import { UserService } from 'src/user/user.service';
-import { Response } from 'src/global/interfaces';
-import { JwtAuthGuard } from 'src/auth/guards';
-import {
-  ApiResponse,
-  ApiTags,
-  ApiBearerAuth,
-  ApiBadRequestResponse,
-  ApiConsumes,
-  ApiBody,
-} from '@nestjs/swagger';
+import { MediaDoc } from './swagger/media.swagger';
 
 @Controller('media')
 export class MediaController {
@@ -30,14 +24,7 @@ export class MediaController {
     private readonly storageService: StorageService,
   ) {}
 
-  @ApiBearerAuth()
-  @ApiTags('user')
-  @ApiResponse({ status: 200, description: 'File uploaded successfully' })
-  @ApiResponse({ status: 500, description: 'Failed to upload file' })
-  @ApiBadRequestResponse({
-    description:
-      'File size should not exceed 5m and should be of type jpeg or png',
-  })
+  @MediaDoc()
   @Post()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
@@ -45,7 +32,7 @@ export class MediaController {
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({
-          fileType: /image\/(jpeg|png)/,
+          fileType: /image\/(jpeg|png|svg)/,
         })
         .addMaxSizeValidator({
           maxSize: 1024 * 1024 * 5, //todo: discuss this (5mb)
@@ -59,14 +46,12 @@ export class MediaController {
         }),
     )
     file: Express.Multer.File,
-    @Req() req: Request,
+    @UserDecorator() user: JwtPayload,
   ): Promise<Response> {
-    const path = `media/${(<any>req).user.id}.${
-      file.mimetype.split('/')[1]
-    }`;
+    const path = `media/${user.id}.${file.mimetype.split('/')[1]}`;
     const ret: Response = this.storageService.save(path, file.buffer);
     this.userService.updateAvatar(
-      (<any>req).user.id,
+      user.id,
       this.storageService.getPublicUrl(path),
     );
     return ret;

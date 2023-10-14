@@ -1,24 +1,24 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import {
   BadRequestException,
   Injectable,
-  Logger,
-  UnauthorizedException,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
-import { CreateUserDto } from 'src/user/dto';
-import { UserService } from 'src/user/user.service';
-import { JwtService } from '@nestjs/jwt';
-import { JwtAuthPayload } from './interfaces/jwt.interface';
-import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import {
   HOST,
-  VERIFICATION_PATH,
   REJECTION_PATH,
+  VERIFICATION_PATH,
 } from 'src/global/constants/global.constants';
-import { JwtResponse } from 'src/types/common.types';
 import { User } from 'src/types';
+import { JwtResponse } from 'src/types/common.types';
+import { CreateUserDto } from 'src/user/dto';
+import { UserService } from 'src/user/user.service';
+import { JwtAuthPayload } from './interfaces/jwt.interface';
+import { FortyTwoDto } from './dto/FortyTwo.dto';
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger('AuthService');
@@ -30,8 +30,12 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async generateToken(user: any): Promise<JwtResponse> {
+  async generateToken(
+    user: any,
+  ): Promise<JwtResponse> {
     const payload: JwtAuthPayload = {
+      isTwoFactorEnabled: user.twoFactorAuth,
+      isTwoFaAuthenticated: user.isTwoFactorAuthenticated,
       username: user.username,
       sub: user.id,
       iss: this.configService.get('JWT_ISSUER'),
@@ -42,6 +46,7 @@ export class AuthService {
         token: await this.jwtService.signAsync(payload),
       };
     } catch (e) {
+      this.logger.error(e.message);
       throw new InternalServerErrorException('Could not create token');
     }
   }
@@ -83,20 +88,18 @@ export class AuthService {
   async signUp(user: CreateUserDto): Promise<User> {
     try {
       const returnedUser: User = await this.userService.createUser(user);
-      if (!returnedUser) {
-        throw new BadRequestException('something went wrong');
-      }
       await this.sendMailVerification(returnedUser);
       return returnedUser;
     } catch (e) {
-      if (e instanceof BadRequestException) throw e;
-      throw new InternalServerErrorException(
-        'Could not send verification email',
-      );
+      this.logger.error(e.message);
+      throw e;
     }
   }
 
-  async signIn(username: string, pass: string): Promise<JwtResponse> {
+  async signIn(
+    username: string,
+    pass: string,
+  ): Promise<JwtResponse> {
     try {
       const user: User = await this.userService.signIn(username, pass);
       return await this.generateToken(user);
@@ -115,17 +118,28 @@ export class AuthService {
     try {
       const decoded: any = await this.jwtService.verifyAsync(token);
       if (!decoded) throw new BadRequestException();
-
-      if (!(await this.userService.verifyEmail(decoded.email, reject))) {
+      if (!(await this.userService.verifyEmail(decoded.email, reject)))
         throw new BadRequestException();
-      }
 
       !reject
         ? res.redirect(this.configService.get('SIGN_IN_URL'))
         : res.send('account deleted'); //todo: to be discussed
-    } catch (e) {
-      this.logger.error(e.message);
-      throw new BadRequestException();
+    } catch (error) {
+      this.logger.error(error.message);
+      throw error;
     }
+  }
+
+  async registerFortyTwoUser(user: FortyTwoDto): Promise<JwtResponse> {
+    const returnedUser = await this.userService.registerFortyTwoUser(user);
+    const token: any = await this.generateToken(
+      {
+        id: returnedUser?.id,
+        twoFactorAuth: returnedUser?.twoFactorAuth,
+        isTwoFactorAuthenticated: returnedUser?.isTwoFactorAuthenticated,
+        username: returnedUser.username,
+      } as any,
+    );
+    return token;
   }
 }

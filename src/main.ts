@@ -20,7 +20,10 @@ async function bootstrap(): Promise<void> {
     }),
   );
   app.use(cookieParser());
-
+  app.enableCors({
+    origin: "*",//todo: change to frontend url
+    credentials: true,
+  });//todo: add cors config
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaExceptionFilter(httpAdapter));
   const config = new DocumentBuilder()

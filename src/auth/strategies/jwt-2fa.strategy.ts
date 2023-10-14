@@ -39,7 +39,7 @@ export class JwtTwoFaStrategy extends PassportStrategy(Strategy, 'jwt-2fa') {
       };
     }
 
-    if (payload.isTwoFactorAuthenticated) {
+    if (payload.isTwoFaAuthenticated) {
       return {
         id: user.id,
         username: user.username,

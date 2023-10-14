@@ -133,6 +133,16 @@ export class UserService {
   }
 
   async signIn(username: string, pass: string): Promise<User> {
+		// check if user is already logged in
+
+		const navoosUser = await this.prisma.user.findUnique({
+			where: {
+				username: username,
+			},
+		});
+		if (!navoosUser) {
+			throw new NotFoundException('User not found');
+		}
     const user = await this.prisma.user.update({
       where: { username: username },
       data: { status: UserStatus.ONLINE }, //todo: to be discussed
@@ -167,7 +177,7 @@ export class UserService {
 
   async verifyEmail(email: string, reject: boolean): Promise<boolean> {
     const user: User = await this.findOneByEmail(email);
-    if (!user) throw new  NotFoundException('user not found');
+    if (!user) throw new NotFoundException('user not found');
 
     if (user.mailVerified) throw new BadRequestException('Link already used');
 
@@ -211,48 +221,48 @@ export class UserService {
   }
 
   async mergeAccounts(profile: any): Promise<User> {
-      return await this.prisma.user.update({
-        where: { email: profile.email },
-        data: {
-          is42User: true,
-          firstName: profile.firstName,
-          lastName: profile.lastName,
-          avatar: profile.avatar,
-          status: UserStatus.ONLINE, //todo: check this
-          country: profile.country,
-        },
-      });
+    return await this.prisma.user.update({
+      where: { email: profile.email },
+      data: {
+        is42User: true,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        avatar: profile.avatar,
+        status: UserStatus.ONLINE, //todo: check this
+        country: profile.country,
+      },
+    });
   }
 
   async getUser(id: string): Promise<SerialisedUser> {
-      const user: User = await this.prisma.user.findUnique({
-        where: {
-          id,
-        },
-        include: {
-          logs: {
-            select: {
-              victories: true,
-              defeats: true,
-              level: true,
-              rank: true,
-            },
+    const user: User = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        logs: {
+          select: {
+            victories: true,
+            defeats: true,
+            level: true,
+            rank: true,
           },
-          HaveAchievement: {
-            select: {
-              level: true,
-              Achiement: {
-                select: {
-                  name: true,
-                  description: true,
-                },
+        },
+        HaveAchievement: {
+          select: {
+            level: true,
+            Achiement: {
+              select: {
+                name: true,
+                description: true,
               },
             },
           },
         },
-      });
-      if (!user) throw new NotFoundException('record not found !');
-      return serializeUser(user);
+      },
+    });
+    if (!user) throw new NotFoundException('record not found !');
+    return serializeUser(user);
   }
 
   async getUserGames(
@@ -271,7 +281,7 @@ export class UserService {
       this.prisma.game.count({
         where: {
           OR: [{ userId: id }, { opponentId: id }],
-        }
+        },
       }),
     ]);
     return serializePaginationResponse(games, totalCount, limit);
@@ -301,7 +311,7 @@ export class UserService {
 
   async search(query: SearchDto): Promise<PaginationResponse<User[]>> {
     const where = {
-         username: { startsWith: query.keyword },
+      username: { startsWith: query.keyword },
     };
     const [users, totalCount] = await this.prisma.$transaction([
       this.prisma.user.findMany({
@@ -352,7 +362,7 @@ export class UserService {
     });
   }
 
-	async registerFortyTwoUser(user: any): Promise<any> {
+  async registerFortyTwoUser(user: any): Promise<any> {
     //add data validation
 
     const generatedUsername = 'user' + '_' + uuidv4().slice(0, 8);
@@ -383,5 +393,5 @@ export class UserService {
       },
     });
     return user;
-	}
+  }
 }

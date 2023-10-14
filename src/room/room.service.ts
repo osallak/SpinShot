@@ -1071,7 +1071,7 @@ export class RoomService {
                 },
               });
             } else {
-              const newOwner = basicMembers[0].userId;
+              const newOwner: any = basicMembers[0].userId;
               await this.prismaService.roomChatConversation.update({
                 where: {
                   roomChatId_userId: {

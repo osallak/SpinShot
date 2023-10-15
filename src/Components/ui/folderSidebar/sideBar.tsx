@@ -12,6 +12,7 @@ import { MouseEvent, useState } from "react";
 import parseJwt from "@/utils/parsJwt";
 import { useRouter } from "next/router";
 import { useAppSelector } from "../../../../redux_tool";
+import Search from "@/Components/search/userSearch";
 
 const SideBar = () => {
   const Router = useRouter();
@@ -68,6 +69,7 @@ const SideBar = () => {
                   alt={option.icon}
                   className="opacity-40 hover:opacity-100"
                 />{" "}
+                <Search isSearch={isSearch} />
               </button>
             ) : option.route === "/profile" ? (
               <button

@@ -117,7 +117,7 @@ const ProfilePage = (props: { id: any }) => {
         >
           <div className={` flex flex-row p-2 w-full h-full `}>
             <div className="fixed h-full pb-4 ">
-              <SideBar avatar={"av"} />
+              <SideBar />
             </div>
             <SubSidebar
               setContent={setContent}

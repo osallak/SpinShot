@@ -5,7 +5,7 @@ import game from "../../../public/game.svg";
 const GamePage = () => {
   return (
     <div className="w-screen h-screen bg-very-dark-purple top-0 left-0 md:space-x-3 space-x-0 flex justify-start p-3 items-center flex-row">
-      <SideBar avatar={game}/>
+      <SideBar/>
       <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl xl:w-[570px] lg:w-[400px] w-[300px] space-y-8">
         <div className="flex justify-center items-center flex-col w-full h-[130px]">
           <div className="w-full h-[130px] flex-col px-6">

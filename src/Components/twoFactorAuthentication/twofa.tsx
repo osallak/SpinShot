@@ -32,7 +32,7 @@ const Twofa = () => {
         return;
       }
       const jwtToken = parseJwt(token);
-      Router.push(`/profile/${jwtToken.username}`);
+      Router.push(`/profile/${jwtToken.sub}`);
     } catch (error: any) {
       console.log(error);
       setErrorMessage("wrong code");

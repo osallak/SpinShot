@@ -1,29 +1,19 @@
-// import {
-//   Button,
-//   Dialog,
-//   DialogHeader,
-//   DialogBody,
-//   DialogFooter,
-// } from "@material-tailwind/react";
-import dataExploreChannel from "@/types/exploreChannel";
+import exploreChannelType from "@/types/channelsType";
 import { Dialog, Transition } from "@headlessui/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Fragment, MouseEvent, useEffect, useState } from "react";
-import exportChannelsIcon from "../../../public/ExportChannels.svg";
-import SubModal from "./channelsStatus/subModal";
+import { Fragment, MouseEvent, useState } from "react";
 import { useRecoilState } from "recoil";
+import exportChannelsIcon from "../../../public/ExportChannels.svg";
 import { exploreChannelAtom } from "../context/recoilContext";
-import exploreChannelType from "@/types/channelsType";
+import SubModal from "./channelsStatus/subModal";
 
-const ExploreChannels = (props: {
-  open: boolean;
-  setOpen: Function;
-}) => {
+const ExploreChannels = (props: { open: boolean; setOpen: Function }) => {
   const [subOpen, setSubOpen] = useState(false);
   const [status, setStatus] = useState("");
   const [name, setName] = useState("");
-  const [exploreChannel, setExploreChannel] = useRecoilState(exploreChannelAtom);
+  const [exploreChannel, setExploreChannel] =
+    useRecoilState(exploreChannelAtom);
 
   const sp = (name: string) => {
     const res = name.split(" ");
@@ -63,7 +53,12 @@ const ExploreChannels = (props: {
   return (
     <>
       {subOpen && (
-        <SubModal open={subOpen} setOpen={setSubOpen} type={status} name={name} />
+        <SubModal
+          open={subOpen}
+          setOpen={setSubOpen}
+          type={status}
+          name={name}
+        />
       )}
       <Transition appear show={props.open} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -103,63 +98,68 @@ const ExploreChannels = (props: {
                       </p>
                     </div>
                     <div className="h-[85%] overflow-auto flex items-center sm:flex-wrap flex-nowrap sm:flex-row flex-col py-3">
-                      {(exploreChannel as exploreChannelType[]).map((items: exploreChannelType, index: number) => (
-                        <div
-                          key={index}
-                          className="sm:w-1/2 w-full flex justify-center items-center lg:px-3 sm:px-2 px-1 md:py-5 sm:py-4 py-2"
-                        >
-                          <div className="bg-very-dark-purple w-full md:h-24 sm:h-20 h-16 md:rounded-[30px] sm:rounded-2xl rounded-xl flex items-center justify-between md:pl-4 sm:pl-3 pl-2">
-                            <div className="flex flex-row h-full lg:space-x-2 space-x-1 w-[70%]">
-                              <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] h-full flex justify-center items-center">
-                                <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] lg:h-[70px] md:h-[60px] sm:h-[50px] h-[40px] rounded-xl bg-pearl bg-opacity-40 flex justify-center items-center">
-                                  <div className="font-Poppins md:text-4xl sm:text-3xl text-2xl font-thin text-very-dark-purple flex justify-center items-center">
-                                    {sp(items.id).map((charName, index) => (
-                                      <p key={index} className="uppercase">
-                                        {charName[0]}
-                                      </p>
-                                    ))}
+                      {(exploreChannel as exploreChannelType[]).map(
+                        (items: exploreChannelType, index: number) => (
+                          <div
+                            key={index}
+                            className="sm:w-1/2 w-full flex justify-center items-center lg:px-3 sm:px-2 px-1 md:py-5 sm:py-4 py-2"
+                          >
+                            <div className="bg-very-dark-purple w-full md:h-24 sm:h-20 h-16 md:rounded-[30px] sm:rounded-2xl rounded-xl flex items-center justify-between md:pl-4 sm:pl-3 pl-2">
+                              <div className="flex flex-row h-full lg:space-x-2 space-x-1 w-[70%]">
+                                <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] h-full flex justify-center items-center">
+                                  <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] lg:h-[70px] md:h-[60px] sm:h-[50px] h-[40px] rounded-xl bg-pearl bg-opacity-40 flex justify-center items-center">
+                                    <div className="font-Poppins md:text-4xl sm:text-3xl text-2xl font-thin text-very-dark-purple flex justify-center items-center">
+                                      {sp(items.id).map((charName, index) => (
+                                        <p key={index} className="uppercase">
+                                          {charName[0]}
+                                        </p>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className=" h-full lg:w-[200px] md:w-[170px] w-[140px] flex flex-col">
+                                  <div className=" h-[50%] flex flex-row justify-start items-center space-x-2">
+                                    <div className=" font-Poppins lg:text-lg md:text-md text-[10px] text-pearl flex flex-row space-x-1">
+                                      {splitThreePoint(items.id).map(
+                                        (channelName, index) => (
+                                          <p key={index}>{channelName}</p>
+                                        )
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                              <div className=" h-full lg:w-[200px] md:w-[170px] w-[140px] flex flex-col">
-                                <div className=" h-[50%] flex flex-row justify-start items-center space-x-2">
-                                  <div className=" font-Poppins lg:text-lg md:text-md text-[10px] text-pearl flex flex-row space-x-1">
-                                    {splitThreePoint(items.id).map(
-                                      (channelName, index) => (
-                                        <p key={index}>{channelName}</p>
-                                      )
-                                    )}
-                                  </div>
+                              <div className="h-full w-[30%] px-1">
+                                <div className="h-[50%] flex justify-center items-center">
+                                  <p className="font-Poppins text-[10px] text-pearl text-opacity-40">
+                                    {items.type}
+                                  </p>
                                 </div>
-                              </div>
-                            </div>
-                            <div className="h-full w-[30%] px-1">
-                              <div className="h-[50%] flex justify-center items-center">
-                                <p className="font-Poppins text-[10px] text-pearl text-opacity-40">
-                                  {items.type}
-                                </p>
-                              </div>
-                              {items.type !== "PRIVATE" && (
-                              <div className="h-[50%] flex justify-center items-center outline-none">
-                                <motion.div
-                                  whileTap={{ scale: 0.9 }}
-                                  className="md:w-16 sm:w-12 w-10 h-5 rounded-full flex justify-center items-center bg-peridot"
-                                >
-                                    <button
-                                      onClick={joinChannel(items.type, items.id)}
-                                      className={`"bg-peridot" focus:outline-none outline-none rounded-full text-lg sm:text-xl w-full h-full font-Passion-One text-very-dark-purple`}
+                                {items.type !== "PRIVATE" && (
+                                  <div className="h-[50%] flex justify-center items-center outline-none">
+                                    <motion.div
+                                      whileTap={{ scale: 0.9 }}
+                                      className="md:w-16 sm:w-12 w-10 h-5 rounded-full flex justify-center items-center bg-peridot"
                                     >
-                                      <p className="font-Passion-One text-very-dark-purple text-sm">
-                                        Join
-                                      </p>
-                                    </button>
-                                </motion.div>
+                                      <button
+                                        onClick={joinChannel(
+                                          items.type,
+                                          items.id
+                                        )}
+                                        className={`"bg-peridot" focus:outline-none outline-none rounded-full text-lg sm:text-xl w-full h-full font-Passion-One text-very-dark-purple`}
+                                      >
+                                        <p className="font-Passion-One text-very-dark-purple text-sm">
+                                          Join
+                                        </p>
+                                      </button>
+                                    </motion.div>
+                                  </div>
+                                )}
                               </div>
-                                  )}
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        )
+                      )}
                     </div>
                   </div>
                   <div className="mt-7 rounded-full w-full lg:h-full md:h-[50px] sm:h-[30px] h-[20px] flex justify-end items-center md:p-5 sm:p-3 p-1">

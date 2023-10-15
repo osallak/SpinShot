@@ -1,33 +1,32 @@
-// import {
-//   Button,
-//   Dialog,
-//   DialogHeader,
-//   DialogBody,
-//   DialogFooter,
-// } from "@material-tailwind/react";
+import ip from "@/utils/endPoint";
 import { Dialog, Transition } from "@headlessui/react";
 import axios from "axios";
 import Image from "next/image";
-import { Fragment, useState, KeyboardEvent, MouseEvent } from "react";
-import CreateChannelIcon from "../../../public/CreateChannel.svg";
-import SwitchButton from "../ui/Buttons/SwitchButton";
-import ip from "@/utils/endPoint";
-import token from "@/utils/token";
+import { useRouter } from "next/router";
+import { Fragment, KeyboardEvent, useState } from "react";
 import { useRecoilState } from "recoil";
+import CreateChannelIcon from "../../../public/CreateChannel.svg";
 import { createChannelAtom } from "../context/recoilContext";
-import createChannelType from "@/types/channelsType"
+import SwitchButton from "../ui/Buttons/SwitchButton";
 
 const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
   const [type, setType] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [createChannel, setCreateChannel] = useRecoilState<any>(createChannelAtom);
+  const router = useRouter();
+  const [createChannel, setCreateChannel] =
+    useRecoilState<any>(createChannelAtom);
 
   const closeModal = () => {
     props.setOpen(false);
   };
 
   const addChannelKeyboard = async (event: KeyboardEvent<HTMLDivElement>) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
     if (event.key === "Enter") {
       const params: any = {
         name: name,
@@ -35,15 +34,11 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
       };
       if (password.length >= 6) params["password"] = password;
       try {
-        const res = await axios.post(
-          `${ip}/room/add`,
-          params,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await axios.post(`${ip}/room/add`, params, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setPassword("");
         setCreateChannel(params);
         props.setOpen(false);
@@ -54,27 +49,29 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
       }
     }
   };
+
   const addChannel = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
     const params: any = {
       name: name,
       type: type,
     };
     if (password.length >= 6) params["password"] = password;
     try {
-      const res = await axios.post(
-        `${ip}/room/add`,
-        params,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-        );
-        setPassword("");
-        setCreateChannel([...createChannel, params]);
-        props.setOpen(false);
-        console.log(params);
-        console.log("res from create channel: ", res);
+      const res = await axios.post(`${ip}/room/add`, params, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setPassword("");
+      setCreateChannel([...createChannel, params]);
+      props.setOpen(false);
+      console.log(params);
+      console.log("res from create channel: ", res);
     } catch (error: any) {
       console.log("error from create channels: ", error);
     }

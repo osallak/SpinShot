@@ -1,10 +1,10 @@
 import ip from "@/utils/endPoint";
-import token from "@/utils/token";
 import { Dialog, Transition } from "@headlessui/react";
 import axios from "axios";
 import Image from "next/image";
 import { ChangeEvent, Fragment, useState } from "react";
 import lock from "../../../../public/lock.svg";
+import { useRouter } from "next/router";
 
 const SubModal = (props: {
   open: boolean;
@@ -13,12 +13,18 @@ const SubModal = (props: {
   name: string;
 }) => {
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   function closeModal() {
     props.setOpen(false);
   }
 
   const joinChannel = async (type: string) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
     if (type === "PUBLIC") {
       try {
         const res = await axios.post(

@@ -1,4 +1,4 @@
-import allMessagesType, { individualData } from "@/types/messagesArrays";
+import { individualData } from "@/types/messagesArrays";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
 import { useRecoilState } from "recoil";

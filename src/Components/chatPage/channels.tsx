@@ -1,9 +1,6 @@
 import allMessagesType from "@/types/messagesArrays";
-import parseJwt from "@/utils/parsJwt";
-import Image from "next/image";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useState } from "react";
 import { useRecoilState } from "recoil";
-import test1 from "../../../public/test1.svg";
 import { chatAll } from "../context/recoilContext";
 
 const Channels = (props: { searchValue: string; loaded: boolean }) => {

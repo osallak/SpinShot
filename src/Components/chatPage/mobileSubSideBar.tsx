@@ -19,35 +19,12 @@ function MobileSubSideBar(props: {
 }) {
   const [clicked, setClicked] = useState<number>();
   const [searchValue, setSearchValue] = useState("");
-  // const [responseExploreChannels, setResponseExploreChannels] = useState()
 
   const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number) => {
     event.preventDefault();
     setClicked(index);
   };
-
-  const exploreChannels = async (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    try {
-      const res = await axios.get(`${ip}/room/all`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      console.log("response from explore channel: ", res.data);
-    } catch (error: any) {
-      console.log("error from explore channel: ", error);
-    }
-    props.setFlag("ExploreChannels");
-    props.setOpen(!props.open);
-  };
-
-  const createChannels = async (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    props.setFlag("CreateChannels");
-    props.setOpen(!props.open);
-  };
-
+  
   return (
     <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl w-[25%] min-w-[350px]">
       <div className="flex justify-center items-center flex-col w-full h-[10%] md:min-h-[100px] min-h-[70px]">

@@ -11,9 +11,12 @@ import logout from "../../../../public/logout.svg";
 import { MouseEvent, useState } from "react";
 import parseJwt from "@/utils/parsJwt";
 import { useRouter } from "next/router";
+import { useAppSelector } from "../../../../redux_tool";
+import Search from "@/Components/search/userSearch";
 
-const SideBar = (props: { avatar: string }) => {
+const SideBar = () => {
   const Router = useRouter();
+  const data = useAppSelector((state) => (state.Profile))
   const [hovered, setHovered] = useState(false);
   const [isSearch, setSearch] = useState(false);
   const Icons = [
@@ -48,7 +51,7 @@ const SideBar = (props: { avatar: string }) => {
     >
       <div className="w-full h-[10%] min-h-[100px] flex justify-center items-center flex-col">
         <div className="flex justify-center items-center h-full">
-          <Image src={logoWhite} alt="white logo" className="h-[120px]" />
+          <Image src={logoWhite} alt="white logo" className="h-[75px] aspect-square w-auto" width={200} height={200} priority={true}/>
         </div>
         <div className="w-[80%] border border-pearl border-opacity-40"></div>
       </div>
@@ -66,6 +69,7 @@ const SideBar = (props: { avatar: string }) => {
                   alt={option.icon}
                   className="opacity-40 hover:opacity-100"
                 />{" "}
+                <Search isSearch={isSearch} />
               </button>
             ) : option.route === "/profile" ? (
               <button
@@ -75,7 +79,7 @@ const SideBar = (props: { avatar: string }) => {
                     option.route +
                       "/" +
                       parseJwt(JSON.stringify(localStorage.getItem("token")))
-                        .username
+                        .sub
                   )
                 }
               >
@@ -96,28 +100,20 @@ const SideBar = (props: { avatar: string }) => {
                 />{" "}
               </button>
             )}
-            {/* {option.route !== "/Search" ? (
-              <button onClick={(event) => changePage(event, option.route)}>
-                {" "}
-                <Image src={option.icon} alt={option.icon} className="opacity-40 hover:opacity-100"/>{" "}
-              </button>
-            ) : (
-              <button onClick={() => setSearch(!isSearch)}>
-                {" "}
-                <Image src={option.icon} alt="" className="opacity-40 hover:opacity-100"/>{" "}
-              </button>
-            )} */}
           </div>
         ))}
       </div>
-      <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center relative">
+      <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center">
+        <div className="w-[70px] h-[70px] rounded-2xl relative flex justify-center items-center">
         <Image
           onClick={handleLogOut}
           onMouseEnter={handleHover}
           onMouseLeave={handleHoverOut}
-          className={`${hovered ? "opacity-10" : "opacity-100"} cursor-pointer`}
-          src={test1}
+          className={`${hovered ? "opacity-10" : "opacity-100"} cursor-pointer rounded-2xl`}
+          src={data?.profile?.profile?.avatar}
           alt="profile pic"
+          width={500}
+          height={500}
         />
         {hovered && (
           <Image
@@ -126,9 +122,10 @@ const SideBar = (props: { avatar: string }) => {
             onMouseLeave={handleHoverOut}
             src={logout}
             alt="logout"
-            className="absolute cursor-pointer"
+            className="absolute cursor-pointer rounded-2xl"
           />
         )}
+        </div>
       </div>
     </div>
   );

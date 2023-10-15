@@ -32,9 +32,10 @@ const Twofa = () => {
         return;
       }
       const jwtToken = parseJwt(token);
-      Router.push(`/profile/${jwtToken.username}`);
+      Router.push(`/profile/${jwtToken.sub}`);
     } catch (error: any) {
-      setErrorMessage(error?.response?.data);
+      console.log(error);
+      setErrorMessage("wrong code");
       setError(false);
     }
   };
@@ -54,6 +55,9 @@ const Twofa = () => {
         inputMode="number"
         style={{ padding: "10px" }}
         inputStyle={{
+          color: "rgb(254, 236, 252)",
+          fontFamily: "Poppins",
+          fontWeight: "bold",
           borderColor: "transparent",
           borderRadius: "10px",
           backgroundColor: "#ffffff30",

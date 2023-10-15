@@ -40,7 +40,7 @@ const Levle = (props: any) => {
 
   const handleLogOut = () => {
     localStorage.removeItem("token")
-    router.push("/Signin");
+    router.push("/signin");
   }
 
   return (
@@ -51,7 +51,7 @@ const Levle = (props: any) => {
           : "backdrop:blur bg-white/10 "
       }  w-full flex flex-col`}
     >
-      <div className="relative rounded-[20px]  w-full  h-[250px] c-gb:h-[70%]  flex flex-row justify-center  ">
+      <div className="relative rounded-[20px]  w-full  h-[250px] c-gb:h-[70%]  flex flex-row justify-center ">
         <div className="absolute w-[120px] sm:w-[20%] c-gb:w-[10rem] c-10xl:w-[12rem] c-10xl:top-14  flex flex-col items-center justify-center  h-[80%] top-10 ">
           <span className="text-xl md:text-2xl c-gb:text-3xl text-pearl ">
             {data.profile?.profile?.rank}

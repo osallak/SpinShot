@@ -24,7 +24,7 @@ const WaitingPage = () => {
       } else {
 				console.log("token from waiting page: ", token);
         localStorage.setItem("token", res?.data?.token);
-        router.push(`/profile/${token.username}`);
+        router.push(`/profile/${token.sub}`);
       } 
     } catch (error: any) {
       router.push("/signin");

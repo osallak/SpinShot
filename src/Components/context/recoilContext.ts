@@ -1,10 +1,8 @@
+import { default as createChannelType, default as exploreChannelType } from "@/types/channelsType";
 import dataFriends from "@/types/friendsType";
+import { default as allMessagesType, default as dataConversation, individualData, roomsData } from "@/types/messagesArrays";
 import { createContext } from "react";
 import { atom } from "recoil";
-import dataSubSideBar from "@/types/messagesArrays"
-import allMessagesType from "@/types/messagesArrays"
-import exploreChannelType from "@/types/channelsType";
-import createChannelType from "@/types/channelsType"
 
 export const userContext = createContext<dataFriends[] | []>([]);
 
@@ -25,6 +23,27 @@ export const chatAll = atom({
 	default: {},
 });
 
+export const conversationContext = createContext<dataConversation[] | []>([]);
+
+export const conversationAtom = atom({
+	key: `conversationAtom-${Math.random()}`,
+	default: [],
+})
+
+export const individualContext = createContext<individualData[] | []>([]);
+
+export const individualAtom = atom({
+	key: `individualAtom-${Math.random()}`,
+	default: [],
+})
+
+export const roomsContext = createContext<roomsData[] | []>([]);
+
+export const roomsAtom = atom({
+	key: `roomsAtom-${Math.random()}`,
+	default: [],
+})
+
 export const exploreChannel = createContext<exploreChannelType[] | []>([]);
 
 export const exploreChannelAtom = atom({
@@ -32,7 +51,7 @@ export const exploreChannelAtom = atom({
 	default: []
 })
 
-// export const createChannel = createContext<createChannelType[] | []> ([]);
+export const createChannel = createContext<createChannelType[] | []> ([]);
 
 export const createChannelAtom = atom({
 	key: `createChannel-${Math.random()}`,

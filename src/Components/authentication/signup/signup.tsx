@@ -1,16 +1,18 @@
-import InputBorder from "@/Components/ui/Inputs/InputBorder";
-import { useEffect, useState, MouseEvent } from "react";
-import Image from "next/image";
-import user from "../../../../../public/user.svg";
-import mail from "../../../../../public/email.svg";
-import lock from "../../../../../public/lock.svg";
-import SpinShotlogo from "../../../../../public/SpinShotlogo.svg";
-import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
-import { useRouter } from "next/router";
-import ConfirmationPassword from "@/Components/ui/Inputs/ConfirmationPassword";
-import EmptyButton from "@/Components/ui/Buttons/EmptyButton";
+import EmptyButton from "@/Components/ui/Buttons/emptyButton";
+import SimpleButton from "@/Components/ui/Buttons/simpleButton";
+import ConfirmationPassword from "@/Components/ui/Inputs/confirmationPassword";
+import InputBorder from "@/Components/ui/Inputs/inputBorder";
+import ip from "@/utils/endPoint";
 import axios from "axios";
-import ip from "@/endpoint/api";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { MouseEvent, useEffect, useState } from "react";
+import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
+import mail from "../../../../public/email.svg";
+import lock from "../../../../public/lock.svg";
+import user from "../../../../public/user.svg";
+
+//this is the last version of signup
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -69,7 +71,7 @@ const Signup = () => {
 
   const redirection = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    Router.push("/Signin");
+    Router.push("/signin");
   };
 
   const RedirectionFunction = async (
@@ -88,7 +90,6 @@ const Signup = () => {
       } catch (error: any) {
         setErrorMessage(error?.response?.data?.message);
         setError(true);
-        console.log("error from signup: ", error);
       }
     }
   };
@@ -109,7 +110,7 @@ const Signup = () => {
   useEffect(() => {
     if (!username || !email || !password || !ConfirmPassword || !isMatch)
       setisValid(false);
-  }, [isValid, username, email, password, ConfirmPassword, isMatch]);
+  }, [isValid, username , email , password , ConfirmPassword , isMatch]);
 
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex flex-col justify-center items-center ">
@@ -189,7 +190,7 @@ const Signup = () => {
                 <div className="b-sm:w-40 w-3/4 c-md:h-10 sm:h-10 h-9 flex justify-center items-center rounded-full">
                   <SimpleButton
                     Type="submit"
-                    onclick={(e) => RedirectionFunction(e, "/Signin")}
+                    onclick={(e) => RedirectionFunction(e, "/signin")}
                     content="Sign up"
                   />
                 </div>

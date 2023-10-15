@@ -1,15 +1,16 @@
 import Image from "next/image";
-import { ConfirmProps } from "@/types/InputsProps";
-import { FocusEvent, ChangeEvent, useState } from "react";
-import PasswordButton from "../Buttons/PasswordButton";
+import { KeyboardEvent } from "react";
+import { InputsProps} from "@/types/InputsProps";
+import { ChangeEvent, FocusEvent, useState } from "react";
+import PasswordButton from "@/Components/ui/Buttons/PasswordButton";
 
-const ConfirmationPassword: React.FC<ConfirmProps> = ({
-  Password,
+const InputBorder: React.FC<InputsProps> = ({
   inputValue,
   setinputValue,
   value,
   setisValid,
   setisMatch,
+  ConfirmPassword,
   type,
   PlaceHolder,
   icon,
@@ -25,29 +26,28 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
     event.preventDefault();
     const value = event.target.value;
     setinputValue(value);
-    // const isReg = value.match(Reg)
-    // if (!isReg) {
-    //   setValidReg(false)
-    //   setisValid(false)
-    // } else {
-    //   setValidReg(true)
-    // }
-    if (value !== Password) {
-      setisMatch(false);
-    } else {
-      setisMatch(true);
+    if (setisMatch !== undefined) {
+      if (ConfirmPassword!) {
+        if (ConfirmPassword !== value)
+          setisMatch(false)
+        else setisMatch(true)
+      }
     }
   };
 
   const HandleBlur = (event: FocusEvent<HTMLInputElement>) => {
     event.preventDefault();
-    const isReg = inputValue.match(Reg);
-    if (!isReg) {
-      setValidReg(false);
-      setisValid(false);
-    } else {
-      setValidReg(true);
-      setisValid(true);
+    const isReg = inputValue.match(Reg || "");
+    if (Reg) {
+      if (!isReg) {
+        setValidReg(false);
+        if (setisValid !== undefined)
+          setisValid(false);
+      } else {
+        setValidReg(true);
+        if (setisValid !== undefined)
+          setisValid(true);
+      }
     }
   };
 
@@ -61,6 +61,7 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
           <Image src={icon} alt="username or Email" className="h-5 w-5" />
         </div>
         <input
+          autoComplete="off"
           type={type == "password" && ShowPassword ? "text" : type}
           value={value}
           onChange={(event) => HandleChange(event)}
@@ -69,12 +70,16 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
           className={`w-full bg-transparent pl-3 h-full focus:outline-none placeholder:opacity-40 placeholder:font-Poppins, font-thin text-pearl focus:placeholder:opacity-0`}
         />
       </div>
-      <PasswordButton
-        ShowPassword={ShowPassword}
-        setShowPassword={setShowPassword}
-      />
+      {type === "password" ? (
+        <PasswordButton
+          ShowPassword={ShowPassword}
+          setShowPassword={setShowPassword}
+        />
+      ) : (
+        ""
+      )}
     </div>
   );
 };
 
-export default ConfirmationPassword;
+export default InputBorder;

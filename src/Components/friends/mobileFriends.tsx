@@ -1,16 +1,17 @@
+"use client";
 import Image from "next/image";
 import FriendsIcon from "../../../public/friend.svg";
-import test1 from "../../../public/test1.svg";
-
-import SimpleButton from "../ui/Buttons/SimpleButton";
-import { useState } from "react";
 import { motion } from "framer-motion";
-import EmptyButton from "../ui/Buttons/EmptyButton";
-import ContentMyFriends from "./contentMyFriends";
+import { useEffect, useState } from "react";
 import ContentFriendsRequests from "./contentFriendsRequest";
+import ContentMyFriends from "./contentMyFriends";
+import { useRouter } from "next/router";
+
+//this is the last version of mobile friends
 
 const MobileCurrentFriends = () => {
   const [friendPage, setFriendPage] = useState("myFriend");
+  const Router = useRouter();
 
   const myFriendsChange = () => {
     setFriendPage("myFriend");
@@ -19,6 +20,14 @@ const MobileCurrentFriends = () => {
   const friendsRequestChange = () => {
     setFriendPage("friendsRequest");
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      Router.push("/signin");
+      return;
+    }
+  })
 
   return (
     <div className="w-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2 flex">

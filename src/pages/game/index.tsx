@@ -57,7 +57,7 @@ const Game = () => {
         />
       </div>
       <div className={` flex flex-row c-gb:space-x-3 p-2 w-full  h-full `}>
-        <SideBar />
+        <SideBar avatar=""/>
         <SubSidebarGame setMode={setMode} setMap={setMap} />
 
         {isopen && (

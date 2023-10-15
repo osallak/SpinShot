@@ -1,10 +1,11 @@
-import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
+"use client";
+import SimpleButton from "@/Components/ui/Buttons/simpleButton";
 import Country from "@/Components/ui/Buttons/Country";
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../../redux_tool";
 import axios from "axios";
 import FormInput from "@/Components/ui/formInput/FormInput";
-import ip from "@/endpoint/api";
+import ip from "@/utils/endPoint";
 import toast, { Toaster } from "react-hot-toast";
 import test from "node:test";
 import { json } from "stream/consumers";

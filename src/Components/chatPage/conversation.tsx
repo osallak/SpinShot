@@ -15,6 +15,9 @@ import test1 from "../../../public/test1.svg";
 import trash from "../../../public/trash.svg";
 import DropDown from "../ui/FolderDropDown/Dropdown";
 import dataConversation from "@/types/messagesArrays";
+import { useRecoilState } from "recoil";
+import { chatAll } from "../context/recoilContext";
+import allMessagesType from '@/types/messagesArrays';
 import { io } from "socket.io-client";
 
 const Conversation = (props: {
@@ -31,6 +34,7 @@ const Conversation = (props: {
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
   const [test, setTest] = useState<string>("");
   const [message, setMessage] = useState("");
+  const [conversation, setConversation] = useRecoilState(chatAll);
 
   const handleClick = () => {
     console.log("hello world from the other side");
@@ -131,15 +135,15 @@ const Conversation = (props: {
 
   return (
     <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">
-      {/* <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
+      <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">
             <div className="flex justify-center items-center space-x-2 flex-row">
-              <Image
-                src={test1}
-                alt="test1"
+              {/* <Image
+                src={props.data[0]?.other?.avatar}
+                alt="profile pic"
                 className="lg:w-16 md:w-14 sm:w-12 w-10"
-              />
+              /> */}
               <div className="flex flex-col">
                 <p className="font-Poppins md:text-xl sm:text-md text-sm text-pearl font-semibold">
                   {props.userName}
@@ -153,17 +157,17 @@ const Conversation = (props: {
           </div>
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
         </div>
-        {props.data.length ? (
+        {/* {conversation.individual.length ? ( */}
           <div
             ref={chatContainerRef}
             className={`w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden `}
           >
             <div className="w-[94%] space-y-1">
-              {props.data.map((items, index) => (
+              {(conversation as allMessagesType).individual?.map((items, index: number) => (
                 <div
                   key={index}
                   className={`flex ${
-                    items.sender != props.userId
+                    items.other.id != props.userId
                       ? "flex-row-reverse space-x-reverse space-x-5"
                       : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
                   } justify-end`}
@@ -208,11 +212,11 @@ const Conversation = (props: {
               ))}
             </div>
           </div>
-        ) : (
+        {/* ) : (
           <div className="font-Poppins text-pearl text-opacity-40 w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden justify-center">
             No chat Messages
           </div>
-        )}
+        )} */}
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[60px] flex justify-center items-center flex-col">
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
           <div className="w-[90%] h-full flex justify-center items-center flex-row">
@@ -223,14 +227,13 @@ const Conversation = (props: {
                   placeholder="Type a message"
                   className="text-pearl caret-peridot w-full h-full outline-none placeholder:text-pearl font-light placeholder:opacity-50 font-Poppins md:text-lg sm:text-md text-sm bg-transparent"
                   type="text"
-                  onKeyDown={handleKeyPress}
+                  // onKeyDown={handleKeyPress}
                   value={message}
                   onChange={(event) => setMessage(event.target.value)}
                 />
               </div>
-              <button onClick={(event) => {
-								// handleSendMessage(event);
-							}}>
+              {/* add handle send message in the button in the buttom of this line */}
+              <button>
                 <Image
                   src={sendMessageIcon}
                   alt="send Message Input"
@@ -240,7 +243,7 @@ const Conversation = (props: {
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

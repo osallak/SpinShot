@@ -1,6 +1,7 @@
+"use client";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import ip from "@/endpoint/api";
+import ip from "@/utils/endPoint";
 import { useRouter } from "next/router";
 
 

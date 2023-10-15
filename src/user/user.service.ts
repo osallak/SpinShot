@@ -1,32 +1,32 @@
+import { MailerService } from '@nestjs-modules/mailer';
 import {
   BadRequestException,
-  ConflictException,
-  HttpException,
   Injectable,
   InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateUserDto } from './dto';
+import { UserStatus, haveAchievement } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { DEFAULT_AVATAR } from 'src/global/constants/global.constants';
-import { Prisma, UserStatus, haveAchievement } from '@prisma/client';
-import { initUserLogs } from './helpers';
-import { v4 as uuidv4 } from 'uuid';
-import { achievements } from './constants';
-import { serializePaginationResponse, serializeUser } from './helpers';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import {
   PaginationResponse,
   Response,
 } from 'src/global/interfaces/global.intefraces';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { MailerService } from '@nestjs-modules/mailer';
-import { SerialisedUser, User } from 'src/types';
 import { serializeService } from 'src/global/services';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { SerialisedUser, User } from 'src/types';
+import { v4 as uuidv4 } from 'uuid';
+import { PrismaService } from '../prisma/prisma.service';
+import { achievements } from './constants';
+import { CreateUserDto } from './dto';
 import { SearchDto } from './dto/search.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  initUserLogs,
+  serializePaginationResponse,
+  serializeUser,
+} from './helpers';
 
 @Injectable()
 export class UserService {
@@ -139,6 +139,7 @@ export class UserService {
     });
     if (!user) throw new NotFoundException('User not found');
     if (!user.mailVerified) throw new BadRequestException('Email not verified');
+    if (!user.password) throw new BadRequestException('Invalid credentials');
     try {
       if (!(await bcrypt.compare(pass, user.password)))
         throw new BadRequestException('Invalid credentials');
@@ -167,7 +168,7 @@ export class UserService {
 
   async verifyEmail(email: string, reject: boolean): Promise<boolean> {
     const user: User = await this.findOneByEmail(email);
-    if (!user) throw new  NotFoundException('user not found');
+    if (!user) throw new NotFoundException('user not found');
 
     if (user.mailVerified) throw new BadRequestException('Link already used');
 
@@ -211,48 +212,48 @@ export class UserService {
   }
 
   async mergeAccounts(profile: any): Promise<User> {
-      return await this.prisma.user.update({
-        where: { email: profile.email },
-        data: {
-          is42User: true,
-          firstName: profile.firstName,
-          lastName: profile.lastName,
-          avatar: profile.avatar,
-          status: UserStatus.ONLINE, //todo: check this
-          country: profile.country,
-        },
-      });
+    return await this.prisma.user.update({
+      where: { email: profile.email },
+      data: {
+        is42User: true,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        avatar: profile.avatar,
+        status: UserStatus.ONLINE, //todo: check this
+        country: profile.country,
+      },
+    });
   }
 
   async getUser(id: string): Promise<SerialisedUser> {
-      const user: User = await this.prisma.user.findUnique({
-        where: {
-          id,
-        },
-        include: {
-          logs: {
-            select: {
-              victories: true,
-              defeats: true,
-              level: true,
-              rank: true,
-            },
+    const user: User = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        logs: {
+          select: {
+            victories: true,
+            defeats: true,
+            level: true,
+            rank: true,
           },
-          HaveAchievement: {
-            select: {
-              level: true,
-              Achiement: {
-                select: {
-                  name: true,
-                  description: true,
-                },
+        },
+        HaveAchievement: {
+          select: {
+            level: true,
+            Achiement: {
+              select: {
+                name: true,
+                description: true,
               },
             },
           },
         },
-      });
-      if (!user) throw new NotFoundException('record not found !');
-      return serializeUser(user);
+      },
+    });
+    if (!user) throw new NotFoundException('record not found !');
+    return serializeUser(user);
   }
 
   async getUserGames(
@@ -271,7 +272,7 @@ export class UserService {
       this.prisma.game.count({
         where: {
           OR: [{ userId: id }, { opponentId: id }],
-        }
+        },
       }),
     ]);
     return serializePaginationResponse(games, totalCount, limit);
@@ -301,7 +302,7 @@ export class UserService {
 
   async search(query: SearchDto): Promise<PaginationResponse<User[]>> {
     const where = {
-         username: { startsWith: query.keyword },
+      username: { startsWith: query.keyword },
     };
     const [users, totalCount] = await this.prisma.$transaction([
       this.prisma.user.findMany({
@@ -352,7 +353,7 @@ export class UserService {
     });
   }
 
-	async registerFortyTwoUser(user: any): Promise<any> {
+  async registerFortyTwoUser(user: any): Promise<any> {
     //add data validation
 
     const generatedUsername = 'user' + '_' + uuidv4().slice(0, 8);
@@ -383,5 +384,5 @@ export class UserService {
       },
     });
     return user;
-	}
+  }
 }

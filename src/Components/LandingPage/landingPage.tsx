@@ -1,4 +1,6 @@
+"use client"
 import Image from "next/image";
+import parseJwt from "@/utils/parsJwt";
 import SimpleButton from "../ui/Buttons/simpleButton";
 import { MouseEvent, KeyboardEvent } from "react";
 import { useRouter } from "next/router";
@@ -9,6 +11,8 @@ const LandingPage = () => {
 
   const redirect = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if (localStorage.getItem("token"))
+      Router.push(`/profile/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}`)
     Router.push("/signin");
   };
   const handleKeyPress = (e: KeyboardEvent<HTMLButtonElement>) => {

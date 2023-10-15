@@ -1,4 +1,5 @@
 import SearchInput from "@/Components/ui/Inputs/searchInput";
+import ip from "@/utils/endPoint";
 import dataSubSideBar from "@/types/messagesArrays";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
@@ -28,7 +29,7 @@ function MobileSubSideBar(props: {
   const exploreChannels = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     try {
-      const res = await axios.get(`http://e3r10p14.1337.ma:3001/room/all`, {
+      const res = await axios.get(`${ip}/room/all`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

@@ -1,17 +1,19 @@
-import allMessagesType from "@/types/messagesArrays";
+import allMessagesType, { individualData } from "@/types/messagesArrays";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
 import { useRecoilState } from "recoil";
 import test1 from "../../../public/test1.svg";
-import { chatAll } from "../context/recoilContext";
+import { chatAll, individualAtom } from "../context/recoilContext";
 
-const Individual = (props: { searchValue: string; loaded: boolean }) => {
+const Individual = (props: { searchValue: string; loaded: boolean; setId: Function }) => {
   const [allMessages, setAllMessages] = useRecoilState(chatAll);
+  const [individual, setIndividual] = useRecoilState(individualAtom);
   const [clicked, setClicked] = useState<number>(0);
 
-  const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number) => {
+  const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number, id: string) => {
     event.preventDefault();
     setClicked(index);
+    props.setId(id)
   };
 
   return (
@@ -19,11 +21,11 @@ const Individual = (props: { searchValue: string; loaded: boolean }) => {
       {props.searchValue?.length === 0 ? (
         props.loaded === true && (
           <div className="w-full hover:overflow-auto overflow-hidden h-full">
-            {(allMessages as allMessagesType).individual?.length ? (
-              (allMessages as allMessagesType).individual?.map(
+            {(individual as individualData[]).length ? (
+              (individual as individualData[])?.map(
                 (items: any, index: number) => (
                   <button
-                    onClick={(event) => clickChat(event, index)}
+                    onClick={(event) => clickChat(event, index, items.other.id)}
                     key={index}
                     className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
                       clicked == index
@@ -39,7 +41,9 @@ const Individual = (props: { searchValue: string; loaded: boolean }) => {
                       <p
                         className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
                       >
-                        {items.message}
+                        {items.message.length > 15
+                          ? items.message.substr(0, 15) + " ..."
+                          : items.message}
                       </p>
                     </div>
                   </button>
@@ -54,8 +58,8 @@ const Individual = (props: { searchValue: string; loaded: boolean }) => {
         )
       ) : (
         <div className="w-full hover:overflow-auto overflow-hidden h-full">
-          {(allMessages as allMessagesType).individual?.length ? (
-            (allMessages as allMessagesType).individual?.map(
+          {(individual as individualData[]).length ? (
+            (individual as individualData[])?.map(
               (items: any, index: number) => (
                 <div
                   key={index}
@@ -63,7 +67,7 @@ const Individual = (props: { searchValue: string; loaded: boolean }) => {
                 >
                   {items.other?.username.startsWith(props.searchValue) && (
                     <button
-                      onClick={(event) => clickChat(event, index)}
+                      onClick={(event) => clickChat(event, index, items.other.id)}
                       key={index}
                       className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
                         clicked == index

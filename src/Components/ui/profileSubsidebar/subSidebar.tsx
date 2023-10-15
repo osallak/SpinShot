@@ -19,6 +19,7 @@ const handle = (id: number, route: string) => {
   props.setPassword(true);
 };
 
+
 const handlePasswd = (id: boolean, route: string) => {
   setBackground(true);
 };

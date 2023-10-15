@@ -53,8 +53,8 @@ const ProfilePage = (props: { id: any }) => {
     icon: any;
     name: string;
   }
-
-
+  
+  
   const handleSearch = async () => {
     const token = localStorage.getItem("token");
     const { id } = router.query;
@@ -72,7 +72,7 @@ const ProfilePage = (props: { id: any }) => {
       return;
     }
   };
-
+  
   const handleClick = (route: string) => {
     {
       route == "/profile" ? setOpned(true) : router.push(route);
@@ -84,7 +84,7 @@ const ProfilePage = (props: { id: any }) => {
     setOpned(false);
     setMenu(!isopen);
   };
-
+  
   const swetshProfile = (tab: Type[], play: TypePlay[]) => {
     setTable(tab);
     setletPlay(play);
@@ -95,21 +95,22 @@ const ProfilePage = (props: { id: any }) => {
     setletPlay(play);
     setTable(tab);
   };
-
+  
   const handleResize = () => {
     {
       router.query.id ===
       parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
-        ? usersearched(buttonsUser, SignOut)
-        : swetshProfile(buttons, userSerched);
+      ? usersearched(buttonsUser, SignOut)
+      : swetshProfile(buttons, userSerched);
     }
     setWidth(window.innerWidth);
   };
-
+  
   useEffect(() => {
     if (router.isReady) {
       handleSearch();
       handleResize();
+      setClick(false);
       if (typeof window !== "undefined") {
         window.addEventListener("resize", handleResize);
         return () => {
@@ -118,7 +119,7 @@ const ProfilePage = (props: { id: any }) => {
       }
     }
   }, [dispatch, router.isReady, router.query.id]);
-
+  
   return (
     <>
         <div
@@ -193,7 +194,7 @@ const ProfilePage = (props: { id: any }) => {
                       myImage={myImage}
                       setUsername={setUsername}
                     />
-                  ) : content == "Achievements" ? (
+                  ) : content == "Achievements"  ? (
                     <Achievements />
                   ) : content == "Match_History" ? (
                     <MatchHistory />

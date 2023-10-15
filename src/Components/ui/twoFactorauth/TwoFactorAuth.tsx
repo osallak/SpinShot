@@ -18,7 +18,6 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
   const [width, setWidth] = useState(0);
   const [submittedCode, setSubmittedCode] = useState<string>("");
   const [qrCode, setQrCode] = useState<any>(undefined);
-  let ele: any = useRef();
   const token = localStorage.getItem("token");
   useEffect(() => {
     handleResize();
@@ -77,7 +76,6 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
       toast.success("2FA is now enabled");
       props.Switch(!open);
     } catch (e: any) {
-      ele.clear();
       toast.error(e?.data ?? "Invalid 2FA");
     }
   };
@@ -102,7 +100,6 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
             </div>
             <div className="flex flex-row  space-x-5 sm:px-5 ">
               <PinInput
-                ref={(n: any) => (ele = n)}
                 length={6}
                 initialValue=""
                 // onChange={(value, index) => {}}

@@ -1,22 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const FormInput = (props: {
   handleChange(e: React.ChangeEvent<HTMLInputElement>): void;
   name: string;
   placehold: string;
+  value: string
 }) => {
 
+  const [placeholder, setPlaceholder] = useState("");
+
+  const handleFocus = () => {
+    setPlaceholder("");
+  }
+
+  const handleBlur = () => {
+    setPlaceholder(props.value)
+    {props.value ? setPlaceholder(props.value) : setPlaceholder(props.name);}
+  }
+
+  
+  useEffect(() => {
+    {props.value ? setPlaceholder(props.value) : setPlaceholder(props.name);}
+  }, [props.value])
+
+
   return (
-    <div className="  ">
+    <div className="">
         <input
           name={props.name}
           onChange={props.handleChange}
-          className=" bg-very-dark-purple w-full rounded-[20px] px-5 h-14 placeholder:text-pearl placeholder:text-opacity-40 outline-none"
-          type=""
+          className={`bg-very-dark-purple w-full rounded-[20px] px-5 h-14 placeholder:text-pearl ${ props.value ? "placeholder:text-opacity-100" : "placeholder:text-opacity-40"} outline-none`}
+          type="text"
           required
-          placeholder={props.placehold}
+          placeholder={placeholder}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
-
     </div>
   );
 };

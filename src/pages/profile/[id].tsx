@@ -1,14 +1,14 @@
 import React from "react";
 import ProfilePage from "../../Components/profile/profilePage";
-import{ useRouter } from "next/router";
+import { useRouter } from "next/router";
 
 const Profile = () => {
-  // const router = useRouter();
-  // const { id } = router.query;
+  const router = useRouter();
+  const id = router.query.id;
   return (
-    <>
-      <ProfilePage />
-    </>
+    <div>
+      <ProfilePage id={id} />
+    </div>
   );
 };
 

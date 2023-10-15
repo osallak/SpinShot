@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import SubSidebar from "../ui/profileSubsidebar/subSidebar";
 import ImageProfile from "./imageProfile";
@@ -16,7 +17,6 @@ import NavbarMobile from "../ui/FolderNavbar/navbarMobile";
 import UploadImage from "../ui/folderUploadImage/uploadImage";
 import { useRouter } from "next/router";
 import TwoFactor from "../ui/twoFactorauth/TwoFactorAuth";
-import { usePathname } from "next/navigation";
 
 const ProfilePage = () => {
   const [isopen, setMenu] = useState(false);
@@ -82,7 +82,7 @@ const ProfilePage = () => {
         >
           <div className={` flex flex-row p-2 w-full h-full `}>
             <div className="fixed h-full pb-4 ">
-              <SideBar />
+              <SideBar avatar={"av"} />
             </div>
             <SubSidebar
               setContent={setContent}

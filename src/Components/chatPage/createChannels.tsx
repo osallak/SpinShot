@@ -5,46 +5,79 @@
 //   DialogBody,
 //   DialogFooter,
 // } from "@material-tailwind/react";
-import Image from "next/image";
-import exportChannelsIcon from "../../../public/ExportChannels.svg";
 import { Dialog, Transition } from "@headlessui/react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Fragment, MouseEvent, useState } from "react";
-import SimpleButton from "../ui/Buttons/SimpleButton";
-import CreateChannelIcon from "../../../public/CreateChannel.svg";
-import SubModal from "./channelsStatus/subModal";
-import SwitchButton from "../ui/Buttons/SwitchButton";
 import axios from "axios";
-
-const ayoubToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiMGM0ZjQ0ODMtNDI5Ny00ZWFkLTg1NWYtOGVhNjcyOTIwYmRmIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTY2MDAzMzMsImV4cCI6MTY5NjY4NjczM30.3JyzTZBDHdFfUMRwu11tNFLngGucY7nH1YpCl1KSnlI";
+import Image from "next/image";
+import { Fragment, useState, KeyboardEvent, MouseEvent } from "react";
+import CreateChannelIcon from "../../../public/CreateChannel.svg";
+import SwitchButton from "../ui/Buttons/SwitchButton";
+import ip from "@/utils/endPoint";
+import token from "@/utils/token";
+import { useRecoilState } from "recoil";
+import { createChannelAtom } from "../context/recoilContext";
+import createChannelType from "@/types/channelsType"
 
 const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
   const [type, setType] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [createChannel, setCreateChannel] = useRecoilState<any>(createChannelAtom);
 
   const closeModal = () => {
     props.setOpen(false);
   };
 
+  const addChannelKeyboard = async (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter") {
+      const params: any = {
+        name: name,
+        type: type,
+      };
+      if (password.length >= 6) params["password"] = password;
+      try {
+        const res = await axios.post(
+          `${ip}/room/add`,
+          params,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setPassword("");
+        setCreateChannel(params);
+        props.setOpen(false);
+        console.log(params);
+        console.log("res from create channel: ", res);
+      } catch (error: any) {
+        console.log("error from create channels: ", error);
+      }
+    }
+  };
   const addChannel = async () => {
-    console.log("type of channel: ", type);
+    const params: any = {
+      name: name,
+      type: type,
+    };
+    if (password.length >= 6) params["password"] = password;
     try {
-      const res = await axios.post(`http://e3r10p14.1337.ma:3001/room/add`, {
-        headers: {
-          Authorization: `Bearer ${ayoubToken}`,
-        },
-        params: {
-          type: type,
-          name: name,
-          password: password,
-        },
-      });
+      const res = await axios.post(
+        `${ip}/room/add`,
+        params,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+        );
+        setPassword("");
+        setCreateChannel([...createChannel, params]);
+        props.setOpen(false);
+        console.log(params);
+        console.log("res from create channel: ", res);
     } catch (error: any) {
       console.log("error from create channels: ", error);
     }
-    // props.setOpen(false);
   };
 
   return (
@@ -62,7 +95,10 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
           <div className="fixed inset-0 bg-black bg-opacity-25" />
         </Transition.Child>
 
-        <div className="fixed inset-0 overflow-y-auto">
+        <div
+          className="fixed inset-0 overflow-y-auto"
+          onKeyDown={(event) => addChannelKeyboard(event)}
+        >
           <div className="flex min-h-full items-center justify-center text-center bg-black bg-opacity-70">
             <Transition.Child
               as={Fragment}
@@ -86,7 +122,11 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
                     </p>
                   </div>
                   <div className="h-[85%] overflow-auto flex items-start justify-center sm:flex-row flex-col py-3">
-                    {/* <SwitchButton setType={setType} /> */}
+                    <SwitchButton
+                      setType={setType}
+                      setName={setName}
+                      setPassword={setPassword}
+                    />
                   </div>
                 </div>
                 <div className="mt-7 rounded-full w-full lg:h-full md:h-[50px] sm:h-[30px] h-[20px] flex justify-end items-center md:p-5 sm:p-3 p-1">

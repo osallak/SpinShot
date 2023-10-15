@@ -10,11 +10,11 @@ import {
 } from "@material-tailwind/react";
 
 import axios from "axios";
-import ip from "@/endpoint/api";
 import { textLimit } from "../profile/userMatchHistory/textLimit";
 import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
 import { useAppDispatch } from "../../../redux_tool";
 import { useRouter } from "next/router";
+import ip from "@/utils/endPoint";
 
 const Search = (props: { isSearch: boolean }) => {
   const [user, setUser] = useState("");

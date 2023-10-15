@@ -1,11 +1,12 @@
-import SimpleButton from "@/Components/ui/Buttons/SimpleButton";
+"use client";
+import SimpleButton from "@/Components/ui/Buttons/simpleButton";
 import React, { useState } from "react";
 import PasswordButton from "@/Components/ui/Buttons/PasswordButton";
 import axios from "axios";
 import { useAppSelector } from "../../../redux_tool";
 
 import toast, { Toaster } from "react-hot-toast";
-import ip from "@/endpoint/api";
+import ip from "@/utils/endPoint";
 
 const ResetPassword = () => {
   const [showPasswd, setShowPasswd] = useState(false);

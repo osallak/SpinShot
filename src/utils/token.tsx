@@ -1,0 +1,12 @@
+// const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF0YWppIiwic3ViIjoiZjdmMzM5ZTctODljNi00OWJmLWFiNTgtMDY3ZjViMTU4ZDYwIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTcxNjMxMTEsImV4cCI6MTY5NzI0OTUxMX0.UMVtVqrgTXXulNj566ALlR7xs3jpK78Ge09FxefDQ9c"
+//ataji
+
+
+
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhtZWVkIiwic3ViIjoiM2IxMDQ3OWYtYzg2Ny00YTBmLWI3NWItYWQ3NDViYmFkYTgzIiwiaXNzIjoic3BpbnNob3QiLCJpYXQiOjE2OTcxNzQ4MzEsImV4cCI6MTY5NzI2MTIzMX0.dtspjmrutDsH8muyRboVA37_a0JpZ-Au9BBPjI0VkjQ"
+// hmeed
+
+
+
+
+export default token;

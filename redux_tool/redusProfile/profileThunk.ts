@@ -1,7 +1,8 @@
+"use client";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import {parseJwt} from "../extractToken"
-import ip from "@/endpoint/api";
+import ip from "@/utils/endPoint";
 import { Router, useRouter } from "next/router";
 
 export const getProfile = createAsyncThunk(
@@ -12,7 +13,8 @@ export const getProfile = createAsyncThunk(
           if (token)
           {
             const my_token = parseJwt(token);
-            const id = my_token.sub
+            const id = my_token.sub;
+						console.log("id: ", id)
             const url = `${ip}/users/profile/${id}`;
             const respo = await axios.get(url, {
               headers: {

@@ -3,6 +3,7 @@ import Twemoji from "react-twemoji";
 import country from "country-list";
 import React, { useState } from "react";
 import { motion, Variants } from "framer-motion";
+import { textLimit } from "@/Components/profile/userMatchHistory/textLimit";
 
 const itemVariants: Variants = {
   open: {
@@ -32,10 +33,11 @@ const Country = (props:{setCountry:Function}) => {
   const sethandle = (flag: string, country:string) => {
     setIsCountry(country);
     props.setCountry(country);
+    setIsOpen(!isOpen);
     setIsFlag(flag);
   }
 
-  const { getCode, getName } = require("country-list");
+  // const { getCode, getName } = require("country-list");
 
   return (
     <motion.div
@@ -72,7 +74,7 @@ const Country = (props:{setCountry:Function}) => {
             {countries.map((countent: any, index: any) => (
               <motion.div variants={itemVariants} className="" key={index}>
                 <motion.button
-                  className="flex flex-row  items-center text-[150%]"
+                  className="flex flex-row  items-center text-xs sm:text-[150%]"
                   variants={itemVariants}
                   value=""
                   onClick={() =>
@@ -95,7 +97,7 @@ const Country = (props:{setCountry:Function}) => {
       <motion.button
         className={` space-x-1 bg-very-dark-purple w-[100%] md:w-[100%] px-5 flex flex-row items-center absolute rounded-[20px] ${
           isOpen
-            ? "text-white text-xl"
+            ? "text-white text-xs sm:text-xl"
             : " placeholder:text-pearl placeholder:text-opacity-40"
         }  h-14   `}
         whileTap={{ scale: 0.99 }}
@@ -104,7 +106,7 @@ const Country = (props:{setCountry:Function}) => {
         <Twemoji options={{ className: "twemoji"}}>
           <motion.div className="  flex flex-row space-x-6 items-center  ">
               { isFlag && <h1>{isFlag}</h1>}
-              <h1> {isCountry.length > 25 ? isCountry.slice(0, 20) + '...' : isCountry}</h1>
+              <h1> {isCountry.length > 25 ? textLimit(isCountry, 20) : isCountry}</h1>
           </motion.div>
         </Twemoji>
       </motion.button>

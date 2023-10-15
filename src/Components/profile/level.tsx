@@ -4,18 +4,29 @@ import DropdownUser from "@/Components/ui/FolderDropDown/DropdownUser";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../../redux_tool";
+import { useRouter } from "next/router";
 
 const Levle = (props: any) => {
   const opned = props.opne;
   const data = useAppSelector((state) => state.Profile);
   const [my_levle, setLevle] = useState<number>(0);
   const [rank, setRank] = useState<number>(0);
+  const router = useRouter();
+
+
+  const isValueNaN = (value: any) => {
+    return isNaN(value);
+  };
 
   const getMyRank = (rank: number) => {
-    setRank(Math.floor(rank));
-    const nb = parseFloat((rank % 1).toFixed(2));
-    const print = nb * 100;
-    setLevle(print);
+    if (!isValueNaN(rank)) {
+      setRank(Math.floor(rank));
+      const nb = parseFloat((rank % 1).toFixed(2));
+      const print = nb * 100;
+      setLevle(print);
+    } else {
+      setMyRank(0);
+    }
   };
 
   const setMyRank = (rank: number) => {
@@ -26,6 +37,11 @@ const Levle = (props: any) => {
   useEffect(() => {
     getMyRank(data.profile?.profile?.level);
   }, [data]);
+
+  const handleLogOut = () => {
+    localStorage.removeItem("token")
+    router.push("/Signin");
+  }
 
   return (
     <div
@@ -49,7 +65,7 @@ const Levle = (props: any) => {
           ))}
         </div>
         <div className="  right-0 absolute p-8 hidden c-gb:block">
-          <DropdownUser Array={SignOut} />
+          <DropdownUser onClick={handleLogOut} Array={SignOut} />
         </div>
       </div>
       <div className=" flex items-center justify-center flex-col  rounded-[20px] w-full h-[100px] c-gb:h-[30%]">

@@ -56,11 +56,16 @@ export const Icons = [
   { icon: notification, route: "/notification" },
 ];
 
-export const buttons = [
+export const buttonsUser = [
   { id: 1, text: "Personal Information", route: "Personal_Information" },
   { id: 2, text: "Achievements", route: "Achievements" },
   { id: 3, text: "Match History", route: "Match_History" },
   { id: 4, text: "Security", route: "Security" },
+];
+
+export const buttons = [
+  { id: 2, text: "Achievements", route: "Achievements" },
+  { id: 3, text: "Match History", route: "Match_History" },
 ];
 
 export const SidbarIcon = [

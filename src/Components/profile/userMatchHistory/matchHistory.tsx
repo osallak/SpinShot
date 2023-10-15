@@ -41,7 +41,6 @@ const MatchHistory = () => {
             },
           }
         );
-        console.log("data ld", response);
         setPosts(response.data.data);
         setTotalPages(response.data.pagination.pageCount);
       }
@@ -49,8 +48,6 @@ const MatchHistory = () => {
       console.error(error);
     }
   };
-
-  // console.log("data ", posts);
 
   const totalMatch =
     (posts[0]?.user?.logs?.victories ?? 0) +

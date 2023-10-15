@@ -20,7 +20,7 @@ const DropdownUser = (props :any) => {
                                 key={index}
                                 className={` `}
                             >
-                                <button className="p-3 flex justify-between opacity-40 w-32 text-pearl hover:opacity-100 " onClick={() => setIsOpen(false)}>
+                                <button className="p-3 flex justify-between opacity-40 w-32 text-pearl hover:opacity-100 " onClick={props.onClick}>
                                         <Image src={option.icon} alt="" />
                                         <span> {option.name} </span>
                                 </button>

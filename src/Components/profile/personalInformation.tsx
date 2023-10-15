@@ -14,6 +14,8 @@ const PersonalInformation = (props: any) => {
   // const dispatch = useAppDispatch();
   const data = useAppSelector((state) => state.Profile);
   const [country, setCountry] = useState("");
+  const [error, setError] = useState(false);
+  // const [errorMessage, setErrorMessage] = useState("");
 
   // const parseinInput = () => {
   //   const namePattern = /^[A-Za-z\s]+$/;
@@ -32,30 +34,29 @@ const PersonalInformation = (props: any) => {
   });
 
   const hendleUpdata = async () => {
-    {form.username ? props.setChose(form.username) : null}
     try {
       const token = localStorage.getItem("token");
-      country ? form["country"] = country : form["country"] = null ;
-      console.log( "my form ", form);
-      Object.keys(form).forEach(key => {
-        if (!form[key])
-          delete(form[key]);
+      country ? (form["country"] = country) : (form["country"] = null);
+      Object.keys(form).forEach((key) => {
+        if (!form[key]) delete form[key];
       });
-      console.log("req ",form);
       const response = await axios.patch(`${ip}/users`, form, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      console.log("res ", response);
-    } catch (error) {
+      });
+      // form.username ? props.setUsername(form.username) : null;
+      props.setUsername(form.username);
+    } catch (error: any) {
       console.error(error);
+      setError(true);
+      if (error.response.status === 409){
+        toast.error("Username already in use");
+      }
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("event ",e.target.name);
-    console.log("event ",e.target.value);
     setForm((prev: any) => {
       prev[e.target.name] = e.target.value == "" ? null : e.target.value;
       return prev;
@@ -66,14 +67,18 @@ const PersonalInformation = (props: any) => {
   //   toast.error("Input incorrect ");
   // };
 
-  useEffect (() => {
-    console.log("value : ",data.profile?.profile?.name?.govenName);
-    if (data.profile){
-      console.log('data : ', data.profile.profile ? 'true' : 'false');
-      const tmp = {firstName : data.profile?.profile?.name?.givenName, lastName : data.profile?.profile?.name.lastName, username : data.profile?.username, email:data.profile.email , country: data?.profile?.profile?.country }
+  useEffect(() => {
+    if (data.profile) {
+      const tmp = {
+        firstName: data.profile?.profile?.name?.givenName,
+        lastName: data.profile?.profile?.name.lastName,
+        username: data.profile?.username,
+        email: data.profile.email,
+        country: data?.profile?.profile?.country,
+      };
       setForm(tmp);
     }
-  }, [data.profile])
+  }, [data.profile]);
 
   return (
     <div className="space-y-52  md:space-y-14 h-[910px]  ">
@@ -90,16 +95,16 @@ const PersonalInformation = (props: any) => {
                     handleChange={handleChange}
                     name={"firstName"}
                     placehold={form.firstName ? form.firstName : "firstName"}
-                    // value={form.firstName}
-                    />
+                    value={form.firstName}
+                  />
                 </div>
                 <div className="w-full md:w-[49%] ">
                   <FormInput
                     handleChange={handleChange}
                     name={"lastName"}
                     placehold={form.lastName ? form.lastName : "lastName"}
-                    // value={form.lastName}
-                    />
+                    value={form.lastName}
+                  />
                 </div>
               </div>
             </div>
@@ -109,8 +114,8 @@ const PersonalInformation = (props: any) => {
                   handleChange={handleChange}
                   name={"username"}
                   placehold={form.username ? form.username : "username"}
-                  // value={form.username}
-                  />
+                  value={form.username}
+                />
               </div>
             </div>
             <div className="flex flex-col space-y-8 md:space-y-0 md:flex-row   c-10xl:space-x-[15%] items-center">
@@ -118,15 +123,15 @@ const PersonalInformation = (props: any) => {
                 <input
                   className=" bg-very-dark-purple w-full rounded-[20px] px-5 h-14 placeholder:text-pearl placeholder:text-opacity-40 outline-none"
                   disabled
-                  placeholder={form.email}
-                  />
+                  placeholder={form?.email ?? "email@gmail.com"}
+                />
               </div>
             </div>
             <div className="flex flex-col space-y-10 md:space-y-0 md:flex-row  c-10xl:space-x-[10%] items-center">
               <div
                 id={"my_element"}
                 className=" bg-very-dark-purple w-[100%] md:w-[49%]  rounded-[20px] h-14 placeholder:text-pearl placeholder:text-opacity-40"
-                >
+              >
                 <Country setCountry={setCountry} />
               </div>
             </div>
@@ -138,9 +143,9 @@ const PersonalInformation = (props: any) => {
           <SimpleButton content="Save" onclick={hendleUpdata} />
         </div>
       </div>
-      {/* <div>
-        <Toaster position="top-center" reverseOrder={false} />
-      </div> */}
+      <div>
+        {error === true && <Toaster position="top-center" reverseOrder={false} />}
+      </div>
     </div>
   );
 };

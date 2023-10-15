@@ -9,7 +9,7 @@ const SidebarMobile = (props: {
   opened: boolean;
 }) => {
   return (
-    <div className="bg-very-dark-purple block md:hidden  h-full w-[60px] top-2 fixed z-50 pb-4">
+    <div className="bg-very-dark-purple block md:hidden  h-full w-[60px] top-2 fixed z-50 pb-4 ">
       <div className=" flex justify-between items-center flex-col w-[60px] h-full c-gb:h-full  backdrop:blur   bg-white/10 md:hidden  rounded-[20px] mr-1 ">
         <div className=" space-y-6 mt-2  ">
           {SidbarIcon.map((Icon, index) => (

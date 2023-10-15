@@ -10,10 +10,10 @@ const Marathone = (props: any) => {
     <div className=" bg-very-dark-purple h-[150px] sm:h-[200px] c-gb:h-[300px] rounded-[20px] w-[85%] c-gb:w-full flex flex-row justify-between ">
       <div className={`   p-4 sm:p-4 c-gb:p-10 md:space-y-3 c-gb:space-y-[16%] w-[80%] `}>
         <h1 className={` ${1 ? "text-pearl opacity-40" : "text-pearl "} text-sm sm:text-2xl`}>
-          {achievement_data.profile?.achievements[1]?.Achiement?.name}
+        SPINSHOT MARATHON
         </h1>
         <h1 className={` ${1 ? "text-pearl opacity-40" : "text-pearl "} text-[8px] sm:text-sm`}>
-          {achievement_data.profile?.achievements[1]?.Achiement?.description}
+        PLAY A TOTAL OF 10 ONLINE MATCHES
         </h1>
         <div className="w-full ">
           <h1 className={`${1 ? "text-pearl opacity-40" : "text-pearl "}`}>{props.level}/10</h1>

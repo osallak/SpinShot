@@ -132,7 +132,7 @@ const PersonalInformation = (props: any) => {
                 id={"my_element"}
                 className=" bg-very-dark-purple w-[100%] md:w-[49%]  rounded-[20px] h-14 placeholder:text-pearl placeholder:text-opacity-40"
               >
-                <Country setCountry={setCountry} />
+                <Country setCountry={setCountry} country={form.country}/>
               </div>
             </div>
           </div>

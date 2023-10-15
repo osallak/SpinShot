@@ -1,10 +1,11 @@
 import React from "react";
 import { useAppSelector } from "../../../../redux_tool";
 import { textLimit } from "./textLimit";
-import { formatDate } from "./date";
+import { getDate } from "./date";
 
 const Matchs = (props: { option: any }) => {
   const data_user = useAppSelector((state) => state.Profile);
+  
   return (
     <div className="w-full h-full flex flex-row justify-between items-center  ">
       <div>
@@ -38,7 +39,7 @@ const Matchs = (props: { option: any }) => {
       </div>
       <div className="flex flex-col">
         <div className="flex flex-row">
-          <h1 className="">{formatDate(props.option.content?.startedAt)}</h1>
+          <h1 className="">{getDate(props.option.content?.startedAt)}</h1>
         </div>
       </div>
       <div className="flex flex-col">

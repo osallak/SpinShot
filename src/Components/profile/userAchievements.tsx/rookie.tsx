@@ -10,13 +10,10 @@ const Rookie = () => {
     <div className={`  bg-very-dark-purple h-[150px] sm:h-[200px] c-gb:h-[300px] rounded-[20px] w-[85%] c-gb:w-full  flex flex-row justify-between`}>
     <div className={` ${1 ? "text-pearl opacity-40" : "text-pearl "} p-4 sm:p-10 space-y-[20%]`}>
       <h1 className=" text-sm sm:text-2xl">
-        {achievement_data.profile?.achievements[0]?.Achiement?.name}
+      SPINSHOT ROOKIE
       </h1>
       <h1 className=" text-[8px] sm:text-sm">
-        {
-          achievement_data.profile?.achievements[0]?.Achiement
-            ?.description
-        }
+      WIN YOUR FIRST MATCH
       </h1>
     </div>
     <div className="flex justify-center items-center  ">

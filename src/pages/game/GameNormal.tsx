@@ -6,6 +6,7 @@ const GameHard = () => {
   const ballRef = useRef<any>(null);
 
   useEffect(() => {
+    // const scoket =
     const engine = Engine.create();
     const render = Render.create({
       canvas: canvasRef.current!,
@@ -54,9 +55,9 @@ const GameHard = () => {
     });
 
     const ball = Bodies.circle(325, 375, 15, {
-      restitution : 1,
-      friction:0,
-      frictionAir:0,
+      // restitution : 1,
+      // friction:0,
+      // frictionAir:0,
       isStatic: true,
       render: {
         fillStyle: "white",
@@ -71,10 +72,10 @@ const GameHard = () => {
     Engine.run(engine);
     Render.run(render);
 
-    const forceMagnitude = {
-      x: 0.005,
-      y: -0.005,
-    };
+    // const forceMagnitude = {
+    //   x: 0.005,
+    //   y: -0.005,
+    // };
 
     // const applyForceInterval = setInterval(() => {
     //   if (ballRef.current) {
@@ -88,18 +89,18 @@ const GameHard = () => {
 
     // Body.applyForce(ball, { x: 0, y: 0 }, forceMagnitude);
 
-    Events.on(engine, "collisionStart", (event: any) => {
-      const pairs = event.pairs;
-      pairs.forEach((pair: any) => {
-        if (
-          (pair.bodyA === ball && pair.bodyB === paddle) ||
-          (pair.bodyA === ball && pair.bodyB === paddle1)
-        ) {
-          const velocity = ball.velocity;
-          velocity.x *= -1;
-        }
-      });
-    });
+    // Events.on(engine, "collisionStart", (event: any) => {
+    //   const pairs = event.pairs;
+    //   pairs.forEach((pair: any) => {
+    //     if (
+    //       (pair.bodyA === ball && pair.bodyB === paddle) ||
+    //       (pair.bodyA === ball && pair.bodyB === paddle1)
+    //     ) {
+    //       const velocity = ball.velocity;
+    //       velocity.x *= -1;
+    //     }
+    //   });
+    // });
 
     const canvas = canvasRef.current;
     if (canvas)

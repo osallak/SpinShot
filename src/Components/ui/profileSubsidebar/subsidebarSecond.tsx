@@ -1,33 +1,27 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import securityIcon from "./../../../../public/securityIcon.svg";
 import securityIcon2 from "./../../../../public/securityIcon2.svg";
 import { buttons } from "@/Components/ui/FolderDropDown/ArrayIcon";
 import Security from  "../upDatePasswd/security"
 
-const SubsidebarSecond = (props: {
-  isActive: boolean;
-  setisActive: Function;
-  setContent: Function;
-  setPassword: Function;
-}) => {
+const SubsidebarSecond = (props: any) => {
 
   const [isClick, setClick] = useState(false);
   const [background, setBackground] = useState(false);
   const [subbackground, setSubBackground] = useState<number>(0);
 
   const handle = (id: number, route: string) => {
-    {
-      route != "Security" ? setClick(false) : null;
-    }
+    route != "Security" ? setClick(false) : null;
     setSubBackground(id);
     props.setContent(route);
+    // props.setPassword(true);
   };
 
   const handlePasswd = (id: boolean, route: string) => {
     setBackground(true);
-    props.setPassword(true);
   };
+
 
   return (
     <div className=" fixed top-[70px] md:top-2 md:ml-[105px] ml-[65px] w-[70%] z-50  h-full c-gb:h-full  backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] ">
@@ -39,7 +33,7 @@ const SubsidebarSecond = (props: {
         </div>
       </div>
       <div className={`font-Poppins text-pearl text-[1.32rem] `}>
-        {buttons.map((button) => (
+        {props.table.map((button:any) => (
           <div
             key={button.id}
             className={`flex justify-center items-center rounded-2xl w-full h-20   `}

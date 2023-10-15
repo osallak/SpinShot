@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import { useAppSelector } from "../../../../redux_tool";
 import Search from "@/Components/search/userSearch";
 
-const SideBar = () => {
+const SideBar = (props:any) => {
   const Router = useRouter();
   const data = useAppSelector((state) => (state.Profile))
   const [hovered, setHovered] = useState(false);
@@ -69,7 +69,7 @@ const SideBar = () => {
                   alt={option.icon}
                   className="opacity-40 hover:opacity-100"
                 />{" "}
-                <Search isSearch={isSearch} />
+                <Search isSearch={isSearch} setId={props.setId}/>
               </button>
             ) : option.route === "/profile" ? (
               <button

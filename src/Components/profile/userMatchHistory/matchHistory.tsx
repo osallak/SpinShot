@@ -70,27 +70,31 @@ const MatchHistory = () => {
               <div className="w-[50%] flex-col flex  justify-center items-center">
                 <h1>Wins</h1>
                 <h1 className="text-peridot">
-									3
-                  {/* {posts[0]?.user?.logs?.victories} */}
+                  {posts[0]?.user?.logs?.victories ?? 0}
                 </h1>
               </div>
               <div className="h-[70%]"></div>
               <div className="w-[50%] flex flex-col items-center">
                 <h1>Loses</h1>
                 <h1 className="text-red-900">
-									4
-                  {/* {posts[0]?.user?.logs?.defeats} */}
+                  {posts[0]?.user?.logs?.defeats ?? 0}
                 </h1>
               </div>
             </div>
           </div>
         </div>
         <div className="h-full w-full ">
-          {array.map((option: any) => (
-            <div key={option.id} className="w-full h-14 sm:h-28 ">
+          {
+            array.length == 0 ?
+            array.map((option: any) => (
+              <div key={option.id} className="w-full h-14 sm:h-28 ">
               {option.content && <Matchs option={option} />}
             </div>
-          ))}
+          )) :
+          <div className=" w-full h-full flex justify-center items-center">
+            there is no match History
+          </div>
+        }
         </div>
       </div>
       <div className=" flex justify-center items-center w-full">

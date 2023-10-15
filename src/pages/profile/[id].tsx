@@ -6,9 +6,7 @@ const Profile = () => {
   const router = useRouter();
   const id = router.query.id;
   return (
-    <div>
       <ProfilePage id={id} />
-    </div>
   );
 };
 

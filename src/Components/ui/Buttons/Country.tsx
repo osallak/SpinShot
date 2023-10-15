@@ -14,7 +14,7 @@ const itemVariants: Variants = {
   closed: { opacity: 0, y: 20, transition: { duration: 0.2 } },
 };
 
-const Country = (props:{setCountry:Function}) => {
+const Country = (props:any) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isFlag, setIsFlag] = useState("");
   const [isCountry, setIsCountry] = useState("Your Country");
@@ -86,7 +86,7 @@ const Country = (props:{setCountry:Function}) => {
                       {getFlagEmoji(countent.code)}
                     </motion.div>
                   </Twemoji>
-                  <motion.span className=" ">{countent.name.length > 30 ? countent.name.slice(0,20) + '...' : countent.name}</motion.span>
+                  <motion.span className=" ">{countent.name.length > 30 ? countent.name.slice(0,10) + '...' : countent.name}</motion.span>
                 </motion.button>
               </motion.div>
             ))}
@@ -98,7 +98,7 @@ const Country = (props:{setCountry:Function}) => {
         className={` space-x-1 bg-very-dark-purple w-[100%] md:w-[100%] px-5 flex flex-row items-center absolute rounded-[20px] ${
           isOpen
             ? "text-white text-xs sm:text-xl"
-            : " placeholder:text-pearl placeholder:text-opacity-40"
+            :  " placeholder:text-pearl placeholder:text-opacity-40"
         }  h-14   `}
         whileTap={{ scale: 0.99 }}
         onClick={() => setIsOpen(!isOpen)}
@@ -106,7 +106,12 @@ const Country = (props:{setCountry:Function}) => {
         <Twemoji options={{ className: "twemoji"}}>
           <motion.div className="  flex flex-row space-x-6 items-center  ">
               { isFlag && <h1>{isFlag}</h1>}
-              <h1> {isCountry.length > 25 ? textLimit(isCountry, 20) : isCountry}</h1>
+              <h1>
+              {
+                // props.country && !isCountry ? props.country :
+                (isCountry.length > 25 ? textLimit(isCountry, 20) : isCountry)
+              } 
+              </h1>
           </motion.div>
         </Twemoji>
       </motion.button>

@@ -20,6 +20,7 @@ import TwoFactor from "../ui/twoFactorauth/TwoFactorAuth";
 import parseJwt from "@/utils/parsJwt";
 import { buttonsUser } from "@/Components/ui/FolderDropDown/ArrayIcon";
 import { buttons } from "@/Components/ui/FolderDropDown/ArrayIcon";
+import { SignOut, userSerched } from "@/Components/ui/FolderDropDown/ArrayIcon";
 
 const ProfilePage = (props: { id: any }) => {
   const [isopen, setMenu] = useState(false);
@@ -39,6 +40,7 @@ const ProfilePage = (props: { id: any }) => {
   const [error, setError] = useState(false);
   const [opp, setId] = useState(false);
   const [table, setTable] = useState<Type[]>([]);
+  const [letPlay, setletPlay] = useState<TypePlay[]>([]);
   const [isClick, setClick] = useState(false);
 
   interface Type {
@@ -46,6 +48,12 @@ const ProfilePage = (props: { id: any }) => {
     text: string;
     route: string;
   }
+
+  interface TypePlay {
+    icon: any;
+    name: string;
+  }
+
 
   const handleSearch = async () => {
     const token = localStorage.getItem("token");
@@ -60,7 +68,7 @@ const ProfilePage = (props: { id: any }) => {
       setValid(true);
     } catch (error) {
       console.log(error);
-      // router.push("/error");
+      router.push("/error");
       return;
     }
   };
@@ -77,10 +85,14 @@ const ProfilePage = (props: { id: any }) => {
     setMenu(!isopen);
   };
 
-  const usersearched = (tab: Type[]) => {
-    setClick(false);
-    tab.length == 4 ? setId(false) : setId(true);
-    tab.length == 4 ? setContent("Personal_Information") : setContent("Achievements");
+  const swetshProfile = (tab: Type[], play: TypePlay[]) => {
+    setTable(tab);
+    setletPlay(play);
+  };
+  
+  const usersearched = (tab: Type[], play: TypePlay[]) => {
+    setContent("Personal_Information");
+    setletPlay(play);
     setTable(tab);
   };
 
@@ -88,16 +100,16 @@ const ProfilePage = (props: { id: any }) => {
     {
       router.query.id ===
       parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
-        ? usersearched(buttonsUser)
-        : usersearched(buttons);
+        ? usersearched(buttonsUser, SignOut)
+        : swetshProfile(buttons, userSerched);
     }
     setWidth(window.innerWidth);
   };
 
   useEffect(() => {
     if (router.isReady) {
-      handleResize();
       handleSearch();
+      handleResize();
       if (typeof window !== "undefined") {
         window.addEventListener("resize", handleResize);
         return () => {
@@ -109,15 +121,14 @@ const ProfilePage = (props: { id: any }) => {
 
   return (
     <>
-      {valid && (
         <div
           className={
-            "bg-very-dark-purple w-full h-full c-gb:w-screen c-gb:h-screen font-semibold font-Poppins text-xs sm:text-lg overflow-auto  min-w-[280px]"
+            "bg-very-dark-purple w-full h-full c-gb:w-screen c-gb:h-screen font-semibold font-Poppins text-xs sm:text-lg overflow-auto  min-w-[280px] p-1"
           }
         >
-          <div className={` flex flex-row p-2 w-full h-full `}>
+          <div className={` flex flex-row p-1 w-full h-full `}>
             <div className="fixed h-full pb-4 ">
-              <SideBar />
+              <SideBar setId={setId} />
             </div>
             <SubSidebar
               setContent={setContent}
@@ -127,7 +138,7 @@ const ProfilePage = (props: { id: any }) => {
               table={table}
               isClick={isClick}
               setClick={setClick}
-
+          
             />
             {isopen && (
               <SidebarMobile
@@ -151,7 +162,7 @@ const ProfilePage = (props: { id: any }) => {
                 isopen={isopen}
               />
               <div className="flex flex-col  c-gb:h-full   overflow-auto ml-0 md:ml-[105px] c-gb:ml-0 ">
-                <div className="rounded-[20px] c-gb:flex c-gb:flex-row  ">
+                <div className="rounded-[20px] c-gb:flex c-gb:flex-row ">
                   <ImageProfile
                     isopen={isopen}
                     opne={opened}
@@ -167,7 +178,7 @@ const ProfilePage = (props: { id: any }) => {
                       Switch={setOpenDialog}
                     />
                   ) : null}
-                  <Levle opne={opened} width={width} />
+                  <Levle opne={opened} width={width} letPlay={letPlay} />
                 </div>
                 <div
                   className={` ${
@@ -176,25 +187,21 @@ const ProfilePage = (props: { id: any }) => {
                       : "backdrop:blur  bg-white/10"
                   } flex flex-auto flex-col rounded-[20px] w-full mt-2  h-[1200px] c-gb:h-[800px] `}
                 >
-                  {content == "Personal_Information" && !opp ? (
+                  {content == "Personal_Information" && table.length > 2 ? (
                     <PersonalInformation
                       isopen={isopen}
                       myImage={myImage}
                       setUsername={setUsername}
                     />
-                  ) : content == "Achievements" && !opp ? (
+                  ) : content == "Achievements" ? (
                     <Achievements />
-                  ) : content == "Match_History" && !opp ? (
+                  ) : content == "Match_History" ? (
                     <MatchHistory />
-                  ) : content == "Security" && !opp ? (
+                  ) : content == "Security" && table.length > 2 ? (
                     password == true ? (
                       <ResetPassword />
                     ) : null
-                  ) : content == "Achievements" && opp ? (
-                    <Achievements />
-                  ) : content == "Match_History" && opp ? (
-                    <MatchHistory />
-                  ) : null}
+                  ) : <div className="flex justify-center items-center text-pearl text-2xl h-full ">can you see Your information</div>}
                 </div>
               </div>
             </div>
@@ -205,6 +212,7 @@ const ProfilePage = (props: { id: any }) => {
                 setisActive={setisActive}
                 setContent={setContent}
                 setPassword={setPassword}
+                table={table}
               />
             )}
             {isActive && (
@@ -214,7 +222,6 @@ const ProfilePage = (props: { id: any }) => {
             )}
           </div>
         </div>
-      )}
     </>
   );
 };

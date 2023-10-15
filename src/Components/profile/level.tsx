@@ -65,7 +65,7 @@ const Levle = (props: any) => {
           ))}
         </div>
         <div className="  right-0 absolute p-8 hidden c-gb:block">
-          <DropdownUser onClick={handleLogOut} Array={SignOut} />
+          <DropdownUser onClick={handleLogOut} Array={props.letPlay}/>
         </div>
       </div>
       <div className=" flex items-center justify-center flex-col  rounded-[20px] w-full h-[100px] c-gb:h-[30%]">

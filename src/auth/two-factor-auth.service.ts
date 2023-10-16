@@ -205,9 +205,9 @@ export class TwoFactorAuthService {
             message: 'User not found',
           });
         }
-				await this.userService.updateData(userId, {
-					isTwoFactorAuthenticated: false,
-				});
+        await this.userService.updateData(userId, {
+          isTwoFactorAuthenticated: false,
+        });
         return resolve({
           status: 200,
           message: 'Signed out successfully',

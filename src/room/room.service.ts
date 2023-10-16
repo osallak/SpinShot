@@ -581,12 +581,16 @@ export class RoomService {
             },
           },
         });
+				let messagesRes = [];
+				if (messages.length > 0 && messages[0]?.messages) {
+					messagesRes = messages[0].messages;
+				}
         resolve({
           status: 200,
           message: 'Single Room',
           data: {
             blockedUsers: blockedUsersRes,
-            messages: toObject.call(messages),
+            messages: toObject.call(messagesRes),
           },
         });
       } catch (e) {

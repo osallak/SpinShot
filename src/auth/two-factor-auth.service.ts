@@ -165,4 +165,59 @@ export class TwoFactorAuthService {
       }
     });
   }
+
+  async getTwoFaStatus(userId: string): Promise<Response> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!userId) {
+          return reject({
+            status: 400,
+            message: 'User not found',
+          });
+        }
+        const user = await this.userService.findOneById(userId);
+        if (!user) {
+          return reject({
+            status: 400,
+            message: 'User not found',
+          });
+        }
+        return resolve({
+          status: 200,
+          message: '2FA status',
+          data: user.twoFactorAuth,
+        });
+      } catch (e) {
+        console.log(e);
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    });
+  }
+  async signOut(userId: string): Promise<Response> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!userId) {
+          return reject({
+            status: 400,
+            message: 'User not found',
+          });
+        }
+        await this.userService.updateData(userId, {
+          isTwoFactorAuthenticated: false,
+        });
+        return resolve({
+          status: 200,
+          message: 'Signed out successfully',
+        });
+      } catch {
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    });
+  }
 }

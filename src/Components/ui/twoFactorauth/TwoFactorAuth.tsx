@@ -18,7 +18,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
   const [width, setWidth] = useState(0);
   const [submittedCode, setSubmittedCode] = useState<string>("");
   const [qrCode, setQrCode] = useState<any>(undefined);
-  const [twoFaToggleSwitchStatus, setTwoFaToggleSwitchStatus] = useState(false);
+  const [twoFaToggleSwitchStatus, setTwoFaToggleSwitchStatus] = useState(true);
   const token = localStorage.getItem("token");
   useEffect(() => {
     handleResize();
@@ -30,7 +30,8 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
         window.removeEventListener("resize", handleResize);
       };
     }
-  }, []);
+  }, [twoFaToggleSwitchStatus]);
+
   const fetchTwoFAStatus = async () => {
     try {
       const res = await axios.get(`${ip}/2fa/status`, {
@@ -38,8 +39,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (res) setTwoFaToggleSwitchStatus(res.data);
-      console.log("fetching ...", twoFaToggleSwitchStatus);
+      setTwoFaToggleSwitchStatus(res?.data ?? false);
     } catch {}
   };
   const fetchQrCode = async () => {
@@ -83,6 +83,9 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
             },
           }
         );
+        toast.success("2FA is now enabled", {
+          id: "2fa-enabledSuccess",
+        });
       } else {
         const res = await axios.post(
           `${ip}/2fa/turn-off-qr`,
@@ -95,11 +98,16 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
             },
           }
         );
+        toast.success("2FA is now disabled", {
+					id: "2fa-disabledSuccess",
+				});
       }
-      toast.success("2FA is now disabled");
       props.Switch(!open);
     } catch (e: any) {
-      toast.error(e?.data ?? "Invalid 2FA");
+      // toast.error(e?.data ?? "Invalid 2FA", {
+			// 	id: "2fa-invalid",
+			// });
+
     }
   };
   return (
@@ -110,7 +118,6 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
         size="xs"
         className="bg-pearl"
       >
-        {/* <Toaster reverseOrder={false} ></Toaster> */}
         <DialogHeader className="flex flex-col items-center justify-center sm:space-y-5 ">
           <span className="text-3xl sm:text-3xl text-very-dark-purple ">
             Authenticate your account
@@ -118,7 +125,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
         </DialogHeader>
         <DialogBody className="sm:h-[35rem] overflow-hidden  flex flex-col items-center justify-center">
           <div className="font-normal flex flex-col items-center justify-center sm:space-y-10">
-            {!twoFaToggleSwitchStatus ? (
+            {!twoFaToggleSwitchStatus && qrCode ? (
               <div className="border-[15px]  border-white rounded-2xl">
                 <Image
                   src={qrCode}

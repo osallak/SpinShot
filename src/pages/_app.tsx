@@ -9,7 +9,6 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
       <Provider store={store}>
-        <Toaster />
         <Component {...pageProps} />
       </Provider>
     </RecoilRoot>

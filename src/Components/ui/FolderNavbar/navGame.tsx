@@ -4,6 +4,7 @@ import Image from "next/image";
 
 const NavGame = () => {
   return (
+
     <div className="  w-[96%] c-gb:w-[80%]  bg-very-dark-purple rounded-xl sm:rounded-3xl flex justify-between flex-row items-center px-[2%] absolute top-16 md:top-6 ">
       <div className="flex  flex-row items-center justify-between w-[50%] ">
         <div className="flex  c-gb:space-x-8  ">

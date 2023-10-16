@@ -28,7 +28,7 @@ const SubSidebarGame = (props: any) => {
   };
 
   return (
-    <div className=" c-gb:block hidden w-[30%]  text-pearl c-3xl:text-3xl">
+    <div className=" c-gb:block hidden w-[30%]  text-pearl text-3xl">
       <div className="bg-white/10 rounded-2xl h-full flex flex-col w-[100%] px-[10%]  ">
         <div className=" flex items-center  h-[10%] ">
           <h1>Game</h1>

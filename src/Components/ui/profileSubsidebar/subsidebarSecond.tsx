@@ -50,7 +50,7 @@ const SubsidebarSecond = (props: {
               }`}
               onClick={() => handle(button.id, button.route)}
             >
-              <div className="w-[80%] h-full flex justify-start items-center text-[10px] sm:text-[20px]">
+              <div className="w-[80%] h-full flex justify-start items-center text-[10px] sm:text-[20px] bg-red-500">
                 {button.text}
                 {button.text === "Security" ? (
                   <div

@@ -18,10 +18,12 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
   const [width, setWidth] = useState(0);
   const [submittedCode, setSubmittedCode] = useState<string>("");
   const [qrCode, setQrCode] = useState<any>(undefined);
+  const [twoFaToggleSwitchStatus, setTwoFaToggleSwitchStatus] = useState(false);
   const token = localStorage.getItem("token");
   useEffect(() => {
     handleResize();
-    fetchQrCode();
+    fetchTwoFAStatus();
+    if (!twoFaToggleSwitchStatus) fetchQrCode();
     if (typeof window !== "undefined") {
       window.addEventListener("resize", handleResize);
       return () => {
@@ -29,7 +31,17 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
       };
     }
   }, []);
-
+  const fetchTwoFAStatus = async () => {
+    try {
+      const res = await axios.get(`${ip}/2fa/status`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res) setTwoFaToggleSwitchStatus(res.data);
+      console.log("fetching ...", twoFaToggleSwitchStatus);
+    } catch {}
+  };
   const fetchQrCode = async () => {
     try {
       const res = await axios.post(
@@ -44,10 +56,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
       );
       const blob = new Blob([res.data], { type: "image/png" });
       setQrCode(URL.createObjectURL(blob));
-    } catch (e) {
-      console.log(e);
-      toast.error("Qr Cannot Be Generated");
-    }
+    } catch (e) {}
   };
   const handleResize = () => {
     {
@@ -62,18 +71,32 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
   const handleClose = () => props.Switch(!open);
   const handleVerify = async () => {
     try {
-      const res = await axios.post(
-        `${ip}/2fa/turn-on-qr`,
-        {
-          code: submittedCode,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      if (!twoFaToggleSwitchStatus) {
+        const res = await axios.post(
+          `${ip}/2fa/turn-on-qr`,
+          {
+            code: submittedCode,
           },
-        }
-      );
-      toast.success("2FA is now enabled");
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } else {
+        const res = await axios.post(
+          `${ip}/2fa/turn-off-qr`,
+          {
+            code: submittedCode,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
+      toast.success("2FA is now disabled");
       props.Switch(!open);
     } catch (e: any) {
       toast.error(e?.data ?? "Invalid 2FA");
@@ -87,7 +110,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
         size="xs"
         className="bg-pearl"
       >
-				<Toaster reverseOrder={false} ></Toaster>
+        {/* <Toaster reverseOrder={false} ></Toaster> */}
         <DialogHeader className="flex flex-col items-center justify-center sm:space-y-5 ">
           <span className="text-3xl sm:text-3xl text-very-dark-purple ">
             Authenticate your account
@@ -95,9 +118,20 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
         </DialogHeader>
         <DialogBody className="sm:h-[35rem] overflow-hidden  flex flex-col items-center justify-center">
           <div className="font-normal flex flex-col items-center justify-center sm:space-y-10">
-            <div className="border-[15px] border-white rounded-2xl">
-              <Image src={qrCode} alt="the qr code" width={200} height={200} />
-            </div>
+            {!twoFaToggleSwitchStatus ? (
+              <div className="border-[15px]  border-white rounded-2xl">
+                <Image
+                  src={qrCode}
+                  alt="the qr code"
+                  width={200}
+                  height={200}
+                />
+              </div>
+            ) : (
+              <span className="font-Poppins text-3xl sm:text-3xl text-very-dark-purple">
+                Qr already generated
+              </span>
+            )}
             <div className="flex flex-row  space-x-5 sm:px-5 ">
               <PinInput
                 length={6}

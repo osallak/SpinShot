@@ -36,28 +36,40 @@ const Chat = () => {
   const [reload, setReload] = useState(false);
 
   const fetchDataSubSideBar = async () => {
-    const token = localStorage.getItem("token");
-    console.log("token: ", token);
-    if (!token) {
-      router.push("/signin");
-      return;
-    }
-    const jwtToken = parseJwt(token);
-    try {
-      const res = await axios.get(`${ip}/chat/all`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          id: jwtToken.sub,
-        },
-      });
-      setIndividual(res?.data?.individual);
-      setChannel(res?.data?.room);
-      setId(res?.data?.individual[0]?.other?.id);
-      setRoomId(res?.data?.room[0]?.id);
-    } catch (error) {
-      console.log("error of fetching data from subsidebar: ", error);
+    if (router.query.id) {
+      const token = localStorage.getItem("token");
+      console.log("token: ", token);
+      if (!token) {
+        router.push("/signin");
+        return;
+      }
+      const jwtToken = parseJwt(token);
+      try {
+        const res = await axios.get(`${ip}/chat/all`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            id: jwtToken.sub,
+          },
+        });
+        setIndividual(res?.data?.individual);
+        setChannel(res?.data?.room);
+        const returnedId = res.data?.individual.find(
+          (items: any) => items.other.id === router.query.id
+        );
+        if (returnedId) setId(returnedId.other.id);
+        else {
+          if (router.query.id === parseJwt(token).sub) {
+            setId(res?.data?.individual[0]?.other?.id);
+          } else {
+          }
+        }
+
+        setRoomId(res?.data?.room[0]?.id);
+      } catch (error) {
+        console.log("error of fetching data from subsidebar: ", error);
+      }
     }
   };
 
@@ -108,7 +120,7 @@ const Chat = () => {
   useEffect(() => {
     fetchDataSubSideBar();
     setIsLoaded(true);
-  }, []);
+  }, [router.query.id, router.isReady]);
 
   useEffect(() => {
     fetchDataExploreChannel();
@@ -126,6 +138,7 @@ const Chat = () => {
         isIndividual={isIndividual}
         setRoomId={setRoomId}
         setId={setId}
+        id={id}
         loaded={loaded}
       />
       {flag === "ExploreChannels" && (

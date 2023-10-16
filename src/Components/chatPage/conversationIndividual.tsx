@@ -1,22 +1,21 @@
 "use client";
 import IMsgDataTypes from "@/types/iMsgDataTypes";
-import individualConversationType, {
-  individualType,
-} from "@/types/individulaTypes";
+import individualConversationType from "@/types/individulaTypes";
+import individualType from "@/types/individulaTypes";
+import { dropDownContent } from "@/utils/dropDownContent";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useRef, useState, KeyboardEvent } from "react";
+import { KeyboardEvent, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import sendMessageIcon from "../../../public/sendMessage.svg";
 import {
-  individualConversationAtom,
   individualAtom,
+  individualConversationAtom,
 } from "../context/recoilContextIndividual";
 import DropDown from "../ui/FolderDropDown/Dropdown";
-import { dropDownContent } from "@/utils/dropDownContent";
 
 let token: any;
 const ConversationIndividual = (props: {
@@ -87,6 +86,11 @@ const ConversationIndividual = (props: {
     }
   };
 
+  const goToUser = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    router.push(`/profile/${props.id}`)
+  }
+
   const emailInput = useCallback((inputElement: any) => {
     if (inputElement) {
       inputElement.focus();
@@ -117,7 +121,8 @@ const ConversationIndividual = (props: {
             <div className="flex justify-center items-center space-x-2 flex-row">
               {(individual as individualType[]).map(
                 (items: individualType, index: number) =>
-                  items.other.id === props.id && (
+                <button className="rounded-xl" onClick={(event) => goToUser(event)}>
+                  {items.other.id === props.id && (
                     <Image
                       key={index}
                       width={500}
@@ -126,16 +131,17 @@ const ConversationIndividual = (props: {
                       alt="profile pic"
                       className="md:w-14 sm:w-12 w-10 rounded-xl"
                     />
-                  )
+                  )}
+                    </button>
               )}
               <div className="flex flex-col">
                 <p className="font-Poppins md:text-xl sm:text-md text-sm text-pearl font-semibold">
                   {individual.map((individ: individualType, index: number) => (
-                    <div key={index}>
+                    <button onClick={(event) => goToUser(event)} key={index}>
                       {props.id === individ.other.id
                         ? individ.other.username
                         : ""}
-                    </div>
+                    </button>
                   ))}
                 </p>
                 <p className="font-Poppins md:text-lg sm:text-sm text-xs text-pearl text-opacity-40 font-thin">

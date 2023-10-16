@@ -17,6 +17,7 @@ import {
   channelConversationAtom,
 } from "../context/recoilContextChannel";
 import DropDown from "../ui/FolderDropDown/Dropdown";
+import threePoint from "../../../public/threePoint.svg"
 
 let token: any;
 const ConversationChannel = (props: {
@@ -52,7 +53,7 @@ const ConversationChannel = (props: {
   const handleSendMessage = () => {
     setMessage("");
     props.setReload(true);
-    const messageData: sendRoomMessageDto = {
+    const messageData: any = {
       from: `${parseJwt(JSON.stringify(token)).sub}`,
       roomName: `${props.id}`,
       content: currentMsg,
@@ -65,7 +66,7 @@ const ConversationChannel = (props: {
     if (event.key === "Enter") {
       props.setReload(true);
       setMessage("");
-      const messageData: sendRoomMessageDto = {
+      const messageData: any = {
         from: `${parseJwt(JSON.stringify(token)).sub}`,
         roomName: `${props.id}`,
         content: currentMsg,
@@ -127,7 +128,7 @@ const ConversationChannel = (props: {
     if (conversationDiv) {
       conversationDiv.scrollTop = conversationDiv.scrollHeight;
     }
-  }, [conversationChannel.length]);
+  }, [conversationChannel]);
 
   return (
     <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">
@@ -187,7 +188,7 @@ const ConversationChannel = (props: {
                     } justify-end`}
                   >
                     <div
-                      className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] min-h-[70px] flex justify-center rounded-xl ${
+                      className={`border x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] min-h-[70px] flex justify-center rounded-xl ${
                         items.user.id != userId
                           ? "items-start bg-peridot text-very-dark-purple font-bold"
                           : "items-end bg-very-dark-purple text-pearl font-medium"
@@ -220,6 +221,7 @@ const ConversationChannel = (props: {
                         </span>
                       </div>
                       <span className="px-3">{items.message}</span>
+                      <Image src={threePoint} alt="three point" />
                     </div>
                   </div>
                 )

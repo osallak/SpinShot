@@ -102,6 +102,10 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
     }
   };
 
+  const handleSendNewMessage = () => {
+    Router.push(`/messages/${props.id}`)
+  }
+
   return (
     <div ref={ref} className="relative">
       <button
@@ -117,7 +121,7 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
           className="z-10 md:p-3 sm:p-2 p-1 right-3  bg-very-dark-purple absolute rounded-l-2xl rounded-b-2xl md:w-[230px] w-[170px]"
         >
           <button
-            // onClick={() => handleBlock()}
+            onClick={() => handleSendNewMessage()}
             className="flex justify-start opacity-40 hover:opacity-100 space-x-2 items-center px-4 py-2 cursor-pointer text-pearl md:text-lg text-xs font-Passion-One"
           >
             <Image

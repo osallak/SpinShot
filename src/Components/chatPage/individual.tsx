@@ -1,16 +1,19 @@
-import { individualType } from "@/types/individulaTypes";
+import individualType from "@/types/individulaTypes";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
 import { useRecoilState } from "recoil";
 import { individualAtom } from "../context/recoilContextIndividual";
+import { useRouter } from "next/router";
 
 const Individual = (props: {
   searchValue: string;
   loaded: boolean;
   setId: Function;
+  id: string;
 }) => {
   const [individual, setIndividual] = useRecoilState(individualAtom);
   const [clicked, setClicked] = useState<number>(0);
+  const router = useRouter();
 
   const clickChat = (
     event: MouseEvent<HTMLButtonElement>,
@@ -21,8 +24,6 @@ const Individual = (props: {
     setClicked(index);
     props.setId(id);
   };
-
-  console.log("individual: ", individual)
 
   return (
     <div className="w-[99%] xl:px-4 px-2 hover:overflow-auto overflow-hidden h-[68%] min-h-[100px] flex items-center">
@@ -36,7 +37,7 @@ const Individual = (props: {
                     onClick={(event) => clickChat(event, index, items.other.id)}
                     key={index}
                     className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
-                      clicked == index
+                      items.other.id === props.id
                         ? "bg-very-dark-purple"
                         : "bg-transparent"
                     }`}
@@ -86,7 +87,7 @@ const Individual = (props: {
                       }
                       key={index}
                       className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
-                        clicked == index
+                        items.other.id === props.id
                           ? "bg-very-dark-purple"
                           : "bg-transparent"
                       }`}

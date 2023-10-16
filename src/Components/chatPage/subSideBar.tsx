@@ -17,6 +17,7 @@ const SubSideBar = (props: {
   isIndividual: string;
   setRoomId: Function;
   setId: Function;
+  id: string;
   loaded: boolean;
 }) => {
   const [clicked, setClicked] = useState<number>();
@@ -111,6 +112,7 @@ const SubSideBar = (props: {
           searchValue={searchValue}
           loaded={props.loaded}
           setId={props.setId}
+          id={props.id}
         />
       )}
       <div className="flex justify-around items-center w-full h-[10%] min-h-[60px]">

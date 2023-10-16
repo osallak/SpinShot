@@ -1,6 +1,8 @@
 "use client";
 import IMsgDataTypes from "@/types/iMsgDataTypes";
-import dataConversation, { individualData } from "@/types/messagesArrays";
+import individualConversationType, {
+  individualType,
+} from "@/types/individulaTypes";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
@@ -8,56 +10,49 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState, KeyboardEvent } from "react";
 import { useRecoilState } from "recoil";
-import { io } from "socket.io-client";
-import game from "../../../public/game.svg";
 import sendMessageIcon from "../../../public/sendMessage.svg";
-import trash from "../../../public/trash.svg";
-import { conversationAtom, individualAtom } from "../context/recoilContext";
+import {
+  individualConversationAtom,
+  individualAtom,
+} from "../context/recoilContextIndividual";
 import DropDown from "../ui/FolderDropDown/Dropdown";
+import { dropDownContent } from "@/utils/dropDownContent";
 
-let socket: any;
 let token: any;
-const ConversationIndividual = (props: { userName: string; id: string }) => {
+const ConversationIndividual = (props: {
+  userName: string;
+  id: string;
+  socket: any;
+  setReload: Function;
+  reload: boolean;
+}) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [currentMsg, setCurrentMsg] = useState("");
   const router = useRouter();
-  const [chatHistory, setChatHistory] = useState<string[]>([]);
-  const [connected, setConnected] = useState<boolean>(false);
-  const [chat, setChat] = useState<IMsgDataTypes[]>([]);
-  const [test, setTest] = useState<string>("");
   const [message, setMessage] = useState("");
-  const [conversation, setConversation] = useRecoilState(conversationAtom);
+  const [individualConversation, setIndividualConversation] = useRecoilState(
+    individualConversationAtom
+  );
   const [individual, setIndividual] = useRecoilState(individualAtom);
   const [userId, setUserId] = useState("");
-  const [username, setUsername] = useState("");
-
-  const deleteConversation = () => {
-    console.log("hello world from the other side");
-  };
-
-  const handleClick = () => {
-    console.log("hello world from handle click");
-  };
-
-  const dropDownContent = [
-    { content: "Delete Conversation", click: deleteConversation, icon: trash },
-    { content: "Let't Play", click: handleClick, icon: game },
-  ];
 
   const handleSendMessage = () => {
     setMessage("");
+    props.setReload(true);
     const messageData: IMsgDataTypes = {
       from: `${parseJwt(JSON.stringify(token)).sub}`,
       to: `${props.id}`,
       content: currentMsg,
       timestamp: String(Date.now()),
     };
-    setConnected(true);
-    socket.emit("pm", messageData);
+    props.socket.emit("pm", messageData);
   };
+
+  console.log("conversation individual : ", individualConversation);
 
   const keySendMessage = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
+      props.setReload(true);
       setMessage("");
       const messageData: IMsgDataTypes = {
         from: `${parseJwt(JSON.stringify(token)).sub}`,
@@ -65,8 +60,7 @@ const ConversationIndividual = (props: { userName: string; id: string }) => {
         content: currentMsg,
         timestamp: String(Date.now()),
       };
-      setConnected(true);
-      socket.emit("pm", messageData);
+      props.socket.emit("pm", messageData);
     }
   };
 
@@ -79,7 +73,7 @@ const ConversationIndividual = (props: { userName: string; id: string }) => {
     const jwtToken = parseJwt(token);
     setUserId(jwtToken.sub);
     try {
-      if (props.id !== "") {
+      if (props.id && props.id !== "") {
         const result = await axios.get(`${ip}/chat/individual/${props.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -88,9 +82,8 @@ const ConversationIndividual = (props: { userName: string; id: string }) => {
             id: jwtToken.sub,
           },
         });
-        setConversation(result.data);
+        setIndividualConversation(result.data);
       }
-      // setResponse(result.data);
     } catch (error) {
       console.log("error of fetching data fron conversation: ", error);
     }
@@ -103,32 +96,20 @@ const ConversationIndividual = (props: { userName: string; id: string }) => {
   }, []);
 
   useEffect(() => {
-    token = localStorage.getItem("token");
-    socket = io(`${ip}`, {
-      extraHeaders: {
-        authorization: `Bearer ${token}`,
-      },
-    });
-    socket.on("connect", () => console.log("connected"));
-    socket.on("pm", (data: any) => console.log(data));
-    socket.on("exception", (data: any) => console.log(data));
-    socket.on("disconnect", (data: any) => console.log(data));
-  }, []);
-
-  useEffect(() => {
     setCurrentMsg(message);
   }, [message]);
 
   useEffect(() => {
     fetchDataConversation();
-  }, [props.id, conversation]);
+    props.setReload(false);
+  }, [props.id, props.reload]);
 
   useEffect(() => {
     const conversationDiv: any = chatContainerRef.current;
     if (conversationDiv) {
       conversationDiv.scrollTop = conversationDiv.scrollHeight;
     }
-  }, [conversation.length]);
+  }, [individualConversation.length]);
 
   return (
     <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">
@@ -136,8 +117,8 @@ const ConversationIndividual = (props: { userName: string; id: string }) => {
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">
             <div className="flex justify-center items-center space-x-2 flex-row">
-              {(individual as individualData[]).map(
-                (items: individualData, index: number) =>
+              {(individual as individualType[]).map(
+                (items: individualType, index: number) =>
                   items.other.id === props.id && (
                     <Image
                       key={index}
@@ -151,7 +132,7 @@ const ConversationIndividual = (props: { userName: string; id: string }) => {
               )}
               <div className="flex flex-col">
                 <p className="font-Poppins md:text-xl sm:text-md text-sm text-pearl font-semibold">
-                  {individual.map((individ: individualData, index: number) => (
+                  {individual.map((individ: individualType, index: number) => (
                     <div key={index}>
                       {props.id === individ.other.id
                         ? individ.other.username
@@ -168,70 +149,71 @@ const ConversationIndividual = (props: { userName: string; id: string }) => {
           </div>
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
         </div>
-        {conversation.length ? (
+        {individualConversation.length ? (
           <div
             ref={chatContainerRef}
             className={`w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden `}
           >
             <div className="w-[94%] space-y-3">
-              {(conversation as dataConversation[]).map(
-                (items: dataConversation, index: number) => (
-                  <div key={index}>
-                    <div
-                      className={`flex ${
-                        items.sender != userId
-                          ? "flex-row-reverse space-x-reverse space-x-5"
-                          : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
-                      } justify-end`}
-                    >
+              {(individualConversation as individualConversationType[]).map(
+                (items: individualConversationType, index: number) =>
+                  items.message !== "" && (
+                    <div key={index}>
                       <div
-                        className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] min-h-[70px] flex justify-center rounded-xl ${
+                        className={`flex ${
                           items.sender != userId
-                            ? "items-start bg-peridot text-very-dark-purple font-bold"
-                            : "items-end bg-very-dark-purple text-pearl font-medium"
-                        } flex-col md:space-y-1 space-y-0 md:p-2 p-1`}
+                            ? "flex-row-reverse space-x-reverse space-x-5"
+                            : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
+                        } justify-end`}
                       >
                         <div
-                          className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
+                          className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] min-h-[70px] flex justify-center rounded-xl ${
                             items.sender != userId
-                              ? "flex-row space-x-2"
-                              : "flex-row-reverse space-x-reverse space-x-2"
-                          }`}
+                              ? "items-start bg-peridot text-very-dark-purple font-bold"
+                              : "items-end bg-very-dark-purple text-pearl font-medium"
+                          } flex-col md:space-y-1 space-y-0 md:p-2 p-1`}
                         >
-                          <span
-                            className={`px-3 ${
-                              items.sender !== userId
-                                ? "text-very-dark-purple"
-                                : "text-pearl"
+                          <div
+                            className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
+                              items.sender != userId
+                                ? "flex-row space-x-2"
+                                : "flex-row-reverse space-x-reverse space-x-2"
                             }`}
                           >
-                            {individual.map(
-                              (individ: individualData, index: number) => (
-                                <div key={index}>
-                                  {props.id === individ.other.id
-                                    ? items.sender === props.id
-                                      ? individ.other.username
-                                      : "you"
-                                    : ""}
-                                </div>
-                              )
-                            )}
-                          </span>
-                          <span
-                            className={`text-[10px] font-light h-full ${
-                              items.sender !== userId
-                                ? "text-very-dark-purple"
-                                : "text-pearl"
-                            }`}
-                          >
-                            {items.sentAt}
-                          </span>
+                            <span
+                              className={`px-3 ${
+                                items.sender !== userId
+                                  ? "text-very-dark-purple"
+                                  : "text-pearl"
+                              }`}
+                            >
+                              {individual.map(
+                                (individ: individualType, index: number) => (
+                                  <div key={index}>
+                                    {props.id === individ.other.id
+                                      ? items.sender === props.id
+                                        ? individ.other.username
+                                        : "you"
+                                      : ""}
+                                  </div>
+                                )
+                              )}
+                            </span>
+                            <span
+                              className={`text-[10px] font-light h-full ${
+                                items.sender !== userId
+                                  ? "text-very-dark-purple"
+                                  : "text-pearl"
+                              }`}
+                            >
+                              {items.sentAt}
+                            </span>
+                          </div>
+                          <span className="px-3">{items.message}</span>
                         </div>
-                        <span className="px-3">{items.message}</span>
                       </div>
                     </div>
-                  </div>
-                )
+                  )
               )}
             </div>
           </div>

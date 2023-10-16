@@ -1,16 +1,14 @@
-import { individualData } from "@/types/messagesArrays";
+import { individualType } from "@/types/individulaTypes";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
 import { useRecoilState } from "recoil";
-import test1 from "../../../public/test1.svg";
-import { chatAll, individualAtom } from "../context/recoilContext";
+import { individualAtom } from "../context/recoilContextIndividual";
 
 const Individual = (props: {
   searchValue: string;
   loaded: boolean;
   setId: Function;
 }) => {
-  const [allMessages, setAllMessages] = useRecoilState(chatAll);
   const [individual, setIndividual] = useRecoilState(individualAtom);
   const [clicked, setClicked] = useState<number>(0);
 
@@ -24,14 +22,16 @@ const Individual = (props: {
     props.setId(id);
   };
 
+  console.log("individual: ", individual)
+
   return (
     <div className="w-[99%] xl:px-4 px-2 hover:overflow-auto overflow-hidden h-[68%] min-h-[100px] flex items-center">
       {props.searchValue?.length === 0 ? (
         props.loaded === true && (
           <div className="w-full hover:overflow-auto overflow-hidden h-full">
-            {(individual as individualData[]).length ? (
-              (individual as individualData[])?.map(
-                (items: any, index: number) => (
+            {(individual as individualType[]).length ? (
+              (individual as individualType[])?.map(
+                (items: individualType, index: number) => (
                   <button
                     onClick={(event) => clickChat(event, index, items.other.id)}
                     key={index}
@@ -56,7 +56,7 @@ const Individual = (props: {
                         className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
                       >
                         {items.message.length > 15
-                          ? items.message.substr(0, 20) + " ..."
+                          ? items.message.slice(0, 20) + " ..."
                           : items.message}
                       </p>
                     </div>
@@ -72,9 +72,9 @@ const Individual = (props: {
         )
       ) : (
         <div className="w-full hover:overflow-auto overflow-hidden h-full">
-          {(individual as individualData[]).length ? (
-            (individual as individualData[])?.map(
-              (items: any, index: number) => (
+          {(individual as individualType[]).length ? (
+            (individual as individualType[])?.map(
+              (items: individualType, index: number) => (
                 <div
                   key={index}
                   className="w-full flex justify-center items-center outline-none rounded-2xl"
@@ -106,7 +106,7 @@ const Individual = (props: {
                           className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
                         >
                           {items.message.length > 15
-                            ? items.message.substr(0, 20) + " ..."
+                            ? items.message.slice(0, 20) + " ..."
                             : items.message}
                         </p>
                       </div>

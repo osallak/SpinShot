@@ -1,15 +1,24 @@
-import allMessagesType from "@/types/messagesArrays";
+import channelType from "@/types/channelTypes";
 import { MouseEvent, useState } from "react";
 import { useRecoilState } from "recoil";
-import { chatAll } from "../context/recoilContext";
+import { channelAtom } from "../context/recoilContextChannel";
 
-const Channels = (props: { searchValue: string; loaded: boolean }) => {
-  const [allMessages, setAllMessages] = useRecoilState(chatAll);
+const Channels = (props: {
+  searchValue: string;
+  loaded: boolean;
+  setRoomId: Function;
+}) => {
+  const [channel, setChannel] = useRecoilState(channelAtom);
   const [clicked, setClicked] = useState<number>(0);
 
-  const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number) => {
+  const clickChat = (
+    event: MouseEvent<HTMLButtonElement>,
+    index: number,
+    id: string
+  ) => {
     event.preventDefault();
     setClicked(index);
+    props.setRoomId(id);
   };
 
   const sp = (name: string) => {
@@ -18,17 +27,19 @@ const Channels = (props: { searchValue: string; loaded: boolean }) => {
     return res;
   };
 
+  console.log("channel: ", channel)
+
   return (
     <div className="w-[99%] xl:px-4 px-2 hover:overflow-auto overflow-hidden flex items-center h-[68%] min-h-[100px]">
       {props.searchValue?.length === 0 ? (
         props.loaded === true && (
           <div className="w-full hover:overflow-auto overflow-hidden h-full">
-            {(allMessages as allMessagesType).room?.length ? (
-              (allMessages as allMessagesType).room?.map(
-                (items: any, index: number) =>
+            {(channel as channelType[]).length ? (
+              (channel as channelType[]).map(
+                (items: channelType, index: number) =>
                   items.messages.length !== 0 && (
                     <button
-                      onClick={(event) => clickChat(event, index)}
+                      onClick={(event) => clickChat(event, index, items.id)}
                       key={index}
                       className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
                         clicked == index
@@ -72,16 +83,16 @@ const Channels = (props: { searchValue: string; loaded: boolean }) => {
         )
       ) : (
         <div className="w-full hover:overflow-auto overflow-hidden h-full">
-          {(allMessages as allMessagesType).room?.length ? (
-            (allMessages as allMessagesType).room?.map(
-              (items: any, index: number) => (
+          {(channel as channelType[]).length ? (
+            (channel as channelType[]).map(
+              (items: channelType, index: number) => (
                 <div
                   key={index}
                   className="w-full flex justify-center items-center outline-none rounded-2xl"
                 >
                   {items.id.startsWith(props.searchValue) && (
                     <button
-                      onClick={(event) => clickChat(event, index)}
+                      onClick={(event) => clickChat(event, index, items.id)}
                       key={index}
                       className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
                         clicked == index

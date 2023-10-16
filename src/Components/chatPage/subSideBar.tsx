@@ -2,11 +2,9 @@ import SearchInput from "@/Components/ui/Inputs/searchInput";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
-import { useRecoilState } from "recoil";
 import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";
 import messagesIcon from "../../../public/messagesIcon.svg";
-import { chatAll } from "../context/recoilContext";
 import IconButton from "../ui/Buttons/iconButton";
 import Channels from "./channels";
 import Individual from "./individual";
@@ -17,12 +15,12 @@ const SubSideBar = (props: {
   setFlag: Function;
   setIsIndividual: Function;
   isIndividual: string;
+  setRoomId: Function;
   setId: Function;
   loaded: boolean;
 }) => {
   const [clicked, setClicked] = useState<number>();
   const [searchValue, setSearchValue] = useState("");
-  const [allMessages, setAllMessages] = useRecoilState(chatAll);
 
   const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number) => {
     event.preventDefault();
@@ -48,7 +46,7 @@ const SubSideBar = (props: {
   };
 
   return (
-    <div className="bg-white/10 h-full lg:flex flex-col rounded-2xl w-[25%] min-w-[350px]">
+    <div className="bg-white/10 h-full lg:flex hidden flex-col rounded-2xl w-[25%] min-w-[350px]">
       <div className="flex justify-center items-center flex-col w-full h-[10%] md:min-h-[100px] min-h-[70px]">
         <div className="w-full h-full flex-col px-6">
           <div className="w-full  pt-5 flex flex-row space-x-3 h-full">
@@ -102,7 +100,11 @@ const SubSideBar = (props: {
         </div>
       </div>
       {props.isIndividual === "Channels" && (
-        <Channels searchValue={searchValue} loaded={props.loaded} />
+        <Channels
+          searchValue={searchValue}
+          loaded={props.loaded}
+          setRoomId={props.setRoomId}
+        />
       )}
       {props.isIndividual === "Individual" && (
         <Individual

@@ -1,51 +1,43 @@
 "use client";
 import SideBar from "@/Components/ui/folderSidebar/sideBar";
-import { default as dataConversation } from "@/types/messagesArrays";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import {
-  chatAll,
-  conversationAtom,
-  exploreChannelAtom,
-  individualAtom,
-  roomsAtom,
-} from "../context/recoilContext";
+import { io } from "socket.io-client";
+import { chatAll, exploreChannelAtom } from "../context/recoilContext";
+import { channelAtom } from "../context/recoilContextChannel";
+import { individualAtom } from "../context/recoilContextIndividual";
 import NavBar from "../ui/FolderNavbar/navBar";
 import MobileSideBar from "../ui/folderSidebar/mobileSideBar";
+import ConversationChannel from "./conversationChannel";
 import ConversationIndividual from "./conversationIndividual";
 import CreateChannels from "./createChannels";
 import ExploreChannels from "./exploreChannels";
 import SubSideBar from "./subSideBar";
 
+let socket: any;
+let token: any;
 const Chat = () => {
   const router = useRouter();
-  const [storedToken, setToken] = useState("");
-  const [otherUserID, setOtherUserID] = useState("");
-  const [exploreOpen, setExploreOpen] = useState(false);
-  const [createOpen, setCreateOpen] = useState(false);
   const [openSideBar, setOpenSideBar] = useState(false);
   const [id, setId] = useState("");
+  const [roomId, setRoomId] = useState("");
   const [isIndividual, setIsIndividual] = useState("Individual");
   const [open, setOpen] = useState(false);
   const [flag, setFlag] = useState("");
-  const [response, setResponse] = useState<dataConversation[]>([]);
-  const [userId, setUserId] = useState("");
-  const [userName, setUserName] = useState("");
-  const userIdRef = useRef<string>();
   const [loaded, setIsLoaded] = useState(false);
   const [exploreChannel, setExploreChannel] =
     useRecoilState(exploreChannelAtom);
-  const [allMessages, setAllMessages] = useRecoilState(chatAll);
   const [individual, setIndividual] = useRecoilState(individualAtom);
-  const [rooms, setRooms] = useRecoilState(roomsAtom);
-  const [conversation, setConversation] = useRecoilState(conversationAtom);
+  const [channel, setChannel] = useRecoilState(channelAtom);
+  const [reload, setReload] = useState(false);
 
   const fetchDataSubSideBar = async () => {
     const token = localStorage.getItem("token");
+    console.log("token: ", token);
     if (!token) {
       router.push("/signin");
       return;
@@ -61,13 +53,15 @@ const Chat = () => {
         },
       });
       setIndividual(res?.data?.individual);
+      setChannel(res?.data?.room);
       setId(res?.data?.individual[0]?.other?.id);
-      setRooms(res?.data?.room);
-      setAllMessages(res.data);
+      setRoomId(res?.data?.room[0]?.id);
     } catch (error) {
       console.log("error of fetching data from subsidebar: ", error);
     }
   };
+
+  // console.log("id of rooms: ", id);
 
   const fetchDataExploreChannel = async () => {
     const token = localStorage.getItem("token");
@@ -90,9 +84,25 @@ const Chat = () => {
   };
 
   useEffect(() => {
+    token = localStorage.getItem("token");
+    socket = io(`${ip}`, {
+      extraHeaders: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+    socket.on("connect", () => console.log("connected"));
+    socket.on("pm", (data: any) => {
+      setReload(true);
+      console.log("hello there from socket event");
+    });
+    socket.on("exception", (data: any) => console.log(data));
+    socket.on("disconnect", (data: any) => console.log(data));
+  }, []);
+
+  useEffect(() => {
     fetchDataSubSideBar();
     setIsLoaded(true);
-  });
+  }, []);
 
   useEffect(() => {
     fetchDataExploreChannel();
@@ -108,6 +118,7 @@ const Chat = () => {
         setFlag={setFlag}
         setIsIndividual={setIsIndividual}
         isIndividual={isIndividual}
+        setRoomId={setRoomId}
         setId={setId}
         loaded={loaded}
       />
@@ -120,9 +131,21 @@ const Chat = () => {
       <div className="w-full h-full">
         <NavBar open={openSideBar} setOpen={setOpenSideBar} />
         {isIndividual === "Individual" ? (
-          <ConversationIndividual userName={"three"} id={id} />
+          <ConversationIndividual
+            userName={"three"}
+            id={id}
+            socket={socket}
+            setReload={setReload}
+            reload={reload}
+          />
         ) : (
-          ""
+          <ConversationChannel
+            userName={"three"}
+            id={roomId}
+            socket={socket}
+            setReload={setReload}
+            reload={reload}
+          />
         )}
       </div>
     </div>

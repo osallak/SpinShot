@@ -37,7 +37,7 @@ const SidebarMobile = (props: {
           <picture>
             <img
               className="w-[50px] rounded-xl"
-              src={data?.profile?.profile.avatar}
+              src={data?.profile?.profile?.avatar}
               alt="Image not found"
             />
           </picture>

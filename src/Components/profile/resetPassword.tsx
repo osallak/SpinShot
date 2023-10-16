@@ -7,16 +7,17 @@ import { useAppSelector } from "../../../redux_tool";
 
 import toast, { Toaster } from "react-hot-toast";
 import ip from "@/utils/endPoint";
+import { useRouter } from "next/router";
 
 const ResetPassword = () => {
   const [showPasswd, setShowPasswd] = useState(false);
   const [showNewPasswd, setShowNewPasswd] = useState(false);
   const [showConfPassw, setShowConfPassw] = useState(false);
   const profile_data = useAppSelector((state) => state.Profile);
-
   const [password, setPassword] = useState("");
   const [NewPassword, setNewPassword] = useState("");
   const [ConfirmPassword, setConfermPassword] = useState("");
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     {

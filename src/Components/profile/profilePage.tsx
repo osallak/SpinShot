@@ -202,7 +202,7 @@ const ProfilePage = (props: { id: any }) => {
                     password == true ? (
                       <ResetPassword />
                     ) : null
-                  ) : <div className="flex justify-center items-center text-pearl text-2xl h-full ">can you see Your information</div>}
+                  ) : <div className="flex justify-center items-center text-pearl text-2xl h-full ">can you see Your (Achievements & Matchs History)</div>}
                 </div>
               </div>
             </div>

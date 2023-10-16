@@ -149,20 +149,15 @@ export class ChatService {
       content: body,
     };
     let isFriend: boolean = false;
-    isFriend = await this.isFriend(body.to, body.from);
-    if (isFriend) {
-      const receiver = this.getSocketsAssociatedWithUser(body.to);
-      if (!receiver || receiver.length === 0) {
-        // TODO: should the client side be notified ?
-        return;
-      }
-      for (let i = 0; i < receiver.length; ++i) {
-        receiver[i].emit(event.event, JSON.stringify(body));
-      }
-      let user: ChatUser = this.World.get(body.from);
-      try {
+    try {
+      isFriend = await this.isFriend(body.to, body.from);
+      if (isFriend) {
+        const receiver = this.getSocketsAssociatedWithUser(body.to) ?? [];
+        for (let i = 0; i < receiver.length; ++i) {
+          receiver[i].emit(event.event, JSON.stringify(body));
+        }
         await this.saveMessageInDatabase(body);
-      } catch (e) {
+      } else {
         const sender: Array<Socket> = this.getSocketsAssociatedWithUser(
           body.from,
         );
@@ -171,13 +166,14 @@ export class ChatService {
           sender[i].emit(
             EXCEPTION,
             JSON.stringify({
-              status: INTERNAL_SERVER_ERROR_MESSAGE,
-              message: INTERNAL_SERVER_ERROR_MESSAGE,
+              status: BAD_REQUEST,
+              message: ANONYMOUS_USER_MESSAGE,
             }),
           );
         }
       }
-    } else {
+    } catch (e) {
+      let user: ChatUser = this.World.get(body.from);
       const sender: Array<Socket> = this.getSocketsAssociatedWithUser(
         body.from,
       );
@@ -186,8 +182,8 @@ export class ChatService {
         sender[i].emit(
           EXCEPTION,
           JSON.stringify({
-            status: BAD_REQUEST,
-            message: ANONYMOUS_USER_MESSAGE,
+            status: INTERNAL_SERVER_ERROR_MESSAGE,
+            message: INTERNAL_SERVER_ERROR_MESSAGE,
           }),
         );
       }

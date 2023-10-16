@@ -5,15 +5,23 @@ import { useRecoilState } from "recoil";
 import test1 from "../../../public/test1.svg";
 import { chatAll, individualAtom } from "../context/recoilContext";
 
-const Individual = (props: { searchValue: string; loaded: boolean; setId: Function }) => {
+const Individual = (props: {
+  searchValue: string;
+  loaded: boolean;
+  setId: Function;
+}) => {
   const [allMessages, setAllMessages] = useRecoilState(chatAll);
   const [individual, setIndividual] = useRecoilState(individualAtom);
   const [clicked, setClicked] = useState<number>(0);
 
-  const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number, id: string) => {
+  const clickChat = (
+    event: MouseEvent<HTMLButtonElement>,
+    index: number,
+    id: string
+  ) => {
     event.preventDefault();
     setClicked(index);
-    props.setId(id)
+    props.setId(id);
   };
 
   return (
@@ -33,7 +41,13 @@ const Individual = (props: { searchValue: string; loaded: boolean; setId: Functi
                         : "bg-transparent"
                     }`}
                   >
-                    <Image src={test1} alt="test" />
+                    <Image
+                      src={items.other.avatar}
+                      alt="test"
+                      width={500}
+                      height={500}
+                      className="md:w-14 sm:w-12 w-10 rounded-xl"
+                    />
                     <div className="flex justify-start items-start space-y-1 flex-col">
                       <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
                         {items.other.username}
@@ -42,7 +56,7 @@ const Individual = (props: { searchValue: string; loaded: boolean; setId: Functi
                         className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
                       >
                         {items.message.length > 15
-                          ? items.message.substr(0, 15) + " ..."
+                          ? items.message.substr(0, 20) + " ..."
                           : items.message}
                       </p>
                     </div>
@@ -67,7 +81,9 @@ const Individual = (props: { searchValue: string; loaded: boolean; setId: Functi
                 >
                   {items.other?.username.startsWith(props.searchValue) && (
                     <button
-                      onClick={(event) => clickChat(event, index, items.other.id)}
+                      onClick={(event) =>
+                        clickChat(event, index, items.other.id)
+                      }
                       key={index}
                       className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
                         clicked == index
@@ -75,15 +91,23 @@ const Individual = (props: { searchValue: string; loaded: boolean; setId: Functi
                           : "bg-transparent"
                       }`}
                     >
-                      <Image src={test1} alt="test" />
+                      <Image
+                        src={items.other.avatar}
+                        alt="test"
+                        width={500}
+                        height={500}
+                        className="md:w-14 sm:w-12 w-10 rounded-xl"
+                      />
                       <div className="flex justify-start items-start space-y-1 flex-col">
                         <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
-                          {items.other?.username}
+                          {items.other.username}
                         </p>
                         <p
                           className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
                         >
-                          {items.message}
+                          {items.message.length > 15
+                            ? items.message.substr(0, 20) + " ..."
+                            : items.message}
                         </p>
                       </div>
                     </button>

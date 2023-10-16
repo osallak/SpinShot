@@ -43,163 +43,9 @@ const Chat = () => {
   const [individual, setIndividual] = useRecoilState(individualAtom);
   const [rooms, setRooms] = useRecoilState(roomsAtom);
   const [conversation, setConversation] = useRecoilState(conversationAtom);
-  // const chatContainerRef = useRef<HTMLDivElement>(null);
-  const [currentMsg, setCurrentMsg] = useState("");
-  // const Router = useRouter();
-  const [message, setMessage] = useState("");
-  // const [chatHistory, setChatHistory] = useState<string[]>([]);
-
-  // const handleMessage = (event: ChangeEvent<HTMLInputElement>) => {
-  //   event.preventDefault();
-  //   setCurrentMessage(event.target.value);
-  // };
-
-  // function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
-  //   if (event.key === "Enter") {
-
-  //     handleSendMessage(event);
-  //   }
-  // }
-
-  // const inputRef = useRef<HTMLInputElement>(null);
-  // useEffect(() => {
-  //   const conversationDiv: any = chatContainerRef.current;
-  //   if (conversationDiv) {
-  //     conversationDiv.scrollTop = conversationDiv.scrollHeight;
-  //   }
-  // }, [chatHistory.length]);
-
-  // useEffect(() => {
-  //   const handleKeyPress = (event: any) => {
-  //     event.preventDefault(); // Prevent the "/" key from being typed into the input
-  //     if (event.key === "/") {
-  //       if (inputRef.current) {
-  //         inputRef.current.focus();
-  //       }
-  //     }
-  //   };
-
-  //   document.addEventListener("keydown", (event) => handleKeyPress);
-  //   return () => {
-  //     document.removeEventListener("keydown", handleKeyPress);
-  //   };
-  // }, []);
-
-  // const emailInput = useCallback((inputElement: any) => {
-  //   if (inputElement) {
-  //     inputElement.focus();
-  //   }
-  // }, []);
-
-  // const sendMessage = (event: MouseEvent<HTMLButtonElement>) => {
-  //   event.preventDefault();
-  //   setMessageContent(currentMessage);
-  //   console.log("Message Content : ", messageContent);
-  // }
-  // interface IMsgDataTypes {
-  //   user: String;
-  //   msg: String;
-  //   time: String;
-  // }
-
-  // const [chat, setChat] = useState<IMsgDataTypes[]>([]);
-
-  // const handleSendMessage = (
-  //   event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
-  // ) => {
-  //   const token = localStorage.getItem("token");
-  //   if (!token) {
-  //     router.push("/signin");
-  //     return;
-  //   }
-  //   const socket = io("e3r10p14.1337.ma:8001", {
-  //     extraHeaders: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   });
-  //   socket.on("connect", () => {
-  //     console.log(parseJwt(token));
-  //     socket.on("pm", (data) => {
-  //       console.log(data);
-  //     });
-  //     socket.on("exception", (data) => {
-  //       console.log(data);
-  //     });
-  //   });
-  //   event.preventDefault();
-  //   if (message.trim() !== "") {
-  //     socket.on("connect", () => {
-  //       console.log("socket connected");
-  //       const msgData: IMsgDataTypes = {
-  //         user: "ataji",
-  //         msg: currentMsg,
-  //         time:
-  //           new Date(Date.now()).getHours() +
-  //           ":" +
-  //           new Date(Date.now()).getMinutes(),
-  //       };
-  //       socket.emit("hello", msgData);
-  //     });
-  //     socket.on("hello", (data: IMsgDataTypes) => {
-  //       setChat((pre) => [...pre, data]);
-  //     });
-  //     setMessage("");
-  //   }
-  // };
-
-  // const socketInitializer = () => {
-  //   socket.on("connect", () => {
-  //     const msgData: IMsgDataTypes = {
-  //       user: "ataji",
-  //       msg: currentMsg,
-  //       time:
-  //         new Date(Date.now()).getHours() +
-  //         ":" +
-  //         new Date(Date.now()).getMinutes(),
-  //     };
-  //     socket.emit("hello", msgData);
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   socket.on("hello", (data: IMsgDataTypes) => {
-  //     setChat((pre) => [...pre, data]);
-  //   });
-  // }, [socket]);
-
-  // useEffect(() => socketInitializer(), []);
-
-  // const featchDataConversation = async (id: string) => {
-  //   // const token = localStorage.getItem("token");
-  //   // if (!token) {
-  //   //   Router.push("/Signin");
-  //   //   return;
-  //   // }
-  //   const jwtToken = parseJwt(token);
-  //   try {
-  //     const result = await axios.get(
-  //       `${ip}/chat/individual/${id}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         params: {
-  //           id: jwtToken.sub,
-  //         },
-  //       }
-  //     );
-  //     setResponse(result.data);
-  //     setConversation(result.data);
-  //     setUserId(jwtToken.sub);
-  //     console.log("response from conversation here:====>    ", result.data);
-  //   } catch (error) {
-  //     console.log("error of fetching data fron conversation: ", error);
-  //   }
-  // };
 
   const fetchDataSubSideBar = async () => {
     const token = localStorage.getItem("token");
-    console.log("token from chat Page: ", token);
     if (!token) {
       router.push("/signin");
       return;
@@ -238,7 +84,7 @@ const Chat = () => {
         });
         setExploreChannel(res.data);
       } catch (error: any) {
-        console.log("error from explore chan   nel: ", error);
+        console.log("error from explore channel: ", error);
       }
     }
   };
@@ -246,7 +92,7 @@ const Chat = () => {
   useEffect(() => {
     fetchDataSubSideBar();
     setIsLoaded(true);
-  }, []);
+  });
 
   useEffect(() => {
     fetchDataExploreChannel();
@@ -284,6 +130,3 @@ const Chat = () => {
 };
 
 export default Chat;
-function io(arg0: string, arg1: { extraHeaders: { Authorization: string } }) {
-  throw new Error("Function not implemented.");
-}

@@ -4,3 +4,11 @@ export default interface IMsgDataTypes {
     content: string;
     timestamp: string;
   }
+
+
+  export interface sendRoomMessageDto {
+    from: string;
+    roomName: string;
+    content: string;
+    timestamp: string;
+  }

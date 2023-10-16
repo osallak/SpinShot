@@ -48,8 +48,6 @@ const ConversationIndividual = (props: {
     props.socket.emit("pm", messageData);
   };
 
-  console.log("conversation individual : ", individualConversation);
-
   const keySendMessage = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       props.setReload(true);

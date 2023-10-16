@@ -1,4 +1,4 @@
-import channelConversationType from "@/types/channelConversationType"
+import messagesType from "@/types/channelConversationType"
 import channelType from "@/types/channelTypes";
 import { createContext } from "react";
 import { atom } from "recoil";
@@ -10,7 +10,7 @@ export const channelAtom = atom({
     default: [],
 })
 
-export const channelConversationContext = createContext<channelConversationType[] | []>([]);
+export const channelConversationContext = createContext<messagesType[] | []>([]);
 
 export const channelConversationAtom = atom({
     key: `channelConversationAtom-${Math.random()}`,

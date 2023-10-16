@@ -1,7 +1,7 @@
 "use client";
-import channelConversationType from "@/types/channelConversationType";
+import messagesType from "@/types/channelConversationType";
 import { default as channelType } from "@/types/channelTypes";
-import IMsgDataTypes from "@/types/iMsgDataTypes";
+import { default as IMsgDataTypes, default as sendRoomMessageDto } from "@/types/iMsgDataTypes";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
@@ -52,28 +52,26 @@ const ConversationChannel = (props: {
   const handleSendMessage = () => {
     setMessage("");
     props.setReload(true);
-    const messageData: IMsgDataTypes = {
+    const messageData: sendRoomMessageDto = {
       from: `${parseJwt(JSON.stringify(token)).sub}`,
-      to: `${props.id}`,
+      roomName: `${props.id}`,
       content: currentMsg,
       timestamp: String(Date.now()),
     };
-    props.socket.emit("pm", messageData);
+    props.socket.emit("gm", messageData);
   };
-
-  console.log("conversation of channel: ", conversationChannel);
 
   const keySendMessage = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       props.setReload(true);
       setMessage("");
-      const messageData: IMsgDataTypes = {
+      const messageData: sendRoomMessageDto = {
         from: `${parseJwt(JSON.stringify(token)).sub}`,
-        to: `${props.id}`,
+        roomName: `${props.id}`,
         content: currentMsg,
         timestamp: String(Date.now()),
       };
-      props.socket.emit("pm", messageData);
+      props.socket.emit("gm", messageData);
     }
   };
 
@@ -95,8 +93,8 @@ const ConversationChannel = (props: {
             id: props.id,
           },
         });
-        console.log("result from rooms api: ", result.data);
-        setConversationChannel(result.data);
+        console.log("result form fetch data conversation: ", result.data.messages);
+        setConversationChannel(result.data.messages);
       }
     } catch (error) {
       console.log("error of fetching data fron conversation: ", error);
@@ -166,88 +164,63 @@ const ConversationChannel = (props: {
                     )
                   )}
                 </p>
-                <p className="font-Poppins md:text-lg sm:text-sm text-xs text-pearl text-opacity-40 font-thin">
-                  Online
-                </p>
               </div>
             </div>
             <DropDown data={dropDownContent} />
           </div>
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
         </div>
-        {conversationChannel.length ? (
+        {conversationChannel ? (
           <div
             ref={chatContainerRef}
             className={`w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden `}
           >
             <div className="w-[94%] space-y-3">
-              {(conversationChannel as channelConversationType[]).map(
-                (items: channelConversationType, index: number) => (
-                  <div key={index} className="border">
-                    {items.messages.map((chan: any, index: number) => (
-                      <div key={index} className="border">
-                        {chan.messages.map((channel: any, index: number) => (
-                          <div key={index}>
-                            <div
-                              className={`flex ${
-                                channel.user.id != userId
-                                  ? "flex-row-reverse space-x-reverse space-x-5"
-                                  : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
-                              } justify-end`}
-                            >
-                              <div
-                                className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] min-h-[70px] flex justify-center rounded-xl ${
-                                  channel.user.id != userId
-                                    ? "items-start bg-peridot text-very-dark-purple font-bold"
-                                    : "items-end bg-very-dark-purple text-pearl font-medium"
-                                } flex-col md:space-y-1 space-y-0 md:p-2 p-1`}
-                              >
-                                <div
-                                  className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
-                                    channel.user.id != userId
-                                      ? "flex-row space-x-2"
-                                      : "flex-row-reverse space-x-reverse space-x-2"
-                                  }`}
-                                >
-                                  <span
-                                    className={`px-3 ${
-                                      channel.user.id !== userId
-                                        ? "text-very-dark-purple"
-                                        : "text-pearl"
-                                    }`}
-                                  >
-                                    {channel.map(
-                                      (room: channelType, index: number) =>
-                                        room.messages.map(
-                                          (items: any, index: number) => (
-                                            <div key={index}>
-                                              {props.id === items.user.id
-                                                ? items.user.id === props.id
-                                                  ? items.user.id
-                                                  : "you"
-                                                : ""}
-                                            </div>
-                                          )
-                                        )
-                                    )}
-                                  </span>
-                                  <span
-                                    className={`text-[10px] font-light h-full ${
-                                      channel.user.id !== userId
-                                        ? "text-very-dark-purple"
-                                        : "text-pearl"
-                                    }`}
-                                  >
-                                    {channel.sentAt}
-                                  </span>
-                                </div>
-                                <span className="px-3">{channel.message}</span>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
+              {(conversationChannel as messagesType[]).map(
+                (items: messagesType, index: number) => (
+                  <div
+                    key={index}
+                    className={`flex ${
+                      items.user.id != userId
+                        ? "flex-row-reverse space-x-reverse space-x-5"
+                        : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
+                    } justify-end`}
+                  >
+                    <div
+                      className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] min-h-[70px] flex justify-center rounded-xl ${
+                        items.user.id != userId
+                          ? "items-start bg-peridot text-very-dark-purple font-bold"
+                          : "items-end bg-very-dark-purple text-pearl font-medium"
+                      } flex-col md:space-y-1 space-y-0 md:p-2 p-1`}
+                    >
+                      <div
+                        className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
+                          items.user.id != userId
+                            ? "flex-row space-x-2"
+                            : "flex-row-reverse space-x-reverse space-x-2"
+                        }`}
+                      >
+                        <span
+                          className={`px-3 ${
+                            items.user.id !== userId
+                              ? "text-very-dark-purple"
+                              : "text-pearl"
+                          }`}
+                        >
+                          {items.user.username}
+                        </span>
+                        <span
+                          className={`text-[10px] font-light h-full ${
+                            items.user.id !== userId
+                              ? "text-very-dark-purple"
+                              : "text-pearl"
+                          }`}
+                        >
+                          {items.sentAt}
+                        </span>
                       </div>
-                    ))}
+                      <span className="px-3">{items.message}</span>
+                    </div>
                   </div>
                 )
               )}

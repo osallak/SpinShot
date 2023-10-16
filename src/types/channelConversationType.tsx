@@ -4,17 +4,8 @@ interface userInformation {
 	username: string;
 }
 
-interface allMessages {
+export default interface messagesType {
 	message: string;
 	sentAt: string;
 	user: userInformation;
-}
-
-interface messages {
-	messages: allMessages[];
-}
-
-export default interface channelConversationType {
-  // blockedUsers: blockedUsers[],
-  messages: messages[];
 }

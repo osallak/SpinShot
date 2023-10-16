@@ -27,8 +27,6 @@ const Channels = (props: {
     return res;
   };
 
-  console.log("channel: ", channel)
-
   return (
     <div className="w-[99%] xl:px-4 px-2 hover:overflow-auto overflow-hidden flex items-center h-[68%] min-h-[100px]">
       {props.searchValue?.length === 0 ? (

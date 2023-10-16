@@ -95,7 +95,13 @@ const Chat = () => {
       setReload(true);
       console.log("hello there from socket event");
     });
-    socket.on("exception", (data: any) => console.log(data));
+    socket.on("gm", (data: any) => {
+      setReload(true);
+      console.log("hello there from socket event of channels: ", data);
+    });
+    socket.on("exception", (data: any) =>
+      console.log("exception of socket event: ", data)
+    );
     socket.on("disconnect", (data: any) => console.log(data));
   }, []);
 

@@ -99,6 +99,23 @@ export class TwoFactorAuthController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
+  @Post('signOut')
+  async signOut(
+    @Req() request: Request,
+    @Res() response: Response,
+  ) {
+    try {
+      const res = await this.twoFactorAuthService.signOut(
+        (request?.user as any)?.id,
+      );
+      return response.status(res.status).json(res.message);
+    } catch (e) {
+      return response.status(e.status).send(e.message);
+    }
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Get('status')
   async getTwoFaStatus(
     @Req() request: Request,

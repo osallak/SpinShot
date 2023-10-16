@@ -196,4 +196,28 @@ export class TwoFactorAuthService {
       }
     });
   }
+  async signOut(userId: string): Promise<Response> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!userId) {
+          return reject({
+            status: 400,
+            message: 'User not found',
+          });
+        }
+				await this.userService.updateData(userId, {
+					isTwoFactorAuthenticated: false,
+				});
+        return resolve({
+          status: 200,
+          message: 'Signed out successfully',
+        });
+      } catch {
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    });
+  }
 }

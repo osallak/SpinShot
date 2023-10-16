@@ -522,11 +522,7 @@ export class RoomService {
     });
   }
 
-  async getSpecificRoom(
-    query: PaginationQueryDto,
-    roomName: string,
-    userId: string,
-  ): Promise<Response> {
+  async getSpecificRoom(roomName: string, userId: string): Promise<Response> {
     return new Promise(async (resolve, reject) => {
       try {
         // sending back a array of blocked users
@@ -562,8 +558,6 @@ export class RoomService {
           },
           select: {
             messages: {
-              skip: query.getSkip(),
-              take: query.limit,
               orderBy: {
                 sentAt: 'desc',
               },
@@ -581,10 +575,10 @@ export class RoomService {
             },
           },
         });
-				let messagesRes = [];
-				if (messages.length > 0 && messages[0]?.messages) {
-					messagesRes = messages[0].messages;
-				}
+        let messagesRes = [];
+        if (messages.length > 0 && messages[0]?.messages) {
+          messagesRes = messages[0].messages;
+        }
         resolve({
           status: 200,
           message: 'Single Room',
@@ -822,8 +816,8 @@ export class RoomService {
             select: {
               userId: true,
               userStatus: true,
-							muteDuration: true,
-							mutedAt: true,
+              muteDuration: true,
+              mutedAt: true,
             },
           });
         resolve(roomMembers);
@@ -1103,15 +1097,15 @@ export class RoomService {
             });
           }
         } else {
-        await this.prismaService.roomChatConversation.delete({
-          where: {
-            roomChatId_userId: {
-              roomChatId: roomName,
-              userId: userId,
+          await this.prismaService.roomChatConversation.delete({
+            where: {
+              roomChatId_userId: {
+                roomChatId: roomName,
+                userId: userId,
+              },
             },
-          },
-        });
-				}
+          });
+        }
         return resolve({
           status: 200,
           message: 'User Left',

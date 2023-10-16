@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
+			<Toaster />
       <Provider store={store}>
         <Component {...pageProps} />
       </Provider>

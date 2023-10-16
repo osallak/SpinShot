@@ -19,9 +19,13 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
   const [submittedCode, setSubmittedCode] = useState<string>("");
   const [qrCode, setQrCode] = useState<any>(undefined);
   const [twoFaToggleSwitchStatus, setTwoFaToggleSwitchStatus] = useState(true);
+  const [invalidTwoFa, setInvalidTwoFa] = useState(false);
   const token = localStorage.getItem("token");
   useEffect(() => {
     handleResize();
+  });
+
+  useEffect(() => {
     fetchTwoFAStatus();
     if (!twoFaToggleSwitchStatus) fetchQrCode();
     if (typeof window !== "undefined") {
@@ -99,15 +103,15 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
           }
         );
         toast.success("2FA is now disabled", {
-					id: "2fa-disabledSuccess",
-				});
+          id: "2fa-disabledSuccess",
+        });
       }
       props.Switch(!open);
     } catch (e: any) {
+      setInvalidTwoFa(true);
       // toast.error(e?.data ?? "Invalid 2FA", {
-			// 	id: "2fa-invalid",
-			// });
-
+      // 	id: "2fa-invalid",
+      // });
     }
   };
   return (
@@ -139,6 +143,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
                 Qr already generated
               </span>
             )}
+            {invalidTwoFa && <span className="font-Poppins text-3xl sm:text-3xl text-red-500">Invalid 2FA</span>}
             <div className="flex flex-row  space-x-5 sm:px-5 ">
               <PinInput
                 length={6}

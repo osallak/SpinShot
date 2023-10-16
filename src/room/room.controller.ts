@@ -151,11 +151,9 @@ export class RoomController {
     @Param('id') roomName: string,
     @Req() request: Request,
     @Res() response: ExpressResponse,
-    @Query() query: PaginationQueryDto,
   ) {
     try {
       const res = await this.roomService.getSpecificRoom(
-        query,
         roomName,
         (request as any)?.user?.id,
       );

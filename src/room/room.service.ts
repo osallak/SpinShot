@@ -1,28 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateRoomDto } from './dtos/create-room.dto';
-import { JoinRoomDto } from './dtos/join-room.dto';
 import {
   FriendshipStatus,
   RoomType,
-  User,
   UserRole,
   UserStatusGroup,
 } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { Response, toObject } from 'src/global/interfaces';
-import { Room } from './dtos/find-room.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
-import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
-import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
-import { serializePaginationResponse } from 'src/user/helpers';
-import { async, elementAt } from 'rxjs';
-import { boolean, valid } from 'joi';
-import { join, resolve } from 'path';
-import { rejects } from 'assert';
 import { banUserDto } from './dtos/ban-user.dto';
-import { ProtectRoomDto } from './dtos/protect-room.dto';
+import { CreateRoomDto } from './dtos/create-room.dto';
 import { ElevateUserDto } from './dtos/elevate-user.dto';
+import { JoinRoomDto } from './dtos/join-room.dto';
+import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
+import { ProtectRoomDto } from './dtos/protect-room.dto';
 
 @Injectable()
 export class RoomService {
@@ -819,7 +811,14 @@ export class RoomService {
               ],
             },
             select: {
+              User: {
+                select: {
+                  avatar: true,
+                  username: true,
+                },
+              },
               userId: true,
+              userRole: true,
               userStatus: true,
               muteDuration: true,
               mutedAt: true,
@@ -1116,6 +1115,53 @@ export class RoomService {
           message: 'User Left',
         });
       } catch (e) {
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    });
+  }
+
+  async getAllMembers(userId: string, roomName: string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!roomName || !userId) {
+          return reject({
+            status: 400,
+            message: 'Missing values',
+          });
+        }
+        const isMember =
+          await this.prismaService.roomChatConversation.findUnique({
+            where: {
+              roomChatId_userId: {
+                roomChatId: roomName,
+                userId: userId,
+              },
+              OR: [
+                {
+                  userStatus: null,
+                },
+                {
+                  userStatus: UserStatusGroup.MUTED,
+                },
+              ],
+            },
+          });
+        if (!isMember) {
+          return reject({
+            status: 403,
+            message: 'User Not A Member',
+          });
+        }
+        const members = await this.getRoomMembers(roomName);
+        return resolve({
+          status: 200,
+          message: 'All Members',
+          data: members,
+        });
+      } catch {
         return reject({
           status: 500,
           message: 'Internal Server Error',

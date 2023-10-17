@@ -69,7 +69,7 @@ const SideBar = (props:any) => {
                   alt={option.icon}
                   className="opacity-40 hover:opacity-100"
                 />{" "}
-                <Search isSearch={isSearch} setId={props.setId}/>
+                <Search isSearch={isSearch} />
               </button>
             ) : option.route === "/profile" ? (
               <button

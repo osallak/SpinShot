@@ -1,15 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { SidbarIcon } from "../FolderDropDown/ArrayIcon";
 import Image from "next/image";
 import test1 from "./../../../../public/test1.svg";
 import { useAppSelector } from "../../../../redux_tool";
+import Search from "@/Components/search/userSearch";
+import { Router, useRouter } from "next/router";
 
 const SidebarMobile = (props: {
-  handleClick: Function;
+  // handleClick: Function;
   setOpned: Function;
   opened: boolean;
+  // setSearch: Function;
+  setPages: Function;
 }) => {
+
   const data = useAppSelector((state) => state.Profile);
+  const [isSearch, setSearch] = useState(false);
+  const router = useRouter();
+
+  const handleClick = (route: string | undefined) => {
+    if (route == "/profile")
+    {
+      props.setOpned(true)
+      props.setPages(route);
+    }
+    else if (route)
+      router.push(route); 
+  };
 
   return (
     <div className="bg-very-dark-purple block md:hidden  h-full w-[60px] top-2 fixed z-50 pb-4 ">
@@ -20,20 +37,28 @@ const SidebarMobile = (props: {
               key={index}
               className="flex justify-center items-center opacity-40  hover:opacity-100 m-2"
             >
-              <button
-                className={``}
-                onClick={() => {
-                  props.opened == false
-                    ? props.handleClick(Icon.route)
-                    : props.setOpned(false);
-                }}
-              >
-                <Image src={Icon.icon} alt="" />
-              </button>
+              {Icon.route == "/search" ? (
+                <button onClick={() => setSearch(!isSearch)}>
+                  <Search isSearch={isSearch} />
+
+                  <Image src={Icon.icon} alt="" />
+                </button>
+              ) : (
+                <button
+                  className={``}
+                  onClick={() => {
+                    props.opened == false
+                      ? handleClick(Icon.route)
+                      : props.setOpned(false);
+                  }}
+                >
+                  <Image src={Icon.icon} alt="" />
+                </button>
+              )}
             </div>
           ))}
         </div>
-        {data?.profile?.profile.avatar ? (
+        {data?.profile?.profile?.avatar ? (
           <picture>
             <img
               className="w-[50px] rounded-xl"

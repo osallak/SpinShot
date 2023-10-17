@@ -21,6 +21,7 @@ import parseJwt from "@/utils/parsJwt";
 import { buttonsUser } from "@/Components/ui/FolderDropDown/ArrayIcon";
 import { buttons } from "@/Components/ui/FolderDropDown/ArrayIcon";
 import { SignOut, letPlay } from "@/Components/ui/FolderDropDown/ArrayIcon";
+import Search from "../search/userSearch";
 
 const ProfilePage = (props: { id: any }) => {
   const [isopen, setMenu] = useState(false);
@@ -42,6 +43,7 @@ const ProfilePage = (props: { id: any }) => {
   const [table, setTable] = useState<Type[]>([]);
   const [table2, setTable2] = useState<TypePlay[]>([]);
   const [isClick, setClick] = useState(false);
+
 
   interface Type {
     id: number;
@@ -68,17 +70,10 @@ const ProfilePage = (props: { id: any }) => {
       setValid(true);
     } catch (error) {
       console.log(error);
-      router.push("/error");
       return;
     }
   };
-  
-  const handleClick = (route: string) => {
-    {
-      route == "/profile" ? setOpned(true) : router.push(route);
-    }
-    setPages(route);
-  };
+
 
   const handleMenu = () => {
     setOpned(false);
@@ -130,7 +125,7 @@ console.log(router.query.id)
         >
           <div className={` flex flex-row p-1 w-full h-full `}>
             <div className="fixed h-full pb-4 ">
-              <SideBar setId={setId} />
+              <SideBar  />
             </div>
             <SubSidebar
               setContent={setContent}
@@ -144,9 +139,11 @@ console.log(router.query.id)
             />
             {isopen && (
               <SidebarMobile
-                handleClick={handleClick}
+                // handleClick={handleClick}
                 setOpned={setOpned}
                 opened={opened}
+                // setSearch={setSearch}
+                setPages={setPages}
               />
             )}
             <div
@@ -205,7 +202,7 @@ console.log(router.query.id)
                     password == true ? (
                       <ResetPassword />
                     ) : null
-                  ) : <div className="flex justify-center items-center h-full text-3xl text-white "> can you see your (Achievements && Matchs History)</div>}
+                  ) : null}
                 </div>
               </div>
             </div>

@@ -17,19 +17,20 @@ import { useRouter } from "next/router";
 import ip from "@/utils/endPoint";
 import { isStringEmptyOrWhitespace } from "@/lib/utils";
 
-const Search = (props: { isSearch: boolean, setId:Function }) => {
+const Search = (props:any) => {
   const [user, setUser] = useState("");
   const [resulta, setSearchResults] = useState<any>([]);
   const [width, setWidth] = useState<any>();
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  console.log("here : " ,props.isSearch)
+
   const handleSearch = async (targetValue__ : string ) => {
     const token = localStorage.getItem("token");
     try {
       if (isStringEmptyOrWhitespace(targetValue__))
         return;
-      console.log('serach val :', targetValue__);
       if (targetValue__)
       {
         const response = await axios.get(`${ip}/users?keyword=${targetValue__}`, {
@@ -46,10 +47,6 @@ const Search = (props: { isSearch: boolean, setId:Function }) => {
       }
   };
 
-
-  // useEffect(() => {
-  //   handleChange();
-  // })
 
   const handleChange = (e: any) => {
     const targetValue = e.target.value;
@@ -82,6 +79,8 @@ const Search = (props: { isSearch: boolean, setId:Function }) => {
       };
     }
   }, [width, props.isSearch]);
+
+  
 
   return (
     <div className="">

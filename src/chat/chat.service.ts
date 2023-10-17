@@ -1,7 +1,7 @@
 import { Injectable, UseFilters } from '@nestjs/common';
 import { Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { FriendshipStatus } from '@prisma/client';
+import { FriendshipStatus, UserStatusGroup } from '@prisma/client';
 import { Socket } from 'socket.io';
 import {
   ANONYMOUS_USER_MESSAGE,
@@ -399,6 +399,14 @@ export class ChatService {
                 roomChatId: body.roomName,
                 userId: body.from,
               },
+              OR: [
+                {
+                  userStatus: null,
+                },
+                {
+                  userStatus: UserStatusGroup.MUTED,
+                },
+              ],
             },
           },
         );
@@ -415,6 +423,12 @@ export class ChatService {
               message: 'You are muted',
             });
           }
+        } else {
+          return reject({
+            event: EXCEPTION,
+            status: BAD_REQUEST,
+            message: 'You are not a member of this room',
+          });
         }
         roomMembers?.forEach((member) => {
           if (member?.userId !== body.from) {
@@ -454,7 +468,7 @@ export class ChatService {
         }
       } catch (e) {
         console.log(e);
-        reject({
+        return reject({
           event: EXCEPTION,
           status: INTERNAL_SERVER_ERROR_MESSAGE,
           message: INTERNAL_SERVER_ERROR_MESSAGE,

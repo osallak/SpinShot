@@ -22,7 +22,7 @@ const SideBar = () => {
   const Icons = [
     { icon: search, route: "/search" },
     { icon: profile, route: "/profile" },
-    { icon: message, route: "/messages/57cca32e-b683-47bd-9fcc-c8e3b749f1b9" },
+    { icon: message, route: `/messages/${Router.query.id}` },
     { icon: friend, route: "/friends" },
     { icon: game, route: "/game" },
   ];

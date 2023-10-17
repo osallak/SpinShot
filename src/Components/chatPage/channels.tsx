@@ -2,14 +2,24 @@ import channelType from "@/types/channelTypes";
 import { MouseEvent, useState } from "react";
 import { useRecoilState } from "recoil";
 import { channelAtom } from "../context/recoilContextChannel";
+import { useEffect } from "react";
+import parseJwt from "@/utils/parsJwt";
+import ip from "@/utils/endPoint";
+import { useRouter } from "next/router";
+import axios from "axios";
 
 const Channels = (props: {
   searchValue: string;
   loaded: boolean;
   setRoomId: Function;
+  roomId: string;
+  reload: boolean;
+  setReload: Function;
+  setIsLoaded: Function;
 }) => {
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [clicked, setClicked] = useState<number>(0);
+  const router = useRouter()
 
   const clickChat = (
     event: MouseEvent<HTMLButtonElement>,
@@ -27,6 +37,38 @@ const Channels = (props: {
     return res;
   };
 
+  const fetchDataSubSideBar = async () => {
+    if (router.query.id) {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/signin");
+        return;
+      }
+      const jwtToken = parseJwt(token);
+      try {
+        const res = await axios.get(`${ip}/chat/all`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            id: jwtToken.sub,
+          },
+        });
+        console.log("res.data.room:", res?.data?.room[0]?.id)
+        setChannel(res?.data?.room);
+        props.setReload(true);
+        props.setRoomId(res?.data?.room[0]?.id);
+      } catch (error) {
+        // console.log("error of fetching data from subsidebar: ", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchDataSubSideBar();
+    props.setIsLoaded(true);
+  }, [router.query.id, router.isReady]);
+
   return (
     <div className="w-[99%] xl:px-4 px-2 hover:overflow-auto overflow-hidden flex items-center h-[68%] min-h-[100px]">
       {props.searchValue?.length === 0 ? (
@@ -35,7 +77,7 @@ const Channels = (props: {
             {(channel as channelType[]).length ? (
               (channel as channelType[]).map(
                 (items: channelType, index: number) =>
-                  items.messages.length !== 0 && (
+                  (
                     <button
                       onClick={(event) => clickChat(event, index, items.id)}
                       key={index}

@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { io } from "socket.io-client";
-import { chatAll, exploreChannelAtom } from "../context/recoilContext";
+import { chatAll, currentFriendsAtom, exploreChannelAtom } from "../context/recoilContext";
 import { channelAtom } from "../context/recoilContextChannel";
 import { individualAtom } from "../context/recoilContextIndividual";
 import NavBar from "../ui/FolderNavbar/navBar";
@@ -17,6 +17,7 @@ import ConversationIndividual from "./conversationIndividual";
 import CreateChannels from "./createChannels";
 import ExploreChannels from "./exploreChannels";
 import SubSideBar from "./subSideBar";
+import individualType from "@/types/individulaTypes";
 
 let socket: any;
 let token: any;
@@ -34,46 +35,61 @@ const Chat = () => {
   const [individual, setIndividual] = useRecoilState(individualAtom);
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [reload, setReload] = useState(false);
+  const [currentFriend, setCurrentFriends] = useRecoilState(currentFriendsAtom)
 
-  const fetchDataSubSideBar = async () => {
-    if (router.query.id) {
-      const token = localStorage.getItem("token");
-      console.log("token: ", token);
-      if (!token) {
-        router.push("/signin");
-        return;
-      }
-      const jwtToken = parseJwt(token);
-      try {
-        const res = await axios.get(`${ip}/chat/all`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            id: jwtToken.sub,
-          },
-        });
-        setIndividual(res?.data?.individual);
-        setChannel(res?.data?.room);
-        const returnedId = res.data?.individual.find(
-          (items: any) => items.other.id === router.query.id
-        );
-        if (returnedId) setId(returnedId.other.id);
-        else {
-          if (router.query.id === parseJwt(token).sub) {
-            setId(res?.data?.individual[0]?.other?.id);
-          } else {
-          }
-        }
-
-        setRoomId(res?.data?.room[0]?.id);
-      } catch (error) {
-        console.log("error of fetching data from subsidebar: ", error);
-      }
-    }
-  };
-
-  // console.log("id of rooms: ", id);
+  // const fetchDataSubSideBar = async () => {
+  //   if (router.query.id) {
+  //     const token = localStorage.getItem("token");
+  //     if (!token) {
+  //       router.push("/signin");
+  //       return;
+  //     }
+  //     const jwtToken = parseJwt(token);
+  //     try {
+  //       const res = await axios.get(`${ip}/chat/all`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //         params: {
+  //           id: jwtToken.sub,
+  //         },
+  //       });
+  //       setIndividual(res?.data?.individual);
+  //       setChannel(res?.data?.room);
+  //       setReload(true)
+  //       const returnedId = res.data?.individual.find(
+  //         (items: any) => items.other.id === router.query.id
+  //       );
+  //       if (returnedId) setId(returnedId.other.id);
+  //       else {
+  //         if (router.query.id === parseJwt(token).sub) {
+  //           setId(res?.data?.individual[0]?.other?.id);
+  //         } else {
+  //           const fromFriends : any = currentFriend.find((items: any) => (
+  //             items.id === router.query.id
+  //           ))
+  //           if (fromFriends) setId(fromFriends.id)
+  //           setIndividual((prev : individualType[] ) => {
+  //             const newConv : individualType = {
+  //                 message : "",
+  //                 other : {
+  //                   avatar : fromFriends.avatar,
+  //                   id : fromFriends.id,
+  //                   username : fromFriends.username
+  //                 },
+  //                 sender : "",
+  //                 sentAt : ""
+  //             }
+  //             return [newConv, ...prev] as any
+  //           })
+  //         }
+  //       }
+  //       setRoomId(res?.data?.room[0]?.id);
+  //     } catch (error) {
+  //       // console.log("error of fetching data from subsidebar: ", error);
+  //     }
+  //   }
+  // };
 
   const fetchDataExploreChannel = async () => {
     const token = localStorage.getItem("token");
@@ -117,10 +133,10 @@ const Chat = () => {
     socket.on("disconnect", (data: any) => console.log(data));
   }, []);
 
-  useEffect(() => {
-    fetchDataSubSideBar();
-    setIsLoaded(true);
-  }, [router.query.id, router.isReady]);
+  // useEffect(() => {
+  //   fetchDataSubSideBar();
+  //   setIsLoaded(true);
+  // }, [router.query.id, router.isReady]);
 
   useEffect(() => {
     fetchDataExploreChannel();
@@ -137,8 +153,12 @@ const Chat = () => {
         setIsIndividual={setIsIndividual}
         isIndividual={isIndividual}
         setRoomId={setRoomId}
+        roomId={roomId}
         setId={setId}
+        reload={reload}
+        setReload={setReload}
         id={id}
+        setIsLoaded={setIsLoaded}
         loaded={loaded}
       />
       {flag === "ExploreChannels" && (

@@ -16,8 +16,12 @@ const SubSideBar = (props: {
   setIsIndividual: Function;
   isIndividual: string;
   setRoomId: Function;
+  roomId: string;
   setId: Function;
+  reload: boolean;
+  setReload: Function;
   id: string;
+  setIsLoaded: Function;
   loaded: boolean;
 }) => {
   const [clicked, setClicked] = useState<number>();
@@ -105,6 +109,10 @@ const SubSideBar = (props: {
           searchValue={searchValue}
           loaded={props.loaded}
           setRoomId={props.setRoomId}
+          roomId={props.roomId}
+          reload={props.reload}
+          setReload={props.setReload}
+          setIsLoaded={props.setIsLoaded}
         />
       )}
       {props.isIndividual === "Individual" && (
@@ -113,6 +121,9 @@ const SubSideBar = (props: {
           loaded={props.loaded}
           setId={props.setId}
           id={props.id}
+          reload={props.reload}
+          setReload={props.setReload}
+          setIsLoaded={props.setIsLoaded}
         />
       )}
       <div className="flex justify-around items-center w-full h-[10%] min-h-[60px]">

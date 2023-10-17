@@ -85,6 +85,7 @@ const ConversationChannel = (props: {
     const jwtToken = parseJwt(token);
     setUserId(jwtToken.sub);
     try {
+      console.log("props.id: ", props.id);
       if (props.id && props.id !== "") {
         const result = await axios.get(`${ip}/room/individual/${props.id}`, {
           headers: {

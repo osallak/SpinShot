@@ -8,7 +8,14 @@ import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { KeyboardEvent, MouseEvent, useCallback, useEffect, useRef, useState } from "react";
+import {
+  KeyboardEvent,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useRecoilState } from "recoil";
 import sendMessageIcon from "../../../public/sendMessage.svg";
 import {
@@ -49,8 +56,8 @@ const ConversationIndividual = (props: {
 
   const keySendMessage = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      props.setReload(true);
       setMessage("");
+      props.setReload(true);
       const messageData: IMsgDataTypes = {
         from: `${parseJwt(JSON.stringify(token)).sub}`,
         to: `${props.id}`,
@@ -86,10 +93,10 @@ const ConversationIndividual = (props: {
     }
   };
 
-  const goToUser = (event: MouseEvent<HTMLButtonElement>) => {
+  const goToUser = (event: MouseEvent<HTMLButtonElement>, id: string) => {
     event.preventDefault();
-    router.push(`/profile/${props.id}`)
-  }
+    router.push(`/profile/${id}`);
+  };
 
   const emailInput = useCallback((inputElement: any) => {
     if (inputElement) {
@@ -120,24 +127,28 @@ const ConversationIndividual = (props: {
           <div className="md:h-full flex items-center justify-between w-[90%]">
             <div className="flex justify-center items-center space-x-2 flex-row">
               {(individual as individualType[]).map(
-                (items: individualType, index: number) =>
-                <button className="rounded-xl" onClick={(event) => goToUser(event)}>
-                  {items.other.id === props.id && (
-                    <Image
-                      key={index}
-                      width={500}
-                      height={500}
-                      src={items.other.avatar}
-                      alt="profile pic"
-                      className="md:w-14 sm:w-12 w-10 rounded-xl"
-                    />
-                  )}
-                    </button>
+                (items: individualType, index: number) => (
+                  <button
+                    className="rounded-xl"
+                    onClick={(event) => goToUser(event, props.id)}
+                  >
+                    {items.other.id === props.id && (
+                      <Image
+                        key={index}
+                        width={500}
+                        height={500}
+                        src={items.other.avatar}
+                        alt="profile pic"
+                        className="md:w-14 sm:w-12 w-10 rounded-xl"
+                      />
+                    )}
+                  </button>
+                )
               )}
               <div className="flex flex-col">
                 <p className="font-Poppins md:text-xl sm:text-md text-sm text-pearl font-semibold">
                   {individual.map((individ: individualType, index: number) => (
-                    <button onClick={(event) => goToUser(event)} key={index}>
+                    <button onClick={(event) => goToUser(event, props.id)} key={index}>
                       {props.id === individ.other.id
                         ? individ.other.username
                         : ""}
@@ -193,13 +204,13 @@ const ConversationIndividual = (props: {
                             >
                               {individual.map(
                                 (individ: individualType, index: number) => (
-                                  <div key={index}>
+                                  <button onClick={(event) => goToUser(event, items.sender)} key={index}>
                                     {props.id === individ.other.id
                                       ? items.sender === props.id
                                         ? individ.other.username
                                         : "you"
                                       : ""}
-                                  </div>
+                                  </button>
                                 )
                               )}
                             </span>

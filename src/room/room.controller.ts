@@ -299,4 +299,23 @@ export class RoomController {
       return response.status(e.status).json(e.message);
     }
   }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('users/:room')
+  async getRoomMembers(
+    @Res() response: ExpressResponse,
+    @Req() request: Request,
+    @Param('room') roomName: string,
+  ) {
+    try {
+      const res = await this.roomService.getAllMembers(
+        (request as any)?.user?.id,
+        roomName,
+      );
+      return response.status(res.status).json(res.data);
+    } catch (e) {
+      return response.status(e.status).json(e.message);
+    }
+  }
 }

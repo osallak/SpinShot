@@ -155,4 +155,4 @@ export const IdDeviceBreakpointsByWidth = {
 // ];
 
 export const SignOut = [{ icon: signout, name: "Sign out" }];
-export const userSerched = [{ icon: play, name: "let's play" }];
+export const letPlay = [{ icon: play, name: "let's play" }];

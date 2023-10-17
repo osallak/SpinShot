@@ -22,6 +22,7 @@ const UploadImage = (props: {
   setUpload: Function;
   open: boolean;
   Switch: Function;
+  setMyImage: Function;
 }) => {
   const [image, setMyImage] = useState<any | null>(null);
   const imageRef = useRef(null);
@@ -37,6 +38,7 @@ const UploadImage = (props: {
   };
 
   const uploadToClient = (event: any) => {
+    props.setMyImage(event.target.files[0]);
     if (event.target.files && event.target.files[0]) {
       setMyImage((prev: any) => event.target.files[0]);
     }
@@ -94,22 +96,12 @@ const UploadImage = (props: {
                 Upload
               </span>
             </label>
-            <span>Use avatar</span>
+            {/* <span>Use avatar</span> */}
             <div className="  overflow-y-auto h-32 sm:h-52 w-[100%]  rounded-[20px] ">
-              <div className="flex  flex-wrap justify-center  bg-very-dark-purple items-center px-2">
-                {/* {ArrayAvatar.map((option: any) => (
-                  <label
-                    key={option.id}
-                    className="py-2 px-1 relative flex items-center justify-center"
-                  >
-                    <input
-                      type="image"
-                      className="border w-full h-full absolute hidden "
-                      onClick={() => handleImage(option.icon)}
-                    />
-                    <Image src={option.icon} alt="" className="" />
-                  </label>
-                ))} */}
+              <div className="flex  flex-wrap justify-center items-center px-2 border h-full">
+                <picture>
+                  <img src={image!} alt=""/>
+                </picture>
               </div>
             </div>
           </div>

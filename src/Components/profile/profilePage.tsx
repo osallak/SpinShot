@@ -20,7 +20,7 @@ import TwoFactor from "../ui/twoFactorauth/TwoFactorAuth";
 import parseJwt from "@/utils/parsJwt";
 import { buttonsUser } from "@/Components/ui/FolderDropDown/ArrayIcon";
 import { buttons } from "@/Components/ui/FolderDropDown/ArrayIcon";
-import { SignOut, userSerched } from "@/Components/ui/FolderDropDown/ArrayIcon";
+import { SignOut, letPlay } from "@/Components/ui/FolderDropDown/ArrayIcon";
 
 const ProfilePage = (props: { id: any }) => {
   const [isopen, setMenu] = useState(false);
@@ -33,14 +33,14 @@ const ProfilePage = (props: { id: any }) => {
   const [isActive, setisActive] = useState(false);
   const [open, setOpenDialog] = useState(false);
   const [upload, setUpload] = useState(false);
-  const [myImage, setMyImage] = useState<File | null>();
   const [width, setWidth] = useState<number>();
+  const [myImage, setMyImage] = useState<File | null>();
   const [username, setUsername] = useState("");
   const router = useRouter();
   const [error, setError] = useState(false);
   const [opp, setId] = useState(false);
   const [table, setTable] = useState<Type[]>([]);
-  const [letPlay, setletPlay] = useState<TypePlay[]>([]);
+  const [table2, setTable2] = useState<TypePlay[]>([]);
   const [isClick, setClick] = useState(false);
 
   interface Type {
@@ -85,14 +85,15 @@ const ProfilePage = (props: { id: any }) => {
     setMenu(!isopen);
   };
   
+console.log(router.query.id)
+
   const swetshProfile = (tab: Type[], play: TypePlay[]) => {
     setTable(tab);
-    setletPlay(play);
+    setTable2(play);
   };
   
   const usersearched = (tab: Type[], play: TypePlay[]) => {
-    setContent("Personal_Information");
-    setletPlay(play);
+    setTable2(play);
     setTable(tab);
   };
   
@@ -101,7 +102,7 @@ const ProfilePage = (props: { id: any }) => {
       router.query.id ===
       parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
       ? usersearched(buttonsUser, SignOut)
-      : swetshProfile(buttons, userSerched);
+      : swetshProfile(buttons, letPlay);
     }
     setWidth(window.innerWidth);
   };
@@ -170,6 +171,7 @@ const ProfilePage = (props: { id: any }) => {
                     setOpenDialog={setOpenDialog}
                     width={width}
                     username={username}
+                    myImage={myImage}
                   />
                   {open ? (
                     <UploadImage
@@ -177,9 +179,10 @@ const ProfilePage = (props: { id: any }) => {
                       setUpload={setUpload}
                       open={open}
                       Switch={setOpenDialog}
+                      setMyImage={setMyImage}
                     />
                   ) : null}
-                  <Levle opne={opened} width={width} letPlay={letPlay} />
+                  <Levle opne={opened} width={width} letPlay={table2} />
                 </div>
                 <div
                   className={` ${
@@ -202,7 +205,7 @@ const ProfilePage = (props: { id: any }) => {
                     password == true ? (
                       <ResetPassword />
                     ) : null
-                  ) : <div className="flex justify-center items-center text-pearl text-2xl h-full ">can you see Your (Achievements & Matchs History)</div>}
+                  ) : <div className="flex justify-center items-center h-full text-3xl text-white "> can you see your (Achievements && Matchs History)</div>}
                 </div>
               </div>
             </div>

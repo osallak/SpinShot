@@ -7,8 +7,10 @@ const DropdownUser = (props :any) => {
     const [isOpen, setIsOpen] = useState(false);
     const Array = props.Array;
 
+    console.log(props.Array)
+
     return (
-        <div className=" font-sans box-border  inline-block">
+        <div className=" font-sans box-border  inline-block ">
             <div className=" bg-cover flex justify-end relativ">
                 <button className="py-2 px-4    cursor-pointer rounded-md" onClick={() => setIsOpen(!isOpen)}>
                     <Image src={chatMenu} alt="" />

@@ -45,12 +45,13 @@ const PersonalInformation = (props: any) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // form.username ? props.setUsername(form.username) : null;
       props.setUsername(form.username);
+      toast.success("Updated successfully");
+      console.log(response);
     } catch (error: any) {
       console.error(error);
       setError(true);
-      if (error.response.status === 409){
+      if (error.response.status === 409) {
         toast.error("Username already in use");
       }
     }
@@ -62,10 +63,6 @@ const PersonalInformation = (props: any) => {
       return prev;
     });
   };
-
-  // const notify = () => {
-  //   toast.error("Input incorrect ");
-  // };
 
   useEffect(() => {
     if (data.profile) {
@@ -90,7 +87,7 @@ const PersonalInformation = (props: any) => {
           <div className="flex flex-col  text-pearl  w-full c-10xl:w-[80%] space-y-5 md:space-y-14  c-10xl:px-20  ">
             <div className="   c-10xl:space-x-[15%] w-full  ">
               <div className=" flex flex-col space-y-5 md:space-y-0 md:flex-row md:space-x-5">
-                <div className="w-full md:w-[49%] ">
+                <div className="w-full md:w-[49%] h-14 ">
                   <FormInput
                     handleChange={handleChange}
                     name={"firstName"}
@@ -98,7 +95,7 @@ const PersonalInformation = (props: any) => {
                     value={form.firstName}
                   />
                 </div>
-                <div className="w-full md:w-[49%] ">
+                <div className="w-full md:w-[49%] h-14 ">
                   <FormInput
                     handleChange={handleChange}
                     name={"lastName"}
@@ -108,15 +105,13 @@ const PersonalInformation = (props: any) => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col space-y-10 md:space-y-0 md:flex-row  c-10xl:space-x-[10%] items-center">
-              <div className="w-full md:w-[49%] ">
-                <FormInput
-                  handleChange={handleChange}
-                  name={"username"}
-                  placehold={form.username ? form.username : "username"}
-                  value={form.username}
-                />
-              </div>
+            <div className="w-full md:w-[49%] h-14 ">
+              <FormInput
+                handleChange={handleChange}
+                name={"username"}
+                placehold={form.username ? form.username : "username"}
+                value={form.username}
+              />
             </div>
             <div className="flex flex-col space-y-8 md:space-y-0 md:flex-row   c-10xl:space-x-[15%] items-center">
               <div className=" w-full">
@@ -132,7 +127,7 @@ const PersonalInformation = (props: any) => {
                 id={"my_element"}
                 className=" bg-very-dark-purple w-[100%] md:w-[49%]  rounded-[20px] h-14 placeholder:text-pearl placeholder:text-opacity-40"
               >
-                <Country setCountry={setCountry} country={form.country}/>
+                <Country setCountry={setCountry} country={form.country} />
               </div>
             </div>
           </div>
@@ -144,7 +139,7 @@ const PersonalInformation = (props: any) => {
         </div>
       </div>
       <div>
-        {error === true && <Toaster position="top-center" reverseOrder={false} />}
+        <Toaster position="top-center" reverseOrder={false} />
       </div>
     </div>
   );

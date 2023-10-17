@@ -8,6 +8,7 @@ import { useAppSelector } from "../../../redux_tool";
 import toast, { Toaster } from "react-hot-toast";
 import ip from "@/utils/endPoint";
 import { useRouter } from "next/router";
+import { isStringEmptyOrWhitespace } from "@/lib/utils";
 
 const ResetPassword = () => {
   const [showPasswd, setShowPasswd] = useState(false);
@@ -33,17 +34,16 @@ const ResetPassword = () => {
   };
 
   const hendleChange = () => {
-    hendleUpdata()
-    // const parss = /^.{6,}$/;
-    // {
-    //   password == "123456" && parss.test(ConfirmPassword)
-    //     ? hendleUpdata()
-    //     : notify();
-    // }
+    const parss = /^.{6,}$/;
+    if (NewPassword == ConfirmPassword && parss.test(ConfirmPassword) && !isStringEmptyOrWhitespace(NewPassword) && !isStringEmptyOrWhitespace(ConfirmPassword) && !isStringEmptyOrWhitespace(password))
+      hendleUpdata()
+    else
+      toast.error("Password incorrect ");
   };
 
 
   const hendleUpdata = async () => {
+    console.log("ss", password, NewPassword, ConfirmPassword);
     try {
       const token = localStorage.getItem("token");
       if (token)
@@ -59,6 +59,8 @@ const ResetPassword = () => {
             },
           }
           );
+          console.log("response: ", response);
+          toast.success("Updated successfully");
       }
     } catch (error) {
       console.error(error);
@@ -119,9 +121,9 @@ const ResetPassword = () => {
         <div className={`  w-24 sm:w-32  h-full`}>
           <SimpleButton content="Save" onclick={hendleChange} />
         </div>
-        {/* <div>
+        <div>
           <Toaster position="top-center" reverseOrder={false} />
-        </div> */}
+        </div>
       </div>
         {/* <Toaster
           position="top-right"

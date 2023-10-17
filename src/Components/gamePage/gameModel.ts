@@ -48,6 +48,14 @@ class GameModel{
             let min: number = this.map(150 / 2, 0, 650, 0, this.width) - 5
             let max: number = this.width - min + 10;
             if (x >= min && x <= max){
+                let previousX: number = this.player1.position.x;
+                if(x < previousX){
+                    Body.translate(this.player1, {x: -1, y: 0});
+                    this.socket?.emit('move', {x: this.map(this.mouse.position.x, 0, this.width, 0, 650)}); // left
+                }else if (x > previousX){
+                    Body.translate(this.player1, {x: 1, y: 0});
+                    this.socket?.emit('move', {x: this.map(this.mouse.position.x, 0, this.width, 0, 650)}); // right
+                }
                 Body.setPosition(this.player1, {x: this.mouse.position.x, y: this.player1.position.y});
                 // this.socket?.emit('move', {x: this.map(this.mouse.position.x, 0, this.width, 0, 650)});
             }
@@ -107,16 +115,17 @@ class GameModel{
         return [width, height];
     }
 
-    public destroy(): void{
-        this.rendrer.canvas.remove();
-    }
-
+    
     public updateState(data: {p1: Vector, p2: Vector, ball: Vector}){
         if (this.player1 && this.player2 && this.ball){
             Matter.Body.setPosition(this.player1, {x: this.map(data.p1.x, 0, 650, 0, this.width), y: this.map(data.p1.y, 0, 750, 0, this.height)});
             Matter.Body.setPosition(this.player2, {x: this.map(data.p2.x, 0, 650, 0, this.width), y: this.map(data.p2.y, 0, 750, 0, this.height)});
             Matter.Body.setPosition(this.ball, {x: this.map(data.ball.x, 0, 650, 0, this.width), y: this.map(data.ball.y, 0, 750, 0, this.height)});
         }
+    }
+    
+    public destroy(): void{
+        this.rendrer.canvas.remove();
     }
 }
 

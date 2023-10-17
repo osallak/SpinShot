@@ -28,19 +28,19 @@ const GamePage = () => {
 
   useEffect(() => {
     handleResize();
-    // let socket: Socket = io("http://localhost:3000");
-    // socket.on('connection', ()=>{
-    //   console.log('connected')
-    // })
-    // socket.on("eventFromBackend", (data: any) => {
-      // game?.updateState(data);
-    // });
-    // setSocket(socket);
+    let socket: Socket = io("http://localhost:3000");
+    socket.on('connection', ()=>{
+      console.log('connected')
+    })
+    socket.on("eventFromBackend", (data: any) => {
+      game?.updateState(data);
+    });
+    setSocket(socket);
     if (typeof window !== "undefined") {
       window.addEventListener("resize", handleResize);
       return () => {
         window.removeEventListener("resize", handleResize);
-        // socket.disconnect();
+        socket.disconnect();
       };
     }
   }, []);

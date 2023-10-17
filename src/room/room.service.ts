@@ -571,6 +571,11 @@ export class RoomService {
                     avatar: true,
                   },
                 },
+                RoomChatConversation: {
+                  select: {
+                    userRole: true,
+                  },
+                },
               },
             },
           },

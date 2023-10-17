@@ -45,5 +45,6 @@ export const roomContent = [
   {content: "Kick", click: kickUser, icon: kick},
   {content: "Ban", click: banUser, icon: ban},
   {content: "Mute", click: muteUser, icon: mute},
+  // {content: "Leave", click: leaveChannel, icon: leave}
   {content: "Add as admin", click: addAdmin, icon: admin}
 ]

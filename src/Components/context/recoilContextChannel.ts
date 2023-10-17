@@ -16,3 +16,10 @@ export const channelConversationAtom = atom({
     key: `channelConversationAtom-${Math.random()}`,
     default: [],
 })
+
+export const blockedUsersContext = createContext<string[] | []>([]);
+
+export const blockedUsersAtom = atom({
+    key: `blockedUsers-${Math.random()}`,
+    default: [],
+})

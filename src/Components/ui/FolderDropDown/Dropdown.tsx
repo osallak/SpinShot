@@ -8,7 +8,7 @@ import {
   useRef,
 } from "react";
 
-const DropDown: React.FC<any> = (props: { data: any }) => {
+const DropDown: React.FC<any> = (props: { data: any, userId: string, id: string }) => {
   const [isOpen, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 

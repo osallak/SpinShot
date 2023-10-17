@@ -1,10 +1,7 @@
 "use client";
 import messagesType from "@/types/channelConversationType";
 import { default as channelType } from "@/types/channelTypes";
-import {
-  default as IMsgDataTypes,
-  default as sendRoomMessageDto,
-} from "@/types/iMsgDataTypes";
+import { roomContent } from "@/utils/dropDownContent";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
@@ -12,17 +9,15 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
-import game from "../../../public/game.svg";
+import leave from "../../../public/kickIcon.svg";
 import sendMessageIcon from "../../../public/sendMessage.svg";
-import trash from "../../../public/trash.svg";
+import settings from "../../../public/settingIcon.svg";
 import {
   channelAtom,
   channelConversationAtom,
 } from "../context/recoilContextChannel";
-import { roomContent } from "@/utils/dropDownContent";
-import DropDown from "../ui/FolderDropDown/Dropdown";
-import threePoint from "../../../public/threePoint.svg";
-import threePointforPeridot from "../../../public/threePointforPeridot.svg"
+import DropDownChannel from "../ui/FolderDropDown/DropDownChannel";
+import { blockedUsersAtom } from "../context/recoilContextChannel";
 
 let token: any;
 const ConversationChannel = (props: {
@@ -41,6 +36,8 @@ const ConversationChannel = (props: {
   );
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [userId, setUserId] = useState("");
+  const [option, setOption] = useState("");
+  const [blockedUsers, setBlockedUsers] = useRecoilState(blockedUsersAtom);
 
   const deleteConversation = () => {
     console.log("hello world from the other side");
@@ -51,13 +48,18 @@ const ConversationChannel = (props: {
   };
 
   const dropDownContent = [
-    { content: "Delete Conversation", click: deleteConversation, icon: trash },
-    { content: "Let't Play", click: handleClick, icon: game },
+    { content: "Settings", click: handleClick, icon: settings },
   ];
 
+  const handleLeave = () => {
+    console.log("leave");
+  };
+
+  const myContent = [{ content: "Leave", click: handleLeave, icon: leave }];
+
   const goToUser = (id: string) => {
-    router.push(`/profile/${id}`)
-  }
+    router.push(`/profile/${id}`);
+  };
 
   const handleSendMessage = () => {
     setMessage("");
@@ -73,15 +75,7 @@ const ConversationChannel = (props: {
 
   const keySendMessage = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      props.setReload(true);
-      setMessage("");
-      const messageData: any = {
-        from: `${parseJwt(JSON.stringify(token)).sub}`,
-        roomName: `${props.id}`,
-        content: currentMsg,
-        timestamp: String(Date.now()),
-      };
-      props.socket.emit("gm", messageData);
+      handleSendMessage();
     }
   };
 
@@ -106,6 +100,8 @@ const ConversationChannel = (props: {
         });
         result.data.messages.reverse();
         setConversationChannel(result.data.messages);
+        setBlockedUsers(result?.data?.blockedUsers);
+        console.log("data: ", result.data);
       }
     } catch (error) {
       console.log("error of fetching data fron conversation: ", error);
@@ -177,7 +173,7 @@ const ConversationChannel = (props: {
                 </p>
               </div>
             </div>
-            <DropDown data={dropDownContent} />
+            <DropDownChannel data={dropDownContent} />
           </div>
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
         </div>
@@ -226,7 +222,9 @@ const ConversationChannel = (props: {
                                 : "text-pearl"
                             }`}
                           >
-                            {items.user.id === userId ? "you" : items.user.username}
+                            {items.user.id === userId
+                              ? "you"
+                              : items.user.username}
                           </button>
                           <span
                             className={`text-[10px] font-light h-full ${
@@ -240,19 +238,23 @@ const ConversationChannel = (props: {
                         </div>
                         <span className="px-3">{items.message}</span>
                       </div>
-                      <DropDown data={roomContent} />
-                      {/* <button >
-                      {items.user.id === userId ? <Image
-                        src={threePoint}
-                        alt="three point"
-                        className="h-full"
-                      /> :
-                      <Image
-                        src={threePointforPeridot}
-                        alt="three point"
-                        className="h-full"
-                      />}
-                      </button> */}
+                      {items.user.id !== userId ? (
+                        <DropDownChannel
+                          option={option}
+                          setOption={setOption}
+                          data={roomContent}
+                          userId={items.user.id}
+                          id={props.id}
+                        />
+                      ) : (
+                        <DropDownChannel
+                          option={option}
+                          setOption={setOption}
+                          data={myContent}
+                          userId={items.user.id}
+                          id={props.id}
+                        />
+                      )}
                     </div>
                   </div>
                 )

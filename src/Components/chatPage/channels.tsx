@@ -54,7 +54,7 @@ const Channels = (props: {
             id: jwtToken.sub,
           },
         });
-        console.log("res.data.room:", res?.data?.room[0]?.id)
+        console.log("res.data.room:", res?.data)
         setChannel(res?.data?.room);
         props.setReload(true);
         props.setRoomId(res?.data?.room[0]?.id);

@@ -9,7 +9,7 @@ export const individualContext = createContext<individualType[] | []>([]);
 
 export const individualAtom = atom({
   key: `individualAtom-${Math.random()}`,
-  default: [],
+  default: [] as any[],
 });
 
 export const individualConversationContext = createContext<

@@ -107,7 +107,7 @@ const Channels = (props: {
                             key={index}
                             className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
                           >
-                            {items.message}
+                            {items.message.length > 15 ? items.message.slice(0, 20) + "..." : items.message}
                           </p>
                         ))}
                       </div>
@@ -160,7 +160,7 @@ const Channels = (props: {
                             key={index}
                             className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
                           >
-                            {items.message}
+                            {items.message.length > 15 ? items.message.slice(0, 20) + "..." : items.message}
                           </p>
                         ))}
                       </div>

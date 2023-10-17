@@ -1,7 +1,10 @@
 "use client";
 import messagesType from "@/types/channelConversationType";
 import { default as channelType } from "@/types/channelTypes";
-import { default as IMsgDataTypes, default as sendRoomMessageDto } from "@/types/iMsgDataTypes";
+import {
+  default as IMsgDataTypes,
+  default as sendRoomMessageDto,
+} from "@/types/iMsgDataTypes";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
@@ -16,8 +19,10 @@ import {
   channelAtom,
   channelConversationAtom,
 } from "../context/recoilContextChannel";
+import { roomContent } from "@/utils/dropDownContent";
 import DropDown from "../ui/FolderDropDown/Dropdown";
-import threePoint from "../../../public/threePoint.svg"
+import threePoint from "../../../public/threePoint.svg";
+import threePointforPeridot from "../../../public/threePointforPeridot.svg"
 
 let token: any;
 const ConversationChannel = (props: {
@@ -49,6 +54,10 @@ const ConversationChannel = (props: {
     { content: "Delete Conversation", click: deleteConversation, icon: trash },
     { content: "Let't Play", click: handleClick, icon: game },
   ];
+
+  const goToUser = (id: string) => {
+    router.push(`/profile/${id}`)
+  }
 
   const handleSendMessage = () => {
     setMessage("");
@@ -95,7 +104,7 @@ const ConversationChannel = (props: {
             id: props.id,
           },
         });
-        console.log("result form fetch data conversation: ", result.data.messages);
+        result.data.messages.reverse();
         setConversationChannel(result.data.messages);
       }
     } catch (error) {
@@ -189,40 +198,61 @@ const ConversationChannel = (props: {
                     } justify-end`}
                   >
                     <div
-                      className={`border x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] min-h-[70px] flex justify-center rounded-xl ${
+                      className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] min-h-[70px] flex justify-between rounded-xl ${
                         items.user.id != userId
-                          ? "items-start bg-peridot text-very-dark-purple font-bold"
-                          : "items-end bg-very-dark-purple text-pearl font-medium"
-                      } flex-col md:space-y-1 space-y-0 md:p-2 p-1`}
+                          ? "items-center bg-peridot text-very-dark-purple font-bold flex-row space-x-reverse pr-5"
+                          : "items-center bg-very-dark-purple text-pearl font-medium flex-row-reverse pl-5"
+                      } flex-row md:space-y-1 space-y-0 py-3`}
                     >
                       <div
-                        className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
+                        className={`space-y-2 flex flex-col x-pp:w-[650px] 2xl:w-[550px] xl:w-[450px] lg:w-[80%] w-[90%] h-full ${
                           items.user.id != userId
-                            ? "flex-row space-x-2"
-                            : "flex-row-reverse space-x-reverse space-x-2"
+                            ? "items-start bg-peridot text-very-dark-purple font-bold"
+                            : "items-end bg-very-dark-purple text-pearl font-medium"
                         }`}
                       >
-                        <span
-                          className={`px-3 ${
-                            items.user.id !== userId
-                              ? "text-very-dark-purple"
-                              : "text-pearl"
+                        <div
+                          className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
+                            items.user.id != userId
+                              ? "flex-row space-x-2"
+                              : "flex-row-reverse space-x-reverse space-x-2"
                           }`}
                         >
-                          {items.user.username}
-                        </span>
-                        <span
-                          className={`text-[10px] font-light h-full ${
-                            items.user.id !== userId
-                              ? "text-very-dark-purple"
-                              : "text-pearl"
-                          }`}
-                        >
-                          {items.sentAt}
-                        </span>
+                          <button
+                            onClick={() => goToUser(items.user.id)}
+                            className={`px-3 font-bold ${
+                              items.user.id !== userId
+                                ? "text-very-dark-purple"
+                                : "text-pearl"
+                            }`}
+                          >
+                            {items.user.id === userId ? "you" : items.user.username}
+                          </button>
+                          <span
+                            className={`text-[10px] font-light h-full ${
+                              items.user.id !== userId
+                                ? "text-very-dark-purple"
+                                : "text-pearl"
+                            }`}
+                          >
+                            {items.sentAt}
+                          </span>
+                        </div>
+                        <span className="px-3">{items.message}</span>
                       </div>
-                      <span className="px-3">{items.message}</span>
-                      <Image src={threePoint} alt="three point" />
+                      <DropDown data={roomContent} />
+                      {/* <button >
+                      {items.user.id === userId ? <Image
+                        src={threePoint}
+                        alt="three point"
+                        className="h-full"
+                      /> :
+                      <Image
+                        src={threePointforPeridot}
+                        alt="three point"
+                        className="h-full"
+                      />}
+                      </button> */}
                     </div>
                   </div>
                 )

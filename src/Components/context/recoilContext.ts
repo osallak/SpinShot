@@ -6,9 +6,8 @@ import dataFriends from "@/types/friendsType";
 import conversationChannelType, {
 	default as allMessagesType,
 	default as dataConversation,
-	individualData,
-	roomsData,
 } from "@/types/messagesArrays";
+
 import { createContext } from "react";
 import { atom } from "recoil";
 
@@ -40,12 +39,12 @@ export const conversationChannelAtom = atom({
 	default: [],
 })
 
-export const roomsContext = createContext<roomsData[] | []>([]);
+// export const roomsContext = createContext<roomsData[] | []>([]);
 
-export const roomsAtom = atom({
-  key: `roomsAtom-${Math.random()}`,
-  default: [],
-});
+// export const roomsAtom = atom({
+//   key: `roomsAtom-${Math.random()}`,
+//   default: [],
+// });
 
 export const exploreChannel = createContext<exploreChannelType[] | []>([]);
 

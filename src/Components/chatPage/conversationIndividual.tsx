@@ -51,20 +51,29 @@ const ConversationIndividual = (props: {
       content: currentMsg,
       timestamp: String(Date.now()),
     };
+
+    setIndividual((prev : individualType[]) => {
+      const newIndividual : individualType[] = prev.map((item : any) => {
+        if (item.other.id === props.id)
+        {
+          return {
+            other : item.other,
+            sender : item.sender,
+            sentAt : item.sentAt,
+            message : currentMsg
+          } 
+        }
+        else
+          return item;
+      })
+      return newIndividual 
+    })
     props.socket.emit("pm", messageData);
   };
 
   const keySendMessage = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      setMessage("");
-      props.setReload(true);
-      const messageData: IMsgDataTypes = {
-        from: `${parseJwt(JSON.stringify(token)).sub}`,
-        to: `${props.id}`,
-        content: currentMsg,
-        timestamp: String(Date.now()),
-      };
-      props.socket.emit("pm", messageData);
+      handleSendMessage();
     }
   };
 

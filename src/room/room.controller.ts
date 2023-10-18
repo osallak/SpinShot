@@ -22,7 +22,7 @@ import { Response as ExpressResponse } from 'express';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import { Response as CustomResponse } from 'src/global/interfaces';
 import { banUserDto } from './dtos/ban-user.dto';
-import { ProtectRoomDto } from './dtos/protect-room.dto';
+import { ChangePasswordDto, ProtectRoomDto, RemovePasswordDto } from './dtos/protect-room.dto';
 import { ElevateUserDto } from './dtos/elevate-user.dto';
 import { ConfigSource } from '@nestjs/microservices/external/kafka.interface';
 import { InviteDto } from './dtos/invite.dto';
@@ -314,6 +314,43 @@ export class RoomController {
         roomName,
       );
       return response.status(res.status).json(res.data);
+    } catch (e) {
+      return response.status(e.status).json(e.message);
+    }
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Patch('change-password/')
+  async changePassword(
+    @Res() response: ExpressResponse,
+    @Req() request: Request,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
+    try {
+      const res = await this.roomService.changePassword(
+        (request as any)?.user?.id,
+        changePasswordDto
+      );
+      return response.status(res.status).json(res.message);
+    } catch (e) {
+      return response.status(e.status).json(e.message);
+    }
+  }
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Patch('remove-password/')
+  async removePassword(
+    @Res() response: ExpressResponse,
+    @Req() request: Request,
+    @Body() roomName: RemovePasswordDto,
+  ) {
+    try {
+      const res = await this.roomService.removePassword(
+        (request as any)?.user?.id,
+        roomName, 
+      );
+      return response.status(res.status).json(res.message);
     } catch (e) {
       return response.status(e.status).json(e.message);
     }

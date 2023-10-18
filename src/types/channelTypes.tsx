@@ -25,6 +25,6 @@ export interface usersListType {
   muteDuration:any;
   mutedAt: any;
   userId: string;
-  userRol: string;
+  userRole: string;
   userStatus: any;
 }

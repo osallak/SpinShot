@@ -5,11 +5,14 @@ import { useAppSelector } from "../../../redux_tool";
 import test1 from "../../../public/test1.svg";
 import pc from "../../../public/pc.jpeg";
 import ibenmain from "../../../public/issam_benmaina1_448x672.jpeg"
+import parseJwt from "@/utils/parsJwt";
+import { useRouter } from "next/router";
 
 const ImageProfile = (props: any) => {
   const data = useAppSelector((state) => state.Profile);
   const [handelMous, setImage] = useState(false);
   const [image, setMyImage] = useState();
+  const router = useRouter();
 
   const handleMouseEnter = () => {
     setImage(true);
@@ -45,16 +48,17 @@ const ImageProfile = (props: any) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={` rounded-3xl  ${
-          props.isopen ? "w-[95px]" : "w-[120px]"
+          props.isopen ? "w-[80px]" : "w-[120px]"
         } c-gb:w-[10rem] c-10xl:w-[15rem]  relative transition-all duration-300 hover:opacity-40  `}
       >
-        <input type="" className="hidden " onClick={Open} />
+        {!props.id && <input type="" className="hidden " onClick={Open} />}
         <div className=" flex justify-center items-center bg-very-dark-purple rounded-3xl  overflow-hidden">
           {handelMous && (
             <div
               className={`  rounded-2xl  duration-300  flex justify-center items-center flex-col  transition-all absolute  `}
             >
-              <Image className={``} src={email}  alt="" />
+              {!props.id && 
+              <Image  src={email}  alt="" />}
             </div>
           )}
           {props.myImage ? (

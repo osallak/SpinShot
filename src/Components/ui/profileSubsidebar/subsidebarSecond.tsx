@@ -23,6 +23,7 @@ const SubsidebarSecond = (props: any) => {
 
   const handlePasswd = (id: boolean, route: string) => {
     setBackground(true);
+    props.setPassword(true);
   };
 
   const handleClick = () => {

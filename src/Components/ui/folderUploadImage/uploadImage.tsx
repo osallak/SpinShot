@@ -16,6 +16,7 @@ import {
 import axios from "axios";
 import ip from "@/utils/endPoint";
 import { useRouter } from "next/router";
+import parseJwt from "@/utils/parsJwt";
 
 const UploadImage = (props: {
   upload: boolean;
@@ -26,7 +27,7 @@ const UploadImage = (props: {
 }) => {
   const [image, setMyImage] = useState<any | null>(null);
   const imageRef = useRef(null);
-  const router = useRouter()
+  const router = useRouter();
 
   const handleOpen = () => {
     props.Switch(!open);
@@ -48,11 +49,12 @@ const UploadImage = (props: {
     props.Switch(!open);
     try {
       const token = localStorage.getItem("token");
-      if (!token)
-      {
+      if (!token) {
         router.push("/signin");
-        return ;
+        return;
       }
+      if (image) {
+        console.log("no image");
         const response = await axios.post(
           `${ip}/media`,
           {
@@ -65,6 +67,7 @@ const UploadImage = (props: {
             },
           }
         );
+      }
     } catch (error) {
       console.error(error);
     }
@@ -100,7 +103,7 @@ const UploadImage = (props: {
             <div className="  overflow-y-auto h-32 sm:h-52 w-[100%]  rounded-[20px] ">
               <div className="flex  flex-wrap justify-center items-center px-2 border h-full">
                 <picture>
-                  <img src={image!} alt=""/>
+                  <img src={image!} alt="" />
                 </picture>
               </div>
             </div>

@@ -39,7 +39,7 @@ const ProfilePage = (props: { id: any }) => {
   const [username, setUsername] = useState("");
   const router = useRouter();
   const [error, setError] = useState(false);
-  const [opp, setId] = useState(false);
+  const [id, setId] = useState(false);
   const [table, setTable] = useState<Type[]>([]);
   const [table2, setTable2] = useState<TypePlay[]>([]);
   const [isClick, setClick] = useState(false);
@@ -85,9 +85,11 @@ console.log(router.query.id)
   const swetshProfile = (tab: Type[], play: TypePlay[]) => {
     setTable(tab);
     setTable2(play);
+    setId(!id);
   };
   
   const usersearched = (tab: Type[], play: TypePlay[]) => {
+    setId(!id);
     setTable2(play);
     setTable(tab);
   };
@@ -115,7 +117,7 @@ console.log(router.query.id)
       }
     }
   }, [dispatch, router.isReady, router.query.id]);
-  
+
   return (
     <>
         <div
@@ -169,6 +171,7 @@ console.log(router.query.id)
                     width={width}
                     username={username}
                     myImage={myImage}
+                    id={id}
                   />
                   {open ? (
                     <UploadImage

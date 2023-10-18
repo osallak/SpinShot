@@ -31,8 +31,16 @@ const ConversationChannel = (props: {
   setReload: Function;
   reload: boolean;
 }) => {
+  const getTime = (time: string): string => {
+    const date = new Date(Number(time));
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let parsedMinutes = Math.floor(minutes / 10) === 0  ? "0" + minutes.toString() : minutes.toString();
+    let parsedHours = Math.floor(hours / 10) === 0  ? "0" + hours.toString() : hours.toString();
+    return parsedHours + ":" + parsedMinutes;
+  }
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const [currentMsg, setCurrentMsg] = useState("");
+  const [currentMsg, setCurrentMsg] = useState(""); 
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [conversationChannel, setConversationChannel] = useRecoilState(
@@ -279,7 +287,9 @@ const ConversationChannel = (props: {
                                 : "text-pearl"
                             }`}
                           >
-                            {items.sentAt}
+                          {
+                            getTime(items.sentAt)
+                          }
                           </span>
                         </div>
                         <span className="px-3">{items.message}</span>

@@ -110,9 +110,10 @@ const DropDownChannel: React.FC<any> = (props: {
       }
     } else if (content === "Add as admin") {
       try {
+        console.log("here");
         const res = await axios.patch(
           `${ip}/room/elevate`,
-          { name: props.id, user: props.userId },
+          { room: props.id, user: props.userId },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

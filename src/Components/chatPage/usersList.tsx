@@ -72,7 +72,7 @@ const UsersList = (props: {
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center text-center bg-black bg-opacity-70">
+          <div className="flex min-h-full items-center justify-center text-center bg-black bg-opacity-70 border border-red-500">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -82,7 +82,7 @@ const UsersList = (props: {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="transform overflow-hidden rounded-2xl bg-pearl lg:p-6 p-1 shadow-xl transition-all lg:w-[900px] md:w-[700px] sm:w-[90%] w-[80%] flex flex-col justify-center items-center">
+              <Dialog.Panel className="transform overflow-hidden rounded-2xl bg-pearl lg:p-6 p-1 shadow-xl transition-all lg:w-[900px] md:w-[700px] sm:w-[90%] w-[80%] h-[500px] flex flex-col justify-center items-center border border-green-500">
                 <div className="w-full md:space-y-5 sm:space-y-3 space-y-0">
                   <div className="text-lg font-medium leading-6 text-gray-900 flex justify-center items-center flex-col h-[100px]">
                     <p className="font-Poppins font-bold xl:text-3xl md:text-xl sm:text-md text-sm">
@@ -90,7 +90,7 @@ const UsersList = (props: {
                     </p>
                   </div>
                 </div>
-                <div className="h-auto md:max-h-[500px] sm:max-h-[350px] max-h-[250px] w-[90%] overflow-auto flex items-center sm:flex-wrap flex-nowrap sm:flex-row flex-col">
+                <div className="h-[500px] w-full border border-red-500 overflow-auto flex items-center sm:flex-wrap flex-nowrap sm:flex-row flex-col">
                   {(props.data as usersListType[]).map(
                     (items: usersListType, index: number) => (
                       <div className="md:w-[50%] w-full h-24 flex justify-center items-center">

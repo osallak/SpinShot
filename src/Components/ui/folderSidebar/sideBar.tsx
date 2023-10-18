@@ -50,7 +50,6 @@ const SideBar = () => {
       { icon: game, route: "/game" },
     ])
   }, [])
-
   
   const dis = async () => {
     const sub = parseJwt(JSON.stringify(localStorage.getItem("token"))).sub

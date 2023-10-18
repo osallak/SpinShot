@@ -33,7 +33,7 @@ const Search = (props:any) => {
         return;
       if (targetValue__)
       {
-        const response = await axios.get(`${ip}/users?keyword=${targetValue__}`, {
+        const response = await axios.get(`${ip}/users?keyword=${targetValue__}&limit=${10}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -97,12 +97,12 @@ const Search = (props:any) => {
           <div className=" w-[80%] ">
             <input
               type="text"
-              className="w-full h-14 rounded-full bg-very-dark-purple px-7 text-md text-pearl font-Poppins overflow-scroll"
+              className="w-full h-14 rounded-full bg-very-dark-purple px-7 text-md text-pearl font-Poppins outline-none ring-0 focus:ring-0"
               placeholder="Search..."
               onChange={(event) => handleChange(event)}
             />
           </div>
-          <div className="flex flex-col  w-[80%] bg-very-dark-purple rounded-3xl  font-Poppins font-semibold text-sm ">
+          <div className="flex flex-col  w-[80%] bg-very-dark-purple rounded-3xl  font-Poppins font-semibold text-sm  scrollbar-rounded-5 scrollbar scrollbar-track-transparent overflow-scroll h-[500px] ">
             {resulta?.data?.length > 0 && user !== "" ? (
               resulta?.data.map((index: any) => (
                 <div
@@ -127,7 +127,7 @@ const Search = (props:any) => {
                   )}
                   <button
                     onClick={() => getInformation(index.id)}
-                    className="border sm:p-2 h-[70%] flex items-center justify-center rounded-full bg-peridot text-very-dark-purple "
+                    className=" sm:p-2 h-[60%] flex items-center justify-center rounded-full bg-peridot text-very-dark-purple text-xs sm:text-sm font-Passion-One w-12 sm:w-20"
                   >
                     profile
                   </button>

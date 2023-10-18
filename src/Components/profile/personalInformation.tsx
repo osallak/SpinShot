@@ -9,11 +9,13 @@ import ip from "@/utils/endPoint";
 import toast, { Toaster } from "react-hot-toast";
 import test from "node:test";
 import { json } from "stream/consumers";
+import { useRouter } from "next/router";
 
 const PersonalInformation = (props: any) => {
   // const dispatch = useAppDispatch();
   const data = useAppSelector((state) => state.Profile);
   const [country, setCountry] = useState("");
+  const router = useRouter();
   const [error, setError] = useState(false);
   // const [errorMessage, setErrorMessage] = useState("");
 
@@ -34,8 +36,12 @@ const PersonalInformation = (props: any) => {
   });
 
   const hendleUpdata = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
     try {
-      const token = localStorage.getItem("token");
       country ? (form["country"] = country) : (form["country"] = null);
       Object.keys(form).forEach((key) => {
         if (!form[key]) delete form[key];
@@ -68,9 +74,9 @@ const PersonalInformation = (props: any) => {
     if (data.profile) {
       const tmp = {
         firstName: data.profile?.profile?.name?.givenName,
-        lastName: data.profile?.profile?.name.lastName,
+        lastName: data.profile?.profile?.name?.lastName,
         username: data.profile?.username,
-        email: data.profile.email,
+        email: data.profile?.email,
         country: data?.profile?.profile?.country,
       };
       setForm(tmp);

@@ -48,17 +48,16 @@ const ImageProfile = (props: any) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={` rounded-3xl  ${
-          props.isopen ? "w-[80px]" : "w-[120px]"
+          props.isopen ? "w-[100px]" : "w-[120px]"
         } c-gb:w-[10rem] c-10xl:w-[15rem]  relative transition-all duration-300 hover:opacity-40  `}
       >
-        {!props.id && <input type="" className="hidden " onClick={Open} />}
+        {props.id && <input type="" className="hidden " onClick={Open} />}
         <div className=" flex justify-center items-center bg-very-dark-purple rounded-3xl  overflow-hidden">
           {handelMous && (
             <div
               className={`  rounded-2xl  duration-300  flex justify-center items-center flex-col  transition-all absolute  `}
             >
-              {!props.id && 
-              <Image  src={email}  alt="" />}
+              {props.id &&  <Image  src={email}  alt="" />}
             </div>
           )}
           {props.myImage ? (

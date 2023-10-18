@@ -162,17 +162,15 @@ const DropDownChannel: React.FC<any> = (props: {
 
   return (
     <div ref={ref} className="relative">
-      {settings && <ChannelSettings open={settings} setOpen={setSettings} id={props.id} />}
+      {settings && (
+        <ChannelSettings open={settings} setOpen={setSettings} id={props.id} />
+      )}
       <button
         className="inline-flex h-10 items-center text-center focus:outline-none"
         type="button"
         onClick={handleClick}
       >
-        {props.id === props.userId ? (
-          <Image src={threePoint} alt="threepoint"></Image>
-        ) : (
-          <Image src={threePointforPeridot} alt="threepoint"></Image>
-        )}
+        <Image src={threePoint} alt="threepoint"></Image>
       </button>
       {isOpen && (
         <div

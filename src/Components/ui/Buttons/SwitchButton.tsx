@@ -1,6 +1,6 @@
 
 import Image from 'next/image';
-import { useEffect, useState, useRef, FocusEvent, ChangeEvent } from 'react';
+import { useEffect, useState, useRef, FocusEvent, ChangeEvent, KeyboardEvent } from 'react';
 import lock from "../../../../public/lock.svg"
 // import { Tabs, TabsHeader, Tab, TabsBody, TabPanel } from "@material-tailwind/react";
 import { Tab } from '@headlessui/react'
@@ -26,6 +26,7 @@ const SwitchButton = (props: {setType: Function, setName: Function, setPassword:
   const [state, setState] = useState("Public");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [button, setButton] = useState<boolean>();
 
   const handleBlur = (category: string) => {
     setState(category);
@@ -37,11 +38,12 @@ const SwitchButton = (props: {setType: Function, setName: Function, setPassword:
     return classes.filter(Boolean).join(' ')
   }
 
+  
   const getName = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setName(event.target.value);
   }
-
+  
   const getPassword = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setPassword(event.target.value);
@@ -51,7 +53,7 @@ const SwitchButton = (props: {setType: Function, setName: Function, setPassword:
     props.setType(state.toUpperCase());
     props.setName(name);
     props.setPassword(password);
-  }, [props, state, name, password])
+  }, [props, state, name, password, button])
 
   return (
     <div className="w-full max-w-md space-y-3">

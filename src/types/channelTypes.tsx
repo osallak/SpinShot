@@ -21,9 +21,10 @@ interface user {
   username: string;
 }
 export interface usersListType {
-  user: user;
+  User: user;
+  muteDuration:any;
+  mutedAt: any;
   userId: string;
-  userStatus: string;
-  muteDuration:string;
-  mutedAt: string;
+  userRol: string;
+  userStatus: any;
 }

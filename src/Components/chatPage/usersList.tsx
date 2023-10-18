@@ -9,15 +9,20 @@ import { useRecoilState } from "recoil";
 import { channelAtom } from "../context/recoilContextChannel";
 import { usersListAtom } from "../context/recoilContextChannel";
 import { usersListType } from "@/types/channelTypes";
+import leave from "../../../public/kickIcon.svg"
 import ip from "@/utils/endPoint";
+import DropDownChannel from "../ui/FolderDropDown/DropDownChannel";
+import { roomContent } from "@/utils/dropDownContent";
 
 const UsersList = (props: {
   open: boolean;
   setOpen: Function;
   id: string | undefined;
+  data: usersListType[];
+	userId: string;
 }) => {
   const [channel, setChannel] = useRecoilState(channelAtom);
-  const [usersList, setUsersList] = useRecoilState(usersListAtom);
+  // const [usersList, setUsersList] = useRecoilState(usersListAtom);
   const [type, setType] = useState("");
   const [seePassword, setSeePassword] = useState(false);
   const [seeConfirmePassword, setSeeConfirmePassword] = useState(false);
@@ -27,62 +32,14 @@ const UsersList = (props: {
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
+	const leaveDropDown = [{content: "Leave", icone: leave}]
+
   const closeModal = () => {
     props.setOpen(false);
   };
 
-  const showPassword = () => {
-    setSeePassword(!seePassword);
-  };
-
-  const showConfirmePassword = () => {
-    setSeeConfirmePassword(!seeConfirmePassword);
-  };
-
-  const handleConfirmePassword = (event: ChangeEvent<HTMLInputElement>) => {
-    setConfirmePassword(event.target.value);
-  };
-
-  const handlePassword = (event: ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
-
-	const removePassword = () => {
-		//remove password from a channel
-	}
-
-  const handleSave = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/signin");
-      return;
-    }
-    if (type === "PROTECTED") {
-      // change the password
-    } else if (type === "PUBLIC") {
-      // add password for channel
-      if (password !== confirmePassword) {
-        setError(true);
-        setErrorMessage("password doesn't match");
-        return;
-      }
-      try {
-        const res = await axios.patch(
-          `${ip}/room/protect`,
-          { room: props.id, password },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        props.setOpen(false);
-      } catch (error: any) {
-        setError(true);
-        setErrorMessage(error?.response?.data);
-				// console.log(error)
-      }
-    }
+  const goToUser = (userId: string) => {
+    router.push(`/profile/${userId}`);
   };
 
   const getTypeOfChannel = () => {
@@ -97,7 +54,7 @@ const UsersList = (props: {
     getTypeOfChannel();
   }, []);
 
-  console.log("type: ", type);
+  console.log("users List: ", props.data);
 
   return (
     <Transition appear show={props.open} as={Fragment}>
@@ -129,83 +86,53 @@ const UsersList = (props: {
                 <div className="w-full md:space-y-5 sm:space-y-3 space-y-0">
                   <div className="text-lg font-medium leading-6 text-gray-900 flex justify-center items-center flex-col h-[100px]">
                     <p className="font-Poppins font-bold xl:text-3xl md:text-xl sm:text-md text-sm">
-                      Settings
+                      Users
                     </p>
-                    {type !== "PRIVATE" && (
-                      <p className="font-Poppins font-normal xl:text-xl md:text-base sm:text-sm text-xs">
-                        Set, Change, or Remove the channel's password
-                      </p>
-                    )}
                   </div>
                 </div>
-                <div className="space-y-3">
-                  <div className="w-[300px] h-10 bg-very-dark-purple flex flex-row justify-center items-center pr-3 rounded-full">
-                    <input
-                      onChange={(event) => handlePassword(event)}
-                      type={`${seePassword ? "text" : "password"}`}
-                      placeholder={`${
-                        type === "PROTECTED" ? "Old Password" : "Password"
-                      }`}
-                      className="bg-very-dark-purple outline-none ring-0 w-full h-full pl-5 rounded-full placeholder:text-pearl placeholder:opacity-40 text-pearl"
-                    />
-                    <button
-                      onClick={showPassword}
-                      className="w-[25px] h-full outline-none ring-0"
-                    >
-                      {seePassword ? (
-                        <Image src={eye} alt="eye" />
-                      ) : (
-                        <Image src={eyeSlash} alt="eyeSlash" />
-                      )}
-                    </button>
-                  </div>
-                  <div className="w-[300px] h-10 bg-very-dark-purple flex flex-row justify-center items-center pr-3 rounded-full">
-                    <input
-                      onChange={(event) => handleConfirmePassword(event)}
-                      type={`${seeConfirmePassword ? "text" : "password"}`}
-                      placeholder={`${
-                        type === "PROTECTED"
-                          ? "New Password"
-                          : "Confirme Password"
-                      }`}
-                      className="bg-very-dark-purple outline-none ring-0 w-full h-full pl-5 rounded-full placeholder:text-pearl placeholder:opacity-40 text-pearl"
-                    />
-                    <button
-                      onClick={showConfirmePassword}
-                      className="w-[25px] h-full outline-none ring-0"
-                    >
-                      {seeConfirmePassword ? (
-                        <Image src={eye} alt="eye" />
-                      ) : (
-                        <Image src={eyeSlash} alt="eyeSlash" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-                {error && (
-                  <span className="text-red-900 font-poppins">
-                    {errorMessage}
-                  </span>
-                )}
-                <div className="mt-7 rounded-full w-full lg:h-full md:h-[50px] sm:h-[30px] h-[20px] flex justify-end items-center md:p-5 sm:p-3 p-1 space-x-2">
-                  <button
-                    type="button"
-                    className="text-very-dark-purple focus:outline-none flex justify-center items-center"
-                      onClick={removePassword}
-                  >
-                    <span className="font-Passion-One text-very-dark-purple flex justify-center items-center">
-                      Remove
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded-full bg-peridot px-4 py-2 text-very-dark-purple lg:w-24 md:w-20 sm:w-16 w-14 lg:h-9 md:h-8 sm:h-7 h-6 focus:outline-none flex justify-center items-center"
-                    onClick={handleSave}
-                  >
-                    <span className="font-Passion-One text-very-dark-purple flex justify-center items-center">
-                      Save
-                    </span>
-                  </button>
+                <div className="h-auto md:max-h-[500px] sm:max-h-[350px] max-h-[250px] w-[90%] overflow-auto flex items-center sm:flex-wrap flex-nowrap sm:flex-row flex-col">
+                  {(props.data as usersListType[]).map(
+                    (items: usersListType, index: number) => (
+                      <div className="md:w-[50%] w-full h-24 flex justify-center items-center">
+                        <div
+                          key={index}
+                          className="bg-very-dark-purple w-[300px] h-20 flex justify-between items-center sm:rounded-2xl rounded-xl px-3 space-x-2"
+                        >
+                          <div className="flex justify-start items-center space-x-2">
+                            <button
+                              onClick={() => goToUser(items.userId)}
+                              className="rounded-xl"
+                            >
+                              <Image
+                                src={items.User.avatar}
+                                alt="avatar"
+                                width={500}
+                                height={500}
+                                className="md:w-14 w-10 rounded-xl"
+                              />
+                            </button>
+                            <div className="flex justify-between items-start flex-col md:h-11 h-8">
+                              <button
+                                onClick={() => goToUser(items.userId)}
+                                className="font-poppins text-pearl font-semibold md:text-base sm:text-sm text-xs"
+                              >
+                                {items.User.username}
+                              </button>
+                              <div className="flex md:space-x-3 space-x-1">
+                                <span className="font-poppins text-pearl font-thin sm:text-sm text-xs text-opacity-40">
+                                  {items.userRole}
+                                </span>
+                                <span className="font-poppins text-pearl font-thin sm:text-sm text-xs text-opacity-40">
+                                  {items.userStatus}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          {props.userId === items.userId ? <DropDownChannel data={leaveDropDown} userId={items.userId} id={props.id} /> :<DropDownChannel data={roomContent} userId={items.userId} id={props.id} />}
+                        </div>
+                      </div>
+                    )
+                  )}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

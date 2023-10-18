@@ -38,7 +38,7 @@ const ConversationChannel = (props: {
   const [conversationChannel, setConversationChannel] = useRecoilState(
     channelConversationAtom
   );
-  const [usersList, setUsersList] = useRecoilState(usersListAtom);
+  const [usersList, setUsersList] = useState<usersListType[]>([]);
   const [type, setType] = useState("");
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [userId, setUserId] = useState("");
@@ -130,7 +130,7 @@ const ConversationChannel = (props: {
             Authorization: `Bearer ${token}`,
           }
         })
-        console.log("res: ", res);
+        console.log("res: ", res.data);
         setUsersList(res.data);
       }
     } catch (error: any) {
@@ -182,7 +182,7 @@ const ConversationChannel = (props: {
 
   return (
     <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">
-      {openUsersList && <UsersList open={openUsersList} setOpen={setOpenUsersList} id={props.id} />}
+      {openUsersList && <UsersList open={openUsersList} setOpen={setOpenUsersList} id={props.id} data={usersList} userId={userId} />}
       <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">

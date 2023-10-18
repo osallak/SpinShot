@@ -66,7 +66,7 @@ const ConversationIndividual = (props: {
         else
           return item;
       })
-      return newIndividual 
+      return newIndividual
     })
     props.socket.emit("pm", messageData);
   };
@@ -191,7 +191,7 @@ const ConversationIndividual = (props: {
                         } justify-end`}
                       >
                         <div
-                          className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] min-h-[70px] flex justify-center rounded-xl ${
+                          className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] md:min-h-[70px] min-h-[50px] flex justify-center rounded-xl ${
                             items.sender != userId
                               ? "items-start bg-peridot text-very-dark-purple font-bold"
                               : "items-end bg-very-dark-purple text-pearl font-medium"

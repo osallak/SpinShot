@@ -15,3 +15,15 @@ export default interface channelType {
   type: string;
   messages: channelMessage[];
 }
+
+interface user {
+  avatar: string;
+  username: string;
+}
+export interface usersListType {
+  user: user;
+  userId: string;
+  userStatus: string;
+  muteDuration:string;
+  mutedAt: string;
+}

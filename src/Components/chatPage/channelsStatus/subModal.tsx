@@ -14,6 +14,8 @@ const SubModal = (props: {
 }) => {
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   function closeModal() {
     props.setOpen(false);
@@ -36,10 +38,10 @@ const SubModal = (props: {
             },
           }
         );
-        console.log("res from room join : ", res);
         props.setOpen(false);
       } catch (error: any) {
-        console.log("error from room join : ", error);
+        setError(true)
+        setErrorMessage(error.response.data)
       }
     } else if (type === "PROTECTED")
     try {
@@ -52,10 +54,10 @@ const SubModal = (props: {
           },
         }
         );
-        console.log("res from room join : ", res);
         props.setOpen(false);
     } catch (error: any) {
-      console.log("error from room join : ", error);
+      setError(true)
+      setErrorMessage(error.response.data)
     }
   };
 
@@ -63,8 +65,6 @@ const SubModal = (props: {
     event.preventDefault();
     setPassword(event.target.value);
   };
-
-  console.log("status", props.type);
 
   return (
     <Transition appear show={props.open} as={Fragment}>
@@ -99,6 +99,9 @@ const SubModal = (props: {
                       <span className="font-Poppins text-very-dark-purple px-4 font-semibold w-full lg:text-lg md:text-md sm:text-sm text-xs">
                         Enter the password of the channel
                       </span>
+                      {error && 
+                      <span className="text-red-900 font-poppins">{errorMessage}</span>
+                      }
                       <div className="border w-full md:h-10 sm:h-9 h-8 rounded-full bg-very-dark-purple flex flex-row justify-center items-center pl-4">
                         <Image
                           src={lock}
@@ -127,6 +130,9 @@ const SubModal = (props: {
                       <span className="font-Poppins text-very-dark-purple px-4 font-semibold w-full lg:text-lg md:text-md sm:text-sm text-xs">
                         welcome to this channel
                       </span>
+                      {error && 
+                      <span className="text-red-900 font-poppins">{errorMessage}</span>
+                      }
                       <div className="w-full md:h-10 sm:h-9 h-8 flex justify-center items-center">
                         <button
                           onClick={() => joinChannel(props.type)}

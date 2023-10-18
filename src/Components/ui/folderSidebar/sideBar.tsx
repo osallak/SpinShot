@@ -1,18 +1,18 @@
 "use client";
-import logoWhite from "../../../../public/logoWhite.svg";
+import Search from "@/Components/search/userSearch";
+import parseJwt from "@/utils/parsJwt";
 import Image from "next/image";
-import search from "../../../../public/search.svg";
+import { useRouter } from "next/router";
+import { MouseEvent, useEffect, useState } from "react";
 import friend from "../../../../public/friend.svg";
+import game from "../../../../public/game.svg";
+import logoWhite from "../../../../public/logoWhite.svg";
+import logout from "../../../../public/logout.svg";
 import message from "../../../../public/message.svg";
 import profile from "../../../../public/profile.svg";
-import game from "../../../../public/game.svg";
-import test1 from "../../../../public/test1.svg";
-import logout from "../../../../public/logout.svg";
-import { MouseEvent, useEffect, useState } from "react";
-import parseJwt from "@/utils/parsJwt";
-import { useRouter } from "next/router";
-import { useAppSelector } from "../../../../redux_tool";
-import Search from "@/Components/search/userSearch";
+import search from "../../../../public/search.svg";
+import { useAppDispatch, useAppSelector } from "../../../../redux_tool";
+import { getProfile } from "../../../../redux_tool/redusProfile/profileThunk";
 
 const SideBar = () => {
   const Router = useRouter();
@@ -20,6 +20,8 @@ const SideBar = () => {
   const [hovered, setHovered] = useState(false);
   const [isSearch, setSearch] = useState(false);
   const [icons, setIcons] = useState<any>([]);
+  const dispatch = useAppDispatch()
+
 
   const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {
     event.preventDefault();
@@ -42,11 +44,24 @@ const SideBar = () => {
   useEffect(() => {
     setIcons([
       { icon: search, route: "/search" },
-      { icon: profile, route: "/profile" },
+      { icon: profile, route: `/profile/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}` },
       { icon: message, route: `/messages/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}` },
       { icon: friend, route: "/friends" },
       { icon: game, route: "/game" },
     ])
+  }, [])
+
+  
+  const dis = async () => {
+    const sub = parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+    try {
+      await dispatch(getProfile(sub))
+    } catch (error: any) {
+    }
+  }
+
+  useEffect(() => {
+    dis();
   }, [])
 
   return (
@@ -81,25 +96,6 @@ const SideBar = () => {
                   className="opacity-40 hover:opacity-100"
                 />{" "}
                 <Search isSearch={isSearch} />
-              </button>
-            ) : option.route === "/profile" ? (
-              <button
-                onClick={(event) =>
-                  changePage(
-                    event,
-                    option.route +
-                      "/" +
-                      parseJwt(JSON.stringify(localStorage.getItem("token")))
-                        .sub
-                  )
-                }
-              >
-                {" "}
-                <Image
-                  src={option.icon}
-                  alt={option.icon}
-                  className="opacity-40 hover:opacity-100"
-                />{" "}
               </button>
             ) : (
               <button onClick={(event) => changePage(event, option.route)}>

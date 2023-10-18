@@ -66,3 +66,10 @@ export const globalToken = atom({
   key: `globalToken-${Math.random()}`,
   default: "",
 });
+
+export const profile = createContext<any[] | []>([])
+
+export const profileAtom = atom({
+  key: `profil-${Math.random()}`,
+  default: [],
+})

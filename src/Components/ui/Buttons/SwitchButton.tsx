@@ -63,7 +63,7 @@ const SwitchButton = (props: {setType: Function, setName: Function, setPassword:
               key={category}
               className={({ selected }) =>
                 classNames(
-                  'w-full rounded-full py-1 text-xl font-medium font-Passion-One leading-5 text-pearl',
+                  'w-full rounded-full py-1 md:text-xl sm:text-base text-xs font-medium font-Passion-One leading-5 text-pearl',
                   'ring-none focus:outline-none focus:ring-none',
                   selected
                     ? 'bg-peridot text-very-dark-purple'

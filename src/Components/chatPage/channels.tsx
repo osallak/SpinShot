@@ -54,12 +54,10 @@ const Channels = (props: {
             id: jwtToken.sub,
           },
         });
-        console.log("res.data.room:", res?.data)
         setChannel(res?.data?.room);
         props.setReload(true);
         props.setRoomId(res?.data?.room[0]?.id);
       } catch (error) {
-        // console.log("error of fetching data from subsidebar: ", error);
       }
     }
   };

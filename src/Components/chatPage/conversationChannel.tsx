@@ -18,6 +18,10 @@ import {
 } from "../context/recoilContextChannel";
 import DropDownChannel from "../ui/FolderDropDown/DropDownChannel";
 import { blockedUsersAtom } from "../context/recoilContextChannel";
+import ChannelSettings from "./channelSettings";
+import { usersListAtom } from "../context/recoilContextChannel";
+import { usersListType } from "@/types/channelTypes";
+import UsersList from "./usersList";
 
 let token: any;
 const ConversationChannel = (props: {
@@ -34,17 +38,18 @@ const ConversationChannel = (props: {
   const [conversationChannel, setConversationChannel] = useRecoilState(
     channelConversationAtom
   );
+  const [usersList, setUsersList] = useRecoilState(usersListAtom);
+  const [type, setType] = useState("");
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [userId, setUserId] = useState("");
   const [option, setOption] = useState("");
   const [blockedUsers, setBlockedUsers] = useRecoilState(blockedUsersAtom);
-
-  const deleteConversation = () => {
-    console.log("hello world from the other side");
-  };
+  const [setting, setSettings] = useState(false);
+  const [openUsersList, setOpenUsersList] = useState(false);
 
   const handleClick = () => {
-    console.log("hello world from handle click");
+    console.log("here we go")
+    setSettings(true);
   };
 
   const dropDownContent = [
@@ -88,7 +93,7 @@ const ConversationChannel = (props: {
     const jwtToken = parseJwt(token);
     setUserId(jwtToken.sub);
     try {
-      console.log("props.id: ", props.id);
+      // console.log("props.id: ", props.id);
       if (props.id && props.id !== "") {
         const result = await axios.get(`${ip}/room/individual/${props.id}`, {
           headers: {
@@ -101,12 +106,39 @@ const ConversationChannel = (props: {
         result.data.messages.reverse();
         setConversationChannel(result.data.messages);
         setBlockedUsers(result?.data?.blockedUsers);
-        console.log("data: ", result.data);
+        // console.log("data: ", result.data);
       }
     } catch (error) {
       console.log("error of fetching data fron conversation: ", error);
     }
   };
+
+  const fetchUsersList = async () => {
+    token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    setOpenUsersList(true);
+    try {
+      if (props.id && props.id !== "") {
+        const res = await axios.get(`${ip}/room/users/${props.id}`, {
+          params: {
+            room: props.id,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        })
+        console.log("res: ", res);
+        setUsersList(res.data);
+      }
+    } catch (error: any) {
+      console.log("error: ", error);
+    }
+  }
+
+  console.log("users list: ", usersList);
 
   const sp = (name: string) => {
     const res = name.split(" ");
@@ -114,11 +146,23 @@ const ConversationChannel = (props: {
     return res;
   };
 
+  const getTypeOfChannel = () => {
+    channel.find((items: any) => {
+      if (items.id === props.id) {
+        setType(items.type);
+      }
+    });
+  };
+
   const emailInput = useCallback((inputElement: any) => {
     if (inputElement) {
       inputElement.focus();
     }
   }, []);
+
+  useEffect(() => {
+    getTypeOfChannel();
+  }, [props.id]);
 
   useEffect(() => {
     setCurrentMsg(message);
@@ -138,6 +182,7 @@ const ConversationChannel = (props: {
 
   return (
     <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">
+      {openUsersList && <UsersList open={openUsersList} setOpen={setOpenUsersList} id={props.id} />}
       <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">
@@ -145,7 +190,8 @@ const ConversationChannel = (props: {
               {(channel as channelType[]).map(
                 (items: channelType, index: number) =>
                   items.id === props.id && (
-                    <div
+                    <button
+                      onClick={fetchUsersList}
                       key={index}
                       className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] h-full flex justify-center items-center"
                     >
@@ -158,22 +204,22 @@ const ConversationChannel = (props: {
                           ))}
                         </div>
                       </div>
-                    </div>
+                    </button>
                   )
               )}
               <div className="flex flex-col">
                 <p className="font-Poppins md:text-xl sm:text-md text-sm text-pearl font-semibold">
                   {(channel as channelType[]).map(
                     (chan: channelType, index: number) => (
-                      <div key={index}>
+                      <button onClick={fetchUsersList} key={index}>
                         {props.id === chan.id ? chan.id : ""}
-                      </div>
+                      </button>
                     )
                   )}
                 </p>
               </div>
             </div>
-            <DropDownChannel data={dropDownContent} />
+            {type !== "PRIVATE" && <DropDownChannel data={dropDownContent} id={props.id} />}
           </div>
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
         </div>

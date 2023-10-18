@@ -7,7 +7,11 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { io } from "socket.io-client";
-import { chatAll, currentFriendsAtom, exploreChannelAtom } from "../context/recoilContext";
+import {
+  chatAll,
+  currentFriendsAtom,
+  exploreChannelAtom,
+} from "../context/recoilContext";
 import { channelAtom } from "../context/recoilContextChannel";
 import { individualAtom } from "../context/recoilContextIndividual";
 import NavBar from "../ui/FolderNavbar/navBar";
@@ -35,61 +39,9 @@ const Chat = () => {
   const [individual, setIndividual] = useRecoilState(individualAtom);
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [reload, setReload] = useState(false);
-  const [currentFriend, setCurrentFriends] = useRecoilState(currentFriendsAtom)
-
-  // const fetchDataSubSideBar = async () => {
-  //   if (router.query.id) {
-  //     const token = localStorage.getItem("token");
-  //     if (!token) {
-  //       router.push("/signin");
-  //       return;
-  //     }
-  //     const jwtToken = parseJwt(token);
-  //     try {
-  //       const res = await axios.get(`${ip}/chat/all`, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         params: {
-  //           id: jwtToken.sub,
-  //         },
-  //       });
-  //       setIndividual(res?.data?.individual);
-  //       setChannel(res?.data?.room);
-  //       setReload(true)
-  //       const returnedId = res.data?.individual.find(
-  //         (items: any) => items.other.id === router.query.id
-  //       );
-  //       if (returnedId) setId(returnedId.other.id);
-  //       else {
-  //         if (router.query.id === parseJwt(token).sub) {
-  //           setId(res?.data?.individual[0]?.other?.id);
-  //         } else {
-  //           const fromFriends : any = currentFriend.find((items: any) => (
-  //             items.id === router.query.id
-  //           ))
-  //           if (fromFriends) setId(fromFriends.id)
-  //           setIndividual((prev : individualType[] ) => {
-  //             const newConv : individualType = {
-  //                 message : "",
-  //                 other : {
-  //                   avatar : fromFriends.avatar,
-  //                   id : fromFriends.id,
-  //                   username : fromFriends.username
-  //                 },
-  //                 sender : "",
-  //                 sentAt : ""
-  //             }
-  //             return [newConv, ...prev] as any
-  //           })
-  //         }
-  //       }
-  //       setRoomId(res?.data?.room[0]?.id);
-  //     } catch (error) {
-  //       // console.log("error of fetching data from subsidebar: ", error);
-  //     }
-  //   }
-  // };
+  const [currentFriend, setCurrentFriends] = useRecoilState(currentFriendsAtom);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const fetchDataExploreChannel = async () => {
     const token = localStorage.getItem("token");
@@ -105,14 +57,16 @@ const Chat = () => {
           },
         });
         setExploreChannel(res.data);
-      } catch (error: any) {
-        console.log("error from explore channel: ", error);
-      }
+      } catch (error: any) {}
     }
   };
 
   useEffect(() => {
     token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
     socket = io(`${ip}`, {
       extraHeaders: {
         authorization: `Bearer ${token}`,
@@ -121,22 +75,13 @@ const Chat = () => {
     socket.on("connect", () => console.log("connected"));
     socket.on("pm", (data: any) => {
       setReload(true);
-      console.log("hello there from socket event");
     });
     socket.on("gm", (data: any) => {
       setReload(true);
-      console.log("hello there from socket event of channels: ", data);
     });
-    socket.on("exception", (data: any) =>
-      console.log("exception of socket event: ", data)
-    );
-    socket.on("disconnect", (data: any) => console.log(data));
+    socket.on("exception", (data: any) => console.log("exception"));
+    socket.on("disconnect", (data: any) => console.log("disconnect"));
   }, []);
-
-  // useEffect(() => {
-  //   fetchDataSubSideBar();
-  //   setIsLoaded(true);
-  // }, [router.query.id, router.isReady]);
 
   useEffect(() => {
     fetchDataExploreChannel();
@@ -162,7 +107,12 @@ const Chat = () => {
         loaded={loaded}
       />
       {flag === "ExploreChannels" && (
-        <ExploreChannels open={open} setOpen={setOpen} />
+        <ExploreChannels
+          open={open}
+          setOpen={setOpen}
+          error={error}
+          errorMessage={errorMessage}
+        />
       )}
       {flag === "CreateChannels" && (
         <CreateChannels open={open} setOpen={setOpen} />

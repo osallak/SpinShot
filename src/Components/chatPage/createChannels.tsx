@@ -1,11 +1,9 @@
 import ip from "@/utils/endPoint";
 import { Dialog, Transition } from "@headlessui/react";
 import axios from "axios";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { Fragment, KeyboardEvent, useState } from "react";
 import { useRecoilState } from "recoil";
-import CreateChannelIcon from "../../../public/CreateChannel.svg";
 import { createChannelAtom } from "../context/recoilContext";
 import SwitchButton from "../ui/Buttons/SwitchButton";
 
@@ -16,37 +14,16 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
   const router = useRouter();
   const [createChannel, setCreateChannel] =
     useRecoilState<any>(createChannelAtom);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const closeModal = () => {
     props.setOpen(false);
   };
 
   const addChannelKeyboard = async (event: KeyboardEvent<HTMLDivElement>) => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/signin");
-      return;
-    }
     if (event.key === "Enter") {
-      const params: any = {
-        name: name,
-        type: type,
-      };
-      if (password.length >= 6) params["password"] = password;
-      try {
-        const res = await axios.post(`${ip}/room/add`, params, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setPassword("");
-        setCreateChannel(params);
-        props.setOpen(false);
-        console.log(params);
-        console.log("res from create channel: ", res);
-      } catch (error: any) {
-        console.log("error from create channels: ", error);
-      }
+      addChannel()
     }
   };
 
@@ -73,7 +50,8 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
       console.log(params);
       console.log("res from create channel: ", res);
     } catch (error: any) {
-      console.log("error from create channels: ", error);
+      setError(true)
+      setErrorMessage(error?.response?.data?.message[0])
     }
   };
 
@@ -109,11 +87,6 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
               <Dialog.Panel className="transform overflow-hidden rounded-2xl bg-pearl lg:p-6 p-1 shadow-xl transition-all lg:w-[900px] md:w-[700px] sm:w-[90%] w-[80%] flex flex-col justify-center items-center">
                 <div className="w-full h-[300px] md:space-y-5 sm:space-y-3 space-y-0">
                   <div className="text-lg font-medium leading-6 text-gray-900 flex justify-center items-center flex-col md:h-[120px] sm:h-[100px] h-[80px]">
-                    <Image
-                      src={CreateChannelIcon}
-                      alt="explore channels"
-                      className="xl:w-20 md:w-16 sm:w-10 w-8"
-                    />
                     <p className="font-Poppins font-bold xl:text-3xl md:text-xl sm:text-md text-sm">
                       Create Channel
                     </p>
@@ -126,6 +99,9 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
                     />
                   </div>
                 </div>
+                {error && 
+                  <span className="text-red-900 font-poppins">{errorMessage}</span>
+                }
                 <div className="mt-7 rounded-full w-full lg:h-full md:h-[50px] sm:h-[30px] h-[20px] flex justify-end items-center md:p-5 sm:p-3 p-1">
                   <button
                     type="button"

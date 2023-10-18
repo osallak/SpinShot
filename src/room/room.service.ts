@@ -21,7 +21,7 @@ import { boolean, valid } from 'joi';
 import { join, resolve } from 'path';
 import { rejects } from 'assert';
 import { banUserDto } from './dtos/ban-user.dto';
-import { ProtectRoomDto } from './dtos/protect-room.dto';
+import { ChangePasswordDto, ProtectRoomDto, RemovePasswordDto } from './dtos/protect-room.dto';
 import { ElevateUserDto } from './dtos/elevate-user.dto';
 
 @Injectable()
@@ -1118,4 +1118,110 @@ export class RoomService {
       }
     });
   }
+
+  async changePassword(
+    userId: string,
+    changePasswordDto: ChangePasswordDto,
+  ): Promise<Response> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const isValid =
+          await this.prismaService.roomChatConversation.findUnique({
+            where: {
+              roomChatId_userId: {
+                roomChatId: changePasswordDto.room,
+                userId: userId,
+              },
+              userRole: UserRole.OWNER,
+              RoomChat: {
+                type: RoomType.PROTECTED,
+              },
+            },
+            select: {
+              RoomChat: {
+                select: {
+                  password: true,
+                }
+              }
+            }
+          });
+        if (!isValid) {
+          return reject({
+            status: 403,
+            message: 'Cannot Change Password',
+          });
+        }
+        const isMatch = await bcrypt.compare(changePasswordDto.password, isValid.RoomChat.password);
+        if (!isMatch) {
+          return reject({
+            status: 403,
+            message: 'Invalid Credentials',
+          });
+        }
+        const newPassword = await bcrypt.hash(changePasswordDto.newPassword, 10);
+        await this.prismaService.roomChat.update({
+          where: {
+            id: changePasswordDto.room,
+          },
+          data: {
+            password: newPassword,
+          },
+        });
+        return resolve({
+          status: 200,
+          message: 'Password Changed',
+        });
+      } catch {
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    });
+  }
+
+  async removePassword(userId: string, roomName: RemovePasswordDto): Promise<Response> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const isValid =
+          await this.prismaService.roomChatConversation.findUnique({
+            where: {
+              roomChatId_userId: {
+                roomChatId: roomName.room,
+                userId: userId,
+              },
+              userRole: UserRole.OWNER,
+              RoomChat: {
+                type: RoomType.PROTECTED,
+              },
+            },
+          });
+        if (!isValid) {
+          return reject({
+            status: 403,
+            message: 'Cannot Remove Password',
+          });
+        }
+        await this.prismaService.roomChat.update({
+          where: {
+            id: roomName.room,
+          },
+          data: {
+            type: RoomType.PUBLIC,
+            password: null,
+          },
+        });
+        return resolve({
+          status: 200,
+          message: 'Password Removed',
+        });
+      } catch {
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    });
+  }
+
 }

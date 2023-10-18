@@ -1068,6 +1068,10 @@ export class RoomService {
                   id: roomName,
                 },
               });
+              return resolve({
+                status: 200,
+                message: 'Room Deleted',
+              });
             } else {
               const newOwner: any = basicMembers[0].userId;
               await this.prismaService.roomChatConversation.update({
@@ -1096,16 +1100,15 @@ export class RoomService {
               },
             });
           }
-        } else {
-          await this.prismaService.roomChatConversation.delete({
-            where: {
-              roomChatId_userId: {
-                roomChatId: roomName,
-                userId: userId,
-              },
-            },
-          });
         }
+        await this.prismaService.roomChatConversation.delete({
+          where: {
+            roomChatId_userId: {
+              roomChatId: roomName,
+              userId: userId,
+            },
+          },
+        });
         return resolve({
           status: 200,
           message: 'User Left',

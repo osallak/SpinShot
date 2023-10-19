@@ -3,15 +3,20 @@ import SimpleButton from "../Buttons/simpleButton";
 import Maps from "./maps";
 
 const SubSidebarGame = (props: any) => {
-  const hendleUpdata = () => {};
+
+  const hendleUpdata = () => {
+    props.socket.emit("joinQueue", {map: props.map});
+    props.setIsClick(!props.isClick);
+    props.setDepend(true);
+  };
 
   const [backgroundmap, setBackgroundmap] = useState({
-    map1: "",
+    map1: "very-dark-purple",
     map2: "",
     map3: "",
   });
 
-  const changeBackgroundmap = (mapId: string, newColor: string) => {
+  const changeBackgroundmap = (mapId: string, type: string,  newColor: string) => {
     const updatedBackgroundmap: {
       [key: string]: string;
       map1: string;
@@ -22,7 +27,7 @@ const SubSidebarGame = (props: any) => {
       map2: "",
       map3: "",
     };
-    props.setMap(mapId);
+    props.setMap(type);
     updatedBackgroundmap[mapId] = newColor;
     setBackgroundmap(updatedBackgroundmap);
   };

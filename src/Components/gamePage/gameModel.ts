@@ -76,16 +76,16 @@ class GameModel{
 
 
     private createObstacles(map: string): void{
-        if (map === 'map1')
+        if (map === 'normal')
             return ;
-        if (map === 'map2'){
+        if (map === 'hard'){
             this.obstacles.push(Matter.Bodies.rectangle(this.width, this.map(187, 0, 750, 0, this.height), this.map(190, 0, 650, 0, this.width), this.map(30, 0, 750, 0, this.height), {isStatic: true, render:{fillStyle: '#FFFF00'}}));
             this.obstacles.push(Matter.Bodies.rectangle(0, this.map(315, 0, 750, 0, this.height), this.map(190, 0, 650, 0, this.width), this.map(30, 0, 750, 0, this.height), {isStatic: true, render:{fillStyle: '#FFFF00'}}));
             this.obstacles.push(Matter.Bodies.rectangle(0, this.map(564, 0, 750, 0, this.height), this.map(190, 0, 650, 0, this.width), this.map(30, 0, 750, 0, this.height), {isStatic: true, render:{fillStyle: '#FFFF00'}}));
             this.obstacles.push(Matter.Bodies.rectangle(this.width, this.map(440, 0, 750, 0, this.height), this.map(190, 0, 650, 0, this.width), this.map(30, 0, 750, 0, this.height), {isStatic: true, render:{fillStyle: '#FFFF00'}}));
             Matter.World.add(this.world, this.obstacles);
         }
-        if (map === 'map3'){
+        if (map === 'expert'){
             this.obstacles.push(Matter.Bodies.rectangle(this.width, this.map(187, 0, 750, 0, this.height), this.map(190, 0, 650, 0, this.width), this.map(30, 0, 750, 0, this.height), {isStatic: true, render:{fillStyle: '#FFFF00'}}));
             this.obstacles.push(Matter.Bodies.rectangle(0, this.map(315, 0, 750, 0, this.height), this.map(390, 0, 650, 0, this.width), this.map(30, 0, 750, 0, this.height), {isStatic: true, render:{fillStyle: '#FFFF00'}}));
             this.obstacles.push(Matter.Bodies.rectangle(0, this.map(564, 0, 750, 0, this.height), this.map(190, 0, 650, 0, this.width), this.map(30, 0, 750, 0, this.height), {isStatic: true, render:{fillStyle: '#FFFF00'}}));

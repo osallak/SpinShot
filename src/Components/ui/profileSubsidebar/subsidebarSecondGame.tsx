@@ -4,7 +4,9 @@ import Maps from './maps';
 
 const SubsidebarSecondGame = (props:any) => {
 
-  const hendleUpdata = () => {};
+  const hendleUpdata = () => {
+    props.setIsClick=(!props.isClick);
+  };
 
   const [backgroundmap, setBackgroundmap] = useState({
     map1: "",

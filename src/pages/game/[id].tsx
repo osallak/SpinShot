@@ -1,10 +1,13 @@
-import React from 'react'
+import React from "react";
+import { useRouter } from "next/router";
 import GamePage from "@/Components/gamePage/gamePage"
 
-const game = () => {
+const Game = () => {
+  const router = useRouter();
+  const {id} = router.query;
   return (
-    <><GamePage /></>
+    <GamePage id={id}/>
   )
 }
 
-export default game;
+export default Game;

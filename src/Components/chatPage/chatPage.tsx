@@ -21,6 +21,7 @@ import ConversationIndividual from "./conversationIndividual";
 import CreateChannels from "./createChannels";
 import ExploreChannels from "./exploreChannels";
 import SubSideBar from "./subSideBar";
+import InviteFriends from "./inviteFriends";
 import individualType from "@/types/individulaTypes";
 
 let socket: any;
@@ -57,7 +58,9 @@ const Chat = () => {
           },
         });
         setExploreChannel(res.data);
-      } catch (error: any) {}
+      } catch (error: any) {
+        console.log("error: ", error);
+      }
     }
   };
 
@@ -106,16 +109,17 @@ const Chat = () => {
         setIsLoaded={setIsLoaded}
         loaded={loaded}
       />
-      {flag === "ExploreChannels" && (
+      {flag === "ExploreChannels" ? (
         <ExploreChannels
           open={open}
           setOpen={setOpen}
           error={error}
           errorMessage={errorMessage}
         />
-      )}
-      {flag === "CreateChannels" && (
+      ) : flag === "CreateChannels" ? (
         <CreateChannels open={open} setOpen={setOpen} />
+      ) : (
+        <InviteFriends open={open} setOpen={setOpen} id={id} roomId={roomId} />
       )}
       <div className="w-full h-full">
         <NavBar open={openSideBar} setOpen={setOpenSideBar} />

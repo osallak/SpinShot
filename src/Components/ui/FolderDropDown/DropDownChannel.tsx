@@ -30,6 +30,8 @@ const DropDownChannel: React.FC<any> = (props: {
     { content: "For 24 Hour", time: "1440" },
   ];
 
+  console.log("userId: ", props.userId);
+
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setOpen(!isOpen);

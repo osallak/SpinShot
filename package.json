@@ -21,6 +21,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "@splinetool/react-spline": "^2.2.6",
     "@splinetool/runtime": "^0.9.411",
+    "@tabler/icons-react": "^2.39.0",
     "@types/axios": "^0.14.0",
     "@types/jsonwebtoken": "^9.0.3",
     "@types/matter-js": "^0.19.1",

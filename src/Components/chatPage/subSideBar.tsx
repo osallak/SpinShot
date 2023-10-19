@@ -8,6 +8,7 @@ import messagesIcon from "../../../public/messagesIcon.svg";
 import IconButton from "../ui/Buttons/iconButton";
 import Channels from "./channels";
 import Individual from "./individual";
+import invite from "../../../public/invite.svg"
 
 const SubSideBar = (props: {
   open: boolean;
@@ -41,6 +42,11 @@ const SubSideBar = (props: {
     props.setFlag("CreateChannels");
     props.setOpen(!props.open);
   };
+
+  const inviteFriends = () => {
+    props.setFlag("Invite");
+    props.setOpen(!props.open);
+  }
 
   const setIndividual = () => {
     props.setIsIndividual("Individual");
@@ -104,7 +110,7 @@ const SubSideBar = (props: {
           </motion.button>
         </div>
       </div>
-      {props.isIndividual === "Channels" && (
+      {props.isIndividual === "Channels" ? (
         <Channels
           searchValue={searchValue}
           loaded={props.loaded}
@@ -114,8 +120,7 @@ const SubSideBar = (props: {
           setReload={props.setReload}
           setIsLoaded={props.setIsLoaded}
         />
-      )}
-      {props.isIndividual === "Individual" && (
+      ) : (
         <Individual
           searchValue={searchValue}
           loaded={props.loaded}
@@ -126,20 +131,29 @@ const SubSideBar = (props: {
           setIsLoaded={props.setIsLoaded}
         />
       )}
-      <div className="flex justify-around items-center w-full h-[10%] min-h-[60px]">
-        <div className="w-[45%] h-10 flex justify-center items-center">
-          <IconButton
-            icon={CreateChannel}
-            content="Create channel"
-            onclick={createChannels}
-          />
+      <div className="flex flex-col justify-center items-center w-full h-[12%] min-h-[100px] space-y-2 ">
+        <div className="flex justify-center items-center w-full px-2 h-10">
+        <IconButton
+          icon={invite}
+          content="Invite Friend"
+          onclick={inviteFriends}
+        />
         </div>
-        <div className="w-[45%] h-10 flex justify-center items-center">
-          <IconButton
-            icon={ExportChannels}
-            content="Explore channels"
-            onclick={exploreChannels}
-          />
+        <div className="flex justify-around items-center w-full">
+          <div className="w-[45%] h-10 flex justify-center items-center">
+            <IconButton
+              icon={CreateChannel}
+              content="Create channel"
+              onclick={createChannels}
+            />
+          </div>
+          <div className="w-[45%] h-10 flex justify-center items-center">
+            <IconButton
+              icon={ExportChannels}
+              content="Explore channels"
+              onclick={exploreChannels}
+            />
+          </div>
         </div>
       </div>
     </div>

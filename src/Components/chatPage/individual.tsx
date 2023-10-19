@@ -6,7 +6,7 @@
 /*   By: ataji <ataji@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 05:03:17 by ataji             #+#    #+#             */
-/*   Updated: 2023/10/18 05:30:50 by ataji            ###   ########.fr       */
+/*   Updated: 2023/10/19 07:20:18 by ataji            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ const Individual = (props: {
   const clickChat = (
     event: MouseEvent<HTMLButtonElement>,
     index: number,
-    id: string
+    id: string,
   ) => {
     event.preventDefault();
     setClicked(index);

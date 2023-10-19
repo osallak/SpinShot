@@ -41,6 +41,14 @@ const ConversationIndividual = (props: {
   );
   const [individual, setIndividual] = useRecoilState(individualAtom);
   const [userId, setUserId] = useState("");
+  const getTime = (time: string): string => {
+    const date = new Date(Number(time));
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let parsedMinutes = Math.floor(minutes / 10) === 0  ? "0" + minutes.toString() : minutes.toString();
+    let parsedHours = Math.floor(hours / 10) === 0  ? "0" + hours.toString() : hours.toString();
+    return parsedHours + ":" + parsedMinutes;
+  }
 
   const handleSendMessage = () => {
     setMessage("");
@@ -230,7 +238,7 @@ const ConversationIndividual = (props: {
                                   : "text-pearl"
                               }`}
                             >
-                              {items.sentAt}
+                              {getTime(items.sentAt)}
                             </span>
                           </div>
                           <span className="px-3">{items.message}</span>

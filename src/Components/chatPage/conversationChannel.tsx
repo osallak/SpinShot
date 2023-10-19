@@ -31,14 +31,6 @@ const ConversationChannel = (props: {
   setReload: Function;
   reload: boolean;
 }) => {
-  const getTime = (time: string): string => {
-    const date = new Date(Number(time));
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    let parsedMinutes = Math.floor(minutes / 10) === 0  ? "0" + minutes.toString() : minutes.toString();
-    let parsedHours = Math.floor(hours / 10) === 0  ? "0" + hours.toString() : hours.toString();
-    return parsedHours + ":" + parsedMinutes;
-  }
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [currentMsg, setCurrentMsg] = useState(""); 
   const router = useRouter();
@@ -54,6 +46,14 @@ const ConversationChannel = (props: {
   const [blockedUsers, setBlockedUsers] = useRecoilState(blockedUsersAtom);
   const [setting, setSettings] = useState(false);
   const [openUsersList, setOpenUsersList] = useState(false);
+  const getTime = (time: string): string => {
+    const date = new Date(Number(time));
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let parsedMinutes = Math.floor(minutes / 10) === 0  ? "0" + minutes.toString() : minutes.toString();
+    let parsedHours = Math.floor(hours / 10) === 0  ? "0" + hours.toString() : hours.toString();
+    return parsedHours + ":" + parsedMinutes;
+  }
 
   const handleClick = () => {
     console.log("here we go")
@@ -264,16 +264,16 @@ const ConversationChannel = (props: {
                         <div
                           className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
                             items.user.id != userId
-                              ? "flex-row space-x-2"
-                              : "flex-row-reverse space-x-reverse space-x-2"
+                              ? "flex-row space-x-1"
+                              : "flex-row-reverse space-x-reverse space-x-1"
                           }`}
                         >
                           <button
                             onClick={() => goToUser(items.user.id)}
-                            className={`px-3 font-bold ${
+                            className={`font-bold ${
                               items.user.id !== userId
-                                ? "text-very-dark-purple"
-                                : "text-pearl"
+                                ? "text-very-dark-purple pl-3"
+                                : "text-pearl pr-3"
                             }`}
                           >
                             {items.user.id === userId

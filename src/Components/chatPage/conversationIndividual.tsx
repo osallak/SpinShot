@@ -213,10 +213,10 @@ const ConversationIndividual = (props: {
                             }`}
                           >
                             <span
-                              className={`px-3 ${
+                              className={`${
                                 items.sender !== userId
-                                  ? "text-very-dark-purple"
-                                  : "text-pearl"
+                                  ? "text-very-dark-purple pl-3"
+                                  : "text-pearl pr-3"
                               }`}
                             >
                               {individual.map(

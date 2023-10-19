@@ -7,11 +7,13 @@ import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useCallback, useEffect, useRef, useState, MouseEvent } from "react";
 import { useRecoilState } from "recoil";
 import leave from "../../../public/kickIcon.svg";
 import sendMessageIcon from "../../../public/sendMessage.svg";
 import settings from "../../../public/settingIcon.svg";
+import threePoint from "../../../public/threePoint.svg";
+import threePointforPeridot from "../../../public/threePointforPeridot.svg";
 import {
   channelAtom,
   channelConversationAtom,
@@ -22,6 +24,7 @@ import ChannelSettings from "./channelSettings";
 import { usersListAtom } from "../context/recoilContextChannel";
 import { usersListType } from "@/types/channelTypes";
 import UsersList from "./usersList";
+import SubUsersList from "./subUsersList";
 
 let token: any;
 const ConversationChannel = (props: {
@@ -32,7 +35,7 @@ const ConversationChannel = (props: {
   reload: boolean;
 }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const [currentMsg, setCurrentMsg] = useState(""); 
+  const [currentMsg, setCurrentMsg] = useState("");
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [conversationChannel, setConversationChannel] = useRecoilState(
@@ -46,17 +49,25 @@ const ConversationChannel = (props: {
   const [blockedUsers, setBlockedUsers] = useRecoilState(blockedUsersAtom);
   const [setting, setSettings] = useState(false);
   const [openUsersList, setOpenUsersList] = useState(false);
+  const [openSubUsersList, setOpenSubUsersList] = useState(false);
+
+  console.log("userSIsdfsdf: ", props.id)
+
   const getTime = (time: string): string => {
     const date = new Date(Number(time));
     let hours = date.getHours();
     let minutes = date.getMinutes();
-    let parsedMinutes = Math.floor(minutes / 10) === 0  ? "0" + minutes.toString() : minutes.toString();
-    let parsedHours = Math.floor(hours / 10) === 0  ? "0" + hours.toString() : hours.toString();
+    let parsedMinutes =
+      Math.floor(minutes / 10) === 0
+        ? "0" + minutes.toString()
+        : minutes.toString();
+    let parsedHours =
+      Math.floor(hours / 10) === 0 ? "0" + hours.toString() : hours.toString();
     return parsedHours + ":" + parsedMinutes;
-  }
+  };
 
   const handleClick = () => {
-    console.log("here we go")
+    console.log("here we go");
     setSettings(true);
   };
 
@@ -136,15 +147,15 @@ const ConversationChannel = (props: {
           },
           headers: {
             Authorization: `Bearer ${token}`,
-          }
-        })
+          },
+        });
         console.log("res: ", res.data);
         setUsersList(res.data);
       }
     } catch (error: any) {
       console.log("error: ", error);
     }
-  }
+  };
 
   console.log("users list: ", usersList);
 
@@ -161,6 +172,11 @@ const ConversationChannel = (props: {
       }
     });
   };
+
+  const handleOpenSubUsersList = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    setOpenSubUsersList(true);
+  }
 
   const emailInput = useCallback((inputElement: any) => {
     if (inputElement) {
@@ -190,7 +206,15 @@ const ConversationChannel = (props: {
 
   return (
     <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">
-      {openUsersList && <UsersList open={openUsersList} setOpen={setOpenUsersList} id={props.id} data={usersList} userId={userId} />}
+      {openUsersList && (
+        <UsersList
+          open={openUsersList}
+          setOpen={setOpenUsersList}
+          id={props.id}
+          data={usersList}
+          userId={userId}
+        />
+      )}
       <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">
@@ -227,7 +251,9 @@ const ConversationChannel = (props: {
                 </p>
               </div>
             </div>
-            {type !== "PRIVATE" && <DropDownChannel data={dropDownContent} id={props.id} />}
+            {type !== "PRIVATE" && (
+              <DropDownChannel data={dropDownContent} id={props.id} />
+            )}
           </div>
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
         </div>
@@ -287,30 +313,21 @@ const ConversationChannel = (props: {
                                 : "text-pearl"
                             }`}
                           >
-                          {
-                            getTime(items.sentAt)
-                          }
+                            {getTime(items.sentAt)}
                           </span>
                         </div>
                         <span className="px-3">{items.message}</span>
                       </div>
-                      {items.user.id !== userId ? (
-                        <DropDownChannel
-                          option={option}
-                          setOption={setOption}
-                          data={roomContent}
-                          userId={items.user.id}
-                          id={props.id}
-                        />
+                      {items.user.id === userId ? (
+                        <button onClick={(event) => handleOpenSubUsersList(event)}>
+                          <Image src={threePoint} alt="three point" />
+                        </button>
                       ) : (
-                        <DropDownChannel
-                          option={option}
-                          setOption={setOption}
-                          data={myContent}
-                          userId={items.user.id}
-                          id={props.id}
-                        />
+                        <button onClick={(event) => handleOpenSubUsersList(event)}>
+                          <Image src={threePointforPeridot} alt="three point" />
+                        </button>
                       )}
+                      {openSubUsersList && <SubUsersList open={openSubUsersList} setOpen={setOpenSubUsersList} setClose={setOpenSubUsersList} type={type} name={props.id} userId={userId} checkedID={items.user.id} />}
                     </div>
                   </div>
                 )

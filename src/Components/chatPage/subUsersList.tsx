@@ -24,7 +24,7 @@ const SubUsersList = (props: {
   setOpen: Function;
   setClose: Function;
   type: string;
-  name: string | undefined;
+  name: string;
   userId: string;
   checkedID: string;
 }) => {

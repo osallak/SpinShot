@@ -3,7 +3,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
-  Logger
+  Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -17,8 +17,8 @@ import { User } from 'src/types';
 import { JwtResponse } from 'src/types/common.types';
 import { CreateUserDto } from 'src/user/dto';
 import { UserService } from 'src/user/user.service';
-import { JwtAuthPayload } from './interfaces/jwt.interface';
 import { FortyTwoDto } from './dto/FortyTwo.dto';
+import { JwtAuthPayload } from './interfaces/jwt.interface';
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger('AuthService');
@@ -120,7 +120,6 @@ export class AuthService {
       throw error;
     }
   }
-
 
   async registerFortyTwoUser(user: FortyTwoDto): Promise<JwtResponse> {
     const returnedUser = await this.userService.registerFortyTwoUser(user);

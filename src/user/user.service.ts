@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { UserStatus, haveAchievement } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { FortyTwoDto } from 'src/auth/dto/FortyTwo.dto';
 import { DEFAULT_AVATAR } from 'src/global/constants/global.constants';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import { PaginationResponse } from 'src/global/interfaces/global.intefraces';
@@ -24,7 +25,6 @@ import {
   serializePaginationResponse,
   serializeUser,
 } from './helpers';
-import { FortyTwoDto } from 'src/auth/dto/FortyTwo.dto';
 
 @Injectable()
 export class UserService {
@@ -303,7 +303,7 @@ export class UserService {
       this.prisma.game.count({
         where: {
           OR: [{ userId: id }, { opponentId: id }],
-        }
+        },
       }),
     ]);
     return serializePaginationResponse(games, totalCount, limit);
@@ -397,5 +397,19 @@ export class UserService {
     });
 
     return user;
+  }
+
+  async verifyPassword(id: string, password: string): Promise<boolean> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+    if (!user) throw new NotFoundException('user not found');
+    try {
+      const isMatch = await bcrypt.compare(password, user.password);
+      return isMatch;
+    } catch (error) {
+      this.logger.error(error.message);
+      throw new BadRequestException('Invalid credentials');
+    }
   }
 }

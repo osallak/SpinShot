@@ -5,12 +5,14 @@ import * as Joi from 'joi';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { FriendsModule } from './friends/friends.module';
+import { GamesModule } from './games/games.module';
 import { MediaController } from './media/media.controller';
 import { MediaModule } from './media/media.module';
 import { PrismaService } from './prisma/prisma.service';
 import { StorageModule } from './storage/storage.module';
 import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -33,11 +35,13 @@ import { UserModule } from './user/user.module';
         },
       },
     }),
+    EventEmitterModule.forRoot(),
     AuthModule,
     UserModule,
     StorageModule,
     MediaModule,
     FriendsModule,
+    GamesModule,
   ],
   controllers: [AuthController, UserController, MediaController],
   providers: [PrismaService],

@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SimpleButton from "../Buttons/simpleButton";
 import Maps from "./maps";
 
 const SubSidebarGame = (props: any) => {
 
+  useEffect(() => {
+    
+  }, [props.matchData])
   const hendleUpdata = () => {
     props.socket.emit("joinQueue", {map: props.map});
     props.setIsClick(!props.isClick);
@@ -47,6 +50,7 @@ const SubSidebarGame = (props: any) => {
             <div className="space-y-36">
               <div className="px-4 ">
                 <Maps
+                  matchData={props.matchData}
                   changeBackgroundmap={changeBackgroundmap}
                   backgroundmap={backgroundmap}
                 />

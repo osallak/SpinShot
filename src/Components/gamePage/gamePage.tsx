@@ -17,7 +17,6 @@ import GameCard from "./gameCard";
 import Gamemenu from "./gameMenu";
 import GameModel from "./gameModel";
 import Matchmaking from "./matchmaking";
-import { get } from "node:http";
 
 let game: GameModel | null = null;
 
@@ -33,17 +32,18 @@ const GamePage = (props: any) => {
   const [pages, setPages] = useState("game");
   const [isClick, setIsClick] = useState(false);
   const [cancelJoin, setCancelJoin] = useState(false);
-  const [matchData, setmatchData] = useState<any>();
+  const [matchData, setmatchData] = useState<any>(null);
   const dispatch = useAppDispatch();
-  const myData = useAppSelector((state) => state.Profile);
   const router = useRouter();
   const [dataGame, setDataGame] = useState<any>();
   const [isClick2, setIsClick2] = useState(true);
   const [depend, setDepend] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
+  const [gameOver, setGameOver] = useState(true);
   const [gamerState, setGamerState] = useState<any>(null);
   const [winnerCardState, setWinnerCardState] = useState(true);
   const [loserCardState, setLoserCardState] = useState(true);
+  const [gameJustFinished, setGameJustFinished] = useState(false);
+  const [clear, setClear] = useState(false);
 
   const handleMenu = () => {
     setOpned(false);
@@ -62,19 +62,25 @@ const GamePage = (props: any) => {
   const gameStartedCallback = (data: any) => {
     // console.log("match data ", data);
     setWinnerCardState(true);
+    setCancelJoin(false);
     setLoserCardState(true);
+    setGameJustFinished(false);
+    setIsClick(false);
     setGamerState(null);
-    // setGameOver(true);
+    setGameOver(false);
     setmatchData(data);
   };
 
   const gameOverCallback = (data: any) => {
+    setClear(true);
     console.log("game over ", data);
+    setDataGame(null);
     setGamerState(data);
+    setGameJustFinished(true);
     // setLoser(data);
     setmatchData(null);
-    setDataGame(null);
     setGameOver(true);
+    // setIsClick(true);
   };
 
   const handleData = async () => {
@@ -92,17 +98,7 @@ const GamePage = (props: any) => {
           },
         });
         setDataGame(respo?.data);
-        // console.log("data game ", respo?.data);
       }
-      // } else if (parseJwt(JSON.stringify(token)).sub === matchData?.secondPlayer){
-      //   const url = `${ip}/users/profile/${matchData?.firstPlayer}`;
-      //   const respo = await axios.get(url, {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   });
-      //   setDataGame(respo?.data);
-      // }
     } catch (error) {
       console.log(error);
       return;
@@ -130,16 +126,16 @@ const GamePage = (props: any) => {
 
   const handleClick = (a: boolean, route: string | undefined) => {
     setOpned(true);
-    {
-      route ? setPages(route) : null;
-    }
+    route ? setPages(route) : null;
   };
+
+
 
   useEffect(() => {
     handleData();
     getDataOfUser();
     setDepend(false);
-  }, [handleData, depend, getDataOfUser]);
+  }, [depend, getDataOfUser]);
 
   useEffect(() => {
     handleResize();
@@ -157,22 +153,23 @@ const GamePage = (props: any) => {
     socket.on("error", errorEventCallback);
     socket.on("gameOver", gameOverCallback);
     socket.on("match", gameStartedCallback);
-    socket.on("gameState", (data: any) => {
-      // console.log("game state ", data.ball);
-      game?.updateState(data);
-    });
-
+    socket.on("gameState", (data: any) => {game?.updateState(data)});
     setSocket(socket);
+
     if (typeof window !== "undefined") {
       window.addEventListener("resize", handleResize);
       return () => {
         window.removeEventListener("resize", handleResize);
       };
     }
+  
     return () => {
       socket.disconnect();
     };
   }, []);
+
+
+
 
   useEffect(() => {
     // handleData();
@@ -182,6 +179,22 @@ const GamePage = (props: any) => {
     };
   }, [width, height, isopen, map, socket]);
 
+  const cleanUp = () => {
+    setDataGame(null);
+  }
+
+  useEffect(() => {
+    return () => {
+      if (clear) {
+        cleanUp();
+      }
+    }
+  }, [isClick, matchData, dataGame]);
+  
+  
+  {
+    console.log(gameOver, cancelJoin, matchData, gameJustFinished , dataGame);
+  }
   return (
     <div
       className={
@@ -200,6 +213,7 @@ const GamePage = (props: any) => {
         <SideBar />
         <SubSidebarGame
           depend={depend}
+          matchData={matchData}
           setDepend={setDepend}
           setMap={setMap}
           setIsClick={setIsClick}
@@ -241,25 +255,27 @@ const GamePage = (props: any) => {
             isClick={isClick}
           />
         )}
-        {!cancelJoin && !gameOver && !matchData && (
+        {isClick && !matchData &&  (
           <Matchmaking
             isClick={isClick}
             setIsClick={setIsClick}
             socket={socket}
             dataGame={dataGame}
             setDataGame={setDataGame}
+            setmatchData={setmatchData}
             matchData={matchData}
+            setClear={setClear}
           />
         )}
       </div>
-      {gameOver && !gamerState && gamerState.winner === router.query?.id && (
+      {gameOver && gamerState && gamerState.winner === router.query?.id && (
         <GameCard
           cardState={winnerCardState}
           setCardState={setWinnerCardState}
           gameState={"You Win"}
         />
       )}
-      {gameOver && !gamerState && gamerState.winner !== router.query?.id && (
+      {gameOver && gamerState && gamerState.winner !== router.query?.id && (
         <GameCard
           cardState={loserCardState}
           setCardState={setLoserCardState}

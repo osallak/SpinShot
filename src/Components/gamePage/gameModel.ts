@@ -67,17 +67,17 @@ class GameModel {
 
     return Math.min(scale, scale2);
   }
+
   private generateEvents(): void {
     Matter.Events.on(this.engine, "beforeUpdate", (event: any) => {
       let x: number = this.mouse.position.x;
-      let min: number = this.normalize(150 / 2, 0, this.width, 0, 650) - 5;
+      let min: number = this.normalize(150 / 2, 0, 650, 0, this.width) - 5;
       let max: number = this.width - min + 10;
-      console.log("mouse x", this.mouse.position.x);
+      // console.log("mouse x", this.mouse.position.x);
       if (x >= min && x <= max) {
         this.socket?.emit("movePlayer", {
           x:
-            this.normalize(this.mouse.position.x, 0, this.width, 0, 650) -
-            this.normalize(25, 0, this.width, 0, 650),
+            this.normalize(this.mouse.position.x, 0, this.width, 0, 650)
         });
         // Body.setPosition(this.player1, {
         //   x: this.mouse.position.x,

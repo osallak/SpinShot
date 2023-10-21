@@ -20,7 +20,9 @@ const Matchmaking = (props: any) => {
   const router = useRouter();
 
 
-  
+  // useEffect(() => {
+
+  // }, [props.matchData, props.dataGame])
   const handleClick = () => {
     setClear(true);
 
@@ -35,6 +37,7 @@ const Matchmaking = (props: any) => {
       // props.setGameOver(true);
       props.socket.on("disconnect", () => console.log("disconnect: "));
     props.setIsClick(!props.isClick);
+    props.setmatchData(null);
     props.setDataGame(null);
   };
 
@@ -64,7 +67,7 @@ const Matchmaking = (props: any) => {
         cleanUp();
       }
     };
-  }, [data]);
+  }, [data, props.matchData, props.dataGame, clear]);
 
   return (
     <div className="">

@@ -8,7 +8,8 @@ import {
 const GameCard = (props: any) => {
 
     const handleClick = () => {
-      console.log(props.gameState);
+      console.log(props.cardState);
+      props.setCardState(false);
       // props.setLost(false);
       // console.log("here ... ", props.setCardState(false));
     // props.setGameOver(false);

@@ -23,9 +23,17 @@ const Matchmaking = (props: any) => {
   
   const handleClick = () => {
     setClear(true);
-    props.socket.emit("leaveQueue", console.log("leave queue"));
-    props.socket.on("exception", console.log("exception: ", props.socket.id));
-    props.socket.on("disconnect", console.log("disconnect: ", props.socket.id));
+
+    props.socket.emit("leaveQueue", () => console.log("leave queue"));
+    props.socket.on("exception", () => console.log("exception: "));
+    if (props.matchData) {
+      props.socket.emit("leave");
+    }
+    // props.socket.emit("leave", () => {
+      //   console.log('leave');
+      // });
+      // props.setGameOver(true);
+      props.socket.on("disconnect", () => console.log("disconnect: "));
     props.setIsClick(!props.isClick);
     props.setDataGame(null);
   };
@@ -45,7 +53,7 @@ const Matchmaking = (props: any) => {
     }
   };
 
-  const clearkhera = () => {
+  const cleanUp = () => {
     setClear(false);
   }
 
@@ -53,7 +61,7 @@ const Matchmaking = (props: any) => {
     getDataOfUaer();
     return () => {
       if (clear) {
-        clearkhera();
+        cleanUp();
       }
     };
   }, [data]);

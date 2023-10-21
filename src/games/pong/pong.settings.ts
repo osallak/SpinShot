@@ -1,11 +1,14 @@
 export const ballSettings = {
   friction: 0,
   restitution: 1,
-  inertia: 100, // Set a finite value for inertia
+  inertia: Infinity,
   density: 0.071,
   frictionAir: 0,
-  label: 'ball',
-  velocity: { x: 1, y: 1 },
+  force: {
+    x: 0.5,
+    y: 0.5,
+  },
+  mass: 15,
 };
 
 export const HEIGHT = 750;

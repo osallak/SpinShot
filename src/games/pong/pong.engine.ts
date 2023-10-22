@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import Matter from 'matter-js';
 import { Socket } from 'socket.io';
 import { MapEnum } from '../types/map-enum.type';
@@ -15,10 +16,10 @@ type position = {
   y: number;
 };
 
+@Injectable()
 export class PongEngine {
   private readonly id: string;
   private engine: Matter.engine;
-  private world: Matter.world;
   private runner: Matter.runner;
   private ball: Matter.body;
   private firstPaddle: Matter.body;
@@ -35,7 +36,9 @@ export class PongEngine {
   private readonly height: number = HEIGHT;
   private isPlaying: boolean = false;
   public cleanUpGameService: (id: string) => void | null = null;
-  private Movement: {
+  public saveGameCallback: (game: any) => void | null = null;
+  private saved: boolean = false;
+  private movement: {
     firstPlayer: {
       x: number;
       shouldMove: boolean;
@@ -70,7 +73,7 @@ export class PongEngine {
     this.secondClient = gameSettings.secondClient;
     this.firstPlayerId = gameSettings.firstPlayerId;
     this.secondPlayerId = gameSettings.secondPlayerId;
-    this.map = gameSettings.map;
+    this.map = gameSettings.map ?? 'normal';
     this.notifyPlayers(
       {
         firstClient: true,
@@ -113,35 +116,40 @@ export class PongEngine {
 
     setTimeout(() => {
       this.throwBall(); //throw the ball
-    }, 2000);
+    }, 3000);
     Matter.Runner.run(this.runner, this.engine);
   }
 
   private beforePlay() {
     setTimeout(() => {
-      this.client1 && this.client1.emit('countDown', '3');
-      this.client2 && this.client2.emit('countDown', '3');
-    }, 1000);
-
-    setTimeout(() => {
       this.client1 && this.client1.emit('countDown', '2');
       this.client2 && this.client2.emit('countDown', '2');
-    }, 2000);
+    }, 1000);
 
     setTimeout(() => {
       this.client1 && this.client1.emit('countDown', '1');
       this.client2 && this.client2.emit('countDown', '1');
-    }, 3000);
+    }, 2000);
 
     setTimeout(() => {
       this.client1 && this.client1.emit('countDown', 'GO!');
       this.client2 && this.client2.emit('countDown', 'GO!');
-    }, 4000);
+    }, 2500);
 
-    setTimeout(() => {
-      this.client1 && this.client1.emit('countDown', '');
-      this.client2 && this.client2.emit('countDown', '');
-    }, 4500);
+    // setTimeout(() => {
+    //   this.client1 && this.client1.emit('countDown', '1');
+    //   this.client2 && this.client2.emit('countDown', '1');
+    // }, 3000);
+
+    // setTimeout(() => {
+    //   this.client1 && this.client1.emit('countDown', 'GO!');
+    //   this.client2 && this.client2.emit('countDown', 'GO!');
+    // }, 4000);
+
+    // setTimeout(() => {
+    //   this.client1 && this.client1.emit('countDown', '');
+    //   this.client2 && this.client2.emit('countDown', '');
+    // }, 4500);
   }
 
   private throwBall() {
@@ -169,7 +177,6 @@ export class PongEngine {
       },
     });
 
-    this.world = Matter.World.create();
     this.runner = Matter.Runner.create({
       delta: 1000 / 60,
       isFixed: true,
@@ -181,15 +188,12 @@ export class PongEngine {
     this.firstPaddle = Matter.Bodies.rectangle(325, 15, 150, 13, {
       label: 'firstPaddle',
       isStatic: true,
-      chamfer: { radius: 6.5 },
     });
 
     this.secondPaddle = Matter.Bodies.rectangle(325, 735, 150, 13, {
       label: 'secondPaddle',
       isStatic: true,
-      chamfer: { radius: 6.5 },
     });
-
 
     this.ball = Matter.Bodies.circle(
       this.width / 2,
@@ -274,11 +278,9 @@ export class PongEngine {
     const labels = [pairs[0].bodyA.label, pairs[0].bodyB.label];
 
     if (labels.includes('ball') && labels.includes('top')) {
-      console.log('top Goal');
       this.goalScored(this.secondPlayerId);
       return;
     } else if (labels.includes('ball') && labels.includes('bottom')) {
-      console.log('bottom Goal');
       this.goalScored(this.firstPlayerId);
       return;
     }
@@ -287,20 +289,20 @@ export class PongEngine {
   private handleAfterUpdate = (
     event: Matter.IEventCollision<Matter.Engine>,
   ) => {
-    if (this.Movement.firstPlayer.shouldMove) {
+    if (this.movement.firstPlayer.shouldMove) {
       Matter.Body.setPosition(this.firstPaddle, {
-        x: this.Movement.firstPlayer.x,
+        x: this.movement.firstPlayer.x,
         y: this.firstPaddle.position.y,
       });
     }
-    if (this.Movement.secondPlayer.shouldMove) {
+    if (this.movement.secondPlayer.shouldMove) {
       Matter.Body.setPosition(this.secondPaddle, {
-        x: this.Movement.secondPlayer.x,
+        x: this.movement.secondPlayer.x,
         y: this.secondPaddle.position.y,
       });
     }
-    this.Movement.firstPlayer.shouldMove = false;
-    this.Movement.secondPlayer.shouldMove = false;
+    this.movement.firstPlayer.shouldMove = false;
+    this.movement.secondPlayer.shouldMove = false;
     this.sendGameState();
   };
 
@@ -310,7 +312,7 @@ export class PongEngine {
 
     playerId === this.firstPlayerId ? this.firstScore++ : this.secondScore++;
 
-    if (this.firstScore >= 10 || this.secondScore >= 10) {
+    if (this.firstScore >= 5 || this.secondScore >= 5) {
       this.gameOver(true);
       return;
     } else {
@@ -342,10 +344,18 @@ export class PongEngine {
 
     this.firstClient && this.firstClient.emit('gameOver', gameOver);
     this.firstClient && this.secondClient.emit('gameOver', gameOver);
-    //cleanup the game
 
     Matter.Events.off(this.engine, 'collisionStart', this.handleCollisionStart);
     Matter.Events.off(this.engine, 'afterUpdate', this.handleAfterUpdate);
+    this.saveGameCallback &&
+      this.saveGameCallback({
+        userId: this.firstPlayerId,
+        opponentId: this.secondPlayerId,
+        map: this.map,
+        userScore: this.firstScore,
+        opponentScore: this.secondScore,
+      });
+    this.cleanUpGameService && this.cleanUpGameService(this.id);
   }
 
   private sendScore() {
@@ -358,7 +368,7 @@ export class PongEngine {
     this.secondClient && this.secondClient.emit('scoreUpdate', scoreUpdate);
   }
 
-  private sendGameState() { 
+  private sendGameState() {
     const firstGameState = {
       ball: this.normalizePosition(this.ball.position),
       opponentPaddle: this.normalizePosition(this.secondPaddle.position).x,
@@ -441,14 +451,13 @@ export class PongEngine {
     }
 
     if (id === this.firstPlayerId) {
-      this.Movement.firstPlayer.x = WIDTH - newX;
-      this.Movement.firstPlayer.shouldMove = true;
+      this.movement.firstPlayer.x = WIDTH - newX;
+      this.movement.firstPlayer.shouldMove = true;
     } else if (id === this.secondPlayerId) {
-      this.Movement.secondPlayer.x = newX;
-      this.Movement.secondPlayer.shouldMove = true;
+      this.movement.secondPlayer.x = newX;
+      this.movement.secondPlayer.shouldMove = true;
     }
   }
-
 
   public resign(id: string) {
     switch (id) {
@@ -465,5 +474,9 @@ export class PongEngine {
       }
     }
     this.gameOver();
+  }
+
+  get isSaved() {
+    return this.saved;
   }
 }

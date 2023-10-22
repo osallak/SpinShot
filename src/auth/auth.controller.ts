@@ -83,7 +83,6 @@ export class AuthController {
     @UserDecorator() user: FortyTwoDto,
   ): Promise<void> {
     const { token } = await this.authService.registerFortyTwoUser(user);
-    console.log(token);
     res.cookie('jwt', 'test'); //todo: replace with jwt token
     res.redirect(this.configService.get('FRONTEND_ORIGIN'));
   }

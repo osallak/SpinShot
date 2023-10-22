@@ -32,6 +32,7 @@ import {
   UpdateUserDoc,
 } from './swagger/user.swagger';
 import { UserService } from './user.service';
+import { UserStatus } from '@prisma/client';
 
 @ApiTags('users')
 @Controller('users')
@@ -100,5 +101,12 @@ export class UserController {
       body.password,
     );
     isMatch ? res.sendStatus(200) : res.sendStatus(401);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('/status/:id')
+  async getUserStatus(@Param('id') id: string): Promise<{status: UserStatus}> {
+    return await this.userService.getUserStatus(id);
   }
 }

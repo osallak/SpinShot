@@ -1,3 +1,5 @@
+import { randomizeForce } from '../helpers/pong.helper';
+
 export const ballSettings = {
   friction: 0,
   restitution: 1,
@@ -6,7 +8,7 @@ export const ballSettings = {
   frictionAir: 0,
   force: {
     x: 0.5,
-    y: 0.5,
+    y: 0.5, 
   },
   mass: 15,
 };

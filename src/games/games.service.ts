@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Socket } from 'socket.io';
 import { MoveDto } from './dto/move.dto';
 import { generateGameId, randomizeMap } from './helpers';
 import { PongEngine } from './pong/pong.engine';
 import { MapEnum } from './types/map-enum.type';
+import { UserStatus } from '@prisma/client';
 
 @Injectable()
 export class GamesService {
-  constructor(/* private readonly authService : AuthService */) {}
+  constructor(private readonly eventEmitter: EventEmitter2) {}
 
   private games = new Map<string, PongEngine>();
   private matchingQueue: {
@@ -22,15 +24,11 @@ export class GamesService {
     let id = this.getIdBySocket(client);
     if (!id) return;
 
-    console.log('tried to join queue ==> id: ', id);
-
     if (this.matchingQueue.find((p) => p.id === id) || this.isPlaying(id)) {
       client.emit('error', `player already joined`);
       client.emit('cancel-join', {});
-      console.log('player already joined');
       return;
     }
-    console.log(`player ${id} joined queue`);
     this.matchingQueue.push({ id, client, map });
 
     if (this.matchingQueue.length < 2) return;
@@ -39,7 +37,6 @@ export class GamesService {
       (p) => p.map === map && p.id !== id,
     );
     if (!firstPlayer) return;
-
 
     this.matchingQueue = this.matchingQueue.filter((element) => {
       return element.id !== firstPlayer?.id && element.id !== id;
@@ -53,9 +50,12 @@ export class GamesService {
     };
 
     const game = new PongEngine(gameOptions);
+    game.cleanUpGameService = this.cleanupSingleGame.bind(this);
+    game.saveGameCallback = this.saveGame.bind(this);
     id = generateGameId();
     this.games.set(id, game);
-    console.log('game created');
+    this.eventEmitter.emit('userUpdate', {status: UserStatus.INGAME, id: gameOptions.firstPlayerId});
+    this.eventEmitter.emit('userUpdate', {status: UserStatus.INGAME, id: gameOptions.secondPlayerId});
     game.play();
   }
 
@@ -68,27 +68,21 @@ export class GamesService {
   private getGameBySocket(client: Socket): PongEngine | null {
     this.games.forEach((game) => {
       if (game.client1?.id === client.id || game.client2?.id === client.id) {
-        console.log('game found: game game game');
         return game;
       }
     });
     return null;
   }
-  
+
   handleMove(client: Socket, moveDto: MoveDto): void {
-    // console.log('handleMove: ', moveDto);
-    let resGame:  PongEngine | null = null;
+    let resGame: PongEngine | null = null;
     this.games.forEach((game) => {
       if (game.client1?.id === client.id || game.client2?.id === client.id) {
         resGame = game;
       }
     });
-  
-    // let game: PongEngine = this.getGameBySocket(client);
-    // console.log('game: ', game);
-    // console.log('getGameBySocket: ', this.games);
+
     if (!resGame) return;
-    // console.log('move: ', moveDto);
     resGame.move(this.getIdBySocket(client), moveDto.x);
   }
 
@@ -158,7 +152,7 @@ export class GamesService {
     };
     const game = new PongEngine(gameOptions);
     game.cleanUpGameService = this.cleanupSingleGame.bind(this);
-  
+
     this.games.set(gameId, game);
     game.play();
   }
@@ -193,23 +187,15 @@ export class GamesService {
 
   connect(client: Socket, id: string): void {
     this.lobby.set(id, client);
+    this.eventEmitter.emit('userUpdate', {status: UserStatus.ONLINE, id});
 
     this.handleAlreadyInGame(id, client);
-  }
-
-  handleLeftGame(client: Socket): void {
-    const id = this.getIdBySocket(client);
-    if (!id) {
-      client.emit('error', `Something went wrong`);
-    }
-
-    // this.handleAlreadyInGame(id, client)
-    //todo
   }
 
   handleDisconnect(client: Socket): void {
     let opponent: Socket | null = null;
     if (!client) return;
+  
     let id = this.getIdBySocket(client);
     if (!id) return;
 
@@ -222,16 +208,16 @@ export class GamesService {
       if (game.firstPlayer === id) {
         opponent = game.client2;
         game.client1 = null;
-
       }
       if (game.secondPlayer === id) {
         opponent = game.client1;
         game.client2 = null;
+        game.resign(id);
       }
     });
 
+    this.eventEmitter.emit('userUpdate', {status: UserStatus.OFFLINE, id});
     this.invites = this.invites.filter((i) => i.from !== id && i.to !== id);
-    opponent && opponent.emit('opponent-left', {});
   }
 
   handleAlreadyInGame(id: string, client: Socket): boolean {
@@ -260,16 +246,15 @@ export class GamesService {
     const id = this.getIdBySocket(client);
     if (!id) return;
     let game: PongEngine | undefined;
-    console.log('searching for game...');
     this.games.forEach((value: PongEngine) => {
       if (value.firstPlayer === id || value.secondPlayer === id) {
         game = value;
-        console.log('game found');
         return;
       }
     });
-    if (!game){ console.log('game not found');return;}
-    console.log('before resign');
+    if (!game) {
+      return;
+    }
     game.resign(id);
     this.cleanupSingleGame(game.gameId);
   }
@@ -289,5 +274,12 @@ export class GamesService {
       }
     });
     return id;
+  }
+
+  private saveGame(game: any): void {
+    console.log('saveGame: ', game);
+    this.eventEmitter.emit('saveGame', game);
+    this.eventEmitter.emit('userUpdate', {status: UserStatus.ONLINE, id: game.userId});
+    this.eventEmitter.emit('userUpdate', {status: UserStatus.ONLINE, id: game.opponentId});
   }
 }

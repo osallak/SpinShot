@@ -239,6 +239,7 @@ export class UserService {
         HaveAchievement: {
           select: {
             level: true,
+            achieved: true,
             Achiement: {
               select: {
                 name: true,
@@ -411,5 +412,14 @@ export class UserService {
       this.logger.error(error.message);
       throw new BadRequestException('Invalid credentials');
     }
+  }
+
+  async getUserStatus(id: string): Promise<{status: UserStatus}> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: { status: true}
+    });
+    if (!user) throw new NotFoundException('user not found');
+    return user;
   }
 }

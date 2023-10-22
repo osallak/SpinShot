@@ -12,3 +12,7 @@ export const randomizeMap = (): MapEnum => {
 
     return maps[index];
 }
+
+export const randomizeForce = () => {
+    return Math.random() * (0.5 - 0.1) + 0.1;
+}

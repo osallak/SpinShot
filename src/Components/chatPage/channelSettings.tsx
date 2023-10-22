@@ -43,8 +43,22 @@ const ChannelSettings = (props: {
     setPassword(event.target.value);
   };
 
-	const removePassword = () => {
-		//remove password from a channel
+	const removePassword = async() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+		try {
+      const res = await axios.patch(`${ip}/room/remove-password`, {room: props.id}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      closeModal();
+    } catch (error: any) {
+      console.log("remove password from a channel: ", error)
+    }
 	}
 
   const handleSave = async () => {
@@ -54,7 +68,17 @@ const ChannelSettings = (props: {
       return;
     }
     if (type === "PROTECTED") {
-      // change the password
+      try {
+        const res = await axios.patch(`${ip}/room/change-password`, { room: props.id, password, newPassword: confirmePassword}, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        console.log("res from change password of a channel protected : ", res);
+        closeModal();
+      } catch (error :any ) {
+        console.log("error from change passwrd of a channel: ", error);
+      }
     } else if (type === "PUBLIC") {
       // add password for channel
       if (password !== confirmePassword) {
@@ -71,10 +95,11 @@ const ChannelSettings = (props: {
               Authorization: `Bearer ${token}`,
             },
           }
-        );
-        props.setOpen(false);
-      } catch (error: any) {
-        setError(true);
+          );
+          props.setOpen(false);
+          closeModal();
+        } catch (error: any) {
+          setError(true);
         setErrorMessage(error?.response?.data);
 				// console.log(error)
       }

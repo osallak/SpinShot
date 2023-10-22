@@ -185,9 +185,7 @@ const ConversationChannel = (props: {
 
   const [content, setContent] = useState<any[]>([]);
 
-  const handleOpenSubUsersList = (
-    event: MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleOpenSubUsersList = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     console.log("and here");
     setContent([
@@ -199,9 +197,7 @@ const ConversationChannel = (props: {
     setOpenSubUsersList(true);
   };
 
-  const handleOpenLeaveList = (
-    event: MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleOpenLeaveList = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     console.log("enter here");
     setContent([{ content: "Leave", icon: kick }]);
@@ -234,8 +230,9 @@ const ConversationChannel = (props: {
     }
   }, [conversationChannel]);
 
-  console.log("userId: ", userId);
-  console.log("blocked user in a channel: ", blockedUsers)
+  function blockeduser(user: string): boolean {
+    return !(blockedUsers as string[]).some((item: string) => item === user)
+  }
 
   return (
     <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">
@@ -297,102 +294,102 @@ const ConversationChannel = (props: {
           >
             <div className="w-[94%] space-y-3">
               {(conversationChannel as messagesType[]).map(
-                (items: messagesType, index: number) => (
-                  <div
-                    key={index}
-                    className={`flex ${
-                      items.user.id != userId
-                        ? "flex-row-reverse space-x-reverse space-x-5"
-                        : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
-                    } justify-end`}
-                  >
+                (items: messagesType, index: number) =>
+                  blockeduser(items.user.id) && (
                     <div
-                      className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] min-h-[70px] flex justify-between rounded-xl ${
+                      key={index}
+                      className={`flex ${
                         items.user.id != userId
-                          ? "items-center bg-peridot text-very-dark-purple font-bold flex-row space-x-reverse pr-5"
-                          : "items-center bg-very-dark-purple text-pearl font-medium flex-row-reverse pl-5"
-                      } flex-row md:space-y-1 space-y-0 py-3`}
+                          ? "flex-row-reverse space-x-reverse space-x-5"
+                          : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
+                      } justify-end`}
                     >
                       <div
-                        className={`space-y-2 flex flex-col x-pp:w-[650px] 2xl:w-[550px] xl:w-[450px] lg:w-[80%] w-[90%] h-full ${
+                        className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] min-h-[70px] flex justify-between rounded-xl ${
                           items.user.id != userId
-                            ? "items-start bg-peridot text-very-dark-purple font-bold"
-                            : "items-end bg-very-dark-purple text-pearl font-medium"
-                        }`}
+                            ? "items-center bg-peridot text-very-dark-purple font-bold flex-row space-x-reverse pr-5"
+                            : "items-center bg-very-dark-purple text-pearl font-medium flex-row-reverse pl-5"
+                        } flex-row md:space-y-1 space-y-0 py-3`}
                       >
                         <div
-                          className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
+                          className={`space-y-2 flex flex-col x-pp:w-[650px] 2xl:w-[550px] xl:w-[450px] lg:w-[80%] w-[90%] h-full ${
                             items.user.id != userId
-                              ? "flex-row space-x-1"
-                              : "flex-row-reverse space-x-reverse space-x-1"
+                              ? "items-start bg-peridot text-very-dark-purple font-bold"
+                              : "items-end bg-very-dark-purple text-pearl font-medium"
                           }`}
                         >
-                          <button
-                            onClick={() => goToUser(items.user.id)}
-                            className={`font-bold ${
-                              items.user.id !== userId
-                                ? "text-very-dark-purple pl-3"
-                                : "text-pearl pr-3"
+                          <div
+                            className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
+                              items.user.id != userId
+                                ? "flex-row space-x-1"
+                                : "flex-row-reverse space-x-reverse space-x-1"
                             }`}
                           >
-                            {items.user.id === userId
-                              ? "you"
-                              : items.user.username}
-                          </button>
-                          <span
-                            className={`text-[10px] font-light h-full ${
-                              items.user.id !== userId
-                                ? "text-very-dark-purple"
-                                : "text-pearl"
-                            }`}
-                          >
-                            {getTime(items.sentAt)}
-                          </span>
+                            <button
+                              onClick={() => goToUser(items.user.id)}
+                              className={`font-bold ${
+                                items.user.id !== userId
+                                  ? "text-very-dark-purple pl-3"
+                                  : "text-pearl pr-3"
+                              }`}
+                            >
+                              {items.user.id === userId
+                                ? "you"
+                                : items.user.username}
+                            </button>
+                            <span
+                              className={`text-[10px] font-light h-full ${
+                                items.user.id !== userId
+                                  ? "text-very-dark-purple"
+                                  : "text-pearl"
+                              }`}
+                            >
+                              {getTime(items.sentAt)}
+                            </span>
+                          </div>
+                          <span className="px-3">{items.message}</span>
                         </div>
-                        <span className="px-3">{items.message}</span>
+                        {items.user.id === userId ? (
+                          <button
+                            onClick={(event) => handleOpenLeaveList(event)}
+                          >
+                            <Image src={threePoint} alt="three point" />
+                          </button>
+                        ) : (
+                          <button
+                            onClick={(event) => handleOpenSubUsersList(event)}
+                          >
+                            <Image
+                              src={threePointforPeridot}
+                              alt="three point"
+                            />
+                          </button>
+                        )}
+                        {openSubUsersList && (
+                          <SubUsersList
+                            open={openSubUsersList}
+                            setOpen={setOpenSubUsersList}
+                            setClose={setOpenSubUsersList}
+                            type={type}
+                            name={props.id}
+                            content={content}
+                            checkedID={items.user.id}
+                          />
+                        )}
+                        {openLeaveList && (
+                          <SubUsersList
+                            open={openLeaveList}
+                            setOpen={setOpenLeaveList}
+                            setClose={setOpenLeaveList}
+                            type={type}
+                            name={props.id}
+                            content={content}
+                            checkedID={items.user.id}
+                          />
+                        )}
                       </div>
-                      {items.user.id === userId ? (
-                        <button
-                          onClick={(event) =>
-                            handleOpenLeaveList(event)
-                          }
-                        >
-                          <Image src={threePoint} alt="three point" />
-                        </button>
-                      ) : (
-                        <button
-                          onClick={(event) =>
-                            handleOpenSubUsersList(event)
-                          }
-                        >
-                          <Image src={threePointforPeridot} alt="three point" />
-                        </button>
-                      )}
-                      {openSubUsersList && (
-                        <SubUsersList
-                          open={openSubUsersList}
-                          setOpen={setOpenSubUsersList}
-                          setClose={setOpenSubUsersList}
-                          type={type}
-                          name={props.id}
-                          content={content}
-                          checkedID={items.user.id}
-                        />
-                      )}
-                      {openLeaveList && (
-                        <SubUsersList
-                          open={openLeaveList}
-                          setOpen={setOpenLeaveList}
-                          setClose={setOpenLeaveList}
-                          type={type}
-                          name={props.id}
-                          content={content}
-                          checkedID={items.user.id}
-                        />
-                      )}
                     </div>
-                  </div>
-                )
+                  )
               )}
             </div>
           </div>

@@ -1,28 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateRoomDto } from './dtos/create-room.dto';
-import { JoinRoomDto } from './dtos/join-room.dto';
 import {
   FriendshipStatus,
   RoomType,
-  User,
   UserRole,
   UserStatusGroup,
 } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { Response, toObject } from 'src/global/interfaces';
-import { Room } from './dtos/find-room.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
-import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
-import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
-import { serializePaginationResponse } from 'src/user/helpers';
-import { async, elementAt } from 'rxjs';
-import { boolean, valid } from 'joi';
-import { join, resolve } from 'path';
-import { rejects } from 'assert';
 import { banUserDto } from './dtos/ban-user.dto';
-import { ProtectRoomDto } from './dtos/protect-room.dto';
+import { ProtectRoomDto, RemovePasswordDto, ChangePasswordDto } from './dtos/protect-room.dto';
 import { ElevateUserDto } from './dtos/elevate-user.dto';
+import { JoinRoomDto } from './dtos/join-room.dto';
+import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
+import { CreateRoomDto } from './dtos/create-room.dto';
 
 @Injectable()
 export class RoomService {
@@ -482,6 +474,14 @@ export class RoomService {
             RoomChatConversation: {
               some: {
                 userId: userId,
+                OR: [
+                  {
+                    userStatus: null,
+                  },
+                  {
+                    userStatus: UserStatusGroup.MUTED,
+                  }
+                ]
               },
             },
           },
@@ -507,6 +507,12 @@ export class RoomService {
             },
           },
         });
+        if (!rooms) {
+          return reject({
+            status: 404,
+            message: 'No Rooms Found',
+          })
+        }
         resolve({
           status: 200,
           message: 'All Rooms',
@@ -522,13 +528,30 @@ export class RoomService {
     });
   }
 
-  async getSpecificRoom(
-    query: PaginationQueryDto,
-    roomName: string,
-    userId: string,
-  ): Promise<Response> {
+  async getSpecificRoom(roomName: string, userId: string): Promise<Response> {
     return new Promise(async (resolve, reject) => {
       try {
+        const u =  await this.prismaService.roomChatConversation.findUnique({
+          where: {
+            roomChatId_userId: {
+              roomChatId: roomName,
+              userId: userId,
+            },
+            OR: [
+              {
+                userStatus: null,
+              },
+              {
+                userStatus: UserStatusGroup.MUTED,
+              },
+            ],
+        }} );
+        if (!u) {
+          return reject({
+            status: 404,
+            message: 'User Not A Member',
+          });
+        }
         // sending back a array of blocked users
         let blockedUsersRes = [];
         const blockedUsers = await this.prismaService.friendship.findMany({
@@ -562,8 +585,6 @@ export class RoomService {
           },
           select: {
             messages: {
-              skip: query.getSkip(),
-              take: query.limit,
               orderBy: {
                 sentAt: 'desc',
               },
@@ -577,16 +598,25 @@ export class RoomService {
                     avatar: true,
                   },
                 },
+                RoomChatConversation: {
+                  select: {
+                    userRole: true,
+                  },
+                },
               },
             },
           },
         });
+        let messagesRes = [];
+        if (messages.length > 0 && messages[0]?.messages) {
+          messagesRes = messages[0].messages;
+        }
         resolve({
           status: 200,
           message: 'Single Room',
           data: {
             blockedUsers: blockedUsersRes,
-            messages: toObject.call(messages),
+            messages: toObject.call(messagesRes),
           },
         });
       } catch (e) {
@@ -816,10 +846,17 @@ export class RoomService {
               ],
             },
             select: {
+              User: {
+                select: {
+                  avatar: true,
+                  username: true,
+                },
+              },
               userId: true,
+              userRole: true,
               userStatus: true,
-							muteDuration: true,
-							mutedAt: true,
+              muteDuration: true,
+              mutedAt: true,
             },
           });
         resolve(roomMembers);
@@ -1070,6 +1107,10 @@ export class RoomService {
                   id: roomName,
                 },
               });
+              return resolve({
+                status: 200,
+                message: 'Room Deleted',
+              });
             } else {
               const newOwner: any = basicMembers[0].userId;
               await this.prismaService.roomChatConversation.update({
@@ -1098,7 +1139,7 @@ export class RoomService {
               },
             });
           }
-        } else {
+        }
         await this.prismaService.roomChatConversation.delete({
           where: {
             roomChatId_userId: {
@@ -1107,7 +1148,6 @@ export class RoomService {
             },
           },
         });
-				}
         return resolve({
           status: 200,
           message: 'User Left',
@@ -1120,4 +1160,157 @@ export class RoomService {
       }
     });
   }
+
+  async getAllMembers(userId: string, roomName: string): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!roomName || !userId) {
+          return reject({
+            status: 400,
+            message: 'Missing values',
+          });
+        }
+        const isMember =
+          await this.prismaService.roomChatConversation.findUnique({
+            where: {
+              roomChatId_userId: {
+                roomChatId: roomName,
+                userId: userId,
+              },
+              OR: [
+                {
+                  userStatus: null,
+                },
+                {
+                  userStatus: UserStatusGroup.MUTED,
+                },
+              ],
+            },
+          });
+        if (!isMember) {
+          return reject({
+            status: 403,
+            message: 'User Not A Member',
+          });
+        }
+        const members = await this.getRoomMembers(roomName);
+        return resolve({
+          status: 200,
+          message: 'All Members',
+          data: members,
+        });
+      } catch {
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    });
+  }
+
+  async changePassword(
+    userId: string,
+    changePasswordDto: ChangePasswordDto,
+  ): Promise<Response> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const isValid =
+          await this.prismaService.roomChatConversation.findUnique({
+            where: {
+              roomChatId_userId: {
+                roomChatId: changePasswordDto.room,
+                userId: userId,
+              },
+              userRole: UserRole.OWNER,
+              RoomChat: {
+                type: RoomType.PROTECTED,
+              },
+            },
+            select: {
+              RoomChat: {
+                select: {
+                  password: true,
+                }
+              }
+            }
+          });
+        if (!isValid) {
+          return reject({
+            status: 403,
+            message: 'Cannot Change Password',
+          });
+        }
+        const isMatch = await bcrypt.compare(changePasswordDto.password, isValid.RoomChat.password);
+        if (!isMatch) {
+          return reject({
+            status: 403,
+            message: 'Invalid Credentials',
+          });
+        }
+        const newPassword = await bcrypt.hash(changePasswordDto.newPassword, 10);
+        await this.prismaService.roomChat.update({
+          where: {
+            id: changePasswordDto.room,
+          },
+          data: {
+            password: newPassword,
+          },
+        });
+        return resolve({
+          status: 200,
+          message: 'Password Changed',
+        });
+      } catch {
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    });
+  }
+
+  async removePassword(userId: string, roomName: RemovePasswordDto): Promise<Response> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const isValid =
+          await this.prismaService.roomChatConversation.findUnique({
+            where: {
+              roomChatId_userId: {
+                roomChatId: roomName.room,
+                userId: userId,
+              },
+              userRole: UserRole.OWNER,
+              RoomChat: {
+                type: RoomType.PROTECTED,
+              },
+            },
+          });
+        if (!isValid) {
+          return reject({
+            status: 403,
+            message: 'Cannot Remove Password',
+          });
+        }
+        await this.prismaService.roomChat.update({
+          where: {
+            id: roomName.room,
+          },
+          data: {
+            type: RoomType.PUBLIC,
+            password: null,
+          },
+        });
+        return resolve({
+          status: 200,
+          message: 'Password Removed',
+        });
+      } catch {
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    });
+  }
+
 }

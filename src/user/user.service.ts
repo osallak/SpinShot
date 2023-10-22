@@ -139,6 +139,7 @@ export class UserService {
     });
     if (!user) throw new NotFoundException('User not found');
     if (!user.mailVerified) throw new BadRequestException('Email not verified');
+    if (!user.password) throw new BadRequestException('Invalid credentials');
     try {
       if (!(await bcrypt.compare(pass, user.password)))
         throw new BadRequestException('Invalid credentials');
@@ -376,7 +377,6 @@ export class UserService {
     });
     return user;
   }
-
   async verifyPassword(id: string, password: string): Promise<boolean> {
     const user = await this.prisma.user.findUnique({
       where: { id },

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   Req,
   Res,
@@ -50,7 +51,7 @@ export class TwoFactorAuthController {
       const res = await this.twoFactorAuthService.validateTwoFactorAuthCode(
         request?.user,
         code,
-				true,
+        true,
       );
       return response.status(res.status).send(res.message);
     } catch (e) {
@@ -70,7 +71,7 @@ export class TwoFactorAuthController {
       const res = await this.twoFactorAuthService.validateTwoFactorAuthCode(
         request?.user,
         code,
-				false,
+        false,
       );
       return response.status(res.status).send(res.message);
     } catch (e) {
@@ -89,6 +90,34 @@ export class TwoFactorAuthController {
       const res = await this.twoFactorAuthService.authenticateTwoFactorAuth(
         request?.user,
         code,
+      );
+      return response.status(res.status).json(res?.data);
+    } catch (e) {
+      return response.status(e.status).send(e.message);
+    }
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Post('signOut')
+  async signOut(@Req() request: Request, @Res() response: Response) {
+    try {
+      const res = await this.twoFactorAuthService.signOut(
+        (request?.user as any)?.id,
+      );
+      return response.status(res.status).json(res.message);
+    } catch (e) {
+      return response.status(e.status).send(e.message);
+    }
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('status')
+  async getTwoFaStatus(@Req() request: Request, @Res() response: Response) {
+    try {
+      const res = await this.twoFactorAuthService.getTwoFaStatus(
+        (request?.user as any)?.id,
       );
       return response.status(res.status).json(res?.data);
     } catch (e) {

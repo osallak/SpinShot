@@ -132,7 +132,7 @@ export class ChatService {
 
   async saveMessageInDatabase(body: SendMessageDto) {
     const toFrom = [body.to, body.from].sort();
-    return this.prismaService.conversation.create({
+    return await this.prismaService.conversation.create({
       data: {
         message: body.content,
         senderId: toFrom[0],

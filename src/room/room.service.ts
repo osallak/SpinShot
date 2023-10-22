@@ -474,6 +474,14 @@ export class RoomService {
             RoomChatConversation: {
               some: {
                 userId: userId,
+                OR: [
+                  {
+                    userStatus: null,
+                  },
+                  {
+                    userStatus: UserStatusGroup.MUTED,
+                  }
+                ]
               },
             },
           },
@@ -499,6 +507,12 @@ export class RoomService {
             },
           },
         });
+        if (!rooms) {
+          return reject({
+            status: 404,
+            message: 'No Rooms Found',
+          })
+        }
         resolve({
           status: 200,
           message: 'All Rooms',
@@ -517,6 +531,27 @@ export class RoomService {
   async getSpecificRoom(roomName: string, userId: string): Promise<Response> {
     return new Promise(async (resolve, reject) => {
       try {
+        const u =  await this.prismaService.roomChatConversation.findUnique({
+          where: {
+            roomChatId_userId: {
+              roomChatId: roomName,
+              userId: userId,
+            },
+            OR: [
+              {
+                userStatus: null,
+              },
+              {
+                userStatus: UserStatusGroup.MUTED,
+              },
+            ],
+        }} );
+        if (!u) {
+          return reject({
+            status: 404,
+            message: 'User Not A Member',
+          });
+        }
         // sending back a array of blocked users
         let blockedUsersRes = [];
         const blockedUsers = await this.prismaService.friendship.findMany({

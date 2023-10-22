@@ -1,10 +1,8 @@
 import exploreChannelType from "@/types/channelsType";
 import { Dialog, Transition } from "@headlessui/react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { Fragment, MouseEvent, useState } from "react";
 import { useRecoilState } from "recoil";
-import exportChannelsIcon from "../../../public/ExportChannels.svg";
 import { exploreChannelAtom } from "../context/recoilContext";
 import SubModal from "./channelsStatus/subModal";
 
@@ -19,8 +17,6 @@ const ExploreChannels = (props: {
   const [name, setName] = useState("");
   const [exploreChannel, setExploreChannel] =
     useRecoilState(exploreChannelAtom);
-
-  console.log("explore channel: ", exploreChannel);
 
   const sp = (name: string) => {
     const res = name.split(" ");
@@ -67,7 +63,7 @@ const ExploreChannels = (props: {
         />
       )}
       <Transition appear show={props.open} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog as="div" className="relative z-50" onClose={closeModal}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

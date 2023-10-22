@@ -1,38 +1,23 @@
-// import { Dialog, Transition } from "@headlessui/react";
-// import { useRouter } from "next/router";
-// import axios from "axios";
-// import Image from "next/image";
-// import eye from "../../../public/eye.svg";
-// import eyeSlash from "../../../public/eye-slash.svg";
-// import { ChangeEvent, Fragment, useEffect, useState } from "react";
-// import { useRecoilState } from "recoil";
-// import { channelAtom } from "../context/recoilContextChannel";
-// import { usersListAtom } from "../context/recoilContextChannel";
-// import { usersListType } from "@/types/channelTypes";
-// import leave from "../../../public/kickIcon.svg";
-// import ip from "@/utils/endPoint";
-// import DropDownChannel from "../ui/FolderDropDown/DropDownChannel";
-// import { roomContent } from "@/utils/dropDownContent";
-
+"use client";
+import { usersListType } from "@/types/channelTypes";
 import {
   Button,
   Dialog,
-  DialogHeader,
   DialogBody,
   DialogFooter,
+  DialogHeader,
 } from "@material-tailwind/react";
-import threePoint from "../../../public/threePoint.svg";
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { usersListType } from "@/types/channelTypes";
-import { useRecoilState } from "recoil";
-import { channelAtom } from "../context/recoilContextChannel";
 import { useRouter } from "next/router";
-import SubUsersList from "./subUsersList";
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import admin from "../../../public/adminIcon.svg";
 import ban from "../../../public/banIcon.svg";
 import kick from "../../../public/kickIcon.svg";
 import mute from "../../../public/muteIcon.svg";
+import threePoint from "../../../public/threePoint.svg";
+import { channelAtom } from "../context/recoilContextChannel";
+import SubUsersList from "./subUsersList";
 
 export default function UsersList(props: {
   open: boolean;
@@ -41,7 +26,6 @@ export default function UsersList(props: {
   data: usersListType[];
   userId: string;
 }) {
-  const [open, setOpen] = useState(false);
   const [type, setType] = useState("");
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [subOpen, setSubOpen] = useState(false);
@@ -63,11 +47,10 @@ export default function UsersList(props: {
 
   const handleSubOpen = (check: string, userId: string) => {
     props.data.find((items: usersListType) => {
-      if (items.userId === userId)
-        setCheckedId(items.userId);
-    })
+      if (items.userId === userId) setCheckedId(items.userId);
+    });
     if (check === "my") {
-      setContent([{ content: "Leave", icon: kick}])
+      setContent([{ content: "Leave", icon: kick }]);
     } else {
       setContent([
         { content: "Mute", icon: mute },
@@ -77,16 +60,15 @@ export default function UsersList(props: {
       ]);
     }
     setSubOpen(true);
-  }
-  
+  };
+
   useEffect(() => {
     getTypeOfChannel();
   }, []);
-  
 
   const handleOpen = () => {
-    props.setOpen(true)
-  }
+    props.setOpen(true);
+  };
 
   return (
     <>
@@ -155,25 +137,29 @@ export default function UsersList(props: {
                         </div>
                       </div>
                       <div className="h-full flex justify-center items-center md:pr-4 sm:pr-3 pr-2">
-                        {props.userId === items.userId ? <button
-                          onClick={() => handleSubOpen("my", items.userId)}
-                          className="outline-none ring-0"
-                        >
-                          <Image
-                            src={threePoint}
-                            alt="three point"
-                            className="md:w-8 sm:w-6 w-5"
-                          ></Image>
-                        </button> : <button
-                          onClick={() => handleSubOpen("other", items.userId)}
-                          className="outline-none ring-0"
-                        >
-                          <Image
-                            src={threePoint}
-                            alt="three point"
-                            className="md:w-8 sm:w-6 w-5"
-                          ></Image>
-                        </button>}
+                        {props.userId === items.userId ? (
+                          <button
+                            onClick={() => handleSubOpen("my", items.userId)}
+                            className="outline-none ring-0"
+                          >
+                            <Image
+                              src={threePoint}
+                              alt="three point"
+                              className="md:w-8 sm:w-6 w-5"
+                            ></Image>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleSubOpen("other", items.userId)}
+                            className="outline-none ring-0"
+                          >
+                            <Image
+                              src={threePoint}
+                              alt="three point"
+                              className="md:w-8 sm:w-6 w-5"
+                            ></Image>
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>

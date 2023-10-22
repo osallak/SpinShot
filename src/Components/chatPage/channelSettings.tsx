@@ -1,13 +1,14 @@
+import ip from "@/utils/endPoint";
 import { Dialog, Transition } from "@headlessui/react";
-import { useRouter } from "next/router";
 import axios from "axios";
 import Image from "next/image";
-import eye from "../../../public/eye.svg";
-import eyeSlash from "../../../public/eye-slash.svg";
+import { useRouter } from "next/router";
 import { ChangeEvent, Fragment, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
+import eyeSlash from "../../../public/eye-slash.svg";
+import eye from "../../../public/eye.svg";
 import { channelAtom } from "../context/recoilContextChannel";
-import ip from "@/utils/endPoint";
 
 const ChannelSettings = (props: {
   open: boolean;
@@ -43,23 +44,29 @@ const ChannelSettings = (props: {
     setPassword(event.target.value);
   };
 
-	const removePassword = async() => {
+  const removePassword = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/signin");
       return;
     }
-		try {
-      const res = await axios.patch(`${ip}/room/remove-password`, {room: props.id}, {
-        headers: {
-          Authorization: `Bearer ${token}`
+    try {
+      const res = await axios.patch(
+        `${ip}/room/remove-password`,
+        { room: props.id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
       closeModal();
+      toast.success("the password removed succefuly");
     } catch (error: any) {
-      console.log("remove password from a channel: ", error)
+      setError(true);
+      setErrorMessage(error?.response?.data);
     }
-	}
+  };
 
   const handleSave = async () => {
     const token = localStorage.getItem("token");
@@ -69,18 +76,22 @@ const ChannelSettings = (props: {
     }
     if (type === "PROTECTED") {
       try {
-        const res = await axios.patch(`${ip}/room/change-password`, { room: props.id, password, newPassword: confirmePassword}, {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const res = await axios.patch(
+          `${ip}/room/change-password`,
+          { room: props.id, password, newPassword: confirmePassword },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        })
-        console.log("res from change password of a channel protected : ", res);
+        );
         closeModal();
-      } catch (error :any ) {
-        console.log("error from change passwrd of a channel: ", error);
+        toast.success("the password changed succefuly");
+      } catch (error: any) {
+        setError(true);
+        setErrorMessage(error?.response?.data);
       }
     } else if (type === "PUBLIC") {
-      // add password for channel
       if (password !== confirmePassword) {
         setError(true);
         setErrorMessage("password doesn't match");
@@ -95,13 +106,13 @@ const ChannelSettings = (props: {
               Authorization: `Bearer ${token}`,
             },
           }
-          );
-          props.setOpen(false);
-          closeModal();
-        } catch (error: any) {
-          setError(true);
+        );
+        props.setOpen(false);
+        closeModal();
+        toast.success("the channel is protected now");
+      } catch (error: any) {
+        setError(true);
         setErrorMessage(error?.response?.data);
-				// console.log(error)
       }
     }
   };
@@ -117,8 +128,6 @@ const ChannelSettings = (props: {
   useEffect(() => {
     getTypeOfChannel();
   }, []);
-
-  console.log("type: ", type);
 
   return (
     <Transition appear show={props.open} as={Fragment}>
@@ -212,7 +221,7 @@ const ChannelSettings = (props: {
                   <button
                     type="button"
                     className="text-very-dark-purple focus:outline-none flex justify-center items-center"
-                      onClick={removePassword}
+                    onClick={removePassword}
                   >
                     <span className="font-Passion-One text-very-dark-purple flex justify-center items-center">
                       Remove

@@ -2,9 +2,9 @@ import ip from "@/utils/endPoint";
 import { Dialog, Transition } from "@headlessui/react";
 import axios from "axios";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { ChangeEvent, Fragment, useState } from "react";
 import lock from "../../../../public/lock.svg";
-import { useRouter } from "next/router";
 
 const SubModal = (props: {
   open: boolean;
@@ -31,21 +31,15 @@ const SubModal = (props: {
       const params: any = {
         type: type,
         name: props.name,
-      }
-      if (type === "PROTECTED")
-        params["password"] = password;
-      const res = await axios.post(
-        `${ip}/room/join`,
-        params,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      };
+      if (type === "PROTECTED") params["password"] = password;
+      const res = await axios.post(`${ip}/room/join`, params, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       props.setOpen(false);
     } catch (error: any) {
-      console.log("error from join a protected channel: ", error);
       setError(true);
       setErrorMessage(error.response.data);
     }
@@ -139,7 +133,9 @@ const SubModal = (props: {
                   )}
                   {props.type === "PRIVATE" && (
                     <div className="flex justify-center items-center flex-col space-y-2">
-                      <span>If you are invited to this channel you can enter</span>
+                      <span>
+                        If you are invited to this channel you can enter
+                      </span>
                       {error && (
                         <span className="text-red-900 font-poppins">
                           {errorMessage}
@@ -154,9 +150,7 @@ const SubModal = (props: {
                         </button>
                       </div>
                     </div>
-                  )
-                    
-                  }
+                  )}
                 </div>
               </Dialog.Panel>
             </Transition.Child>

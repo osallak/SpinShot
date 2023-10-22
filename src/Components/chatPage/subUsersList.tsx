@@ -1,24 +1,19 @@
+"use client";
+import channelType from "@/types/channelTypes";
 import ip from "@/utils/endPoint";
+import {
+  Dialog,
+  DialogBody,
+  DialogHeader,
+  IconButton,
+} from "@material-tailwind/react";
 import axios from "axios";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { ChangeEvent, Fragment, MouseEvent, useEffect, useState } from "react";
-import admin from "../../../public/adminIcon.svg";
-import ban from "../../../public/banIcon.svg";
-import kick from "../../../public/kickIcon.svg";
+import { MouseEvent, useState } from "react";
+import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
-import channelType from "@/types/channelTypes";
-import { channelAtom } from "../context/recoilContextChannel";
-import mute from "../../../public/muteIcon.svg";
 import timeMute from "../../../public/timeMute.svg";
-import {
-  Button,
-  Dialog,
-  DialogHeader,
-  DialogBody,
-  IconButton,
-  DialogFooter,
-} from "@material-tailwind/react";
+import { channelAtom } from "../context/recoilContextChannel";
 
 const SubUsersList = (props: {
   open: boolean;
@@ -29,22 +24,15 @@ const SubUsersList = (props: {
   content: any[];
   checkedID: string;
 }) => {
-  const [password, setPassword] = useState("");
-  const router = useRouter();
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [channel, setChannel] = useRecoilState(channelAtom);
-  const [content, setContent] = useState<any[]>([]);
   const [timeOpen, setTimeOpen] = useState(false);
-  // const [checkedId, setCheckedId] = useState("");
-  function closeModal() {
-    // props.setOpen(false);
-  }
 
   const muteTime = [
-    { content: "For 1 Hour", time: "60" },
-    { content: "For 12 Hour", time: "720" },
-    { content: "For 24 Hour", time: "1440" },
+    { content: "For 1 Hour", time: "3600000" },
+    { content: "For 12 Hour", time: "43200000" },
+    { content: "For 24 Hour", time: "86400000" },
   ];
 
   const handleClick = async (
@@ -73,9 +61,10 @@ const SubUsersList = (props: {
           }
         );
         props.setClose(false);
-        console.log("result from delete axios: ", res);
+        toast.success("user kicked succesfuly");
       } catch (error: any) {
-        console.log("error from kick someone in rooms: ", error);
+        setError(true);
+        setErrorMessage(error?.response?.data);
       }
     } else if (content === "Ban") {
       try {
@@ -93,9 +82,10 @@ const SubUsersList = (props: {
           }
         );
         props.setClose(false);
-        console.log("res from ban: ", res);
+        toast.success("user baned succesfuly");
       } catch (error: any) {
-        console.log("error from ban : ", error);
+        setError(true);
+        setErrorMessage(error?.response?.data);
       }
     } else if (content === "Mute") {
       const params: any = {
@@ -114,9 +104,10 @@ const SubUsersList = (props: {
           },
         });
         props.setClose(false);
-        console.log("res from mute: ", res);
+        toast.success("user muted succefuly");
       } catch (error: any) {
-        console.log("error from mute: ", error);
+        setError(true);
+        setErrorMessage(error?.response?.data);
       }
     } else if (content === "Add as admin") {
       try {
@@ -130,9 +121,10 @@ const SubUsersList = (props: {
           }
         );
         props.setClose(false);
-        console.log("res from add as admin: ", res);
+        toast.success("the channel now has a new admin");
       } catch (error: any) {
-        console.log("error from add as admin: ", error);
+        setError(true);
+        setErrorMessage(error?.response?.data);
       }
     } else if (content === "Leave") {
       try {
@@ -146,20 +138,16 @@ const SubUsersList = (props: {
           }
         );
         props.setClose(false);
-        console.log("res from leave: ", res);
+        toast.success("you leave this channel");
       } catch (error: any) {
-        console.log("error from leave: ", error);
+        setError(true);
+        setErrorMessage(error?.response?.data);
       }
     }
   };
 
   const openTime = (event: MouseEvent<HTMLButtonElement>) => {
     setTimeOpen(!timeOpen);
-  };
-
-  const getPassword = (event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    setPassword(event.target.value);
   };
 
   const handleOpen = () => props.setOpen(true);
@@ -254,6 +242,11 @@ const SubUsersList = (props: {
             </div>
           )}
         </div>
+        {error && (
+          <span className="font-poppins text-red-900 font-semibold text-base">
+            {errorMessage}
+          </span>
+        )}
       </DialogBody>
     </Dialog>
   );

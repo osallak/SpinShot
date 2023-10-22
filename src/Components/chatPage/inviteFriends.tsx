@@ -1,17 +1,16 @@
+import dataFriends from "@/types/friendsType";
 import ip from "@/utils/endPoint";
-import axios from "axios";
 import {
   Button,
   Dialog,
-  DialogHeader,
   DialogBody,
   DialogFooter,
+  DialogHeader,
 } from "@material-tailwind/react";
+import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import { useRecoilState } from "recoil";
 import { currentFriendsAtom } from "../context/recoilContext";
-import toast from "react-hot-toast";
-import dataFriends from "@/types/friendsType";
 
 const InviteFriends = (props: {
   open: boolean;
@@ -46,7 +45,6 @@ const InviteFriends = (props: {
           status: "ACCEPTED",
         },
       });
-      console.log(res.data.data);
       setCurrentFriends(res.data.data);
     } catch (error: any) {}
     const id = (currentFriends as dataFriends[]).find(
@@ -67,7 +65,6 @@ const InviteFriends = (props: {
         }
       );
     } catch (error: any) {
-		console.log("error from invite ; ", error);
       setError(true);
       if (username === "") setErrorMessage("wrong userName or roomName");
       else setErrorMessage(error?.response?.data?.message[1]);

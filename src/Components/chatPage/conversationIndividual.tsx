@@ -1,7 +1,9 @@
 "use client";
 import IMsgDataTypes from "@/types/iMsgDataTypes";
-import individualConversationType from "@/types/individulaTypes";
-import individualType from "@/types/individulaTypes";
+import {
+  default as individualConversationType,
+  default as individualType,
+} from "@/types/individulaTypes";
 import { dropDownContent } from "@/utils/dropDownContent";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
@@ -46,10 +48,14 @@ const ConversationIndividual = (props: {
     const date = new Date(Number(time));
     let hours = date.getHours();
     let minutes = date.getMinutes();
-    let parsedMinutes = Math.floor(minutes / 10) === 0  ? "0" + minutes.toString() : minutes.toString();
-    let parsedHours = Math.floor(hours / 10) === 0  ? "0" + hours.toString() : hours.toString();
+    let parsedMinutes =
+      Math.floor(minutes / 10) === 0
+        ? "0" + minutes.toString()
+        : minutes.toString();
+    let parsedHours =
+      Math.floor(hours / 10) === 0 ? "0" + hours.toString() : hours.toString();
     return parsedHours + ":" + parsedMinutes;
-  }
+  };
 
   const handleSendMessage = () => {
     setMessage("");
@@ -61,22 +67,19 @@ const ConversationIndividual = (props: {
       timestamp: String(Date.now()),
     };
 
-    setIndividual((prev : individualType[]) => {
-      const newIndividual : individualType[] = prev.map((item : any) => {
-        if (item.other.id === props.id)
-        {
+    setIndividual((prev: individualType[]) => {
+      const newIndividual: individualType[] = prev.map((item: any) => {
+        if (item.other.id === props.id) {
           return {
-            other : item.other,
-            sender : item.sender,
-            sentAt : item.sentAt,
-            message : currentMsg
-          } 
-        }
-        else
-          return item;
-      })
-      return newIndividual
-    })
+            other: item.other,
+            sender: item.sender,
+            sentAt: item.sentAt,
+            message: currentMsg,
+          };
+        } else return item;
+      });
+      return newIndividual;
+    });
     props.socket.emit("pm", messageData);
   };
 
@@ -106,9 +109,7 @@ const ConversationIndividual = (props: {
         });
         setIndividualConversation(result.data);
       }
-    } catch (error) {
-      console.log("error of fetching data fron conversation: ", error);
-    }
+    } catch (error) {}
   };
 
   const goToUser = (event: MouseEvent<HTMLButtonElement>, id: string) => {
@@ -139,7 +140,7 @@ const ConversationIndividual = (props: {
   }, [individualConversation.length]);
 
   return (
-    <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">
+    <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2 relative">
       <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">
@@ -166,7 +167,10 @@ const ConversationIndividual = (props: {
               <div className="flex flex-col">
                 <p className="font-Poppins md:text-xl sm:text-md text-sm text-pearl font-semibold">
                   {individual.map((individ: individualType, index: number) => (
-                    <button onClick={(event) => goToUser(event, props.id)} key={index}>
+                    <button
+                      onClick={(event) => goToUser(event, props.id)}
+                      key={index}
+                    >
                       {props.id === individ.other.id
                         ? individ.other.username
                         : ""}
@@ -222,7 +226,12 @@ const ConversationIndividual = (props: {
                             >
                               {individual.map(
                                 (individ: individualType, index: number) => (
-                                  <button onClick={(event) => goToUser(event, items.sender)} key={index}>
+                                  <button
+                                    onClick={(event) =>
+                                      goToUser(event, items.sender)
+                                    }
+                                    key={index}
+                                  >
                                     {props.id === individ.other.id
                                       ? items.sender === props.id
                                         ? individ.other.username
@@ -242,7 +251,15 @@ const ConversationIndividual = (props: {
                               {getTime(items.sentAt)}
                             </span>
                           </div>
-                          <span className="px-3">{items.message}</span>
+                          <span
+                            className={`px-3 font-poppins font-light ${
+                              items.sender === userId
+                                ? "text-pearl"
+                                : "text-very-dark-purple"
+                            } md:text-lg sm:text-base text-sm`}
+                          >
+                            {items.message}
+                          </span>
                         </div>
                       </div>
                     </div>

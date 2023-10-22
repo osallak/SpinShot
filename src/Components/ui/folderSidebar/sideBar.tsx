@@ -14,18 +14,28 @@ import search from "../../../../public/search.svg";
 import { useAppDispatch, useAppSelector } from "../../../../redux_tool";
 import { getProfile } from "../../../../redux_tool/redusProfile/profileThunk";
 
-const SideBar = () => {
+const SideBar = (props: {
+  setOpenSubSideBar: Function;
+  openSubSideBar: boolean;
+  flag: string;
+}) => {
   const Router = useRouter();
   const data = useAppSelector((state) => state.Profile);
   const [hovered, setHovered] = useState(false);
   const [isSearch, setSearch] = useState(false);
   const [icons, setIcons] = useState<any>([]);
-  const dispatch = useAppDispatch()
-
+  const dispatch = useAppDispatch();
 
   const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {
     event.preventDefault();
-    Router.push(path);
+    const page = path.split("/");
+    if (
+      props.openSubSideBar ||
+      props.flag !== page[1] ||
+      window.innerWidth > 920
+    )
+      Router.push(path);
+    else props.setOpenSubSideBar(true);
   };
 
   const handleHover = () => {
@@ -44,24 +54,33 @@ const SideBar = () => {
   useEffect(() => {
     setIcons([
       { icon: search, route: "/search" },
-      { icon: profile, route: `/profile/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}` },
-      { icon: message, route: `/messages/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}` },
+      {
+        icon: profile,
+        route: `/profile/${
+          parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+        }`,
+      },
+      {
+        icon: message,
+        route: `/messages/${
+          parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+        }`,
+      },
       { icon: friend, route: "/friends" },
       { icon: game, route: "/game" },
-    ])
-  }, [])
-  
+    ]);
+  }, []);
+
   const dis = async () => {
-    const sub = parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+    const sub = parseJwt(JSON.stringify(localStorage.getItem("token"))).sub;
     try {
-      await dispatch(getProfile(sub))
-    } catch (error: any) {
-    }
-  }
+      await dispatch(getProfile(sub));
+    } catch (error: any) {}
+  };
 
   useEffect(() => {
     dis();
-  }, [])
+  }, []);
 
   return (
     <div

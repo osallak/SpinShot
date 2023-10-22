@@ -1,7 +1,6 @@
 "use client";
 import messagesType from "@/types/channelConversationType";
-import { default as channelType } from "@/types/channelTypes";
-import { roomContent } from "@/utils/dropDownContent";
+import { default as channelType, usersListType } from "@/types/channelTypes";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
@@ -9,33 +8,29 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import {
   KeyboardEvent,
+  MouseEvent,
   useCallback,
   useEffect,
   useRef,
   useState,
-  MouseEvent,
 } from "react";
 import { useRecoilState } from "recoil";
-import leave from "../../../public/kickIcon.svg";
+import admin from "../../../public/adminIcon.svg";
+import ban from "../../../public/banIcon.svg";
+import kick from "../../../public/kickIcon.svg";
+import mute from "../../../public/muteIcon.svg";
 import sendMessageIcon from "../../../public/sendMessage.svg";
 import settings from "../../../public/settingIcon.svg";
 import threePoint from "../../../public/threePoint.svg";
 import threePointforPeridot from "../../../public/threePointforPeridot.svg";
 import {
+  blockedUsersAtom,
   channelAtom,
   channelConversationAtom,
 } from "../context/recoilContextChannel";
 import DropDownChannel from "../ui/FolderDropDown/DropDownChannel";
-import { blockedUsersAtom } from "../context/recoilContextChannel";
-import ChannelSettings from "./channelSettings";
-import { usersListAtom } from "../context/recoilContextChannel";
-import { usersListType } from "@/types/channelTypes";
-import UsersList from "./usersList";
 import SubUsersList from "./subUsersList";
-import admin from "../../../public/adminIcon.svg";
-import ban from "../../../public/banIcon.svg";
-import kick from "../../../public/kickIcon.svg";
-import mute from "../../../public/muteIcon.svg";
+import UsersList from "./usersList";
 
 let token: any;
 const ConversationChannel = (props: {
@@ -56,9 +51,9 @@ const ConversationChannel = (props: {
   const [type, setType] = useState("");
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [userId, setUserId] = useState("");
-  const [option, setOption] = useState("");
   const [blockedUsers, setBlockedUsers] = useRecoilState(blockedUsersAtom);
   const [setting, setSettings] = useState(false);
+  const [content, setContent] = useState<any[]>([]);
   const [openUsersList, setOpenUsersList] = useState(false);
   const [openSubUsersList, setOpenSubUsersList] = useState(false);
   const [openLeaveList, setOpenLeaveList] = useState(false);
@@ -77,19 +72,12 @@ const ConversationChannel = (props: {
   };
 
   const handleClick = () => {
-    console.log("here we go");
     setSettings(true);
   };
 
   const dropDownContent = [
     { content: "Settings", click: handleClick, icon: settings },
   ];
-
-  const handleLeave = () => {
-    console.log("leave");
-  };
-
-  const myContent = [{ content: "Leave", click: handleLeave, icon: leave }];
 
   const goToUser = (id: string) => {
     router.push(`/profile/${id}`);
@@ -122,7 +110,6 @@ const ConversationChannel = (props: {
     const jwtToken = parseJwt(token);
     setUserId(jwtToken.sub);
     try {
-      // console.log("props.id: ", props.id);
       if (props.id && props.id !== "") {
         const result = await axios.get(`${ip}/room/individual/${props.id}`, {
           headers: {
@@ -135,11 +122,8 @@ const ConversationChannel = (props: {
         result.data.messages.reverse();
         setConversationChannel(result.data.messages);
         setBlockedUsers(result?.data?.blockedUsers);
-        // console.log("data: ", result.data);
       }
-    } catch (error) {
-      console.log("error of fetching data fron conversation: ", error);
-    }
+    } catch (error) {}
   };
 
   const fetchUsersList = async () => {
@@ -159,15 +143,10 @@ const ConversationChannel = (props: {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("res: ", res.data);
         setUsersList(res.data);
       }
-    } catch (error: any) {
-      console.log("error: ", error);
-    }
+    } catch (error: any) {}
   };
-
-  console.log("users list: ", usersList);
 
   const sp = (name: string) => {
     const res = name.split(" ");
@@ -183,11 +162,8 @@ const ConversationChannel = (props: {
     });
   };
 
-  const [content, setContent] = useState<any[]>([]);
-
   const handleOpenSubUsersList = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    console.log("and here");
     setContent([
       { content: "Mute", icon: mute },
       { content: "Kick", icon: kick },
@@ -197,9 +173,12 @@ const ConversationChannel = (props: {
     setOpenSubUsersList(true);
   };
 
+  function blockeduser(user: string): boolean {
+    return !(blockedUsers as string[]).some((item: string) => item === user);
+  }
+
   const handleOpenLeaveList = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    console.log("enter here");
     setContent([{ content: "Leave", icon: kick }]);
     setOpenLeaveList(true);
   };
@@ -229,10 +208,6 @@ const ConversationChannel = (props: {
       conversationDiv.scrollTop = conversationDiv.scrollHeight;
     }
   }, [conversationChannel]);
-
-  function blockeduser(user: string): boolean {
-    return !(blockedUsers as string[]).some((item: string) => item === user)
-  }
 
   return (
     <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">
@@ -270,14 +245,10 @@ const ConversationChannel = (props: {
                   )
               )}
               <div className="flex flex-col">
-                <p className="font-Poppins md:text-xl sm:text-md text-sm text-pearl font-semibold">
-                  {(channel as channelType[]).map(
-                    (chan: channelType, index: number) => (
-                      <button onClick={fetchUsersList} key={index}>
-                        {props.id === chan.id ? chan.id : ""}
-                      </button>
-                    )
-                  )}
+                <p className="font-Poppins lg:text-xl md:text-lg sm:text-base text-sm text-pearl font-semibold">
+                  {props.id?.length > 10
+                    ? props.id.slice(0, 10) + " ..."
+                    : props.id}
                 </p>
               </div>
             </div>
@@ -305,14 +276,14 @@ const ConversationChannel = (props: {
                       } justify-end`}
                     >
                       <div
-                        className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] min-h-[70px] flex justify-between rounded-xl ${
+                        className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] md:min-h-[70px] min-h-[50px] flex justify-between rounded-xl ${
                           items.user.id != userId
-                            ? "items-center bg-peridot text-very-dark-purple font-bold flex-row space-x-reverse pr-5"
-                            : "items-center bg-very-dark-purple text-pearl font-medium flex-row-reverse pl-5"
-                        } flex-row md:space-y-1 space-y-0 py-3`}
+                            ? "items-center bg-peridot text-very-dark-purple font-bold flex-row space-x-reverse"
+                            : "items-center bg-very-dark-purple text-pearl font-medium flex-row-reverse"
+                        } flex-row md:space-y-1 space-y-0 md:p-2 p-1`}
                       >
                         <div
-                          className={`space-y-2 flex flex-col x-pp:w-[650px] 2xl:w-[550px] xl:w-[450px] lg:w-[80%] w-[90%] h-full ${
+                          className={`flex flex-col x-pp:w-[650px] 2xl:w-[550px] xl:w-[450px] lg:w-[80%] w-[90%]  ${
                             items.user.id != userId
                               ? "items-start bg-peridot text-very-dark-purple font-bold"
                               : "items-end bg-very-dark-purple text-pearl font-medium"
@@ -321,8 +292,8 @@ const ConversationChannel = (props: {
                           <div
                             className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
                               items.user.id != userId
-                                ? "flex-row space-x-1"
-                                : "flex-row-reverse space-x-reverse space-x-1"
+                                ? "flex-row space-x-2"
+                                : "flex-row-reverse space-x-reverse space-x-2"
                             }`}
                           >
                             <button
@@ -347,7 +318,7 @@ const ConversationChannel = (props: {
                               {getTime(items.sentAt)}
                             </span>
                           </div>
-                          <span className="px-3">{items.message}</span>
+                          <span className={`px-3 font-poppins font-light ${items.user.id === userId ? "text-pearl" : "text-very-dark-purple"} md:text-lg sm:text-base text-sm`}>{items.message}</span>
                         </div>
                         {items.user.id === userId ? (
                           <button

@@ -1,15 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   individual.tsx                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ataji <ataji@student.42.fr>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/17 05:03:17 by ataji             #+#    #+#             */
-/*   Updated: 2023/10/19 07:20:18 by ataji            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
+"use client";
 import individualType from "@/types/individulaTypes";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
@@ -41,7 +30,7 @@ const Individual = (props: {
   const clickChat = (
     event: MouseEvent<HTMLButtonElement>,
     index: number,
-    id: string,
+    id: string
   ) => {
     event.preventDefault();
     setClicked(index);
@@ -67,8 +56,6 @@ const Individual = (props: {
         });
         setIndividual(res?.data?.individual);
         props.setReload(true);
-        console.log("props.id: ", props.id);
-        console.log("individual: ", res.data.individual);
         const returnedId = res.data?.individual.find(
           (items: any) => items.other.id === router.query.id
         );
@@ -96,9 +83,7 @@ const Individual = (props: {
             });
           }
         }
-      } catch (error) {
-        // console.log("error of fetching data from subsidebar: ", error);
-      }
+      } catch (error) {}
     }
   };
 
@@ -118,7 +103,7 @@ const Individual = (props: {
                   <button
                     onClick={(event) => clickChat(event, index, items.other.id)}
                     key={index}
-                    className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${
+                    className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl md:h-20 h-14 ${
                       items.other.id === props.id
                         ? "bg-very-dark-purple"
                         : "bg-transparent"
@@ -131,12 +116,12 @@ const Individual = (props: {
                       height={500}
                       className="md:w-14 sm:w-12 w-10 rounded-xl"
                     />
-                    <div className="flex justify-start items-start space-y-1 flex-col">
-                      <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
+                    <div className="flex justify-start items-start md:space-y-1 space-y-0 flex-col">
+                      <p className="font-poppins flex justify-start text-pearl md:text-lg text-base font-semibold">
                         {items.other.username}
                       </p>
                       <p
-                        className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
+                        className={`font-poppins text-pearl flex justify-start md:text-sm text-xs font-medium opacity-40`}
                       >
                         {items.message.length > 15
                           ? items.message.slice(0, 20) + " ..."
@@ -157,12 +142,12 @@ const Individual = (props: {
         <div className="w-full hover:overflow-auto overflow-hidden h-full">
           {(individual as individualType[]).length ? (
             (individual as individualType[])?.map(
-              (items: individualType, index: number) => (
-                <div
-                  key={index}
-                  className="w-full flex justify-center items-center outline-none rounded-2xl"
-                >
-                  {items.other?.username.startsWith(props.searchValue) && (
+              (items: individualType, index: number) =>
+                items.other?.username.startsWith(props.searchValue) && (
+                  <div
+                    key={index}
+                    className="w-full flex justify-center items-center outline-none md:h-20 h-14  rounded-2xl"
+                  >
                     <button
                       onClick={(event) =>
                         clickChat(event, index, items.other.id)
@@ -181,12 +166,12 @@ const Individual = (props: {
                         height={500}
                         className="md:w-14 sm:w-12 w-10 rounded-xl"
                       />
-                      <div className="flex justify-start items-start space-y-1 flex-col">
-                        <p className="font-poppins flex justify-start text-pearl text-lg font-semibold">
+                      <div className="flex justify-start items-start md:space-y-1 space-y-0  flex-col">
+                        <p className="font-poppins flex justify-start text-pearl md:text-lg text-base font-semibold">
                           {items.other.username}
                         </p>
                         <p
-                          className={`font-poopins text-pearl flex justify-start text-sm font-medium opacity-40`}
+                          className={`font-poopins text-pearl flex justify-start md:text-sm text-xs  font-medium opacity-40`}
                         >
                           {lastMessage.length > 15
                             ? lastMessage.slice(0, 20) + " ..."
@@ -194,9 +179,8 @@ const Individual = (props: {
                         </p>
                       </div>
                     </button>
-                  )}
-                </div>
-              )
+                  </div>
+                )
             )
           ) : (
             <div className="font-Poppins text-pearl text-opacity-40 w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden justify-center">

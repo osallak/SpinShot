@@ -1,28 +1,21 @@
 "use client";
 import SideBar from "@/Components/ui/folderSidebar/sideBar";
 import ip from "@/utils/endPoint";
-import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { io } from "socket.io-client";
-import {
-  chatAll,
-  currentFriendsAtom,
-  exploreChannelAtom,
-} from "../context/recoilContext";
-import { channelAtom } from "../context/recoilContextChannel";
-import { individualAtom } from "../context/recoilContextIndividual";
+import { exploreChannelAtom } from "../context/recoilContext";
 import NavBar from "../ui/FolderNavbar/navBar";
 import MobileSideBar from "../ui/folderSidebar/mobileSideBar";
 import ConversationChannel from "./conversationChannel";
 import ConversationIndividual from "./conversationIndividual";
 import CreateChannels from "./createChannels";
 import ExploreChannels from "./exploreChannels";
-import SubSideBar from "./subSideBar";
 import InviteFriends from "./inviteFriends";
-import individualType from "@/types/individulaTypes";
+import MobileSubSideBar from "./mobileSubSideBar";
+import SubSideBar from "./subSideBar";
 
 let socket: any;
 let token: any;
@@ -37,12 +30,10 @@ const Chat = () => {
   const [loaded, setIsLoaded] = useState(false);
   const [exploreChannel, setExploreChannel] =
     useRecoilState(exploreChannelAtom);
-  const [individual, setIndividual] = useRecoilState(individualAtom);
-  const [channel, setChannel] = useRecoilState(channelAtom);
   const [reload, setReload] = useState(false);
-  const [currentFriend, setCurrentFriends] = useRecoilState(currentFriendsAtom);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [openSubSideBar, setOpenSubSideBar] = useState(false);
 
   const fetchDataExploreChannel = async () => {
     const token = localStorage.getItem("token");
@@ -58,9 +49,7 @@ const Chat = () => {
           },
         });
         setExploreChannel(res.data);
-      } catch (error: any) {
-        console.log("error: ", error);
-      }
+      } catch (error: any) {}
     }
   };
 
@@ -92,8 +81,41 @@ const Chat = () => {
 
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 md:pl-3 pl-0 py-0 pr-0 items-center flex-row relative">
-      <SideBar />
-      {openSideBar && <MobileSideBar />}
+      <SideBar
+        setOpenSubSideBar={setOpenSubSideBar}
+        openSubSideBar={openSubSideBar}
+        flag="messages"
+      />
+      {openSideBar && (
+        <MobileSideBar
+          setOpenSubSideBar={setOpenSubSideBar}
+          openSubSideBar={openSubSideBar}
+          flag="messages"
+        />
+      )}
+      {openSubSideBar && (
+        <div className="h-full md:w-[300px] sm:w-[250px] w-[200px] lg:hidden flex items-end absolute md:left-[90px] left-16 drop-shadow-2xl z-40">
+        <div className="bg-very-dark-purple h-[91%] z-50 md:h-full flex flex-col rounded-l-2xl w-full">
+        <MobileSubSideBar
+          setOpenSubSideBar={setOpenSubSideBar}
+          openSubSideBar={openSubSideBar}
+          open={open}
+          setOpen={setOpen}
+          setFlag={setFlag}
+          setIsIndividual={setIsIndividual}
+          isIndividual={isIndividual}
+          setRoomId={setRoomId}
+          roomId={roomId}
+          setId={setId}
+          reload={reload}
+          setReload={setReload}
+          id={id}
+          setIsLoaded={setIsLoaded}
+          loaded={loaded}
+        />
+        </div>
+        </div>
+      )}
       <SubSideBar
         open={open}
         setOpen={setOpen}
@@ -122,7 +144,7 @@ const Chat = () => {
         <InviteFriends open={open} setOpen={setOpen} id={id} roomId={roomId} />
       )}
       <div className="w-full h-full">
-        <NavBar open={openSideBar} setOpen={setOpenSideBar} />
+        <NavBar open={openSideBar} setOpen={setOpenSideBar} setOpenSubSideBar={setOpenSubSideBar} />
         {isIndividual === "Individual" ? (
           <ConversationIndividual
             userName={"three"}

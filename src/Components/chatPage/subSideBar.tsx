@@ -1,14 +1,15 @@
+"use client"
 import SearchInput from "@/Components/ui/Inputs/searchInput";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { MouseEvent, useState } from "react";
+import { useState } from "react";
 import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";
+import invite from "../../../public/invite.svg";
 import messagesIcon from "../../../public/messagesIcon.svg";
 import IconButton from "../ui/Buttons/iconButton";
 import Channels from "./channels";
 import Individual from "./individual";
-import invite from "../../../public/invite.svg"
 
 const SubSideBar = (props: {
   open: boolean;
@@ -25,13 +26,7 @@ const SubSideBar = (props: {
   setIsLoaded: Function;
   loaded: boolean;
 }) => {
-  const [clicked, setClicked] = useState<number>();
   const [searchValue, setSearchValue] = useState("");
-
-  const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number) => {
-    event.preventDefault();
-    setClicked(index);
-  };
 
   const exploreChannels = () => {
     props.setFlag("ExploreChannels");
@@ -57,7 +52,7 @@ const SubSideBar = (props: {
   };
 
   return (
-    <div className="bg-white/10 h-full lg:flex hidden flex-col rounded-2xl w-[25%] min-w-[350px]">
+    <div className={`bg-white/10 h-full lg:flex hidden flex-col rounded-2xl w-[25%] lg:min-w-[350px] md:min-w-[250px] min-w-[150px]`}>
       <div className="flex justify-center items-center flex-col w-full h-[10%] md:min-h-[100px] min-h-[70px]">
         <div className="w-full h-full flex-col px-6">
           <div className="w-full  pt-5 flex flex-row space-x-3 h-full">

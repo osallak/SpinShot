@@ -173,7 +173,7 @@ const DropDownChannel: React.FC<any> = (props: {
         type="button"
         onClick={handleClick}
       >
-        <Image src={threePoint} alt="threepoint"></Image>
+        <Image src={threePoint} alt="threepoint" className="lg:w-9 md:w-8 sm:w-7 w-6"></Image>
       </button>
       {isOpen && (
         <div

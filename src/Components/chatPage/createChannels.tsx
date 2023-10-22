@@ -1,3 +1,4 @@
+"use client";
 import ip from "@/utils/endPoint";
 import { Dialog, Transition } from "@headlessui/react";
 import axios from "axios";
@@ -23,7 +24,7 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
 
   const addChannelKeyboard = async (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Enter") {
-      addChannel()
+      addChannel();
     }
   };
 
@@ -47,17 +48,15 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
       setPassword("");
       setCreateChannel([...createChannel, params]);
       props.setOpen(false);
-      console.log(params);
-      console.log("res from create channel: ", res);
     } catch (error: any) {
-      setError(true)
-      setErrorMessage(error?.response?.data?.message[0])
+      setError(true);
+      setErrorMessage(error?.response?.data?.message[0]);
     }
   };
 
   return (
     <Transition appear show={props.open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={closeModal}>
+      <Dialog as="div" className="relative z-50" onClose={closeModal}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -99,9 +98,11 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
                     />
                   </div>
                 </div>
-                {error && 
-                  <span className="text-red-900 font-poppins">{errorMessage}</span>
-                }
+                {error && (
+                  <span className="text-red-900 font-poppins">
+                    {errorMessage}
+                  </span>
+                )}
                 <div className="mt-7 rounded-full w-full lg:h-full md:h-[50px] sm:h-[30px] h-[20px] flex justify-end items-center md:p-5 sm:p-3 p-1">
                   <button
                     type="button"

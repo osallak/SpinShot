@@ -1,6 +1,7 @@
 "use client";
 import SideBar from "@/Components/ui/folderSidebar/sideBar";
 import ip from "@/utils/endPoint";
+import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -41,6 +42,11 @@ const Chat = () => {
       router.push("/signin");
       return;
     }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
     if (open === true) {
       try {
         const res = await axios.get(`${ip}/room/explore`, {
@@ -56,6 +62,11 @@ const Chat = () => {
   useEffect(() => {
     token = localStorage.getItem("token");
     if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
       router.push("/signin");
       return;
     }
@@ -95,25 +106,25 @@ const Chat = () => {
       )}
       {openSubSideBar && (
         <div className="h-full md:w-[300px] sm:w-[250px] w-[200px] lg:hidden flex items-end absolute md:left-[90px] left-16 drop-shadow-2xl z-40">
-        <div className="bg-very-dark-purple h-[91%] z-50 md:h-full flex flex-col rounded-l-2xl w-full">
-        <MobileSubSideBar
-          setOpenSubSideBar={setOpenSubSideBar}
-          openSubSideBar={openSubSideBar}
-          open={open}
-          setOpen={setOpen}
-          setFlag={setFlag}
-          setIsIndividual={setIsIndividual}
-          isIndividual={isIndividual}
-          setRoomId={setRoomId}
-          roomId={roomId}
-          setId={setId}
-          reload={reload}
-          setReload={setReload}
-          id={id}
-          setIsLoaded={setIsLoaded}
-          loaded={loaded}
-        />
-        </div>
+          <div className="bg-very-dark-purple h-[91%] z-50 md:h-full flex flex-col rounded-l-2xl w-full">
+            <MobileSubSideBar
+              setOpenSubSideBar={setOpenSubSideBar}
+              openSubSideBar={openSubSideBar}
+              open={open}
+              setOpen={setOpen}
+              setFlag={setFlag}
+              setIsIndividual={setIsIndividual}
+              isIndividual={isIndividual}
+              setRoomId={setRoomId}
+              roomId={roomId}
+              setId={setId}
+              reload={reload}
+              setReload={setReload}
+              id={id}
+              setIsLoaded={setIsLoaded}
+              loaded={loaded}
+            />
+          </div>
         </div>
       )}
       <SubSideBar
@@ -144,7 +155,11 @@ const Chat = () => {
         <InviteFriends open={open} setOpen={setOpen} id={id} roomId={roomId} />
       )}
       <div className="w-full h-full">
-        <NavBar open={openSideBar} setOpen={setOpenSideBar} setOpenSubSideBar={setOpenSubSideBar} />
+        <NavBar
+          open={openSideBar}
+          setOpen={setOpenSideBar}
+          setOpenSubSideBar={setOpenSubSideBar}
+        />
         {isIndividual === "Individual" ? (
           <ConversationIndividual
             userName={"three"}

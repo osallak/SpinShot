@@ -1,4 +1,5 @@
 import ip from "@/utils/endPoint";
+import parseJwt from "@/utils/parsJwt";
 import { Dialog, Transition } from "@headlessui/react";
 import axios from "axios";
 import Image from "next/image";
@@ -24,6 +25,11 @@ const SubModal = (props: {
   const joinChannel = async (type: string) => {
     const token = localStorage.getItem("token");
     if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
       router.push("/signin");
       return;
     }

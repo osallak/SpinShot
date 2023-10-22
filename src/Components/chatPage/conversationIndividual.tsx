@@ -95,6 +95,11 @@ const ConversationIndividual = (props: {
       router.push("/signin");
       return;
     }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
     const jwtToken = parseJwt(token);
     setUserId(jwtToken.sub);
     try {

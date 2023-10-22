@@ -43,14 +43,18 @@ const Channels = (props: {
         router.push("/signin");
         return;
       }
-      const jwtToken = parseJwt(token);
+      const twoFA = parseJwt(JSON.stringify(token));
+      if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+        router.push("/signin");
+        return;
+      }
       try {
         const res = await axios.get(`${ip}/chat/all`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
           params: {
-            id: jwtToken.sub,
+            id: twoFA.sub,
           },
         });
         setChannel(res?.data?.room);

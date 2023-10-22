@@ -5,6 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { Fragment, KeyboardEvent, useState } from "react";
 import { useRecoilState } from "recoil";
+import { parseJwt } from "../../../redux_tool/extractToken";
 import { createChannelAtom } from "../context/recoilContext";
 import SwitchButton from "../ui/Buttons/SwitchButton";
 
@@ -31,6 +32,11 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
   const addChannel = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
       router.push("/signin");
       return;
     }

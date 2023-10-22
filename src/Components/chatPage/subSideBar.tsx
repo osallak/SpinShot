@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import SearchInput from "@/Components/ui/Inputs/searchInput";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -41,7 +41,7 @@ const SubSideBar = (props: {
   const inviteFriends = () => {
     props.setFlag("Invite");
     props.setOpen(!props.open);
-  }
+  };
 
   const setIndividual = () => {
     props.setIsIndividual("Individual");
@@ -52,7 +52,9 @@ const SubSideBar = (props: {
   };
 
   return (
-    <div className={`bg-white/10 h-full lg:flex hidden flex-col rounded-2xl w-[25%] lg:min-w-[350px] md:min-w-[250px] min-w-[150px]`}>
+    <div
+      className={`bg-white/10 h-full lg:flex hidden flex-col rounded-2xl w-[25%] lg:min-w-[350px] md:min-w-[250px] min-w-[150px]`}
+    >
       <div className="flex justify-center items-center flex-col w-full h-[10%] md:min-h-[100px] min-h-[70px]">
         <div className="w-full h-full flex-col px-6">
           <div className="w-full  pt-5 flex flex-row space-x-3 h-full">
@@ -128,11 +130,11 @@ const SubSideBar = (props: {
       )}
       <div className="flex flex-col justify-center items-center w-full h-[12%] min-h-[100px] space-y-2 ">
         <div className="flex justify-center items-center w-full px-2 h-10">
-        <IconButton
-          icon={invite}
-          content="Invite Friend"
-          onclick={inviteFriends}
-        />
+          <IconButton
+            icon={invite}
+            content="Invite Friend"
+            onclick={inviteFriends}
+          />
         </div>
         <div className="flex justify-around items-center w-full">
           <div className="w-[45%] h-10 flex justify-center items-center">

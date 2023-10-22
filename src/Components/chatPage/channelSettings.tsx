@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 import eyeSlash from "../../../public/eye-slash.svg";
 import eye from "../../../public/eye.svg";
+import { parseJwt } from "../../../redux_tool/extractToken";
 import { channelAtom } from "../context/recoilContextChannel";
 
 const ChannelSettings = (props: {
@@ -47,6 +48,11 @@ const ChannelSettings = (props: {
   const removePassword = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
       router.push("/signin");
       return;
     }

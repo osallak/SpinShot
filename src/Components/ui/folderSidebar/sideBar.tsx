@@ -52,6 +52,11 @@ const SideBar = (props: {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token || (parseJwt(token).isTwoFactorEnabled && !parseJwt(token).isTwoFaAuthenticated)) {
+      Router.push("/signin");
+      return;
+    }
     setIcons([
       { icon: search, route: "/search" },
       {
@@ -72,7 +77,12 @@ const SideBar = (props: {
   }, []);
 
   const dis = async () => {
-    const sub = parseJwt(JSON.stringify(localStorage.getItem("token"))).sub;
+    const token = localStorage.getItem("token");
+    if (!token || (parseJwt(token).isTwoFactorEnabled && !parseJwt(token).isTwoFaAuthenticated)) {
+      Router.push("/signin");
+      return;
+    }
+    const sub = parseJwt(JSON.stringify(token)).sub;
     try {
       await dispatch(getProfile(sub));
     } catch (error: any) {}

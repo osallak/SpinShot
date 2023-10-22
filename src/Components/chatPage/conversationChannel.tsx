@@ -107,6 +107,11 @@ const ConversationChannel = (props: {
       router.push("/signin");
       return;
     }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
     const jwtToken = parseJwt(token);
     setUserId(jwtToken.sub);
     try {
@@ -129,6 +134,11 @@ const ConversationChannel = (props: {
   const fetchUsersList = async () => {
     token = localStorage.getItem("token");
     if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
       router.push("/signin");
       return;
     }
@@ -245,7 +255,10 @@ const ConversationChannel = (props: {
                   )
               )}
               <div className="flex flex-col">
-                <button onClick={fetchUsersList} className="font-Poppins lg:text-xl md:text-lg sm:text-base text-sm text-pearl font-semibold">
+                <button
+                  onClick={fetchUsersList}
+                  className="font-Poppins lg:text-xl md:text-lg sm:text-base text-sm text-pearl font-semibold"
+                >
                   {props.id?.length > 10
                     ? props.id.slice(0, 10) + " ..."
                     : props.id}
@@ -318,7 +331,15 @@ const ConversationChannel = (props: {
                               {getTime(items.sentAt)}
                             </span>
                           </div>
-                          <span className={`px-3 font-poppins font-light ${items.user.id === userId ? "text-pearl" : "text-very-dark-purple"} md:text-lg sm:text-base text-sm`}>{items.message}</span>
+                          <span
+                            className={`px-3 font-poppins font-light ${
+                              items.user.id === userId
+                                ? "text-pearl"
+                                : "text-very-dark-purple"
+                            } md:text-lg sm:text-base text-sm`}
+                          >
+                            {items.message}
+                          </span>
                         </div>
                         {items.user.id === userId ? (
                           <button

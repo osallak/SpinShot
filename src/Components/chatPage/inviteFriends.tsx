@@ -1,5 +1,6 @@
 import dataFriends from "@/types/friendsType";
 import ip from "@/utils/endPoint";
+import parseJwt from "@/utils/parsJwt";
 import {
   Button,
   Dialog,
@@ -8,10 +9,11 @@ import {
   DialogHeader,
 } from "@material-tailwind/react";
 import axios from "axios";
+import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 import { currentFriendsAtom } from "../context/recoilContext";
-import toast from "react-hot-toast";
 
 const InviteFriends = (props: {
   open: boolean;
@@ -21,6 +23,7 @@ const InviteFriends = (props: {
 }) => {
   const [username, setUsername] = useState("");
   const [roomname, setRoomname] = useState("");
+  const router = useRouter();
   const [currentFriends, setCurrentFriends] =
     useRecoilState(currentFriendsAtom);
   const [error, setError] = useState(false);
@@ -37,13 +40,23 @@ const InviteFriends = (props: {
   };
 
   const handleClick = async (id: string) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
     try {
       await axios.post(
         `${ip}/room/invite`,
         { userId: id, roomName: roomname },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -57,10 +70,20 @@ const InviteFriends = (props: {
   };
 
   const fetchCurrentFriends = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
     try {
       const res = await axios.get(`${ip}/friends`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
         params: {
           status: "ACCEPTED",

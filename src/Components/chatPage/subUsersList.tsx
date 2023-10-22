@@ -9,10 +9,12 @@ import {
 } from "@material-tailwind/react";
 import axios from "axios";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { MouseEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 import timeMute from "../../../public/timeMute.svg";
+import { parseJwt } from "../../../redux_tool/extractToken";
 import { channelAtom } from "../context/recoilContextChannel";
 
 const SubUsersList = (props: {
@@ -25,6 +27,7 @@ const SubUsersList = (props: {
   checkedID: string;
 }) => {
   const [error, setError] = useState(false);
+  const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [timeOpen, setTimeOpen] = useState(false);
@@ -48,6 +51,16 @@ const SubUsersList = (props: {
     });
     if (content === "Kick") {
       try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          router.push("/signin");
+          return;
+        }
+        const twoFA = parseJwt(JSON.stringify(token));
+        if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+          router.push("/signin");
+          return;
+        }
         const res = await axios.delete(
           `${ip}/room/kick/${props.name}/${props.checkedID}`,
           {
@@ -56,7 +69,7 @@ const SubUsersList = (props: {
               user: props.checkedID,
             },
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -67,6 +80,16 @@ const SubUsersList = (props: {
         setErrorMessage(error?.response?.data);
       }
     } else if (content === "Ban") {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/signin");
+        return;
+      }
+      const twoFA = parseJwt(JSON.stringify(token));
+      if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+        router.push("/signin");
+        return;
+      }
       try {
         const res = await axios.patch(
           `${ip}/room/ban`,
@@ -77,7 +100,7 @@ const SubUsersList = (props: {
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -98,9 +121,19 @@ const SubUsersList = (props: {
         type: type?.type,
       };
       try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          router.push("/signin");
+          return;
+        }
+        const twoFA = parseJwt(JSON.stringify(token));
+        if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+          router.push("/signin");
+          return;
+        }
         const res = await axios.post(`${ip}/room/mute`, params, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
           },
         });
         props.setClose(false);
@@ -111,12 +144,22 @@ const SubUsersList = (props: {
       }
     } else if (content === "Add as admin") {
       try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          router.push("/signin");
+          return;
+        }
+        const twoFA = parseJwt(JSON.stringify(token));
+        if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+          router.push("/signin");
+          return;
+        }
         const res = await axios.patch(
           `${ip}/room/elevate`,
           { room: props.name, user: props.checkedID },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -128,12 +171,22 @@ const SubUsersList = (props: {
       }
     } else if (content === "Leave") {
       try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          router.push("/signin");
+          return;
+        }
+        const twoFA = parseJwt(JSON.stringify(token));
+        if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+          router.push("/signin");
+          return;
+        }
         const res = await axios.patch(
           `${ip}/room/leave`,
           { room: props.name },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         );

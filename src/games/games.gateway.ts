@@ -8,6 +8,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { UserStatus } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { Server, Socket } from 'socket.io';
 import { MapSelectionDto } from './dto/map-selection.dto';
@@ -16,7 +17,6 @@ import { WebsocketExceptionsFilter } from './filter/ws.filter';
 import { GamesService } from './games.service';
 import { WsJwtGuard } from './guard/ws.guard';
 import { SocketAuthMidleware } from './middleware/ws.mw';
-import { PrismaClient, UserStatus } from '@prisma/client';
 
 @WebSocketGateway({
   cors: '*',

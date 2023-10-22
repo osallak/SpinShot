@@ -133,20 +133,7 @@ export class PongEngine {
       this.client2 && this.client2.emit('countDown', 'GO!');
     }, 2500);
 
-    // setTimeout(() => {
-    //   this.client1 && this.client1.emit('countDown', '1');
-    //   this.client2 && this.client2.emit('countDown', '1');
-    // }, 3000);
 
-    // setTimeout(() => {
-    //   this.client1 && this.client1.emit('countDown', 'GO!');
-    //   this.client2 && this.client2.emit('countDown', 'GO!');
-    // }, 4000);
-
-    // setTimeout(() => {
-    //   this.client1 && this.client1.emit('countDown', '');
-    //   this.client2 && this.client2.emit('countDown', '');
-    // }, 4500);
   }
 
   private throwBall() {
@@ -310,7 +297,7 @@ export class PongEngine {
     playerId === this.firstPlayerId ? this.firstScore++ : this.secondScore++;
 
     if (this.firstScore >= 5 || this.secondScore >= 5) {
-      this.gameOver(true);
+      this.gameOver();
       return;
     } else {
       this.ball = Matter.Bodies.circle(
@@ -329,7 +316,7 @@ export class PongEngine {
     }
   }
 
-  private gameOver(finished: boolean = true) {
+  private gameOver() {
     const gameOver = {
       firstScore: this.firstScore,
       secondScore: this.secondScore,
@@ -361,8 +348,14 @@ export class PongEngine {
       secondPlayer: this.secondScore,
     };
 
-    this.firstClient && this.firstClient.emit('scoreUpdate', scoreUpdate);
-    this.secondClient && this.secondClient.emit('scoreUpdate', scoreUpdate);
+    this.firstClient && this.firstClient.emit('scoreUpdate', {
+      userScore: this.firstScore,
+      opponentScore: this.secondScore,
+    });
+    this.secondClient && this.secondClient.emit('scoreUpdate', {
+      userScore: this.secondScore,
+      opponentScore: this.firstScore,
+    });
   }
 
   private sendGameState() {
@@ -443,7 +436,7 @@ export class PongEngine {
 
   public move(id: string, newX: MoveDirection) {
     if (!id) {
-      this.gameOver(false); //false means the game is aborted
+      this.gameOver(); 
       return;
     }
 
@@ -460,11 +453,11 @@ export class PongEngine {
     switch (id) {
       case this.firstPlayerId:
         this.firstScore = 0;
-        this.secondScore = 10;
+        this.secondScore = 5;
         break;
       case this.secondPlayerId:
         this.secondScore = 0;
-        this.firstScore = 10;
+        this.firstScore = 5;
         break;
       default: {
         return;

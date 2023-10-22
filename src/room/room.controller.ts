@@ -6,27 +6,27 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards';
-import { CreateRoomDto } from './dtos/create-room.dto';
-import { RoomService } from './room.service';
-import { JoinRoomDto } from './dtos/join-room.dto';
-import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
-import { Response, toObject } from 'src/global/interfaces';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response as ExpressResponse } from 'express';
-import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
-import { Response as CustomResponse } from 'src/global/interfaces';
+import { JwtAuthGuard } from 'src/auth/guards';
+import { toObject } from 'src/global/interfaces';
 import { banUserDto } from './dtos/ban-user.dto';
-import { ChangePasswordDto, ProtectRoomDto, RemovePasswordDto } from './dtos/protect-room.dto';
 import { ElevateUserDto } from './dtos/elevate-user.dto';
-import { ConfigSource } from '@nestjs/microservices/external/kafka.interface';
 import { InviteDto } from './dtos/invite.dto';
+import { JoinRoomDto } from './dtos/join-room.dto';
 import { leaveRoomDto } from './dtos/leave-room.dto';
+import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
+import {
+  ChangePasswordDto,
+  ProtectRoomDto,
+  RemovePasswordDto,
+} from './dtos/protect-room.dto';
+import { RoomService } from './room.service';
+import { CreateRoomDto } from './dtos/create-room.dto';
 
 @ApiTags('room')
 @Controller('room')
@@ -330,7 +330,7 @@ export class RoomController {
     try {
       const res = await this.roomService.changePassword(
         (request as any)?.user?.id,
-        changePasswordDto
+        changePasswordDto,
       );
       return response.status(res.status).json(res.message);
     } catch (e) {
@@ -348,7 +348,7 @@ export class RoomController {
     try {
       const res = await this.roomService.removePassword(
         (request as any)?.user?.id,
-        roomName, 
+        roomName,
       );
       return response.status(res.status).json(res.message);
     } catch (e) {

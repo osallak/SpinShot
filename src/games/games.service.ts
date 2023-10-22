@@ -277,7 +277,6 @@ export class GamesService {
   }
 
   private saveGame(game: any): void {
-    console.log('saveGame: ', game);
     this.eventEmitter.emit('saveGame', game);
     this.eventEmitter.emit('userUpdate', {status: UserStatus.ONLINE, id: game.userId});
     this.eventEmitter.emit('userUpdate', {status: UserStatus.ONLINE, id: game.opponentId});

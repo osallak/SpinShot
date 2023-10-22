@@ -20,7 +20,7 @@ export class GamesRepository {
         include: { logs: true },
       }),
     ]);
-    if (!user || !opponent) return; //todo: throw error
+    if (!user || !opponent) return;
 
     // this.achieveUsers(user, opponent);
     try {
@@ -59,7 +59,9 @@ export class GamesRepository {
       data: { status: payload.status },
     });
   }
-  async achieveUser(user: User, opponent: User): Promise<void>{
-    
+
+  async achieveUser(user: User, opponent: User, score: { user: number, opponent: number}): Promise<void>{
+
+    //todo
   }
 }

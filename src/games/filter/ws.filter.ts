@@ -13,7 +13,7 @@ export class WebsocketExceptionsFilter extends BaseWsExceptionFilter {
     const details =
       error instanceof Object
         ? { ...error }
-        : { event: 'events', statusCode: 500, message: error };//todo: event property should be discussed
+        : { event: 'error', statusCode: 500, message: error };
     client.send(
       JSON.stringify({
         ...details,

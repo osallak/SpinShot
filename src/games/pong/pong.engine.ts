@@ -87,9 +87,6 @@ export class PongEngine {
     to: { firstClient: boolean; secondClient: boolean },
     type: 'match' | 'reconnect',
   ) {
-    if (type === 'reconnect') {
-      return; //todo: remove in production
-    }
     if (to.firstClient && this.firstClient) {
       this.firstClient.emit(type, {
         opponnet: this.secondPlayerId,

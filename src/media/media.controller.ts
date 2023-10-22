@@ -35,9 +35,9 @@ export class MediaController {
           fileType: /image\/(jpeg|png|svg)/,
         })
         .addMaxSizeValidator({
-          maxSize: 1024 * 1024 * 5, //todo: discuss this (5mb)
+          maxSize: 1024 * 1024 * 5,
           message: (maxSize) =>
-            `File size should not exceed ${Math.floor(maxSize / 1000000)}m`, //todo: remove magic number
+            `File size should not exceed ${Math.floor(maxSize / 1000000)}m`,
         })
         .build({
           exceptionFactory(error) {

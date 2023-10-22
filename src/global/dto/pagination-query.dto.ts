@@ -7,7 +7,7 @@ export class PaginationQueryDto {
 
   @Min(1)
   @IsOptional()
-  @Max(50) //todo: to be discussed
+  @Max(50)
   readonly limit: number = 5;
 
   getSkip(): number {

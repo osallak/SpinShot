@@ -15,8 +15,8 @@ export function serializeUser(user: User): SerialisedUser {
       rank: user.logs.rank,
       level: user.logs.level,
     },
-    logs: user.logs,//todo: remove extra fields
-    achievements: user.HaveAchievement,//todo: same as above
+    logs: user.logs,
+    achievements: user.HaveAchievement,
   };
 }
 

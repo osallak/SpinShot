@@ -29,7 +29,6 @@ export class PrismaExceptionFilter extends PrismaClientExceptionFilter {
       }
 
       default:
-        console.log('exceptionCode: ', exception.code);
         super.catch(exception, host);
         break;
     }

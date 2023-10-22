@@ -17,8 +17,8 @@ import { User } from 'src/types';
 import { JwtResponse } from 'src/types/common.types';
 import { CreateUserDto } from 'src/user/dto';
 import { UserService } from 'src/user/user.service';
-import { JwtAuthPayload } from './interfaces/jwt.interface';
 import { FortyTwoDto } from './dto/FortyTwo.dto';
+import { JwtAuthPayload } from './interfaces/jwt.interface';
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger('AuthService');

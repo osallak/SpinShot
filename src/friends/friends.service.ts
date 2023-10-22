@@ -153,7 +153,6 @@ export class FriendsService {
       },
       data: { status: FriendshipStatus.ACCEPTED },
     });
-    //todo: notification
     return {
       status: 201,
       message: 'friend request accepted',

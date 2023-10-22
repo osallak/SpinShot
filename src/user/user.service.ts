@@ -121,6 +121,7 @@ export class UserService {
         status: UserStatus.OFFLINE,
         avatar: DEFAULT_AVATAR,
         is42User: false,
+        mailVerified: true,
         logs: {
           create: initUserLogs(),
         },
@@ -133,9 +134,8 @@ export class UserService {
   }
 
   async signIn(username: string, pass: string): Promise<User> {
-    const user = await this.prisma.user.update({
-      where: { username: username },
-      data: { status: UserStatus.ONLINE }, //todo: to be discussed
+    const user = await this.prisma.user.findUnique({
+      where: { username },
     });
     if (!user) throw new NotFoundException('User not found');
     if (!user.mailVerified) throw new BadRequestException('Email not verified');
@@ -150,7 +150,6 @@ export class UserService {
   }
 
   async deleteUser(user: any): Promise<void> {
-    //todo: delete user's achievements as well as his logs
     await this.prisma.user.delete({
       where: {
         id: user.id,
@@ -231,17 +230,10 @@ export class UserService {
         id,
       },
       include: {
-        logs: {
-          select: {
-            victories: true,
-            defeats: true,
-            level: true,
-            rank: true,
-          },
-        },
         HaveAchievement: {
           select: {
             level: true,
+            achieved: true,
             Achiement: {
               select: {
                 name: true,
@@ -383,6 +375,28 @@ export class UserService {
         },
       },
     });
+    return user;
+  }
+  async verifyPassword(id: string, password: string): Promise<boolean> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+    if (!user) throw new NotFoundException('user not found');
+    try {
+      const isMatch = await bcrypt.compare(password, user.password);
+      return isMatch;
+    } catch (error) {
+      this.logger.error(error.message);
+      throw new BadRequestException('Invalid credentials');
+    }
+  }
+
+  async getUserStatus(id: string): Promise<{ status: UserStatus }> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: { status: true },
+    });
+    if (!user) throw new NotFoundException('user not found');
     return user;
   }
 }

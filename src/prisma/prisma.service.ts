@@ -4,6 +4,7 @@ import {
   Logger,
   OnModuleInit,
 } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
 import { PrismaClient } from '@prisma/client';
 
 @Injectable()
@@ -35,4 +36,5 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       this.logger.error(e.message);
     }
   }
+
 }

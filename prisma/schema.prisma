@@ -74,8 +74,7 @@ model Game {
   id         String   @id @default(uuid())
   userId     String   @map("user_id")
   opponentId String
-  mode       Mode //! deprecated
-  map        Map
+  map        String
   startedAt  DateTime @default(now()) @map("started_at")
 
   opponent User     @relation("opponent", fields: [opponentId], references: [id], onDelete: Cascade)
@@ -113,9 +112,10 @@ model haveAchievement {
   id            String      @id @default(uuid())
   userId        String      @map("user_id")
   achievementId String      @map("achievement_id")
-  level         Float
-  User          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Achiement     Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  level         Int
+  achieved      Boolean     @default(false)
+  User          User        @relation(fields: [userId], references: [id])
+  Achiement     Achievement @relation(fields: [achievementId], references: [id])
 
   @@map("have_achievement")
 }
@@ -239,17 +239,10 @@ enum FriendshipStatus {
   @@map("friendship_status")
 }
 
-enum Mode {
-  ON_TIME
-  DEFI
-
-  @@map("mode")
-}
-
 enum Map {
-  EASY
-  MEDIUM
+  NORMAL
   HARD
+  EXPERT
 
   @@map("map")
 }

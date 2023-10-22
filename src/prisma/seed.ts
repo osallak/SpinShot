@@ -91,8 +91,7 @@ const createRandomGame = async (user: User, users: User[]): Promise<void> => {
     data: {
       userId: user.id,
       opponentId: opponentId,
-      mode: faker.helpers.arrayElement(['DEFI', 'ON_TIME']),
-      map: faker.helpers.arrayElement(['EASY', 'MEDIUM', 'HARD']),
+      map: faker.helpers.arrayElement(['normal', 'hard', 'expert']),
       History: {
         create: {
           userScore: faker.number.int({ min: 0, max: 100 }),
@@ -110,7 +109,7 @@ const createRandomGame = async (user: User, users: User[]): Promise<void> => {
 
 const createRandomUser = async (): Promise<any> => {
   const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash('123456', salt);
+  const hashedPassword = await bcrypt.hash('123123', salt);
   const user = await prisma.user.create({
     data: {
       id: faker.string.uuid(),
@@ -131,7 +130,7 @@ const createRandomUser = async (): Promise<any> => {
     },
   });
   await initAcheivements(user);
-  await createRandomGame(user, await prisma.user.findMany());
+  // await createRandomGame(user, await prisma.user.findMany());
   return user;
 };
 

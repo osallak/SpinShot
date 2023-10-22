@@ -4,7 +4,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
 import { UserStatus, haveAchievement } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -21,6 +21,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { achievements } from './constants';
 import { CreateUserDto } from './dto';
 import { SearchDto } from './dto/search.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { initUserLogs, serializePaginationResponse, serializeUser } from './helpers';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
   initUserLogs,

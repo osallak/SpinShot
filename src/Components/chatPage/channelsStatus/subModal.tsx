@@ -28,9 +28,15 @@ const SubModal = (props: {
       return;
     }
     try {
+      const params: any = {
+        type: type,
+        name: props.name,
+      }
+      if (type === "PROTECTED")
+        params["password"] = password;
       const res = await axios.post(
         `${ip}/room/join`,
-        { type, name: props.name },
+        params,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -39,6 +45,7 @@ const SubModal = (props: {
       );
       props.setOpen(false);
     } catch (error: any) {
+      console.log("error from join a protected channel: ", error);
       setError(true);
       setErrorMessage(error.response.data);
     }

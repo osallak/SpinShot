@@ -235,7 +235,7 @@ const ConversationChannel = (props: {
   }, [conversationChannel]);
 
   console.log("userId: ", userId);
-  console.log("conversation channel: ", conversationChannel)
+  console.log("blocked user in a channel: ", blockedUsers)
 
   return (
     <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">

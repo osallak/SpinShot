@@ -37,7 +37,7 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
       name: name,
       type: type,
     };
-    if (password.length >= 6) params["password"] = password;
+    if (type === "PROTECTED") params["password"] = password;
     try {
       const res = await axios.post(`${ip}/room/add`, params, {
         headers: {

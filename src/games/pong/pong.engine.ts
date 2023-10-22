@@ -261,13 +261,13 @@ export class PongEngine {
     const pairs = event.pairs;
     const labels = [pairs[0].bodyA.label, pairs[0].bodyB.label];
 
-    // if (labels.includes('ball') && labels.includes('top')) {
-    //   this.goalScored(this.secondPlayerId);
-    //   return;
-    // } else if (labels.includes('ball') && labels.includes('bottom')) {
-    //   this.goalScored(this.firstPlayerId);
-    //   return;
-    // }
+    if (labels.includes('ball') && labels.includes('top')) {
+      this.goalScored(this.secondPlayerId);
+      return;
+    } else if (labels.includes('ball') && labels.includes('bottom')) {
+      this.goalScored(this.firstPlayerId);
+      return;
+    }
   };
 
   private handleAfterUpdate = (
@@ -375,7 +375,6 @@ export class PongEngine {
       opponentScore: this.firstScore,
     };
     if (this.isPlaying) {
-      console.log('ball: ', this.ball.position);
       this.firstClient && this.firstClient.emit('gameState', firstGameState);
       this.secondClient && this.secondClient.emit('gameState', secondGameState);
     }

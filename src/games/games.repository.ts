@@ -52,7 +52,6 @@ export class GamesRepository {
 
   @OnEvent('userUpdate')
   async updateUser(payload: any): Promise<void> {
-    console.log('userUpdate: ', payload);
     if (!payload.id) return;
     await this.prismaService.user.update({
       where: { id: payload.id },

@@ -1,7 +1,7 @@
 import { Injectable, UseFilters } from '@nestjs/common';
 import { Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { FriendshipStatus } from '@prisma/client';
+import { FriendshipStatus, UserStatusGroup } from '@prisma/client';
 import { Socket } from 'socket.io';
 import {
   ANONYMOUS_USER_MESSAGE,
@@ -132,7 +132,7 @@ export class ChatService {
 
   async saveMessageInDatabase(body: SendMessageDto) {
     const toFrom = [body.to, body.from].sort();
-    return this.prismaService.conversation.create({
+    return await this.prismaService.conversation.create({
       data: {
         message: body.content,
         senderId: toFrom[0],
@@ -149,20 +149,15 @@ export class ChatService {
       content: body,
     };
     let isFriend: boolean = false;
-    isFriend = await this.isFriend(body.to, body.from);
-    if (isFriend) {
-      const receiver = this.getSocketsAssociatedWithUser(body.to);
-      if (!receiver || receiver.length === 0) {
-        // TODO: should the client side be notified ?
-        return;
-      }
-      for (let i = 0; i < receiver.length; ++i) {
-        receiver[i].emit(event.event, JSON.stringify(body));
-      }
-      let user: ChatUser = this.World.get(body.from);
-      try {
+    try {
+      isFriend = await this.isFriend(body.to, body.from);
+      if (isFriend) {
+        const receiver = this.getSocketsAssociatedWithUser(body.to) ?? [];
+        for (let i = 0; i < receiver.length; ++i) {
+          receiver[i].emit(event.event, JSON.stringify(body));
+        }
         await this.saveMessageInDatabase(body);
-      } catch (e) {
+      } else {
         const sender: Array<Socket> = this.getSocketsAssociatedWithUser(
           body.from,
         );
@@ -171,13 +166,14 @@ export class ChatService {
           sender[i].emit(
             EXCEPTION,
             JSON.stringify({
-              status: INTERNAL_SERVER_ERROR_MESSAGE,
-              message: INTERNAL_SERVER_ERROR_MESSAGE,
+              status: BAD_REQUEST,
+              message: ANONYMOUS_USER_MESSAGE,
             }),
           );
         }
       }
-    } else {
+    } catch (e) {
+      let user: ChatUser = this.World.get(body.from);
       const sender: Array<Socket> = this.getSocketsAssociatedWithUser(
         body.from,
       );
@@ -186,8 +182,8 @@ export class ChatService {
         sender[i].emit(
           EXCEPTION,
           JSON.stringify({
-            status: BAD_REQUEST,
-            message: ANONYMOUS_USER_MESSAGE,
+            status: INTERNAL_SERVER_ERROR_MESSAGE,
+            message: INTERNAL_SERVER_ERROR_MESSAGE,
           }),
         );
       }
@@ -403,6 +399,14 @@ export class ChatService {
                 roomChatId: body.roomName,
                 userId: body.from,
               },
+              OR: [
+                {
+                  userStatus: null,
+                },
+                {
+                  userStatus: UserStatusGroup.MUTED,
+                },
+              ],
             },
           },
         );
@@ -419,6 +423,12 @@ export class ChatService {
               message: 'You are muted',
             });
           }
+        } else {
+          return reject({
+            event: EXCEPTION,
+            status: BAD_REQUEST,
+            message: 'You are not a member of this room',
+          });
         }
         roomMembers?.forEach((member) => {
           if (member?.userId !== body.from) {
@@ -458,7 +468,7 @@ export class ChatService {
         }
       } catch (e) {
         console.log(e);
-        reject({
+        return reject({
           event: EXCEPTION,
           status: INTERNAL_SERVER_ERROR_MESSAGE,
           message: INTERNAL_SERVER_ERROR_MESSAGE,

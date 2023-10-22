@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   Req,
   Res,
   UseGuards,
@@ -14,17 +13,20 @@ import {
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response as ExpressResponse } from 'express';
 import { JwtAuthGuard } from 'src/auth/guards';
-import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import { toObject } from 'src/global/interfaces';
 import { banUserDto } from './dtos/ban-user.dto';
-import { CreateRoomDto } from './dtos/create-room.dto';
 import { ElevateUserDto } from './dtos/elevate-user.dto';
 import { InviteDto } from './dtos/invite.dto';
 import { JoinRoomDto } from './dtos/join-room.dto';
 import { leaveRoomDto } from './dtos/leave-room.dto';
 import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
-import { ProtectRoomDto } from './dtos/protect-room.dto';
+import {
+  ChangePasswordDto,
+  ProtectRoomDto,
+  RemovePasswordDto,
+} from './dtos/protect-room.dto';
 import { RoomService } from './room.service';
+import { CreateRoomDto } from './dtos/create-room.dto';
 
 @ApiTags('room')
 @Controller('room')
@@ -149,11 +151,9 @@ export class RoomController {
     @Param('id') roomName: string,
     @Req() request: Request,
     @Res() response: ExpressResponse,
-    @Query() query: PaginationQueryDto,
   ) {
     try {
       const res = await this.roomService.getSpecificRoom(
-        query,
         roomName,
         (request as any)?.user?.id,
       );
@@ -293,6 +293,62 @@ export class RoomController {
       const res = await this.roomService.leaveRoom(
         (request as any)?.user?.id,
         leaveRoomDto.room,
+      );
+      return response.status(res.status).json(res.message);
+    } catch (e) {
+      return response.status(e.status).json(e.message);
+    }
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('users/:room')
+  async getRoomMembers(
+    @Res() response: ExpressResponse,
+    @Req() request: Request,
+    @Param('room') roomName: string,
+  ) {
+    try {
+      const res = await this.roomService.getAllMembers(
+        (request as any)?.user?.id,
+        roomName,
+      );
+      return response.status(res.status).json(res.data);
+    } catch (e) {
+      return response.status(e.status).json(e.message);
+    }
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Patch('change-password/')
+  async changePassword(
+    @Res() response: ExpressResponse,
+    @Req() request: Request,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
+    try {
+      const res = await this.roomService.changePassword(
+        (request as any)?.user?.id,
+        changePasswordDto,
+      );
+      return response.status(res.status).json(res.message);
+    } catch (e) {
+      return response.status(e.status).json(e.message);
+    }
+  }
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Patch('remove-password/')
+  async removePassword(
+    @Res() response: ExpressResponse,
+    @Req() request: Request,
+    @Body() roomName: RemovePasswordDto,
+  ) {
+    try {
+      const res = await this.roomService.removePassword(
+        (request as any)?.user?.id,
+        roomName,
       );
       return response.status(res.status).json(res.message);
     } catch (e) {

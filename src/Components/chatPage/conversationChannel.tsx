@@ -245,11 +245,11 @@ const ConversationChannel = (props: {
                   )
               )}
               <div className="flex flex-col">
-                <p className="font-Poppins lg:text-xl md:text-lg sm:text-base text-sm text-pearl font-semibold">
+                <button onClick={fetchUsersList} className="font-Poppins lg:text-xl md:text-lg sm:text-base text-sm text-pearl font-semibold">
                   {props.id?.length > 10
                     ? props.id.slice(0, 10) + " ..."
                     : props.id}
-                </p>
+                </button>
               </div>
             </div>
             {type !== "PRIVATE" && (

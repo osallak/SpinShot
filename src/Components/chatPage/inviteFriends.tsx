@@ -8,9 +8,10 @@ import {
   DialogHeader,
 } from "@material-tailwind/react";
 import axios from "axios";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { currentFriendsAtom } from "../context/recoilContext";
+import toast from "react-hot-toast";
 
 const InviteFriends = (props: {
   open: boolean;
@@ -35,7 +36,27 @@ const InviteFriends = (props: {
     setRoomname(event.target.value);
   };
 
-  const handleClick = async () => {
+  const handleClick = async (id: string) => {
+    try {
+      await axios.post(
+        `${ip}/room/invite`,
+        { userId: id, roomName: roomname },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      props.setOpen(false);
+      toast.success("user invited succefuly");
+    } catch (error: any) {
+      setError(true);
+      if (username === "") setErrorMessage("wrong userName or roomName");
+      else setErrorMessage(error?.response?.data);
+    }
+  };
+
+  const fetchCurrentFriends = async () => {
     try {
       const res = await axios.get(`${ip}/friends`, {
         headers: {
@@ -47,29 +68,11 @@ const InviteFriends = (props: {
       });
       setCurrentFriends(res.data.data);
     } catch (error: any) {}
-    const id = (currentFriends as dataFriends[]).find(
-      (items: dataFriends, index: number) => {
-        if (items.username === username) {
-          return items.username;
-        }
-      }
-    );
-    try {
-      await axios.post(
-        `${ip}/room/invite`,
-        { userId: id?.id, roomName: roomname },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-    } catch (error: any) {
-      setError(true);
-      if (username === "") setErrorMessage("wrong userName or roomName");
-      else setErrorMessage(error?.response?.data?.message[1]);
-    }
   };
+
+  useEffect(() => {
+    fetchCurrentFriends();
+  }, []);
 
   return (
     <Dialog
@@ -103,12 +106,18 @@ const InviteFriends = (props: {
         )}
       </DialogBody>
       <DialogFooter>
-        <Button
-          onClick={handleClick}
-          className="rounded-full bg-peridot w-20 flex justify-center items-center text-very-dark-purple font-Passion-One font-semibold"
-        >
-          Invite
-        </Button>
+        {(currentFriends as dataFriends[]).map(
+          (items: dataFriends, index: number) =>
+            items.username === username && (
+              <Button
+                key={index}
+                onClick={() => handleClick(items.id)}
+                className="rounded-full bg-peridot w-20 flex justify-center items-center text-very-dark-purple font-Passion-One font-semibold"
+              >
+                Invite
+              </Button>
+            )
+        )}
       </DialogFooter>
     </Dialog>
   );

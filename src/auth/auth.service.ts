@@ -30,8 +30,17 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async generateToken(payload: JwtAuthPayload): Promise<JwtResponse> {
-    payload['iss'] = this.configService.get('JWT_ISSUER');
+  async generateToken(
+    user: any,
+  ): Promise<JwtResponse> {
+    const payload: JwtAuthPayload = {
+      isTwoFactorEnabled: user.twoFactorAuth,
+      isTwoFaAuthenticated: user.isTwoFactorAuthenticated,
+      username: user.username,
+      sub: user.id,
+      iss: this.configService.get('JWT_ISSUER'),
+    };
+
     try {
       return {
         token: await this.jwtService.signAsync(payload),
@@ -87,13 +96,13 @@ export class AuthService {
     }
   }
 
-  async signIn(username: string, pass: string): Promise<JwtResponse> {
-    const user: User = await this.userService.signIn(username, pass);
+  async signIn(
+    username: string,
+    pass: string,
+  ): Promise<JwtResponse> {
     try {
-      return await this.generateToken({
-        username: user.username,
-        sub: user.id,
-      } as JwtAuthPayload);
+      const user: User = await this.userService.signIn(username, pass);
+      return await this.generateToken(user);
     } catch (e) {
       this.logger.error(e.message);
       throw e;
@@ -123,9 +132,14 @@ export class AuthService {
 
   async registerFortyTwoUser(user: FortyTwoDto): Promise<JwtResponse> {
     const returnedUser = await this.userService.registerFortyTwoUser(user);
-    return await this.generateToken({
-      username: returnedUser.username,
-      sub: returnedUser.id,
-    } as JwtAuthPayload);
+    const token: any = await this.generateToken(
+      {
+        id: returnedUser?.id,
+        twoFactorAuth: returnedUser?.twoFactorAuth,
+        isTwoFactorAuthenticated: returnedUser?.isTwoFactorAuthenticated,
+        username: returnedUser.username,
+      } as any,
+    );
+    return token;
   }
 }

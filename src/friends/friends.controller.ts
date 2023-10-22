@@ -1,10 +1,11 @@
 import { Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { UserDecorator } from 'src/global/decorators/global.decorators';
 import { PaginationResponse, Response } from 'src/global/interfaces';
 import { User } from 'src/types/user.types';
 import { FriendsQueryDto } from './dto/pagination.dto';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtTwoFactorGuard } from 'src/auth/guards/jwt-2fa.guard';
 import { FriendsService } from './friends.service';
 import { FriendsGuard } from './guards/friends.guard';
 import {

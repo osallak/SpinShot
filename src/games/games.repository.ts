@@ -22,7 +22,7 @@ export class GamesRepository {
     ]);
     if (!user || !opponent) return; //todo: throw error
 
-    this.achieveUsers(user, opponent);
+    // this.achieveUsers(user, opponent);
     try {
       const game = await this.prismaService.game.create({
         data: {

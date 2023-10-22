@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { FriendsModule } from './friends/friends.module';
 import { GamesModule } from './games/games.module';
 import { MediaController } from './media/media.controller';
+import { ChatModule } from './chat/chat.module';
+import { RoomModule } from './room/room.module';
 import { MediaModule } from './media/media.module';
 import { PrismaService } from './prisma/prisma.service';
 import { StorageModule } from './storage/storage.module';
@@ -40,6 +42,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     UserModule,
     StorageModule,
     MediaModule,
+    ChatModule,
+    RoomModule,
     FriendsModule,
     GamesModule,
   ],

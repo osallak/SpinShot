@@ -3,8 +3,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
-  ApiResponse,
-  ApiTags,
+  ApiResponse
 } from '@nestjs/swagger';
 import { UpdateUserDto } from '../dto/update-user.dto';
 
@@ -13,7 +12,7 @@ export const SearchDoc = () =>
     ApiBearerAuth(),
     ApiResponse({
       status: 200,
-      description: 'Search users',
+      description: 'filter users by username',
       content: {
         schema: {
           example: {
@@ -63,7 +62,7 @@ export const GetUserGamesDoc = () =>
     ApiBearerAuth(),
     ApiResponse({
       status: 200,
-      description: 'Get user games by username (pagination',
+      description: 'Get user games by id (pagination supported)',
     }),
   );
 
@@ -71,7 +70,7 @@ export const UpdateUserDoc = () =>
   applyDecorators(
     ApiBearerAuth(),
     ApiCreatedResponse({
-      description: 'Update user by username',
+      description: 'Update user by id',
     }),
     ApiBody({
       type: UpdateUserDto,

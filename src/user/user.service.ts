@@ -4,27 +4,25 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
 import { UserStatus, haveAchievement } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { FortyTwoDto } from 'src/auth/dto/FortyTwo.dto';
 import { DEFAULT_AVATAR } from 'src/global/constants/global.constants';
 import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
-import { PaginationResponse } from 'src/global/interfaces/global.intefraces';
+import {
+  PaginationResponse,
+  Response,
+} from 'src/global/interfaces/global.intefraces';
 import { serializeService } from 'src/global/services';
 import { SerialisedUser, User } from 'src/types';
 import { v4 as uuidv4 } from 'uuid';
-import { CreateUserDto } from '../auth/dto/create-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { achievements } from './constants';
+import { CreateUserDto } from './dto';
 import { SearchDto } from './dto/search.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import {
-  initUserLogs,
-  serializePaginationResponse,
-  serializeUser,
-} from './helpers';
+import { initUserLogs, serializePaginationResponse, serializeUser } from './helpers';
 
 @Injectable()
 export class UserService {
@@ -165,7 +163,7 @@ export class UserService {
 
   async verifyEmail(email: string, reject: boolean): Promise<boolean> {
     const user: User = await this.findOneByEmail(email);
-    if (!user) throw new NotFoundException('user not found');
+    if (!user) throw new  NotFoundException('user not found');
 
     if (user.mailVerified) throw new BadRequestException('Link already used');
 
@@ -209,32 +207,23 @@ export class UserService {
   }
 
   async mergeAccounts(profile: any): Promise<User> {
-    return await this.prisma.user.update({
-      where: { email: profile.email },
-      data: {
-        is42User: true,
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        avatar: profile.avatar,
-        status: UserStatus.ONLINE, //todo: check this
-        country: profile.country,
-      },
-    });
+      return await this.prisma.user.update({
+        where: { email: profile.email },
+        data: {
+          is42User: true,
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          avatar: profile.avatar,
+          status: UserStatus.ONLINE, //todo: check this
+          country: profile.country,
+        },
+      });
   }
 
   async getUser(id: string): Promise<SerialisedUser> {
-    const user: User = await this.prisma.user.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        logs: {
-          select: {
-            victories: true,
-            defeats: true,
-            level: true,
-            rank: true,
-          },
+      const user: User = await this.prisma.user.findUnique({
+        where: {
+          id,
         },
         HaveAchievement: {
           select: {
@@ -248,10 +237,9 @@ export class UserService {
             },
           },
         },
-      },
-    });
-    if (!user) throw new NotFoundException('Resource not found');
-    return serializeUser(user);
+      });
+      if (!user) throw new NotFoundException('record not found !');
+      return serializeUser(user);
   }
 
   async getUserGames(
@@ -265,40 +253,6 @@ export class UserService {
         take: limit,
         where: {
           OR: [{ userId: id }, { opponentId: id }],
-        },
-        select: {
-          History: {
-            select: {
-              userScore: true,
-              opponentScore: true,
-            },
-          },
-          opponent: {
-            select: {
-              id: true,
-              username: true,
-              avatar: true,
-              country: true,
-              logs: {
-                select: {
-                  rank: true,
-                },
-              },
-            },
-          },
-          user: {
-            select: {
-              logs: {
-                select: {
-                  defeats: true,
-                  victories: true,
-                },
-              },
-            },
-          },
-          startedAt: true,
-          opponentId: true,
-          userId: true,
         },
       }),
       this.prisma.game.count({
@@ -325,7 +279,7 @@ export class UserService {
     };
   }
 
-  async updateAvatar(id: string, publicUrl: string): Promise<any> {
+  async updateAvatar(id: string, publicUrl: string): Promise<User> {
     return await this.prisma.user.update({
       where: { id },
       data: { avatar: publicUrl },
@@ -334,11 +288,7 @@ export class UserService {
 
   async search(query: SearchDto): Promise<PaginationResponse<User[]>> {
     const where = {
-      OR: [
-        { username: { contains: query.keyword } },
-        { firstName: { contains: query.keyword } },
-        { lastName: { contains: query.keyword } },
-      ],
+         username: { startsWith: query.keyword },
     };
     const [users, totalCount] = await this.prisma.$transaction([
       this.prisma.user.findMany({
@@ -366,7 +316,30 @@ export class UserService {
     );
   }
 
-  async registerFortyTwoUser(user: FortyTwoDto): Promise<User> {
+  async updateData(id: string, data: object): Promise<User | Response> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user: User = await this.prisma.user.update({
+          where: { id },
+          data: data,
+        });
+        return resolve({
+          status: 200,
+          message: 'User updated',
+          data: {
+            user,
+          },
+        });
+      } catch {
+        return reject({
+          status: 500,
+          message: 'Internal Server Error',
+        });
+      }
+    });
+  }
+
+	async registerFortyTwoUser(user: any): Promise<any> {
     //add data validation
 
     const generatedUsername = 'user' + '_' + uuidv4().slice(0, 8);
@@ -396,7 +369,6 @@ export class UserService {
         },
       },
     });
-
     return user;
   }
 

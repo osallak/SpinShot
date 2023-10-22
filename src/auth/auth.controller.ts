@@ -19,6 +19,7 @@ import { FortyTwoAuthGuard } from './guards/42-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { SigninDoc, SignupDoc } from './swagger/auth.swagger';
 import { FortyTwoDto } from './dto/FortyTwo.dto';
+
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -60,7 +61,6 @@ export class AuthController {
   ) {
     await this.authService.verifyOrReject(token as string, res, true);
   }
-
   @ApiTags('42')
   @Get('42')
   @UseGuards(FortyTwoAuthGuard)
@@ -68,25 +68,15 @@ export class AuthController {
     @Req() req: Request,
     @Res() res: Response,
     @UserDecorator() user: FortyTwoDto,
-  ): Promise<void> {
-    const { token } = await this.authService.registerFortyTwoUser(user);
-    res.cookie('access-token', token);
-    res.redirect(this.configService.get('FRONTEND_ORIGIN'));
-  }
+  ): Promise<any> {
+    try {
+      const { token } = await this.authService.registerFortyTwoUser(user);
+      return res.status(200).json({ token: token });
+    } catch (e) {
+      return res.status(500).send('Internal Server Error');
+    }
 
-  @ApiExcludeEndpoint()
-  @Get('42/cb')
-  @UseGuards(FortyTwoAuthGuard)
-  async login42Callback(
-    @Req() req: Request,
-    @Res() res: Response,
-    @UserDecorator() user: FortyTwoDto,
-  ): Promise<void> {
-    const { token } = await this.authService.registerFortyTwoUser(user);
-    res.cookie('jwt', 'test'); //todo: replace with jwt token
-    res.redirect(this.configService.get('FRONTEND_ORIGIN'));
   }
-
 
 
 }

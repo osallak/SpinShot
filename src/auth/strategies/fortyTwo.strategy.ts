@@ -11,7 +11,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
     super({
       clientID: configService.get('INTRA_CLIENT_ID'),
       clientSecret: configService.get('INTRA_APP_SECRET'),
-      callbackURL: `${HOST}:${configService.get('PORT') || 3000}/auth/42/cb`,
+      callbackURL: configService.get('INTRA_CALLBACK_URL'),
     });
   }
 

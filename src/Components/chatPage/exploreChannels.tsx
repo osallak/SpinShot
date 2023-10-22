@@ -8,12 +8,19 @@ import exportChannelsIcon from "../../../public/ExportChannels.svg";
 import { exploreChannelAtom } from "../context/recoilContext";
 import SubModal from "./channelsStatus/subModal";
 
-const ExploreChannels = (props: { open: boolean; setOpen: Function, error: boolean, errorMessage: string }) => {
+const ExploreChannels = (props: {
+  open: boolean;
+  setOpen: Function;
+  error: boolean;
+  errorMessage: string;
+}) => {
   const [subOpen, setSubOpen] = useState(false);
   const [status, setStatus] = useState("");
   const [name, setName] = useState("");
   const [exploreChannel, setExploreChannel] =
     useRecoilState(exploreChannelAtom);
+
+  console.log("explore channel: ", exploreChannel);
 
   const sp = (name: string) => {
     const res = name.split(" ");
@@ -129,26 +136,24 @@ const ExploreChannels = (props: { open: boolean; setOpen: Function, error: boole
                                     {items.type}
                                   </p>
                                 </div>
-                                {items.type !== "PRIVATE" && (
-                                  <div className="h-[50%] flex justify-center items-center outline-none">
-                                    <motion.div
-                                      whileTap={{ scale: 0.9 }}
-                                      className="md:w-16 sm:w-12 w-10 h-5 rounded-full flex justify-center items-center bg-peridot"
+                                <div className="h-[50%] flex justify-center items-center outline-none">
+                                  <motion.div
+                                    whileTap={{ scale: 0.9 }}
+                                    className="md:w-16 sm:w-12 w-10 h-5 rounded-full flex justify-center items-center bg-peridot"
+                                  >
+                                    <button
+                                      onClick={joinChannel(
+                                        items.type,
+                                        items.id
+                                      )}
+                                      className={`"bg-peridot" focus:outline-none outline-none rounded-full text-lg sm:text-xl w-full h-full font-Passion-One text-very-dark-purple`}
                                     >
-                                      <button
-                                        onClick={joinChannel(
-                                          items.type,
-                                          items.id
-                                        )}
-                                        className={`"bg-peridot" focus:outline-none outline-none rounded-full text-lg sm:text-xl w-full h-full font-Passion-One text-very-dark-purple`}
-                                      >
-                                        <p className="font-Passion-One text-very-dark-purple text-sm">
-                                          Join
-                                        </p>
-                                      </button>
-                                    </motion.div>
-                                  </div>
-                                )}
+                                      <p className="font-Passion-One text-very-dark-purple text-sm">
+                                        Join
+                                      </p>
+                                    </button>
+                                  </motion.div>
+                                </div>
                               </div>
                             </div>
                           </div>

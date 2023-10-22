@@ -41,6 +41,7 @@ const ConversationIndividual = (props: {
   );
   const [individual, setIndividual] = useRecoilState(individualAtom);
   const [userId, setUserId] = useState("");
+
   const getTime = (time: string): string => {
     const date = new Date(Number(time));
     let hours = date.getHours();

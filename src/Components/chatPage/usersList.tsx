@@ -29,6 +29,10 @@ import { useRecoilState } from "recoil";
 import { channelAtom } from "../context/recoilContextChannel";
 import { useRouter } from "next/router";
 import SubUsersList from "./subUsersList";
+import admin from "../../../public/adminIcon.svg";
+import ban from "../../../public/banIcon.svg";
+import kick from "../../../public/kickIcon.svg";
+import mute from "../../../public/muteIcon.svg";
 
 export default function UsersList(props: {
   open: boolean;
@@ -42,6 +46,7 @@ export default function UsersList(props: {
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [subOpen, setSubOpen] = useState(false);
   const [checkedId, setCheckedId] = useState("");
+  const [content, setContent] = useState<any[]>([]);
   const router = useRouter();
 
   const goToUser = (userId: string) => {
@@ -56,20 +61,32 @@ export default function UsersList(props: {
     });
   };
 
-  const getUserID = (userID: string) => {
+  const handleSubOpen = (check: string, userId: string) => {
     props.data.find((items: usersListType) => {
-      if (items.userId === userID) {
+      if (items.userId === userId)
         setCheckedId(items.userId);
-      }
     })
+    if (check === "my") {
+      setContent([{ content: "Leave", icon: kick}])
+    } else {
+      setContent([
+        { content: "Mute", icon: mute },
+        { content: "Kick", icon: kick },
+        { content: "Ban", icon: ban },
+        { content: "Add as admin", icon: admin },
+      ]);
+    }
     setSubOpen(true);
   }
-
+  
   useEffect(() => {
     getTypeOfChannel();
   }, []);
+  
 
-  const handleOpen = () => props.setOpen(true);
+  const handleOpen = () => {
+    props.setOpen(true)
+  }
 
   return (
     <>
@@ -80,7 +97,7 @@ export default function UsersList(props: {
           setClose={props.setOpen}
           type={type}
           name={props.id}
-          userId={props.userId}
+          content={content}
           checkedID={checkedId}
         />
       )}
@@ -138,8 +155,8 @@ export default function UsersList(props: {
                         </div>
                       </div>
                       <div className="h-full flex justify-center items-center md:pr-4 sm:pr-3 pr-2">
-                        <button
-                          onClick={() => getUserID(items.userId)}
+                        {props.userId === items.userId ? <button
+                          onClick={() => handleSubOpen("my", items.userId)}
                           className="outline-none ring-0"
                         >
                           <Image
@@ -147,7 +164,16 @@ export default function UsersList(props: {
                             alt="three point"
                             className="md:w-8 sm:w-6 w-5"
                           ></Image>
-                        </button>
+                        </button> : <button
+                          onClick={() => handleSubOpen("other", items.userId)}
+                          className="outline-none ring-0"
+                        >
+                          <Image
+                            src={threePoint}
+                            alt="three point"
+                            className="md:w-8 sm:w-6 w-5"
+                          ></Image>
+                        </button>}
                       </div>
                     </div>
                   </div>

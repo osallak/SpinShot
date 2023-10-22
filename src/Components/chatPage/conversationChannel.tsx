@@ -7,7 +7,14 @@ import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { KeyboardEvent, useCallback, useEffect, useRef, useState, MouseEvent } from "react";
+import {
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  MouseEvent,
+} from "react";
 import { useRecoilState } from "recoil";
 import leave from "../../../public/kickIcon.svg";
 import sendMessageIcon from "../../../public/sendMessage.svg";
@@ -25,6 +32,10 @@ import { usersListAtom } from "../context/recoilContextChannel";
 import { usersListType } from "@/types/channelTypes";
 import UsersList from "./usersList";
 import SubUsersList from "./subUsersList";
+import admin from "../../../public/adminIcon.svg";
+import ban from "../../../public/banIcon.svg";
+import kick from "../../../public/kickIcon.svg";
+import mute from "../../../public/muteIcon.svg";
 
 let token: any;
 const ConversationChannel = (props: {
@@ -50,8 +61,7 @@ const ConversationChannel = (props: {
   const [setting, setSettings] = useState(false);
   const [openUsersList, setOpenUsersList] = useState(false);
   const [openSubUsersList, setOpenSubUsersList] = useState(false);
-
-  console.log("userSIsdfsdf: ", props.id)
+  const [openLeaveList, setOpenLeaveList] = useState(false);
 
   const getTime = (time: string): string => {
     const date = new Date(Number(time));
@@ -173,10 +183,30 @@ const ConversationChannel = (props: {
     });
   };
 
-  const handleOpenSubUsersList = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
+  const [content, setContent] = useState<any[]>([]);
+
+  const handleOpenSubUsersList = (
+    event: MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+    console.log("and here");
+    setContent([
+      { content: "Mute", icon: mute },
+      { content: "Kick", icon: kick },
+      { content: "Ban", icon: ban },
+      { content: "Add as admin", icon: admin },
+    ]);
     setOpenSubUsersList(true);
-  }
+  };
+
+  const handleOpenLeaveList = (
+    event: MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+    console.log("enter here");
+    setContent([{ content: "Leave", icon: kick }]);
+    setOpenLeaveList(true);
+  };
 
   const emailInput = useCallback((inputElement: any) => {
     if (inputElement) {
@@ -203,6 +233,9 @@ const ConversationChannel = (props: {
       conversationDiv.scrollTop = conversationDiv.scrollHeight;
     }
   }, [conversationChannel]);
+
+  console.log("userId: ", userId);
+  console.log("conversation channel: ", conversationChannel)
 
   return (
     <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">
@@ -319,15 +352,44 @@ const ConversationChannel = (props: {
                         <span className="px-3">{items.message}</span>
                       </div>
                       {items.user.id === userId ? (
-                        <button onClick={(event) => handleOpenSubUsersList(event)}>
+                        <button
+                          onClick={(event) =>
+                            handleOpenLeaveList(event)
+                          }
+                        >
                           <Image src={threePoint} alt="three point" />
                         </button>
                       ) : (
-                        <button onClick={(event) => handleOpenSubUsersList(event)}>
+                        <button
+                          onClick={(event) =>
+                            handleOpenSubUsersList(event)
+                          }
+                        >
                           <Image src={threePointforPeridot} alt="three point" />
                         </button>
                       )}
-                      {openSubUsersList && <SubUsersList open={openSubUsersList} setOpen={setOpenSubUsersList} setClose={setOpenSubUsersList} type={type} name={props.id} userId={userId} checkedID={items.user.id} />}
+                      {openSubUsersList && (
+                        <SubUsersList
+                          open={openSubUsersList}
+                          setOpen={setOpenSubUsersList}
+                          setClose={setOpenSubUsersList}
+                          type={type}
+                          name={props.id}
+                          content={content}
+                          checkedID={items.user.id}
+                        />
+                      )}
+                      {openLeaveList && (
+                        <SubUsersList
+                          open={openLeaveList}
+                          setOpen={setOpenLeaveList}
+                          setClose={setOpenLeaveList}
+                          type={type}
+                          name={props.id}
+                          content={content}
+                          checkedID={items.user.id}
+                        />
+                      )}
                     </div>
                   </div>
                 )

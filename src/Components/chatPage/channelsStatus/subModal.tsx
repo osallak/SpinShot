@@ -27,37 +27,20 @@ const SubModal = (props: {
       router.push("/signin");
       return;
     }
-    if (type === "PUBLIC") {
-      try {
-        const res = await axios.post(
-          `${ip}/room/join`,
-          { type, name: props.name },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        props.setOpen(false);
-      } catch (error: any) {
-        setError(true)
-        setErrorMessage(error.response.data)
-      }
-    } else if (type === "PROTECTED")
     try {
       const res = await axios.post(
         `${ip}/room/join`,
-        { type, name: props.name, password },
+        { type, name: props.name },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-        );
-        props.setOpen(false);
+      );
+      props.setOpen(false);
     } catch (error: any) {
-      setError(true)
-      setErrorMessage(error.response.data)
+      setError(true);
+      setErrorMessage(error.response.data);
     }
   };
 
@@ -99,9 +82,11 @@ const SubModal = (props: {
                       <span className="font-Poppins text-very-dark-purple px-4 font-semibold w-full lg:text-lg md:text-md sm:text-sm text-xs">
                         Enter the password of the channel
                       </span>
-                      {error && 
-                      <span className="text-red-900 font-poppins">{errorMessage}</span>
-                      }
+                      {error && (
+                        <span className="text-red-900 font-poppins">
+                          {errorMessage}
+                        </span>
+                      )}
                       <div className="border w-full md:h-10 sm:h-9 h-8 rounded-full bg-very-dark-purple flex flex-row justify-center items-center pl-4">
                         <Image
                           src={lock}
@@ -130,9 +115,11 @@ const SubModal = (props: {
                       <span className="font-Poppins text-very-dark-purple px-4 font-semibold w-full lg:text-lg md:text-md sm:text-sm text-xs">
                         welcome to this channel
                       </span>
-                      {error && 
-                      <span className="text-red-900 font-poppins">{errorMessage}</span>
-                      }
+                      {error && (
+                        <span className="text-red-900 font-poppins">
+                          {errorMessage}
+                        </span>
+                      )}
                       <div className="w-full md:h-10 sm:h-9 h-8 flex justify-center items-center">
                         <button
                           onClick={() => joinChannel(props.type)}
@@ -143,6 +130,26 @@ const SubModal = (props: {
                       </div>
                     </div>
                   )}
+                  {props.type === "PRIVATE" && (
+                    <div className="flex justify-center items-center flex-col space-y-2">
+                      <span>If you are invited to this channel you can enter</span>
+                      {error && (
+                        <span className="text-red-900 font-poppins">
+                          {errorMessage}
+                        </span>
+                      )}
+                      <div className="w-full md:h-10 sm:h-9 h-8 flex justify-center items-center">
+                        <button
+                          onClick={() => joinChannel(props.type)}
+                          className="flex justify-center items-center md:w-[100px] sm:w-[85px] w-[70px] h-full bg-peridot font-Passion-One text-very-dark-purple rounded-full lg:text-lg md:text-md sm:text-sm text-xs focus:outline-none outline-none"
+                        >
+                          Confirme
+                        </button>
+                      </div>
+                    </div>
+                  )
+                    
+                  }
                 </div>
               </Dialog.Panel>
             </Transition.Child>

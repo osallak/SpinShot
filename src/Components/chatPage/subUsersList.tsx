@@ -16,6 +16,7 @@ import {
   Dialog,
   DialogHeader,
   DialogBody,
+  IconButton,
   DialogFooter,
 } from "@material-tailwind/react";
 
@@ -25,7 +26,7 @@ const SubUsersList = (props: {
   setClose: Function;
   type: string;
   name: string;
-  userId: string;
+  content: any[];
   checkedID: string;
 }) => {
   const [password, setPassword] = useState("");
@@ -45,21 +46,6 @@ const SubUsersList = (props: {
     { content: "For 12 Hour", time: "720" },
     { content: "For 24 Hour", time: "1440" },
   ];
-
-  useEffect(() => {
-    if (props.userId !== props.checkedID) {
-      setContent([
-        { content: "Mute", icon: mute },
-        { content: "Kick", icon: kick },
-        { content: "Ban", icon: ban },
-        { content: "Add as admin", icon: admin },
-      ]);
-    } else {
-      setContent([{ content: "Leave", icon: kick }]);
-    }
-  }, []);
-
-  console.log("here the content: ", props.checkedID);
 
   const handleClick = async (
     event: MouseEvent<HTMLButtonElement>,
@@ -95,7 +81,11 @@ const SubUsersList = (props: {
       try {
         const res = await axios.patch(
           `${ip}/room/ban`,
-          { name: props.name, userToBeBanned: props.checkedID, type: type?.type },
+          {
+            name: props.name,
+            userToBeBanned: props.checkedID,
+            type: type?.type,
+          },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -164,15 +154,16 @@ const SubUsersList = (props: {
   };
 
   const openTime = (event: MouseEvent<HTMLButtonElement>) => {
-    setTimeOpen(!timeOpen)
-  }
+    setTimeOpen(!timeOpen);
+  };
 
   const getPassword = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     setPassword(event.target.value);
   };
 
-  const handleOpen = () => props.setOpen(!props.open);
+  const handleOpen = () => props.setOpen(true);
+  const handleClose = () => props.setOpen(false);
 
   return (
     <Dialog
@@ -181,11 +172,35 @@ const SubUsersList = (props: {
       handler={handleOpen}
       className=" bg-pearl outline-none ring-0"
     >
-      <DialogBody>
+      <DialogHeader className="flex justify-end items-center py-2">
+        <IconButton
+          className="justify-end flex items-center"
+          color="blue-gray"
+          size="sm"
+          variant="text"
+          onClick={handleClose}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="#260323"
+            strokeWidth={2}
+            className="h-5 w-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </IconButton>
+      </DialogHeader>
+      <DialogBody className="py-1">
         <div className="w-full flex md:space-y-5 sm:space-y-3 space-y-0">
           <div className="h-auto md:max-h-[500px] sm:max-h-[350px] max-h-[250px] w-[50%] overflow-auto flex items-center sm:flex-wrap flex-nowrap sm:flex-row flex-col py-3 space-y-2">
-            {content.map((items, index) => (
-              <div className="w-full">
+            {props.content.map((items, index) => (
+              <div key={index} className="w-full">
                 {items.content === "Leave" ? (
                   <button
                     onClick={(event) => handleClick(event, items.content)}
@@ -223,15 +238,21 @@ const SubUsersList = (props: {
               </div>
             ))}
           </div>
-          {timeOpen && 
+          {timeOpen && (
             <div className="space-y-2 border border-black w-[50%] h-full flex items-center justify-center flex-col rounded-2xl bg-very-dark-purple">
               {muteTime.map((items, index) => (
-                <button key={index} onClick={(event) => handleClick(event, "Mute", items.time)} className="flex flex-col justify-center items-center">
-                  <span className="font-Passion-One font-semibold text-pearl">{items.content}</span>
+                <button
+                  key={index}
+                  onClick={(event) => handleClick(event, "Mute", items.time)}
+                  className="flex flex-col justify-center items-center"
+                >
+                  <span className="font-Passion-One font-semibold text-pearl">
+                    {items.content}
+                  </span>
                 </button>
               ))}
             </div>
-          }
+          )}
         </div>
       </DialogBody>
     </Dialog>

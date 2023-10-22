@@ -4,7 +4,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotFoundException
+  NotFoundException,
 } from '@nestjs/common';
 import { UserStatus, haveAchievement } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -22,7 +22,11 @@ import { achievements } from './constants';
 import { CreateUserDto } from './dto';
 import { SearchDto } from './dto/search.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { initUserLogs, serializePaginationResponse, serializeUser } from './helpers';
+import {
+  initUserLogs,
+  serializePaginationResponse,
+  serializeUser,
+} from './helpers';
 
 @Injectable()
 export class UserService {
@@ -117,6 +121,7 @@ export class UserService {
         status: UserStatus.OFFLINE,
         avatar: DEFAULT_AVATAR,
         is42User: false,
+        mailVerified: true,
         logs: {
           create: initUserLogs(),
         },
@@ -129,9 +134,8 @@ export class UserService {
   }
 
   async signIn(username: string, pass: string): Promise<User> {
-    const user = await this.prisma.user.update({
-      where: { username: username },
-      data: { status: UserStatus.ONLINE }, //todo: to be discussed
+    const user = await this.prisma.user.findUnique({
+      where: { username },
     });
     if (!user) throw new NotFoundException('User not found');
     if (!user.mailVerified) throw new BadRequestException('Email not verified');
@@ -145,7 +149,6 @@ export class UserService {
   }
 
   async deleteUser(user: any): Promise<void> {
-    //todo: delete user's achievements as well as his logs
     await this.prisma.user.delete({
       where: {
         id: user.id,
@@ -163,7 +166,7 @@ export class UserService {
 
   async verifyEmail(email: string, reject: boolean): Promise<boolean> {
     const user: User = await this.findOneByEmail(email);
-    if (!user) throw new  NotFoundException('user not found');
+    if (!user) throw new NotFoundException('user not found');
 
     if (user.mailVerified) throw new BadRequestException('Link already used');
 
@@ -207,24 +210,25 @@ export class UserService {
   }
 
   async mergeAccounts(profile: any): Promise<User> {
-      return await this.prisma.user.update({
-        where: { email: profile.email },
-        data: {
-          is42User: true,
-          firstName: profile.firstName,
-          lastName: profile.lastName,
-          avatar: profile.avatar,
-          status: UserStatus.ONLINE, //todo: check this
-          country: profile.country,
-        },
-      });
+    return await this.prisma.user.update({
+      where: { email: profile.email },
+      data: {
+        is42User: true,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        avatar: profile.avatar,
+        status: UserStatus.ONLINE, //todo: check this
+        country: profile.country,
+      },
+    });
   }
 
   async getUser(id: string): Promise<SerialisedUser> {
-      const user: User = await this.prisma.user.findUnique({
-        where: {
-          id,
-        },
+    const user: User = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+      include: {
         HaveAchievement: {
           select: {
             level: true,
@@ -237,9 +241,10 @@ export class UserService {
             },
           },
         },
-      });
-      if (!user) throw new NotFoundException('record not found !');
-      return serializeUser(user);
+      },
+    });
+    if (!user) throw new NotFoundException('record not found !');
+    return serializeUser(user);
   }
 
   async getUserGames(
@@ -288,7 +293,7 @@ export class UserService {
 
   async search(query: SearchDto): Promise<PaginationResponse<User[]>> {
     const where = {
-         username: { startsWith: query.keyword },
+      username: { startsWith: query.keyword },
     };
     const [users, totalCount] = await this.prisma.$transaction([
       this.prisma.user.findMany({
@@ -339,7 +344,7 @@ export class UserService {
     });
   }
 
-	async registerFortyTwoUser(user: any): Promise<any> {
+  async registerFortyTwoUser(user: any): Promise<any> {
     //add data validation
 
     const generatedUsername = 'user' + '_' + uuidv4().slice(0, 8);
@@ -386,10 +391,10 @@ export class UserService {
     }
   }
 
-  async getUserStatus(id: string): Promise<{status: UserStatus}> {
+  async getUserStatus(id: string): Promise<{ status: UserStatus }> {
     const user = await this.prisma.user.findUnique({
       where: { id },
-      select: { status: true}
+      select: { status: true },
     });
     if (!user) throw new NotFoundException('user not found');
     return user;

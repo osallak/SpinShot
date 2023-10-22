@@ -242,7 +242,6 @@ export class UserService {
               },
             },
           },
-          
         },
       },
     });
@@ -261,6 +260,14 @@ export class UserService {
         take: limit,
         where: {
           OR: [{ userId: id }, { opponentId: id }],
+        },
+        include: {
+          History: {
+            select: {
+              userScore: true,
+              opponentScore: true,
+            },
+          },
         },
       }),
       this.prisma.game.count({

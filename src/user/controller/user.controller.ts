@@ -1,26 +1,21 @@
 import {
+  Body,
   Controller,
   Get,
-  UseGuards,
-  Req,
   Param,
-  Query,
   Patch,
-  Post,
-  Body,
-  ConsoleLogger,
+  Query,
+  UseGuards
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/guards';
-import { UserService } from '../user.service';
-import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SerialisedUser, User } from 'src/types';
-import { PaginationResponse } from 'src/global/interfaces';
+import { JwtAuthGuard } from 'src/auth/guards';
 import { UserDecorator } from 'src/global/decorators/global.decorators';
-import { JwtPayload } from 'jsonwebtoken';
+import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
+import { PaginationResponse } from 'src/global/interfaces';
+import { SerialisedUser, User } from 'src/types';
 import { SearchDto } from '../dto/search.dto';
-import { JwtTwoFactorGuard } from 'src/auth/guards/jwt-2fa.guard';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { UserService } from '../user.service';
 
 @ApiTags('user')
 @Controller('users')

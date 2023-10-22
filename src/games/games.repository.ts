@@ -60,8 +60,35 @@ export class GamesRepository {
     });
   }
 
-  async achieveUser(user: User, opponent: User, score: { user: number, opponent: number}): Promise<void>{
+  async achieveWinner(user: User): Promise<void> {
+    await this.prismaService.logs.update({
+      where: { id: user.logs.id },
+      data: {
+        victories: user.logs.victories + 1,
+        level: user.logs.level + 0.3,
+      },
+    });
+    // const achievements = await this.prismaService.haveAchievement.findMany({
+    //   where: { userId: user.id },
+    // });
+    // if ()
+  }
 
-    //todo
+  async achieveLoser(user: User): Promise<void> {
+    await this.prismaService.logs.update({
+      where: { id: user.logs.id },
+      data: { defeats: user.logs.defeats + 1 },
+    });
+  }
+
+  async achieveUser(
+    user: User,
+    opponent: User,
+    score: { user: number; opponent: number },
+  ): Promise<void> {
+    if (score.user > score.opponent) {
+      await this.achieveWinner(user);
+      await this.achieveLoser(opponent);
+    }
   }
 }

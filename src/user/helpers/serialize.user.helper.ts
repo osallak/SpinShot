@@ -3,20 +3,20 @@ import { SerialisedUser, User } from 'src/types';
 
 export function serializeUser(user: User): SerialisedUser {
   return {
-    username: user.username,
-    email: user.email,
+    username: user?.username,
+    email: user?.email,
     profile: {
       name: {
-        givenName: user.firstName ?? null,
-        lastName: user.lastName ?? null,
+        givenName: user?.firstName ?? null,
+        lastName: user?.lastName ?? null,
       },
-      avatar: user.avatar,
-      country: user.country || null,
-      rank: user.logs.rank,
-      level: user.logs.level,
+      avatar: user?.avatar,
+      country: user?.country || null,
+      rank: user.logs?.rank,
+      level: user.logs?.level,
     },
-    logs: user.logs,
-    achievements: user.HaveAchievement,
+    logs: user?.logs,
+    achievements: user?.HaveAchievement,
   };
 }
 

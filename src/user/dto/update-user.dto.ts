@@ -25,6 +25,11 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsNotEmpty()
   country: string;
 
+  @ApiProperty()
+  @IsOptional()
+  @IsNotEmpty()
+  oldPassword: string;
+
   @Exclude()
   email: string;
 }

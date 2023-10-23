@@ -31,6 +31,10 @@ const ImageProfile = (props: any) => {
     }
   }, [data]);
 
+
+  console.log( "image ", props.myImage)
+  console.log( "image ", image)
+
   return (
     <div
       className={` ${
@@ -55,9 +59,19 @@ const ImageProfile = (props: any) => {
               <Image className={``} src={email}  alt="" />
             </div>
           )}
-          {image ? (
+          {props.myImage ? (
             <picture className={` bg-cover w-28 h-28 c-gb:w-36  c-gb:h-36 c-14xl:h-64 c-14xl:w-64 `}>
-              <Image
+              <img
+                className=" rounded-2xl w-full h-full" //h-20 w-20 md:h-36 md:w-36	c-14xl:w-64 c-14xl:h-64
+                src={URL.createObjectURL(props.myImage)}
+                width={150}
+                height={150}
+                alt=""
+              />
+            </picture>
+          ) : (
+            <picture className={` bg-cover w-28 h-28 c-gb:w-36  c-gb:h-36 c-14xl:h-64 c-14xl:w-64 `}>
+              <img
                 className=" rounded-2xl w-full h-full" //h-20 w-20 md:h-36 md:w-36	c-14xl:w-64 c-14xl:h-64
                 src={image}
                 width={150}
@@ -65,8 +79,7 @@ const ImageProfile = (props: any) => {
                 alt=""
               />
             </picture>
-          ) : (
-            <Image className="bg-cover w-full h-full" src={test1} alt="" />
+            // <Image className="bg-cover w-full h-full" src={test1} alt="" />
           )}
         </div>
       </label>

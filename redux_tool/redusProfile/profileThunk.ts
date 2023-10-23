@@ -18,7 +18,6 @@ export const getProfile = createAsyncThunk(
             'Authorization': `Bearer ${token}`,
           }
             },)
-            console.log( "data fetched ", respo);
             return respo.data;
           }
         } catch (error: any) {

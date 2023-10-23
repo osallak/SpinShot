@@ -5,22 +5,21 @@ import SidebarM from "@/Components/ui/folderSidebar/sidebarMobile";
 import SubSidebarGame from "@/Components/ui/profileSubsidebar/subSidebarGame";
 import SubsidebarSecondGame from "@/Components/ui/profileSubsidebar/subsidebarSecondGame";
 import ip from "@/utils/endPoint";
-import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { Socket, io } from "socket.io-client";
-import { useAppDispatch, useAppSelector } from "../../../redux_tool";
-import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
 import GameCard from "./gameCard";
 import Gamemenu from "./gameMenu";
 import GameModel from "./gameModel";
 import Matchmaking from "./matchmaking";
+import { SocketContext } from "@/context/socket.context";
+
 
 let game: GameModel | null = null;
 
 const GamePage = (props: any) => {
+  const socket:any = useContext(SocketContext);
   const [isopen, setMenu] = useState(false);
   const [opened, setOpned] = useState(false);
   const [mode, setMode] = useState<string>();
@@ -28,21 +27,21 @@ const GamePage = (props: any) => {
   const [width, setWidth] = useState<number>();
   const [height, setheight] = useState<number>();
   const divRef = React.useRef<HTMLDivElement>(null);
-  const [socket, setSocket] = useState<Socket | null>(null);
+  // const [socket, setSocket] = useState<Socket | null>(null);
   const [pages, setPages] = useState("game");
   const [isClick, setIsClick] = useState(false);
   const [cancelJoin, setCancelJoin] = useState(false);
   const [matchData, setmatchData] = useState<any>(null);
-  const dispatch = useAppDispatch();
   const router = useRouter();
   const [dataGame, setDataGame] = useState<any>();
   const [isClick2, setIsClick2] = useState(true);
-  const [depend, setDepend] = useState(false);
+  // const [depend, setDepend] = useState(false);
   const [gameOver, setGameOver] = useState(true);
   const [gamerState, setGamerState] = useState<any>(null);
   const [winnerCardState, setWinnerCardState] = useState(true);
   const [loserCardState, setLoserCardState] = useState(true);
   const [gameJustFinished, setGameJustFinished] = useState(false);
+  const [score, setScore] = useState<any>(null);
   const [clear, setClear] = useState(false);
 
   const handleMenu = () => {
@@ -58,9 +57,9 @@ const GamePage = (props: any) => {
     gameOver && setGameOver(false);
     setCancelJoin(true);
   };
-
+  
   const gameStartedCallback = (data: any) => {
-    // console.log("match data ", data);
+    // console.log("hana bdit ok");
     setWinnerCardState(true);
     setCancelJoin(false);
     setLoserCardState(true);
@@ -69,11 +68,13 @@ const GamePage = (props: any) => {
     setGamerState(null);
     setGameOver(false);
     setmatchData(data);
+    handleData(data);
+    setDataGame(dataGame);
   };
 
   const gameOverCallback = (data: any) => {
     setClear(true);
-    console.log("game over ", data);
+    // console.log("game over ", data);
     setDataGame(null);
     setGamerState(data);
     setGameJustFinished(true);
@@ -83,41 +84,50 @@ const GamePage = (props: any) => {
     // setIsClick(true);
   };
 
-  const handleData = async () => {
+  const handleData = async (data:any) => {
+    // console.log("after");
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/Signin");
       return;
     }
     try {
-      if (matchData?.opponent) {
-        const url = `${ip}/users/profile/${matchData?.opponent}`;
+      // console.log("matchData men handleData", data);
+      if (data?.opponent || data?.opponnet) {
+        let url = undefined
+        if (data?.opponnet)
+          url = `${ip}/users/profile/${data?.opponnet}`;
+        else
+          url = `${ip}/users/profile/${data?.opponent}`;
         const respo = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log("setting 3afak: ", respo?.data);
         setDataGame(respo?.data);
+        // console.log("after setting:", dataGame);
       }
     } catch (error) {
+      // console.log("errrror dzeb")
       console.log(error);
       return;
     }
   };
 
-  const getDataOfUser = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/Signin");
-      return;
-    }
-    try {
-      await dispatch(getProfile(parseJwt(JSON.stringify(token)).sub)).unwrap();
-    } catch (error) {
-      console.log(error);
-      return;
-    }
-  };
+  // const getDataOfUser = async () => {
+  //   const token = localStorage.getItem("token");
+  //   if (!token) {
+  //     router.push("/Signin");
+  //     return;
+  //   }
+  //   try {
+  //     await dispatch(getProfile(parseJwt(JSON.stringify(token)).sub)).unwrap();
+  //   } catch (error) {
+  //     console.log(error);
+  //     return;
+  //   }
+  // };
 
   const handleResize = () => {
     setWidth(window.innerWidth);
@@ -129,21 +139,22 @@ const GamePage = (props: any) => {
     route ? setPages(route) : null;
   };
 
-
+  // useEffect(() => {
+    // console.log("1111111");
+    // handleData();
+    // getDataOfUser();
+    // setDepend(false);
+  // }, []);
 
   useEffect(() => {
-    handleData();
-    getDataOfUser();
-    setDepend(false);
-  }, [depend, getDataOfUser]);
-
-  useEffect(() => {
+    if (!socket)
+    return;
+    console.log("socket: ", socket);
     handleResize();
-    const token = localStorage.getItem("token");
-    let socket: Socket = io("ws://e1r7p8:3000/games", {
-      extraHeaders: { Authorization: `Bearer ${token}` },
-    });
-
+    // const token = localStorage.getItem("token");
+    // let socket: Socket = io(`ws://${socketIp}/games`, {
+    //   extraHeaders: { Authorization: `Bearer ${token}` },
+    // });
     socket.on("connect", () => {
       console.log("connected......");
       socket.emit("message", "Message received on the server...");
@@ -153,8 +164,17 @@ const GamePage = (props: any) => {
     socket.on("error", errorEventCallback);
     socket.on("gameOver", gameOverCallback);
     socket.on("match", gameStartedCallback);
-    socket.on("gameState", (data: any) => {game?.updateState(data)});
-    setSocket(socket);
+    socket.on("gameState", (data: any) => {
+      // console.log("game state ", data);
+      // setScore(data);
+      game?.updateState(data);
+    });
+    socket.on("scoreUpdate", (data: any) => {
+      // console.log("score update ", data);
+      setScore(data);
+      // game?.updateState(data);
+    })
+    // setSocket(socket);
 
     if (typeof window !== "undefined") {
       window.addEventListener("resize", handleResize);
@@ -162,14 +182,11 @@ const GamePage = (props: any) => {
         window.removeEventListener("resize", handleResize);
       };
     }
-  
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
 
-
-
+    // return () => {
+    //   socket.disconnect();
+    // };
+  }, [socket]);
 
   useEffect(() => {
     // handleData();
@@ -181,20 +198,21 @@ const GamePage = (props: any) => {
 
   const cleanUp = () => {
     setDataGame(null);
-  }
+    setmatchData(null);
+  };
 
   useEffect(() => {
     return () => {
       if (clear) {
         cleanUp();
       }
-    }
-  }, [isClick, matchData, dataGame]);
-  
-  
-  {
-    console.log(gameOver, cancelJoin, matchData, gameJustFinished , dataGame);
-  }
+    };
+  }, []);
+
+  // {
+  //   console.log(matchData, dataGame);
+  // }
+
   return (
     <div
       className={
@@ -212,9 +230,9 @@ const GamePage = (props: any) => {
       <div className={` flex flex-row c-gb:space-x-3 p-2 w-full  h-full `}>
         <SideBar />
         <SubSidebarGame
-          depend={depend}
+          // depend={depend}
           matchData={matchData}
-          setDepend={setDepend}
+          // setDepend={setDepend}
           setMap={setMap}
           setIsClick={setIsClick}
           isClick={isClick}
@@ -240,7 +258,7 @@ const GamePage = (props: any) => {
           <div
             className={`flex justify-center items-center w-[96%] c-gb:w-[80% h-[15%] `}
           >
-            <NavGame />
+            <NavGame dataGame={dataGame} score={score} />
           </div>
           <div
             className={`h-[80%] w-[80%] flex justify-center items-center relative `}
@@ -249,13 +267,19 @@ const GamePage = (props: any) => {
         </div>
         {opened && (
           <SubsidebarSecondGame
-            setMode={setMode}
+          // opened={opened}
+          setOpned={setOpned}
+            // depend={depend}
+            matchData={matchData}
+            // setDepend={setDepend}
             setMap={setMap}
             setIsClick={setIsClick}
             isClick={isClick}
+            socket={socket}
+            map={map}
           />
         )}
-        {isClick && !matchData &&  (
+        {isClick && !matchData && (
           <Matchmaking
             isClick={isClick}
             setIsClick={setIsClick}

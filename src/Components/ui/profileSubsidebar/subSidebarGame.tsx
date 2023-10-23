@@ -7,10 +7,12 @@ const SubSidebarGame = (props: any) => {
   useEffect(() => {
     
   }, [props.matchData])
+
   const hendleUpdata = () => {
+    console.log("socket game: ", props.socket);
     props.socket.emit("joinQueue", {map: props.map});
     props.setIsClick(!props.isClick);
-    props.setDepend(true);
+    // props.setDepend(true);
   };
 
   const [backgroundmap, setBackgroundmap] = useState({
@@ -60,7 +62,7 @@ const SubSidebarGame = (props: any) => {
         </div>
         <div className="absolute h-[4%]  w-[17%] top-[85%] flex justify-center items-center ">
           <div className="w-[150px] h-full">
-            <SimpleButton content="Play" onclick={hendleUpdata} />
+            <SimpleButton content="Play" onclick={hendleUpdata} gameSession={props.matchData}/>
           </div>
         </div>
       </div>

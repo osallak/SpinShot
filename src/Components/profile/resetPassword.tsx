@@ -12,6 +12,7 @@ const ResetPassword = () => {
   const [showPasswd, setShowPasswd] = useState(false);
   const [showNewPasswd, setShowNewPasswd] = useState(false);
   const [showConfPassw, setShowConfPassw] = useState(false);
+  const [status, setStatus] = useState<any>();
   const profile_data = useAppSelector((state) => state.Profile);
 
   const [password, setPassword] = useState("");
@@ -31,8 +32,19 @@ const ResetPassword = () => {
     ("");
   };
 
+
+  console.log(status);
+
   const hendleChange = () => {
-    hendleUpdata()
+    console.log("11")
+    checkPassword();
+    console.log("22")
+    if (status?.status == 200) {
+      upDatePasswd()
+    }
+    else {
+      toast.error("Password incorrect ");
+    }
     // const parss = /^.{6,}$/;
     // {
     //   password == "123456" && parss.test(ConfirmPassword)
@@ -41,8 +53,30 @@ const ResetPassword = () => {
     // }
   };
 
+  const checkPassword = async () => { 
+    try {
+      const token = localStorage.getItem("token");
+      if (token)
+      {
+        const response = await axios.put(
+          `${ip}/users/me/password`,
+          {
+            password: password,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+          );
+          setStatus(response);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  const hendleUpdata = async () => {
+  const upDatePasswd = async () => {
     try {
       const token = localStorage.getItem("token");
       if (token)
@@ -50,6 +84,7 @@ const ResetPassword = () => {
         const response = await axios.patch(
           `${ip}/users`,
           {
+            oldPassword: password,
             password: ConfirmPassword,
           },
           {

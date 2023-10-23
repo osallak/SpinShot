@@ -68,7 +68,7 @@ const ProfilePage = (props: { id: any }) => {
       setValid(true);
     } catch (error) {
       console.log(error);
-      router.push("/error");
+      // router.push("/error");
       return;
     }
   };
@@ -119,6 +119,9 @@ const ProfilePage = (props: { id: any }) => {
       }
     }
   }, [dispatch, router.isReady, router.query.id]);
+
+
+  console.log("image : ", myImage);
   
   return (
     <>
@@ -165,6 +168,7 @@ const ProfilePage = (props: { id: any }) => {
               <div className="flex flex-col  c-gb:h-full   overflow-auto ml-0 md:ml-[105px] c-gb:ml-0 ">
                 <div className="rounded-[20px] c-gb:flex c-gb:flex-row ">
                   <ImageProfile
+                    myImage={myImage}
                     isopen={isopen}
                     opne={opened}
                     setOpenDialog={setOpenDialog}
@@ -173,6 +177,7 @@ const ProfilePage = (props: { id: any }) => {
                   />
                   {open ? (
                     <UploadImage
+                      setMyImage={setMyImage}
                       upload={upload}
                       setUpload={setUpload}
                       open={open}
@@ -202,7 +207,7 @@ const ProfilePage = (props: { id: any }) => {
                     password == true ? (
                       <ResetPassword />
                     ) : null
-                  ) : <div className="flex justify-center items-center text-pearl text-2xl h-full ">can you see Your information</div>}
+                  ) : null}
                 </div>
               </div>
             </div>

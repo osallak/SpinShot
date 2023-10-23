@@ -6,9 +6,17 @@ import { useAppSelector } from '../../../../redux_tool';
 
 const Rookie = () => {
     const achievement_data = useAppSelector((state) => state.Profile);
+    console.log(achievement_data.profile.achievements[0].achieved);
+    console.log(achievement_data.profile.achievements[0].Achiement.name);
+    console.log(achievement_data?.profile?.achievements[1]?.achieved);
+    console.log(achievement_data?.profile?.achievements[1]?.Achiement?.name);
+    console.log(achievement_data?.profile?.achievements[2]?.achieved);
+    console.log(achievement_data?.profile?.achievements[2]?.Achiement?.name);
+    console.log(achievement_data?.profile?.achievements[3]?.achieved);
+    console.log(achievement_data?.profile?.achievements[3]?.Achiement?.name);
   return (
     <div className={`  bg-very-dark-purple h-[150px] sm:h-[200px] c-gb:h-[300px] rounded-[20px] w-[85%] c-gb:w-full  flex flex-row justify-between`}>
-    <div className={` ${1 ? "text-pearl opacity-40" : "text-pearl "} p-4 sm:p-10 space-y-[20%]`}>
+    <div className={` ${achievement_data?.profile?.achievements[0]?.achieved ? "text-pearl" : "text-pearl opacity-40"} p-4 sm:p-10 space-y-[20%]`}>
       <h1 className=" text-sm sm:text-2xl">
       SPINSHOT ROOKIE
       </h1>
@@ -17,10 +25,10 @@ const Rookie = () => {
       </h1>
     </div>
     <div className="flex justify-center items-center  ">
-      {1 ? (
-        <Image className="      " src={rookieLose} alt="" />
-      ) : (
+      {achievement_data?.profile?.achievements[0]?.achieved ? (
         <Image className="      " src={rookieWin} alt="" />
+        ) : (
+        <Image className="      " src={rookieLose} alt="" />
       )}
     </div>
   </div>

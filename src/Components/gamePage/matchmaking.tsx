@@ -1,21 +1,18 @@
-import React, { useEffect, useState } from "react";
-import test1 from "../../../public/test1.svg";
 import {
-  Button,
   Dialog,
-  DialogHeader,
   DialogBody,
   DialogFooter,
-  Option,
+  DialogHeader
 } from "@material-tailwind/react";
-import { useAppDispatch, useAppSelector } from "../../../redux_tool";
 import { useRouter } from "next/router";
-import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../../redux_tool";
 import { parseJwt } from "../../../redux_tool/extractToken";
+import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
 
 const Matchmaking = (props: any) => {
   const data = useAppSelector((state) => state.Profile);
-  const [clear, setClear] = useState(false);
+  // const [clear, setClear] = useState(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -24,7 +21,7 @@ const Matchmaking = (props: any) => {
 
   // }, [props.matchData, props.dataGame])
   const handleClick = () => {
-    setClear(true);
+    // setClear(true);
 
     props.socket.emit("leaveQueue", () => console.log("leave queue"));
     props.socket.on("exception", () => console.log("exception: "));
@@ -56,18 +53,18 @@ const Matchmaking = (props: any) => {
     }
   };
 
-  const cleanUp = () => {
-    setClear(false);
-  }
+  // const cleanUp = () => {
+    // setClear(false);
+  // }
 
   useEffect(() => {
     getDataOfUaer();
-    return () => {
-      if (clear) {
-        cleanUp();
-      }
-    };
-  }, [data, props.matchData, props.dataGame, clear]);
+    // return () => {
+    //   if (clear) {
+    //     cleanUp();
+    //   }
+    // };
+  }, [props.matchData, props.dataGame]);
 
   return (
     <div className="">

@@ -1,20 +1,22 @@
 "use client";
-import SimpleButton from "@/Components/ui/Buttons/simpleButton";
 import Country from "@/Components/ui/Buttons/Country";
-import React, { useEffect, useState } from "react";
-import { useAppSelector } from "../../../redux_tool";
-import axios from "axios";
+import SimpleButton from "@/Components/ui/Buttons/simpleButton";
 import FormInput from "@/Components/ui/formInput/FormInput";
 import ip from "@/utils/endPoint";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import test from "node:test";
-import { json } from "stream/consumers";
+import { store, useAppSelector } from "../../../redux_tool";
+import { updateUsename, updateFirstName, updateLastName } from "../../../redux_tool/redusProfile/profileSlice";
 
 const PersonalInformation = (props: any) => {
   // const dispatch = useAppDispatch();
   const data = useAppSelector((state) => state.Profile);
+  console.log("data.profile", data.profile);
   const [country, setCountry] = useState("");
   const [error, setError] = useState(false);
+  const [firstName, setfirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   // const [errorMessage, setErrorMessage] = useState("");
 
   // const parseinInput = () => {
@@ -45,12 +47,15 @@ const PersonalInformation = (props: any) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // form.username ? props.setUsername(form.username) : null;
-      props.setUsername(form.username);
+      // form?.username ? props.setUsername(form?.username) : null;
+      props.setUsername(form?.username);
+      store.dispatch(updateUsename(form?.username));
+      store.dispatch(updateFirstName(form?.firstName));
+      store.dispatch(updateLastName(form?.lastName));
     } catch (error: any) {
       console.error(error);
       setError(true);
-      if (error.response.status === 409){
+      if (error?.response?.status === 409) {
         toast.error("Username already in use");
       }
     }
@@ -68,12 +73,13 @@ const PersonalInformation = (props: any) => {
   // };
 
   useEffect(() => {
+    console.log("data.profile", data.profile);
     if (data.profile) {
       const tmp = {
         firstName: data.profile?.profile?.name?.givenName,
-        lastName: data.profile?.profile?.name.lastName,
+        lastName: data.profile?.profile?.name?.lastName,
         username: data.profile?.username,
-        email: data.profile.email,
+        email: data?.profile?.email,
         country: data?.profile?.profile?.country,
       };
       setForm(tmp);
@@ -94,16 +100,16 @@ const PersonalInformation = (props: any) => {
                   <FormInput
                     handleChange={handleChange}
                     name={"firstName"}
-                    placehold={form.firstName ? form.firstName : "firstName"}
-                    value={form.firstName}
+                    placehold={form?.firstName ? form?.firstName : "firstName"}
+                    value={form?.firstName}
                   />
                 </div>
                 <div className="w-full md:w-[49%] ">
                   <FormInput
                     handleChange={handleChange}
                     name={"lastName"}
-                    placehold={form.lastName ? form.lastName : "lastName"}
-                    value={form.lastName}
+                    placehold={form?.lastName ? form?.lastName : "lastName"}
+                    value={form?.lastName}
                   />
                 </div>
               </div>
@@ -113,8 +119,8 @@ const PersonalInformation = (props: any) => {
                 <FormInput
                   handleChange={handleChange}
                   name={"username"}
-                  placehold={form.username ? form.username : "username"}
-                  value={form.username}
+                  placehold={form?.username ? form?.username : "username"}
+                  value={form?.username}
                 />
               </div>
             </div>
@@ -132,7 +138,7 @@ const PersonalInformation = (props: any) => {
                 id={"my_element"}
                 className=" bg-very-dark-purple w-[100%] md:w-[49%]  rounded-[20px] h-14 placeholder:text-pearl placeholder:text-opacity-40"
               >
-                <Country setCountry={setCountry} country={form.country}/>
+                <Country setCountry={setCountry} country={form?.country} />
               </div>
             </div>
           </div>
@@ -144,7 +150,9 @@ const PersonalInformation = (props: any) => {
         </div>
       </div>
       <div>
-        {error === true && <Toaster position="top-center" reverseOrder={false} />}
+        {error === true && (
+          <Toaster position="top-center" reverseOrder={false} />
+        )}
       </div>
     </div>
   );

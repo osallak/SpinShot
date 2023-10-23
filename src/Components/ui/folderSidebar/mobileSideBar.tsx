@@ -72,8 +72,10 @@ const MobileSideBar = () => {
           ))}
         </div>
         <div className="w-full h-[6%] min-h-[60px] py-2 flex justify-center items-center">
-          <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={test1} alt="test1" className={`w-9 ${hovered ? "opacity-10" : "opacity-100"}`} />
-          {hovered && <Image onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={logout} alt="logout" className="absolute cursor-pointer w-4" />}
+          <picture>
+          <img onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={test1} alt="test1" className={`w-9 ${hovered ? "opacity-10" : "opacity-100"}`} />
+          </picture>
+          {hovered && <picture> <img onClick={handleLogOut} onMouseEnter={handleHover} onMouseLeave={handleHoverOut} src={logout} alt="logout" className="absolute cursor-pointer w-4" /> </picture>}
         </div>
       </div>
     </div>

@@ -69,7 +69,6 @@ const FriendRequestsDropDown = (props: { id: string }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("response from accept button: ", res);
       setFriends((prev :  any) => {
         const newArray = prev.map((item: dataFriends) => item.id != props.id);
         return newArray;

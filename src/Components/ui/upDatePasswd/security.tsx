@@ -23,7 +23,7 @@ const Security = (props: {
           onClick={() => props.handlePasswd(true, "ResetPassword")}
         >
           <button className="left-[10%] relative h-10">
-            <button>Reset Password</button>
+            <div>Reset Password</div>
           </button>
         </div>
         <div className=" w-6 relative left-[30%] bottom-14 flex flex-row">

@@ -6,7 +6,6 @@ import linechoose2 from "../../../../public/linechoose2.svg";
 
 const Maps = (props: any) => {
   const [clickable, setClickable] = useState(true);
-
   useEffect(() => {
     if (props.matchData) {
       setClickable(false);

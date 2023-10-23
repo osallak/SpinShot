@@ -33,6 +33,7 @@ const MatchHistory = () => {
       if (token) {
         const my_token = parseJwt(token);
         const id = my_token.sub;
+        console.log(id);
         const response = await axios.get(
           `${ip}/users/games/${id}?page=${page}&limit=${5}`,
           {
@@ -41,8 +42,10 @@ const MatchHistory = () => {
             },
           }
         );
+        console.log(response.data);
         setPosts(response.data.data);
         setTotalPages(response.data.pagination.pageCount);
+        console.log(posts);
       }
     } catch (error) {
       console.error(error);
@@ -50,8 +53,8 @@ const MatchHistory = () => {
   };
 
   const totalMatch =
-    (posts[0]?.user?.logs?.victories ?? 0) +
-    (posts[0]?.user?.logs?.defeats ?? 0);
+    (posts[0]?.logs?.victories ?? 0) +
+    (posts[0]?.logs?.defeats ?? 0);
 
   return (
     <div className="  h-[1100px] c-gb:h-[900px] relative space-y-5 text-[10px] sm:text-sm md:text-lg c-3xl:text-2xl text-pearl">
@@ -70,14 +73,14 @@ const MatchHistory = () => {
               <div className="w-[50%] flex-col flex  justify-center items-center">
                 <h1>Wins</h1>
                 <h1 className="text-peridot">
-                  {posts[0]?.user?.logs?.victories ?? 0}
+                  {posts[0]?.logs?.victories ?? 0}
                 </h1>
               </div>
               <div className="h-[70%]"></div>
               <div className="w-[50%] flex flex-col items-center">
                 <h1>Loses</h1>
                 <h1 className="text-red-900">
-                  {posts[0]?.user?.logs?.defeats ?? 0}
+                  {posts[0]?.logs?.defeats ?? 0}
                 </h1>
               </div>
             </div>
@@ -85,7 +88,7 @@ const MatchHistory = () => {
         </div>
         <div className="h-full w-full ">
           {
-            array.length == 0 ?
+            array.length != 0 ?
             array.map((option: any) => (
               <div key={option.id} className="w-full h-14 sm:h-28 ">
               {option.content && <Matchs option={option} />}

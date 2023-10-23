@@ -37,20 +37,20 @@ return (
         </div>
       </div>
       <div className={`font-Poppins font-semibold text-pearl `}>
-        {props.table.map((button: any) => (
+        {props.table.map((bu: any) => (
           <div
-            key={button.id}
+            key={bu.id}
             className={`flex justify-center items-center rounded-2xl w-full h-20   `}
           >
             <button
               className={` w-[90%] h-full  rounded-2xl flex justify-center items-center  ${
-                subbackground === button.id ? " bg-very-dark-purple" : ""
+                subbackground === bu.id ? " bg-very-dark-purple" : ""
               }`}
-              onClick={() => handle(button.id, button.route)}
+              onClick={() => handle(bu.id, bu.route)}
             >
               <div className="w-[80%] h-full flex justify-start items-center c-ml:text-xl 2xl:text-base xl:text-sm text-xs">
-                {button.text}
-                {button.text === "Security" ? (
+                {bu.text}
+                {bu.text === "Security" ? (
                   <div
                     className={`flex justify-end items-center rounded-2xl h-20 w-[100%]`}
                     onClick={() => props.setClick(!props.isClick)}

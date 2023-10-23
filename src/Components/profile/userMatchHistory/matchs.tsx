@@ -31,21 +31,21 @@ const Matchs = (props: { option: any }) => {
       </div>
       <div className="flex flex-col ">
         <div className="flex flex-row">
-          <h1 className="">{props.option.content?.History?.opponentScore}</h1>
+          <h1 className="">{props.option.content?.history.opponentScore}</h1>
         </div>
         <div className="flex flex-row">
-          <h1 className="">{props.option.content?.History?.userScore}</h1>
-        </div>
-      </div>
-      <div className="flex flex-col">
-        <div className="flex flex-row">
-          <h1 className="">{getDate(props.option.content?.startedAt)}</h1>
+          <h1 className="">{props.option.content?.history?.userScore}</h1>
         </div>
       </div>
       <div className="flex flex-col">
         <div className="flex flex-row">
-          {props.option.content?.History?.userScore >
-          props.option.content?.History?.opponentScore ? (
+          <h1 className="">{getDate(props?.option?.content?.startedAt)}</h1>
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <div className="flex flex-row">
+          {props.option.content?.history?.userScore >
+          props.option.content?.history?.opponentScore ? (
             <h1 className="text-peridot">VECTORY</h1>
           ) : (
             <h1 className="text-red-900">DEFEAT</h1>

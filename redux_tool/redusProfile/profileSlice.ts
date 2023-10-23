@@ -17,15 +17,24 @@ export const ProfileSlice = createSlice({
     setProfile: (state, action: PayloadAction<any>) => {
       state.profile = action.payload;
     },
+    updateUsename: (state, action: PayloadAction<any>) => {
+      state.profile.username = action.payload;
+    },
+    updateFirstName: (state, action: PayloadAction<any>) => {
+      state.profile.profile.name.givenName = action.payload;
+    },
+    updateLastName: (state, action: PayloadAction<any>) => {
+      state.profile.profile.name.lastName = action.payload;
+    },
   },
+
   extraReducers: (builder) => {
-    builder
-      .addCase(getProfile.fulfilled, (state, action) => {
-        state.profile = action.payload;
-      })
+    builder.addCase(getProfile.fulfilled, (state, action) => {
+      state.profile = action.payload;
+    });
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setProfile } = ProfileSlice.actions;
+export const { setProfile, updateUsename, updateFirstName, updateLastName} = ProfileSlice.actions;
 export default ProfileSlice.reducer;

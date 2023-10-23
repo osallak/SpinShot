@@ -22,6 +22,7 @@ const UploadImage = (props: {
   setUpload: Function;
   open: boolean;
   Switch: Function;
+  setMyImage: Function;
 }) => {
   const [image, setMyImage] = useState<any | null>(null);
   const imageRef = useRef(null);
@@ -39,6 +40,7 @@ const UploadImage = (props: {
   const uploadToClient = (event: any) => {
     if (event.target.files && event.target.files[0]) {
       setMyImage((prev: any) => event.target.files[0]);
+      props.setMyImage(event.target.files[0]);
     }
   };
 

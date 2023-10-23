@@ -8,7 +8,7 @@ import profile from "../../../../public/profile.svg";
 import game from "../../../../public/game.svg";
 import test1 from "../../../../public/test1.svg";
 import logout from "../../../../public/logout.svg";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import parseJwt from "@/utils/parsJwt";
 import { useRouter } from "next/router";
 import { useAppSelector } from "../../../../redux_tool";
@@ -19,13 +19,8 @@ const SideBar = (props:any) => {
   const data = useAppSelector((state) => (state.Profile))
   const [hovered, setHovered] = useState(false);
   const [isSearch, setSearch] = useState(false);
-  const Icons = [
-    { icon: search, route: "/search" },
-    { icon: profile, route: "/profile" },
-    { icon: message, route: "/messages" },
-    { icon: friend, route: "/friends" },
-    { icon: game, route: "/game" },
-  ];
+
+  const [icons, setIcons] = useState<any[]>([]);
 
   const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {
     event.preventDefault();
@@ -45,6 +40,16 @@ const SideBar = (props:any) => {
     Router.push("/signin");
   };
 
+  useEffect(() => {
+    setIcons([
+      { icon: search, route: "/search" },
+    { icon: profile, route: `/profile/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}` },
+    { icon: message, route: `/messages/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}` },
+    { icon: friend, route: "/friends" },
+    { icon: game, route: `/game/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}` },
+    ])
+  }, [])
+
   return (
     <div
       className={`bg-white/10 rounded-2xl h-full md:flex flex-col hidden lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px] `}
@@ -56,7 +61,7 @@ const SideBar = (props:any) => {
         <div className="w-[80%] border border-pearl border-opacity-40"></div>
       </div>
       <div className="w-full h-[82%] min-h-[150px] py-5  overflow-hidden flex flex-col items-center">
-        {Icons.map((option, index) => (
+        {icons.map((option, index) => (
           <div
             key={index}
             className="w-full h-[60px] flex items-center justify-center"
@@ -70,25 +75,6 @@ const SideBar = (props:any) => {
                   className="opacity-40 hover:opacity-100"
                 />{" "}
                 <Search isSearch={isSearch} setId={props.setId}/>
-              </button>
-            ) : option.route === "/profile" ? (
-              <button
-                onClick={(event) =>
-                  changePage(
-                    event,
-                    option.route +
-                      "/" +
-                      parseJwt(JSON.stringify(localStorage.getItem("token")))
-                        .sub
-                  )
-                }
-              >
-                {" "}
-                <Image
-                  src={option.icon}
-                  alt={option.icon}
-                  className="opacity-40 hover:opacity-100"
-                />{" "}
               </button>
             ) : (
               <button onClick={(event) => changePage(event, option.route)}>
@@ -105,7 +91,9 @@ const SideBar = (props:any) => {
       </div>
       <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center">
         <div className="w-[70px] h-[70px] rounded-2xl relative flex justify-center items-center">
-        <Image
+          <picture>
+
+        <img
           onClick={handleLogOut}
           onMouseEnter={handleHover}
           onMouseLeave={handleHoverOut}
@@ -114,7 +102,8 @@ const SideBar = (props:any) => {
           alt="profile pic"
           width={500}
           height={500}
-        />
+          />
+          </picture>
         {hovered && (
           <Image
             onClick={handleLogOut}

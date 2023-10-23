@@ -5,16 +5,18 @@ import Maps from './maps';
 const SubsidebarSecondGame = (props:any) => {
 
   const hendleUpdata = () => {
-    props.setIsClick=(!props.isClick);
+    props.socket.emit("joinQueue", {map: props.map});
+    props.setIsClick(!props.isClick);
+    props.setOpned(false);
+    // props.setDepend(true);
   };
-
   const [backgroundmap, setBackgroundmap] = useState({
-    map1: "",
+    map1: "very-dark-purple",
     map2: "",
     map3: "",
   });
 
-  const changeBackgroundmap = (mapId: string, newColor: string) => {
+  const changeBackgroundmap = (mapId: string, type: string,  newColor: string) => {
     const updatedBackgroundmap: {
       [key: string]: string;
       map1: string;
@@ -25,10 +27,12 @@ const SubsidebarSecondGame = (props:any) => {
       map2: "",
       map3: "",
     };
-    props.setMap(mapId);
+    props.setMap(type);
     updatedBackgroundmap[mapId] = newColor;
     setBackgroundmap(updatedBackgroundmap);
   };
+
+
 
   return (
     <div className='fixed top-[70px] md:top-2 md:ml-[105px] ml-[65px] w-[70%] z-50  h-full  backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] text-pearl pb-5 '>
@@ -45,6 +49,7 @@ const SubsidebarSecondGame = (props:any) => {
             <div className="space-y-36">
               <div className="px-4 ">
                 <Maps
+                  matchData={props.matchData}
                   changeBackgroundmap={changeBackgroundmap}
                   backgroundmap={backgroundmap}
                 />
@@ -52,9 +57,9 @@ const SubsidebarSecondGame = (props:any) => {
             </div>
           </div>
         </div>
-        <div className="absolute h-[4%]  w-[17%] top-[85%] flex justify-center items-center ">
-          <div className="w-[150px] h-full">
-            <SimpleButton content="Play" onclick={hendleUpdata} />
+        <div className="absolute h-[4%]  w-full top-[85%] flex justify-center items-center ">
+          <div className="w-[100px] h-full">
+            <SimpleButton content="Play" onclick={hendleUpdata} gameSession={props.matchData} />
           </div>
         </div>
       </div>

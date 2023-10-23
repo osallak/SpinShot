@@ -2,6 +2,7 @@
 import { currentFriendsAtom } from "@/Components/context/recoilContext";
 import dataFriends from "@/types/friendsType";
 import ip from "@/utils/endPoint";
+import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -23,7 +24,11 @@ const ContentMyFriends = () => {
 
   const fetchData = async () => {
     const token = localStorage.getItem("token");
-    if (!token) {
+    if (
+      !token ||
+      (parseJwt(token).isTwoFactorEnabled &&
+        !parseJwt(token).isTwoFaAuthenticated)
+    ) {
       Router.push("/signin");
       return;
     }

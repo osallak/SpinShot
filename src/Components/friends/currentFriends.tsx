@@ -2,13 +2,13 @@
 import { currentFriendsAtom } from "@/Components/context/recoilContext";
 import dataFriends from "@/types/friendsType";
 import ip from "@/utils/endPoint";
+import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import FriendsIcon from "../../../public/friend.svg";
-import test1 from "../../../public/test1.svg";
 import CurrentFriendsDropDown from "../ui/FolderDropDown/currentFriendsDropDown";
 
 const CurrentFriends = () => {
@@ -25,7 +25,11 @@ const CurrentFriends = () => {
 
   const fetchData = async () => {
     const token = localStorage.getItem("token");
-    if (!token) {
+    if (
+      !token ||
+      (parseJwt(token).isTwoFactorEnabled &&
+        !parseJwt(token).isTwoFaAuthenticated)
+    ) {
       Router.push("/signin");
       return;
     }
@@ -82,14 +86,14 @@ const CurrentFriends = () => {
                   <div className="w-full h-full flex items-center justify-center">
                     <div className="w-[50%] h-full flex justify-start items-center space-x-2 ">
                       <div className="lg:w-[60px] w-[50px] lg:h-[60px] h-[50px] min-h-[50px] min-w-[50px]  rounded-xl">
-                      <Image
-                        onClick={() => goToUser(items.id)}
-                        src={items.avatar}
-                        width={500}
-                        height={500}
-                        alt="avatar"
-                        className="w-full h-full cursor-pointer rounded-xl"
-                      />
+                        <Image
+                          onClick={() => goToUser(items.id)}
+                          src={items.avatar}
+                          width={500}
+                          height={500}
+                          alt="avatar"
+                          className="w-full h-full cursor-pointer rounded-xl"
+                        />
                       </div>
                       <div className="h-[70%] flex justify-center flex-col">
                         <p className="font-Poppins text-pearl font-semibold xl:text-xl md:text-lg text-base">

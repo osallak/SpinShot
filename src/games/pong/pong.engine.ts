@@ -31,7 +31,7 @@ export class PongEngine {
   private firstScore: number = 0;
   private secondScore: number = 0;
   private map: MapEnum;
-  private spawnUp: boolean = Math.random() > 0.5;
+  private spawnUp: number = 1;
   private readonly width: number = WIDTH;
   private readonly height: number = HEIGHT;
   private isPlaying: boolean = false;
@@ -89,7 +89,7 @@ export class PongEngine {
   ) {
     if (to.firstClient && this.firstClient) {
       this.firstClient.emit(type, {
-        opponnet: this.secondPlayerId,
+        opponent: this.secondPlayerId,
         opponentScore: this.secondScore,
         userScore: this.firstScore,
         map: this.map,
@@ -112,7 +112,7 @@ export class PongEngine {
     this.beforePlay();
 
     setTimeout(() => {
-      this.throwBall(); //throw the ball
+      this.throwBall(); //throw the ball 
     }, 3000);
     Matter.Runner.run(this.runner, this.engine);
   }
@@ -137,7 +137,7 @@ export class PongEngine {
   }
 
   private throwBall() {
-    this.spawnUp = !this.spawnUp;
+    this.spawnUp = -this.spawnUp;
     this.isPlaying = true;
     Matter.World.add(this.engine.world, this.ball);
   }
@@ -186,15 +186,17 @@ export class PongEngine {
       {
         label: 'ball',
         ...ballSettings,
+        force: {
+          x: 0.5 * this.spawnUp,
+          y: 0.5 * this.spawnUp,
+        }
       },
     );
 
     Matter.World.add(this.engine.world, [this.firstPaddle, this.secondPaddle]);
   }
 
-  //walls, obstacles
   private initStaticObjects() {
-    //init borders
     const wallOptions = { isStatic: true };
     Matter.World.add(this.engine.world, [
       Matter.Bodies.rectangle(400, 0, 800, 20, {
@@ -307,6 +309,10 @@ export class PongEngine {
         {
           label: 'ball',
           ...ballSettings,
+          force: {
+            x: 0.5 * this.spawnUp,
+            y: 0.5 * this.spawnUp,
+          }
         },
       );
       this.sendScore();

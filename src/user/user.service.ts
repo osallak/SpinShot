@@ -225,7 +225,6 @@ export class UserService {
   }
 
   async getUser(id: string): Promise<SerialisedUser> {
-    console.log('id: ', id);
     const user: User = await this.prisma.user.findUnique({
       where: {
         id,

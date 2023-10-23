@@ -27,14 +27,19 @@ export class StorageService {
   save(path: string, media: Buffer): Response {
     try {
       const file = this.storage.bucket(this.bucket).file(path);
-      const stream: Writable = file.createWriteStream();
+      const stream: Writable = file.createWriteStream({
+        resumable: false,
+        metadata: {
+          cacheControl: 'no-store',
+        },
+      });
       stream.end(media);
       return {
         status: 201,
         message: 'File uploaded successfully',
       };
     } catch (e) {
-      this.logger.error(e.message);
+      this.logger.error(e);
       throw new InternalServerErrorException('Failed to upload file');
     }
   }
@@ -60,7 +65,7 @@ export class StorageService {
     try {
       const file = this.storage.bucket(this.bucket).file(path);
       await file.makePublic();
-    } catch(error) {
+    } catch (error) {
       this.logger.error(error.message);
       throw new InternalServerErrorException('failed to make file public');
     }

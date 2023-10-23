@@ -6,10 +6,6 @@ export const ballSettings = {
   inertia: Infinity,
   density: 0.071,
   frictionAir: 0,
-  force: {
-    x: 0.5,
-    y: 0.5, 
-  },
   mass: 15,
 };
 

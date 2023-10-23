@@ -158,7 +158,7 @@ export class UserService {
         logs: true,
         HaveAchievement: {
           include: {
-            Achiement: true,
+            Achivement: true,
           },
         },
       },
@@ -234,7 +234,7 @@ export class UserService {
           select: {
             level: true,
             achieved: true,
-            Achiement: {
+            Achivement: {
               select: {
                 name: true,
                 description: true,
@@ -302,7 +302,6 @@ export class UserService {
           startedAt: game.startedAt,
         });
       }});
-      console.log(userGames);
     return serializePaginationResponse(userGames, totalCount, limit);
   }
 

@@ -70,6 +70,7 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.use(SocketAuthMidleware() as any);
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage('joinQueue')
   join(
     @ConnectedSocket() client: Socket,
@@ -78,11 +79,13 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.gamesService.join(client, data.map);
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage('leaveQueue')
   leaveQueue(@ConnectedSocket() client: Socket): void {
     this.gamesService.handleCancelJoin(client);
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage('movePlayer')
   move(
     @ConnectedSocket() client: Socket,
@@ -91,26 +94,31 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.gamesService.handleMove(client, moveDto);
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage('invite')
   invite(@ConnectedSocket() client: Socket, data: { id: string }): void {
     this.gamesService.handleInvite(client, data.id);
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage('accept-invite')
   acceptInvite(@ConnectedSocket() client: Socket, data: { id: string }): void {
     this.gamesService.acceptInvite(client, data.id);
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage('cancel-invite')
   cancelInvite(@ConnectedSocket() client: Socket): void {
     this.gamesService.handleCancelInvite(client);
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage('decline-invite')
   declineInvite(@ConnectedSocket() client: Socket, data: { id: string }): void {
     this.gamesService.handleDeclineInvite(client, data.id);
   }
 
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage('leave')
   handleLeave(@ConnectedSocket() client: Socket): void {
     this.gamesService.leave(client);

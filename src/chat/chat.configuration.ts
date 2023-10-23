@@ -4,6 +4,7 @@ export const OPTIONS = {
   cors: {
     origin: '*',
   },
+  namespace: 'chat',
 };
 
 export const PRIVATE_MESSAGE = 'pm';

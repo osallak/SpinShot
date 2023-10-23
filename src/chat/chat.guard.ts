@@ -28,7 +28,10 @@ export class WsGuard implements CanActivate {
             } else {
               reject(new WsUnauthorizedException(ANONYMOUS_USER_MESSAGE));
             }
-          });
+          })
+          .catch(() => {
+            reject(new WsUnauthorizedException(ANONYMOUS_USER_MESSAGE));
+          })
       });
     } catch (ex) {
       throw new WsUnauthorizedException(ANONYMOUS_USER_MESSAGE);

@@ -446,7 +446,7 @@ export class RoomService {
         if (!isUserAdmin) {
           reject({
             status: 403,
-            message: 'Cannot Ban',
+            message: 'Cannot Mute',
           });
           return;
         }

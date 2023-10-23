@@ -12,6 +12,7 @@ export class WsGuard implements CanActivate {
   ) {}
 
   canActivate(context: any): boolean | any | Promise<boolean | any> {
+    console.log(context.args[0].handshake.headers?.authorization?.split(' ')[1]);
     const bearerToken =
       context.args[0].handshake.headers?.authorization?.split(' ')[1];
     try {
@@ -28,7 +29,10 @@ export class WsGuard implements CanActivate {
             } else {
               reject(new WsUnauthorizedException(ANONYMOUS_USER_MESSAGE));
             }
-          });
+          })
+          .catch(() => {
+            reject(new WsUnauthorizedException(ANONYMOUS_USER_MESSAGE));
+          })
       });
     } catch (ex) {
       throw new WsUnauthorizedException(ANONYMOUS_USER_MESSAGE);

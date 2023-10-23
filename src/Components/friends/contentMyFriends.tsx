@@ -7,7 +7,6 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import test1 from "../../../public/test1.svg";
 import CurrentFriendsDropDown from "../ui/FolderDropDown/currentFriendsDropDown";
 
 const ContentMyFriends = () => {
@@ -40,7 +39,6 @@ const ContentMyFriends = () => {
     } catch (error: any) {
       setError(true);
       setErrorMessage(error?.response?.data?.message);
-      console.log("error from friends: ", error);
     }
   };
 
@@ -64,12 +62,16 @@ const ContentMyFriends = () => {
               <div key={index} className="w-full h-[60px] min-h-[60px]">
                 <div className="w-full h-full flex items-center justify-center">
                   <div className="w-[50%] h-full flex justify-start items-center space-x-2">
-                    <Image
-                      onClick={() => goToUser(items.username)}
-                      src={test1}
-                      alt="avatar"
-                      className="xl:w-16 md:w-14 w-10 cursor-pointer"
-                    />
+                    <div className="md:w-[50px] w-[40px] md:h-[50px] h-[40px] min-h-[40px] min-w-[40px] ">
+                      <Image
+                        onClick={() => goToUser(items.username)}
+                        src={items.avatar}
+                        width={500}
+                        height={500}
+                        alt="avatar"
+                        className="w-full h-full rounded-xl cursor-pointer"
+                      />
+                    </div>
                     <div className="h-[70%] flex justify-center flex-col">
                       <p
                         onClick={() => goToUser(items.username)}

@@ -153,6 +153,7 @@ const ConversationIndividual = (props: {
               {(individual as individualType[]).map(
                 (items: individualType, index: number) => (
                   <button
+                    key={index}
                     className="rounded-xl"
                     onClick={(event) => goToUser(event, props.id)}
                   >

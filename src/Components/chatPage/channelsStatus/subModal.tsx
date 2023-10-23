@@ -5,11 +5,13 @@ import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { ChangeEvent, Fragment, useState } from "react";
+import toast from "react-hot-toast";
 import lock from "../../../../public/lock.svg";
 
 const SubModal = (props: {
   open: boolean;
   setOpen: Function;
+  setExploreClose: Function;
   type: string;
   name: string;
 }) => {
@@ -44,7 +46,9 @@ const SubModal = (props: {
           Authorization: `Bearer ${token}`,
         },
       });
+      props.setExploreClose(false);
       props.setOpen(false);
+      toast.success(`welcome to ${props.name}`);
     } catch (error: any) {
       setError(true);
       setErrorMessage(error.response.data);

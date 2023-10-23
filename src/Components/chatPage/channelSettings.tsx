@@ -67,7 +67,7 @@ const ChannelSettings = (props: {
         }
       );
       closeModal();
-      toast.success("the password removed succefuly");
+      toast.success("the password removed successfully");
     } catch (error: any) {
       setError(true);
       setErrorMessage(error?.response?.data);
@@ -92,7 +92,7 @@ const ChannelSettings = (props: {
           }
         );
         closeModal();
-        toast.success("the password changed succefuly");
+        toast.success("the password changed successfully");
       } catch (error: any) {
         setError(true);
         setErrorMessage(error?.response?.data);
@@ -169,7 +169,7 @@ const ChannelSettings = (props: {
                     </p>
                     {type !== "PRIVATE" && (
                       <p className="font-Poppins font-normal xl:text-xl md:text-base sm:text-sm text-xs">
-                        Set, Change, or Remove the channel's password
+                        Set, Change, or Remove the channel&apos;s password
                       </p>
                     )}
                   </div>

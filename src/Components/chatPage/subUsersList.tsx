@@ -74,7 +74,7 @@ const SubUsersList = (props: {
           }
         );
         props.setClose(false);
-        toast.success("user kicked succesfuly");
+        toast.success("user kicked successfully");
       } catch (error: any) {
         setError(true);
         setErrorMessage(error?.response?.data);
@@ -105,7 +105,7 @@ const SubUsersList = (props: {
           }
         );
         props.setClose(false);
-        toast.success("user baned succesfuly");
+        toast.success("user baned successfully");
       } catch (error: any) {
         setError(true);
         setErrorMessage(error?.response?.data);
@@ -137,7 +137,7 @@ const SubUsersList = (props: {
           },
         });
         props.setClose(false);
-        toast.success("user muted succefuly");
+        toast.success("user muted successfully");
       } catch (error: any) {
         setError(true);
         setErrorMessage(error?.response?.data);

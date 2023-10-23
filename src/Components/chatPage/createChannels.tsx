@@ -4,6 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { Fragment, KeyboardEvent, useState } from "react";
+import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 import { parseJwt } from "../../../redux_tool/extractToken";
 import { createChannelAtom } from "../context/recoilContext";
@@ -54,6 +55,7 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
       setPassword("");
       setCreateChannel([...createChannel, params]);
       props.setOpen(false);
+      toast.success("the channel created");
     } catch (error: any) {
       setError(true);
       setErrorMessage(error?.response?.data?.message[0]);

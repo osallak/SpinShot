@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useState } from "react";
 import CreateChannel from "../../../public/CreateChannel.svg";
 import ExportChannels from "../../../public/ExportChannels.svg";
-import invite from "../../../public/invite.svg";
 import messagesIcon from "../../../public/messagesIcon.svg";
 import IconButton from "../ui/Buttons/iconButton";
 import Channels from "./channels";
@@ -128,29 +127,20 @@ const SubSideBar = (props: {
           setIsLoaded={props.setIsLoaded}
         />
       )}
-      <div className="flex flex-col justify-center items-center w-full h-[12%] min-h-[100px] space-y-2 ">
-        <div className="flex justify-center items-center w-full px-2 h-10">
+      <div className="flex justify-around items-center w-full py-2">
+        <div className="w-[45%] h-10 flex justify-center items-center">
           <IconButton
-            icon={invite}
-            content="Invite Friend"
-            onclick={inviteFriends}
+            icon={CreateChannel}
+            content="Create channel"
+            onclick={createChannels}
           />
         </div>
-        <div className="flex justify-around items-center w-full">
-          <div className="w-[45%] h-10 flex justify-center items-center">
-            <IconButton
-              icon={CreateChannel}
-              content="Create channel"
-              onclick={createChannels}
-            />
-          </div>
-          <div className="w-[45%] h-10 flex justify-center items-center">
-            <IconButton
-              icon={ExportChannels}
-              content="Explore channels"
-              onclick={exploreChannels}
-            />
-          </div>
+        <div className="w-[45%] h-10 flex justify-center items-center">
+          <IconButton
+            icon={ExportChannels}
+            content="Explore channels"
+            onclick={exploreChannels}
+          />
         </div>
       </div>
     </div>

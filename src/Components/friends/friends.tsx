@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import parseJwt from "@/utils/parsJwt";
 import { useRouter } from "next/router";
-import test1 from "../../../public/test1.svg";
+import { useEffect, useState } from "react";
 import NavBar from "../ui/FolderNavbar/navBar";
 import MobileSideBar from "../ui/folderSidebar/mobileSideBar";
 import SideBar from "../ui/folderSidebar/sideBar";
@@ -9,15 +9,17 @@ import CurrentFriends from "./currentFriends";
 import FriendsRequest from "./friendRequest";
 import MobileFriends from "./mobileFriends";
 
-//this is the last version of friends
-
 const FriendsPage = () => {
   const [openSideBar, setOpenSideBar] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
+    if (
+      !token ||
+      (parseJwt(token).isTwoFactorEnabled &&
+        !parseJwt(token).isTwoFaAuthenticated)
+    ) {
       router.push("/signin");
       return;
     }

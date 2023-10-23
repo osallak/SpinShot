@@ -1,15 +1,14 @@
 "use client";
 import dataFriends from "@/types/friendsType";
 import ip from "@/utils/endPoint";
+import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import test1 from "../../../public/test1.svg";
 import { friendRequestsAtom } from "../context/recoilContext";
 import FriendRequestsDropDown from "../ui/FolderDropDown/friendsRequestsDropDown";
-import parseJwt from "@/utils/parsJwt";
 
 const FriendsRequest = () => {
   const [friendRequets, setFriendRequets] = useRecoilState(friendRequestsAtom);
@@ -24,7 +23,11 @@ const FriendsRequest = () => {
 
   const fetchData = async () => {
     const token = localStorage.getItem("token");
-    if (!token || (parseJwt(token).isTwoFactorEnabled && !parseJwt(token).isTwoFaAuthenticated)) {
+    if (
+      !token ||
+      (parseJwt(token).isTwoFactorEnabled &&
+        !parseJwt(token).isTwoFaAuthenticated)
+    ) {
       router.push("/signin");
       return;
     }

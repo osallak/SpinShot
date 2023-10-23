@@ -8,7 +8,7 @@ import {
   useRef,
 } from "react";
 
-const DropDown: React.FC<any> = ({ data }) => {
+const DropDown: React.FC<any> = (props: { data: any, userId: string, id: string }) => {
   const [isOpen, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -54,7 +54,7 @@ const DropDown: React.FC<any> = ({ data }) => {
           id="dropdownDotsHorizontal"
           className="z-10 md:p-3 sm:p-2 p-1 right-3  bg-very-dark-purple absolute rounded-l-2xl rounded-b-2xl md:w-[230px] w-[170px]"
         >
-          {data.map((content: any, index: number) => (
+          {props.data.map((content: any, index: number) => (
             <button
               onClick={content.click}
               key={index}

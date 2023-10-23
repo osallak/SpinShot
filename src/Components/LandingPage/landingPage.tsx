@@ -1,18 +1,15 @@
-"use client"
+"use client";
 import Image from "next/image";
-import parseJwt from "@/utils/parsJwt";
-import SimpleButton from "../ui/Buttons/simpleButton";
-import { MouseEvent, KeyboardEvent } from "react";
 import { useRouter } from "next/router";
-import Racket from "../../../public/racket.svg"
+import { KeyboardEvent, MouseEvent } from "react";
+import Racket from "../../../public/racket.svg";
+import SimpleButton from "../ui/Buttons/simpleButton";
 
 const LandingPage = () => {
   const Router = useRouter();
 
   const redirect = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (localStorage.getItem("token"))
-      Router.push(`/profile/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}`)
     Router.push("/signin");
   };
   const handleKeyPress = (e: KeyboardEvent<HTMLButtonElement>) => {

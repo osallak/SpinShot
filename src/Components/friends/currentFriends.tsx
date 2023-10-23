@@ -19,8 +19,8 @@ const CurrentFriends = () => {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const goToUser = (username: string) => {
-    Router.push(`/profile/${username}`);
+  const goToUser = (id: string) => {
+    Router.push(`/profile/${id}`);
   };
 
   const fetchData = async () => {
@@ -83,16 +83,18 @@ const CurrentFriends = () => {
                   <div className="w-full h-full flex items-center justify-center">
                     <div className="w-[50%] h-full flex justify-start items-center space-x-2 ">
                       <Image
-                        onClick={() => goToUser(items.username)}
-                        src={test1}
+                        onClick={() => goToUser(items.id)}
+                        src={items.avatar}
+                        width={500}
+                        height={500}
                         alt="avatar"
-                        className="xl:w-16 md:w-14 w-10 cursor-pointer"
+                        className="rounded-xl md:w-14 w-10 cursor-pointer"
                       />
                       <div className="h-[70%] flex justify-center flex-col">
                         <p className="font-Poppins text-pearl font-semibold xl:text-xl md:text-lg text-base">
                           <span
                             className="cursor-pointer"
-                            onClick={() => goToUser(items.username)}
+                            onClick={() => goToUser(items.id)}
                           >
                             {items.username}
                           </span>

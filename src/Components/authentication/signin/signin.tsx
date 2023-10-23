@@ -14,7 +14,6 @@ import mail from "../../../../public/mail.svg";
 import lock from "../../../../public/lock.svg";
 import { globalToken } from "@/Components/context/recoilContext";
 import { useRecoilState } from "recoil";
-// the last version of signin without authentication with intra
 
 const Signin = () => {
   const [username, setUsername] = useState("");

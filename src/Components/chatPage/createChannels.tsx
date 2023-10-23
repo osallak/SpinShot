@@ -1,27 +1,23 @@
-// import {
-//   Button,
-//   Dialog,
-//   DialogHeader,
-//   DialogBody,
-//   DialogFooter,
-// } from "@material-tailwind/react";
+"use client";
+import ip from "@/utils/endPoint";
 import { Dialog, Transition } from "@headlessui/react";
 import axios from "axios";
-import Image from "next/image";
-import { Fragment, useState, KeyboardEvent, MouseEvent } from "react";
-import CreateChannelIcon from "../../../public/CreateChannel.svg";
-import SwitchButton from "../ui/Buttons/SwitchButton";
-import ip from "@/utils/endPoint";
-import token from "@/utils/token";
+import { useRouter } from "next/router";
+import { Fragment, KeyboardEvent, useState } from "react";
 import { useRecoilState } from "recoil";
+import { parseJwt } from "../../../redux_tool/extractToken";
 import { createChannelAtom } from "../context/recoilContext";
-import createChannelType from "@/types/channelsType"
+import SwitchButton from "../ui/Buttons/SwitchButton";
 
 const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
   const [type, setType] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [createChannel, setCreateChannel] = useRecoilState<any>(createChannelAtom);
+  const router = useRouter();
+  const [createChannel, setCreateChannel] =
+    useRecoilState<any>(createChannelAtom);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const closeModal = () => {
     props.setOpen(false);
@@ -29,60 +25,44 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
 
   const addChannelKeyboard = async (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Enter") {
-      const params: any = {
-        name: name,
-        type: type,
-      };
-      if (password.length >= 6) params["password"] = password;
-      try {
-        const res = await axios.post(
-          `${ip}/room/add`,
-          params,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setPassword("");
-        setCreateChannel(params);
-        props.setOpen(false);
-        console.log(params);
-        console.log("res from create channel: ", res);
-      } catch (error: any) {
-        console.log("error from create channels: ", error);
-      }
+      addChannel();
     }
   };
+
   const addChannel = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
     const params: any = {
       name: name,
       type: type,
     };
-    if (password.length >= 6) params["password"] = password;
+    if (type === "PROTECTED") params["password"] = password;
     try {
-      const res = await axios.post(
-        `${ip}/room/add`,
-        params,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-        );
-        setPassword("");
-        setCreateChannel([...createChannel, params]);
-        props.setOpen(false);
-        console.log(params);
-        console.log("res from create channel: ", res);
+      const res = await axios.post(`${ip}/room/add`, params, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setPassword("");
+      setCreateChannel([...createChannel, params]);
+      props.setOpen(false);
     } catch (error: any) {
-      console.log("error from create channels: ", error);
+      setError(true);
+      setErrorMessage(error?.response?.data?.message[0]);
     }
   };
 
   return (
     <Transition appear show={props.open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={closeModal}>
+      <Dialog as="div" className="relative z-50" onClose={closeModal}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -112,11 +92,6 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
               <Dialog.Panel className="transform overflow-hidden rounded-2xl bg-pearl lg:p-6 p-1 shadow-xl transition-all lg:w-[900px] md:w-[700px] sm:w-[90%] w-[80%] flex flex-col justify-center items-center">
                 <div className="w-full h-[300px] md:space-y-5 sm:space-y-3 space-y-0">
                   <div className="text-lg font-medium leading-6 text-gray-900 flex justify-center items-center flex-col md:h-[120px] sm:h-[100px] h-[80px]">
-                    <Image
-                      src={CreateChannelIcon}
-                      alt="explore channels"
-                      className="xl:w-20 md:w-16 sm:w-10 w-8"
-                    />
                     <p className="font-Poppins font-bold xl:text-3xl md:text-xl sm:text-md text-sm">
                       Create Channel
                     </p>
@@ -129,6 +104,11 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
                     />
                   </div>
                 </div>
+                {error && (
+                  <span className="text-red-900 font-poppins">
+                    {errorMessage}
+                  </span>
+                )}
                 <div className="mt-7 rounded-full w-full lg:h-full md:h-[50px] sm:h-[30px] h-[20px] flex justify-end items-center md:p-5 sm:p-3 p-1">
                   <button
                     type="button"

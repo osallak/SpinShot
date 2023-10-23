@@ -1,35 +1,41 @@
 "use client";
-import logoWhite from "../../../../public/logoWhite.svg";
+import Search from "@/Components/search/userSearch";
+import parseJwt from "@/utils/parsJwt";
 import Image from "next/image";
-import search from "../../../../public/search.svg";
+import { useRouter } from "next/router";
+import { MouseEvent, useEffect, useState } from "react";
 import friend from "../../../../public/friend.svg";
+import game from "../../../../public/game.svg";
+import logoWhite from "../../../../public/logoWhite.svg";
+import logout from "../../../../public/logout.svg";
 import message from "../../../../public/message.svg";
 import profile from "../../../../public/profile.svg";
-import game from "../../../../public/game.svg";
-import test1 from "../../../../public/test1.svg";
-import logout from "../../../../public/logout.svg";
-import { MouseEvent, useState } from "react";
-import parseJwt from "@/utils/parsJwt";
-import { useRouter } from "next/router";
-import { useAppSelector } from "../../../../redux_tool";
-import Search from "@/Components/search/userSearch";
+import search from "../../../../public/search.svg";
+import { useAppDispatch, useAppSelector } from "../../../../redux_tool";
+import { getProfile } from "../../../../redux_tool/redusProfile/profileThunk";
 
-const SideBar = () => {
+const SideBar = (props: {
+  setOpenSubSideBar: Function;
+  openSubSideBar: boolean;
+  flag: string;
+}) => {
   const Router = useRouter();
-  const data = useAppSelector((state) => (state.Profile))
+  const data = useAppSelector((state) => state.Profile);
   const [hovered, setHovered] = useState(false);
   const [isSearch, setSearch] = useState(false);
-  const Icons = [
-    { icon: search, route: "/search" },
-    { icon: profile, route: "/profile" },
-    { icon: message, route: "/messages" },
-    { icon: friend, route: "/friends" },
-    { icon: game, route: "/game" },
-  ];
+  const [icons, setIcons] = useState<any>([]);
+  const dispatch = useAppDispatch();
 
   const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {
     event.preventDefault();
-    Router.push(path);
+    const page = path.split("/");
+    if (
+      props.openSubSideBar ||
+      props.flag !== page[1] ||
+      window.innerWidth > 920
+    )
+      Router.push(path);
+    else props.setOpenSubSideBar(true);
   };
 
   const handleHover = () => {
@@ -45,18 +51,66 @@ const SideBar = () => {
     Router.push("/signin");
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token || (parseJwt(token).isTwoFactorEnabled && !parseJwt(token).isTwoFaAuthenticated)) {
+      Router.push("/signin");
+      return;
+    }
+    setIcons([
+      { icon: search, route: "/search" },
+      {
+        icon: profile,
+        route: `/profile/${
+          parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+        }`,
+      },
+      {
+        icon: message,
+        route: `/messages/${
+          parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+        }`,
+      },
+      { icon: friend, route: "/friends" },
+      { icon: game, route: "/game" },
+    ]);
+  }, []);
+
+  const dis = async () => {
+    const token = localStorage.getItem("token");
+    if (!token || (parseJwt(token).isTwoFactorEnabled && !parseJwt(token).isTwoFaAuthenticated)) {
+      Router.push("/signin");
+      return;
+    }
+    const sub = parseJwt(JSON.stringify(token)).sub;
+    try {
+      await dispatch(getProfile(sub));
+    } catch (error: any) {}
+  };
+
+  useEffect(() => {
+    dis();
+  }, []);
+
   return (
     <div
       className={`bg-white/10 rounded-2xl h-full md:flex flex-col hidden lg:w-[140px] w-[100px] lg:max-w-[100px] min-w-[80px] `}
     >
       <div className="w-full h-[10%] min-h-[100px] flex justify-center items-center flex-col">
         <div className="flex justify-center items-center h-full">
-          <Image src={logoWhite} alt="white logo" className="h-[75px] aspect-square w-auto" width={200} height={200} priority={true}/>
+          <Image
+            src={logoWhite}
+            alt="white logo"
+            className="h-[75px] aspect-square w-auto"
+            width={200}
+            height={200}
+            priority={true}
+          />
         </div>
         <div className="w-[80%] border border-pearl border-opacity-40"></div>
       </div>
       <div className="w-full h-[82%] min-h-[150px] py-5  overflow-hidden flex flex-col items-center">
-        {Icons.map((option, index) => (
+        {icons.map((option: any, index: number) => (
           <div
             key={index}
             className="w-full h-[60px] flex items-center justify-center"
@@ -70,25 +124,6 @@ const SideBar = () => {
                   className="opacity-40 hover:opacity-100"
                 />{" "}
                 <Search isSearch={isSearch} />
-              </button>
-            ) : option.route === "/profile" ? (
-              <button
-                onClick={(event) =>
-                  changePage(
-                    event,
-                    option.route +
-                      "/" +
-                      parseJwt(JSON.stringify(localStorage.getItem("token")))
-                        .sub
-                  )
-                }
-              >
-                {" "}
-                <Image
-                  src={option.icon}
-                  alt={option.icon}
-                  className="opacity-40 hover:opacity-100"
-                />{" "}
               </button>
             ) : (
               <button onClick={(event) => changePage(event, option.route)}>
@@ -105,26 +140,28 @@ const SideBar = () => {
       </div>
       <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center">
         <div className="w-[70px] h-[70px] rounded-2xl relative flex justify-center items-center">
-        <Image
-          onClick={handleLogOut}
-          onMouseEnter={handleHover}
-          onMouseLeave={handleHoverOut}
-          className={`${hovered ? "opacity-10" : "opacity-100"} cursor-pointer rounded-2xl`}
-          src={data?.profile?.profile?.avatar}
-          alt="profile pic"
-          width={500}
-          height={500}
-        />
-        {hovered && (
           <Image
             onClick={handleLogOut}
             onMouseEnter={handleHover}
             onMouseLeave={handleHoverOut}
-            src={logout}
-            alt="logout"
-            className="absolute cursor-pointer rounded-2xl"
+            className={`${
+              hovered ? "opacity-10" : "opacity-100"
+            } cursor-pointer rounded-2xl`}
+            src={data?.profile?.profile?.avatar}
+            alt="profile pic"
+            width={500}
+            height={500}
           />
-        )}
+          {hovered && (
+            <Image
+              onClick={handleLogOut}
+              onMouseEnter={handleHover}
+              onMouseLeave={handleHoverOut}
+              src={logout}
+              alt="logout"
+              className="absolute cursor-pointer rounded-2xl"
+            />
+          )}
         </div>
       </div>
     </div>

@@ -1,140 +1,125 @@
 "use client";
-import dataConversation, { individualData } from "@/types/messagesArrays";
+import IMsgDataTypes from "@/types/iMsgDataTypes";
+import {
+  default as individualConversationType,
+  default as individualType,
+} from "@/types/individulaTypes";
+import { dropDownContent } from "@/utils/dropDownContent";
+import ip from "@/utils/endPoint";
+import parseJwt from "@/utils/parsJwt";
+import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import {
+  KeyboardEvent,
+  MouseEvent,
   useCallback,
   useEffect,
   useRef,
-  useState
+  useState,
 } from "react";
 import { useRecoilState } from "recoil";
-import game from "../../../public/game.svg";
 import sendMessageIcon from "../../../public/sendMessage.svg";
-import trash from "../../../public/trash.svg";
-import { conversationAtom, individualAtom } from "../context/recoilContext";
+import {
+  individualAtom,
+  individualConversationAtom,
+} from "../context/recoilContextIndividual";
 import DropDown from "../ui/FolderDropDown/Dropdown";
-import parseJwt from "@/utils/parsJwt";
-import token from "@/utils/token";
-import axios from "axios";
-import ip from "@/utils/endPoint";
 
+let token: any;
 const ConversationIndividual = (props: {
   userName: string;
   id: string;
+  socket: any;
+  setReload: Function;
+  reload: boolean;
 }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [currentMsg, setCurrentMsg] = useState("");
-  const Router = useRouter();
-  const [chatHistory, setChatHistory] = useState<string[]>([]);
-  const [connected, setConnected] = useState<boolean>(false);
-  const [socket, setSocket] = useState<any>(undefined);
-  const [chat, setChat] = useState<IMsgDataTypes[]>([]);
-  const [test, setTest] = useState<string>("");
+  const router = useRouter();
   const [message, setMessage] = useState("");
-  const [conversation, setConversation] = useRecoilState(conversationAtom);
-  const [individual, setIndividual] = useRecoilState(individualAtom)
+  const [individualConversation, setIndividualConversation] = useRecoilState(
+    individualConversationAtom
+  );
+  const [individual, setIndividual] = useRecoilState(individualAtom);
   const [userId, setUserId] = useState("");
-  const [username, setUsername] = useState("")
 
-  const deleteConversation = () => {
-    console.log("hello world from the other side");
+  const getTime = (time: string): string => {
+    const date = new Date(Number(time));
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let parsedMinutes =
+      Math.floor(minutes / 10) === 0
+        ? "0" + minutes.toString()
+        : minutes.toString();
+    let parsedHours =
+      Math.floor(hours / 10) === 0 ? "0" + hours.toString() : hours.toString();
+    return parsedHours + ":" + parsedMinutes;
   };
 
-  const handleClick = () => {
-    console.log("hello world from handle click");
-  }
+  const handleSendMessage = () => {
+    setMessage("");
+    props.setReload(true);
+    const messageData: IMsgDataTypes = {
+      from: `${parseJwt(JSON.stringify(token)).sub}`,
+      to: `${props.id}`,
+      content: currentMsg,
+      timestamp: String(Date.now()),
+    };
 
-  const dropDownContent = [
-    { content: "Delete Conversation", click: deleteConversation, icon: trash },
-    { content: "Let't Play", click: handleClick, icon: game },
-  ];
+    setIndividual((prev: individualType[]) => {
+      const newIndividual: individualType[] = prev.map((item: any) => {
+        if (item.other.id === props.id) {
+          return {
+            other: item.other,
+            sender: item.sender,
+            sentAt: item.sentAt,
+            message: currentMsg,
+          };
+        } else return item;
+      });
+      return newIndividual;
+    });
+    props.socket.emit("pm", messageData);
+  };
 
-  // const handleMessage = (event: ChangeEvent<HTMLInputElement>) => {
-  //   event.preventDefault();
-  //   setCurrentMessage(event.target.value);
-  // };
-
-  // function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
-  //   if (event.key === "Enter") {
-  //     handleSendMessage(event);
-  //   }
-  // }
-
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // const sendMessage = (event: MouseEvent<HTMLButtonElement>) => {
-  //   event.preventDefault();
-  //   setMessageContent(currentMessage);
-  //   console.log("Message Content : ", messageContent);
-  // }
-
-  interface IMsgDataTypes {
-    from: string;
-    to: string;
-    content: string;
-    timestamp: string;
-  }
-
-  // const handleSendMessage = (
-  //   event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
-  //   ) => {
-  //     event.preventDefault();
-  //     if (message.trim() !== "") {
-  //       socket.on("connect", () => {
-  //         console.log("socket connected successfuly");
-  //         const messageData: IMsgDataTypes = {
-  //           from: "ataji",
-  //           to: "username3",
-  //           content: currentMsg,
-  //           timestamp: String(Date.now()),
-  //         };
-  //         setConnected(true);
-  //         socket.emit("pm", messageData);
-  //       });
-  //       socket.on("disconnect", (data: any) => console.log("disconnected"));
-  //       socket.on("pm", (data: any) => console.log("the response from the server socket: ", data));
-  //       socket.on("exception", (data: any) => console.log("exception: ", data));
-  //     setMessage("");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const socket = io("ws://e3r10p14.1337.ma:3001", {
-  //     extraHeaders: {
-  //       authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMSIsInN1YiI6IjMxYTQwM2M3LTM4NjItNDI0My1iNjZlLThkYjRlMzg1OWZjNSIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk2NTg3ODA1LCJleHAiOjE2OTY2NzQyMDV9.MW1zUeCPwYBMqt5IFhuHTNEXtILwciQFpnigZoHN_tQ`,
-  //     },
-  //   });
-  //   setSocket(socket);
-  // });
+  const keySendMessage = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSendMessage();
+    }
+  };
 
   const fetchDataConversation = async () => {
-    // const token = localStorage.getItem("token");
-    // if (!token) {
-    //   Router.push("/Signin");
-    //   return;
-    // }
+    token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
     const jwtToken = parseJwt(token);
     setUserId(jwtToken.sub);
     try {
-      if (props.id !== ''){
-        const result = await axios.get(
-          `${ip}/chat/individual/${props.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            params: {
-              id: jwtToken.sub,
-            },
-          }
-        );
-        setConversation(result.data);
+      if (props.id && props.id !== "") {
+        const result = await axios.get(`${ip}/chat/individual/${props.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            id: jwtToken.sub,
+          },
+        });
+        setIndividualConversation(result.data);
       }
-      // setResponse(result.data);
-    } catch (error) {
-      console.log("error of fetching data fron conversation: ", error);
-    }
+    } catch (error) {}
+  };
+
+  const goToUser = (event: MouseEvent<HTMLButtonElement>, id: string) => {
+    event.preventDefault();
+    router.push(`/profile/${id}`);
   };
 
   const emailInput = useCallback((inputElement: any) => {
@@ -144,49 +129,57 @@ const ConversationIndividual = (props: {
   }, []);
 
   useEffect(() => {
-    fetchDataConversation();
-  }, [props.id])
+    setCurrentMsg(message);
+  }, [message]);
 
   useEffect(() => {
-    const handleKeyPress = (event: any) => {
-      event.preventDefault(); // Prevent the "/" key from being typed into the input
-      if (event.key === "/") {
-        if (inputRef.current) {
-          inputRef.current.focus();
-        }
-      }
-    };
-
-    document.addEventListener("keydown", (event) => handleKeyPress);
-    return () => {
-      document.removeEventListener("keydown", handleKeyPress);
-    };
-  }, []);
+    fetchDataConversation();
+    props.setReload(false);
+  }, [props.id, props.reload]);
 
   useEffect(() => {
     const conversationDiv: any = chatContainerRef.current;
     if (conversationDiv) {
       conversationDiv.scrollTop = conversationDiv.scrollHeight;
     }
-  }, [chatHistory.length]);
+  }, [individualConversation.length]);
 
   return (
-    <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2">
+    <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2 relative">
       <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">
             <div className="flex justify-center items-center space-x-2 flex-row">
-              {/* <Image
-                src={props.data[0]?.other?.avatar}
-                alt="profile pic"
-                className="lg:w-16 md:w-14 sm:w-12 w-10"
-              /> */}
+              {(individual as individualType[]).map(
+                (items: individualType, index: number) => (
+                  <button
+                    className="rounded-xl"
+                    onClick={(event) => goToUser(event, props.id)}
+                  >
+                    {items.other.id === props.id && (
+                      <Image
+                        key={index}
+                        width={500}
+                        height={500}
+                        src={items.other.avatar}
+                        alt="profile pic"
+                        className="md:w-14 sm:w-12 w-10 rounded-xl"
+                      />
+                    )}
+                  </button>
+                )
+              )}
               <div className="flex flex-col">
                 <p className="font-Poppins md:text-xl sm:text-md text-sm text-pearl font-semibold">
-                  {individual.map((individ: individualData, index: number) => (
-                    <div key={index}>
-                      {props.id === individ.other.id ? individ.other.username : ""}
-                    </div>
+                  {individual.map((individ: individualType, index: number) => (
+                    <button
+                      onClick={(event) => goToUser(event, props.id)}
+                      key={index}
+                    >
+                      {props.id === individ.other.id
+                        ? individ.other.username
+                        : ""}
+                    </button>
                   ))}
                 </p>
                 <p className="font-Poppins md:text-lg sm:text-sm text-xs text-pearl text-opacity-40 font-thin">
@@ -198,67 +191,92 @@ const ConversationIndividual = (props: {
           </div>
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
         </div>
-        {/* {conversation.individual.length ? ( */}
-        <div
-          ref={chatContainerRef}
-          className={`w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden `}
-        >
-          <div className="w-[94%] space-y-3">
-            {(conversation as dataConversation[]).map((items: dataConversation, index: number) => (
-              <div key={index}>
-                <div
-                  className={`flex ${
-                    items.sender != userId
-                      ? "flex-row-reverse space-x-reverse space-x-5"
-                      : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
-                  } justify-end`}
-                >
-                  <div
-                    className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] min-h-[70px] flex justify-center rounded-xl ${
-                      items.sender != userId
-                        ? "items-start bg-peridot text-very-dark-purple font-bold"
-                        : "items-end bg-very-dark-purple text-pearl font-medium"
-                    } flex-col md:space-y-1 space-y-0 md:p-2 p-1`}
-                  >
-                    <div
-                      className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
-                        items.sender != userId
-                          ? "flex-row space-x-2"
-                          : "flex-row-reverse space-x-reverse space-x-2"
-                      }`}
-                    >
-                      <span
-                        className={`px-3 ${
-                          items.sender !== userId
-                            ? "text-very-dark-purple"
-                            : "text-pearl"
-                        }`}
+        {individualConversation.length ? (
+          <div
+            ref={chatContainerRef}
+            className={`w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden `}
+          >
+            <div className="w-[94%] space-y-3">
+              {(individualConversation as individualConversationType[]).map(
+                (items: individualConversationType, index: number) =>
+                  items.message !== "" && (
+                    <div key={index}>
+                      <div
+                        className={`flex ${
+                          items.sender != userId
+                            ? "flex-row-reverse space-x-reverse space-x-5"
+                            : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
+                        } justify-end`}
                       >
-                        {individual.map((individ: individualData, index: number) => (
-                          <div key={index}>
-                            {props.id === individ.other.id ?
-                              (items.sender === props.id ? individ.other.username : "you") : ("")}
+                        <div
+                          className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] md:min-h-[70px] min-h-[50px] flex justify-center rounded-xl ${
+                            items.sender != userId
+                              ? "items-start bg-peridot text-very-dark-purple font-bold"
+                              : "items-end bg-very-dark-purple text-pearl font-medium"
+                          } flex-col md:space-y-1 space-y-0 md:p-2 p-1`}
+                        >
+                          <div
+                            className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
+                              items.sender != userId
+                                ? "flex-row space-x-2"
+                                : "flex-row-reverse space-x-reverse space-x-2"
+                            }`}
+                          >
+                            <span
+                              className={`${
+                                items.sender !== userId
+                                  ? "text-very-dark-purple pl-3"
+                                  : "text-pearl pr-3"
+                              }`}
+                            >
+                              {individual.map(
+                                (individ: individualType, index: number) => (
+                                  <button
+                                    onClick={(event) =>
+                                      goToUser(event, items.sender)
+                                    }
+                                    key={index}
+                                  >
+                                    {props.id === individ.other.id
+                                      ? items.sender === props.id
+                                        ? individ.other.username
+                                        : "you"
+                                      : ""}
+                                  </button>
+                                )
+                              )}
+                            </span>
+                            <span
+                              className={`text-[10px] font-light h-full ${
+                                items.sender !== userId
+                                  ? "text-very-dark-purple"
+                                  : "text-pearl"
+                              }`}
+                            >
+                              {getTime(items.sentAt)}
+                            </span>
                           </div>
-                        ))}
-                      </span>
-                      <span className={`text-[10px] font-light h-full ${items.sender !== userId ? "text-very-dark-purple" : "text-pearl"}`}>
-                        {items.sentAt}
-                      </span>
+                          <span
+                            className={`px-3 font-poppins font-light ${
+                              items.sender === userId
+                                ? "text-pearl"
+                                : "text-very-dark-purple"
+                            } md:text-lg sm:text-base text-sm`}
+                          >
+                            {items.message}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <span className="px-3">
-                      {items.message}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
+                  )
+              )}
+            </div>
           </div>
-        </div>
-        {/* ) : (
+        ) : (
           <div className="font-Poppins text-pearl text-opacity-40 w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden justify-center">
             No chat Messages
           </div>
-        )} */}
+        )}
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[60px] flex justify-center items-center flex-col">
           <div className="w-[93%] border border-pearl border-opacity-40"></div>
           <div className="w-[90%] h-full flex justify-center items-center flex-row">
@@ -269,13 +287,12 @@ const ConversationIndividual = (props: {
                   placeholder="Type a message"
                   className="text-pearl caret-peridot w-full h-full outline-none placeholder:text-pearl font-light placeholder:opacity-50 font-Poppins md:text-lg sm:text-md text-sm bg-transparent"
                   type="text"
-                  // onKeyDown={handleKeyPress}
+                  onKeyDown={(event) => keySendMessage(event)}
                   value={message}
                   onChange={(event) => setMessage(event.target.value)}
                 />
               </div>
-              {/* add handle send message in the button in the buttom of this line */}
-              <button>
+              <button onClick={(event) => handleSendMessage()}>
                 <Image
                   src={sendMessageIcon}
                   alt="send Message Input"

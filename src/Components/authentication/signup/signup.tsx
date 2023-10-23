@@ -8,11 +8,9 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { MouseEvent, useEffect, useState } from "react";
 import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
-import mail from "../../../../public/mail.svg";
 import lock from "../../../../public/lock.svg";
+import mail from "../../../../public/mail.svg";
 import user from "../../../../public/user.svg";
-
-//this is the last version of signup
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -146,7 +144,7 @@ const Signup = () => {
                 {SignupArray.map((SignUp, index) => (
                   <div
                     key={index}
-                    className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]"
+                    className="flex justify-center items-center sm:w-[67%] w-[70%] md:h-[45px] h-[35px]"
                   >
                     <InputBorder
                       inputValue={SignUp.inputValue}
@@ -221,7 +219,7 @@ const Signup = () => {
         </div>
       </div>
       {widthsc && widthsc > 1024 && (
-        <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center">
+        <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur flex flex-row justify-center items-center">
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
             Already have an account?&nbsp;
           </p>

@@ -1,4 +1,5 @@
 "use client";
+import { globalToken } from "@/Components/context/recoilContext";
 import ContinueWithIntra from "@/Components/ui/Buttons/continueWithIntra";
 import EmptyButton from "@/Components/ui/Buttons/emptyButton";
 import SimpleButton from "@/Components/ui/Buttons/simpleButton";
@@ -8,12 +9,11 @@ import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { MouseEvent, useEffect, useRef, useState } from "react";
-import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
-import mail from "../../../../public/mail.svg";
-import lock from "../../../../public/lock.svg";
-import { globalToken } from "@/Components/context/recoilContext";
+import { MouseEvent, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
+import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
+import lock from "../../../../public/lock.svg";
+import mail from "../../../../public/mail.svg";
 
 const Signin = () => {
   const [username, setUsername] = useState("");
@@ -59,7 +59,6 @@ const Signin = () => {
         password,
       });
       const token = parseJwt(res?.data?.token);
-      console.log("res.data.token: ", res.data.token)
       setTmpToken(res?.data?.token);
       if (token.isTwoFactorEnabled === true) {
         Router.push("/twoFactorAuthentication");
@@ -69,8 +68,7 @@ const Signin = () => {
       }
     } catch (error: any) {
       setErrorMessage(error?.response?.data?.message);
-      if (error?.response?.status === 404)
-        setErrorMessage("User not Found");
+      if (error?.response?.status === 404) setErrorMessage("User not Found");
       setError(true);
     }
   };
@@ -132,7 +130,7 @@ const Signin = () => {
                   {SigninArray.map((SignIn, index) => (
                     <div
                       key={index}
-                      className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]"
+                      className="flex justify-center items-center sm:w-[67%] w-[70%] md:h-[45px] h-[35px]"
                     >
                       <InputBorder
                         inputValue={SignIn.inputValue}
@@ -199,7 +197,7 @@ const Signin = () => {
         </div>
       </div>
       {widthsc && widthsc > 1024 && (
-        <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center">
+        <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur flex flex-row justify-center items-center">
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
             Don&apos;t have an account?&nbsp;
           </p>

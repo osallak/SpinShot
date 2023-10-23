@@ -89,7 +89,7 @@ export class PongEngine {
   ) {
     if (to.firstClient && this.firstClient) {
       this.firstClient.emit(type, {
-        opponet: this.secondPlayerId,
+        opponent: this.secondPlayerId,
         opponentScore: this.secondScore,
         userScore: this.firstScore,
         map: this.map,

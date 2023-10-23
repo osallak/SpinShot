@@ -12,7 +12,6 @@ export class WsGuard implements CanActivate {
   ) {}
 
   canActivate(context: any): boolean | any | Promise<boolean | any> {
-    console.log(context.args[0].handshake.headers?.authorization?.split(' ')[1]);
     const bearerToken =
       context.args[0].handshake.headers?.authorization?.split(' ')[1];
     try {

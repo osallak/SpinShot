@@ -88,7 +88,6 @@ export class AuthService {
   async signUp(user: CreateUserDto): Promise<User> {
     try {
       const returnedUser: User = await this.userService.createUser(user);
-      await this.sendMailVerification(returnedUser);
       return returnedUser;
     } catch (e) {
       this.logger.error(e.message);

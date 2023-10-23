@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
+import { FriendshipStatus } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { User } from 'src/types/user.types';
 import { achievements } from 'src/user/constants';
@@ -10,8 +11,6 @@ export class GamesRepository {
 
   constructor(private readonly prismaService: PrismaService) {}
   @OnEvent('saveGame')
-
-  // this.achieveUsers(user, opponent);
   public async saveGame(payload: any) {
     try {
       const [user, opponent] = await this.prismaService.$transaction([
@@ -19,14 +18,14 @@ export class GamesRepository {
           where: { id: payload.userID },
           include: {
             logs: true,
-            HaveAchievement: { include: { Achiement: true } },
+            HaveAchievement: { include: { Achivement: true } },
           },
         }),
         this.prismaService.user.findUnique({
           where: { id: payload.opponentId },
           include: {
             logs: true,
-            HaveAchievement: { include: { Achiement: true } },
+            HaveAchievement: { include: { Achivement: true } },
           },
         }),
       ]);
@@ -96,15 +95,16 @@ export class GamesRepository {
   }
 
   async checkAchievements(
-    user: User,
+    user: any,
     winner: boolean,
     opponentScore: number,
+    ids: { user: string; opponent?: string } = { user: user.id },
   ): Promise<void> {
     try {
       if (user.HaveAchievement.length === 0) return;
       user.HaveAchievement.forEach(async (achievement) => {
         if (
-          achievement.name === achievements[0].name &&
+          achievement.Achivement.name === achievements[0].name &&
           !achievement.achieved &&
           winner
         ) {
@@ -115,7 +115,7 @@ export class GamesRepository {
           return;
         }
         if (
-          achievement.name === achievements[1].name &&
+          achievement.Achivement.name === achievements[1].name &&
           !achievement.achieved
         ) {
           if (user.logs.victories + user.logs.defeats >= 10) {
@@ -128,8 +128,9 @@ export class GamesRepository {
         }
 
         if (
-          achievement.name === achievements[2].name &&
-          !achievement.achieved && winner
+          achievement.Achivement.name === achievements[2].name &&
+          !achievement.achieved &&
+          winner
         ) {
           if (opponentScore === 0) {
             await this.prismaService.haveAchievement.update({
@@ -140,8 +141,31 @@ export class GamesRepository {
           }
         }
 
-        if (achievement.name === achievements[3].name) {
-          //todo
+        if (
+          achievement.Achivement.name === achievements[3].name &&
+          !achievement.achieved &&
+          ids.opponent
+        ) {
+          const sortedIds = [ids.user, ids.opponent].sort();
+          const friendship = await this.prismaService.friendship.findUnique({
+            where: {
+              leftUserId_rightUserId: {
+                leftUserId: sortedIds[0],
+                rightUserId: sortedIds[1],
+              },
+            },
+          });
+          if (!friendship) return;
+          if (
+            friendship.status === FriendshipStatus.BLOCKED ||
+            friendship.status === FriendshipStatus.NOT_FOUND
+          )
+            return;
+
+          await this.prismaService.haveAchievement.update({
+            where: { id: achievement.id },
+            data: { achieved: true },
+          });
         }
       });
     } catch (error) {
@@ -163,11 +187,22 @@ export class GamesRepository {
     score: { user: number; opponent: number },
   ): Promise<void> {
     if (score.user > score.opponent) {
-      await this.achieveWinner(user, { user: score.user, opponent: score.opponent });
+      await this.achieveWinner(user, {
+        user: score.user,
+        opponent: score.opponent,
+      });
       await this.achieveLoser(opponent);
     } else {
-      await this.achieveWinner(opponent, { user: score.opponent, opponent: score.user });
-      await this.achieveLoser(user);//play total of 10 online matches, vs friend
+      await this.achieveWinner(opponent, {
+        user: score.opponent,
+        opponent: score.user,
+      });
+      await this.achieveLoser(user);
     }
+    this.checkAchievements(user, score.user > score.opponent, score.opponent, {
+      user: user.id,
+      opponent: opponent.id,
+    });
+    this.checkAchievements(opponent, score.opponent > score.user, score.user);
   }
 }

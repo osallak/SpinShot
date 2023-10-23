@@ -302,7 +302,6 @@ export class UserService {
           startedAt: game.startedAt,
         });
       }});
-      console.log(userGames);
     return serializePaginationResponse(userGames, totalCount, limit);
   }
 

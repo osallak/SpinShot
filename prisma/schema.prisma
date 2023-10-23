@@ -30,7 +30,7 @@ model User {
   LeftFriendship           Friendship[]           @relation("left")
   RightFriendship          Friendship[]           @relation("right")
   User                     Game[]                 @relation("user")
-  Opponnent                Game[]                 @relation("opponent")
+  Opponent                Game[]                 @relation("opponent")
   HaveAchievement          haveAchievement[]
   RoomChatConversation     RoomChatConversation[]
   Sent                     Conversation[]         @relation("sender")

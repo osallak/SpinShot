@@ -57,6 +57,7 @@ const ConversationChannel = (props: {
   const [openUsersList, setOpenUsersList] = useState(false);
   const [openSubUsersList, setOpenSubUsersList] = useState(false);
   const [openLeaveList, setOpenLeaveList] = useState(false);
+  const [targetId, setTargetId] = useState("");
 
   const getTime = (time: string): string => {
     const date = new Date(Number(time));
@@ -172,7 +173,10 @@ const ConversationChannel = (props: {
     });
   };
 
-  const handleOpenSubUsersList = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleOpenSubUsersList = (
+    event: MouseEvent<HTMLButtonElement>,
+    id: string
+  ) => {
     event.preventDefault();
     setContent([
       { content: "Mute", icon: mute },
@@ -180,6 +184,7 @@ const ConversationChannel = (props: {
       { content: "Ban", icon: ban },
       { content: "Add as admin", icon: admin },
     ]);
+    setTargetId(id);
     setOpenSubUsersList(true);
   };
 
@@ -349,7 +354,9 @@ const ConversationChannel = (props: {
                           </button>
                         ) : (
                           <button
-                            onClick={(event) => handleOpenSubUsersList(event)}
+                            onClick={(event) =>
+                              handleOpenSubUsersList(event, items.user.id)
+                            }
                           >
                             <Image
                               src={threePointforPeridot}
@@ -357,7 +364,7 @@ const ConversationChannel = (props: {
                             />
                           </button>
                         )}
-                        {openSubUsersList && (
+                        {openSubUsersList && items.user.id === targetId && (
                           <SubUsersList
                             open={openSubUsersList}
                             setOpen={setOpenSubUsersList}
@@ -368,7 +375,7 @@ const ConversationChannel = (props: {
                             checkedID={items.user.id}
                           />
                         )}
-                        {openLeaveList && (
+                        {openLeaveList && items.user.id === targetId && (
                           <SubUsersList
                             open={openLeaveList}
                             setOpen={setOpenLeaveList}

@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import { MouseEvent, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { currentFriendsAtom } from "../context/recoilContext";
-import { channelAtom } from "../context/recoilContextChannel";
 import { individualAtom } from "../context/recoilContextIndividual";
 
 const Individual = (props: {
@@ -23,7 +22,6 @@ const Individual = (props: {
   const [individual, setIndividual] = useRecoilState(individualAtom);
   const [clicked, setClicked] = useState<number>(0);
   const router = useRouter();
-  const [channel, setChannel] = useRecoilState(channelAtom);
   const [currentFriend, setCurrentFriends] = useRecoilState(currentFriendsAtom);
   const [lastMessage, setLastMessage] = useState("");
 

@@ -1,15 +1,15 @@
 import parseJwt from "@/utils/parsJwt";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import threeLines from "../../../../public/threeLines.svg";
 import { useAppDispatch, useAppSelector } from "../../../../redux_tool";
 import { getProfile } from "../../../../redux_tool/redusProfile/profileThunk";
-import { useRouter } from "next/router";
 
 const NavBar = (props: {
   open: boolean;
   setOpen: Function;
-  setOpenSubSideBar: Function;
+  setOpenSubSideBar?: Function;
 }) => {
   const dispatch = useAppDispatch();
   const data = useAppSelector((state) => state.Profile);
@@ -17,12 +17,16 @@ const NavBar = (props: {
 
   const openSideBar = () => {
     props.setOpen(!props.open);
-    props.setOpenSubSideBar(false);
+    {props.setOpenSubSideBar && props.setOpenSubSideBar(false)};
   };
 
   const dis = async () => {
     const token = localStorage.getItem("token");
-    if (!token || (parseJwt(token).isTwoFactorEnabled && !parseJwt(token).isTwoFaAuthenticated)) {
+    if (
+      !token ||
+      (parseJwt(token).isTwoFactorEnabled &&
+        !parseJwt(token).isTwoFaAuthenticated)
+    ) {
       Router.push("/signin");
       return;
     }
@@ -54,13 +58,13 @@ const NavBar = (props: {
               {data?.profile?.email}
             </span>
           </div>
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center bg-cover sm:w-[40px] w-[35px] sm:h-[40px] h-[35px] rounded-xl">
             <Image
               src={data?.profile?.profile?.avatar}
               width={500}
               height={500}
               alt="test1"
-              className="sm:w-10 w-9 rounded-xl"
+              className="rounded-xl bg-cover w-full h-full"
             />
           </div>
         </div>

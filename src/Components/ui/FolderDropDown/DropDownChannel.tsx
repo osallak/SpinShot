@@ -1,16 +1,13 @@
-import { Select, Option, button } from "@material-tailwind/react";
-import threePoint from "../../../../public/threePoint.svg";
-import threePointforPeridot from "../../../../public/threePointforPeridot.svg";
-import timeMute from "../../../../public/timeMute.svg";
-import Image from "next/image";
-import { useState, MouseEvent, useEffect, useRef } from "react";
-import { useRecoilState } from "recoil";
-import { channelAtom } from "@/Components/context/recoilContextChannel";
-import axios from "axios";
-import ip from "@/utils/endPoint";
-import { headers } from "next/dist/client/components/headers";
-import channelType from "@/types/channelTypes";
 import ChannelSettings from "@/Components/chatPage/channelSettings";
+import { channelAtom } from "@/Components/context/recoilContextChannel";
+import channelType from "@/types/channelTypes";
+import ip from "@/utils/endPoint";
+import axios from "axios";
+import Image from "next/image";
+import { MouseEvent, useEffect, useRef, useState } from "react";
+import { useRecoilState } from "recoil";
+import threePoint from "../../../../public/threePoint.svg";
+import timeMute from "../../../../public/timeMute.svg";
 
 const DropDownChannel: React.FC<any> = (props: {
   data: any;
@@ -29,8 +26,6 @@ const DropDownChannel: React.FC<any> = (props: {
     { content: "For 12 Hour", time: "720" },
     { content: "For 24 Hour", time: "1440" },
   ];
-
-  console.log("userId: ", props.userId);
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -181,11 +176,10 @@ const DropDownChannel: React.FC<any> = (props: {
           className="z-10 md:p-3 sm:p-2 p-1 right-3  bg-very-dark-purple absolute rounded-l-2xl rounded-b-2xl md:w-[230px] w-[170px]"
         >
           {props.data.map((content: any, index: number) => (
-            <div>
+            <div key={index}>
               {content.content !== "Mute" && content.content !== "Settings" ? (
                 <button
                   onClick={(event) => handleUsers(event, content.content)}
-                  key={index}
                   className="flex justify-start opacity-40 hover:opacity-100 space-x-2 items-center px-4 py-2 cursor-pointer text-pearl md:text-lg text-xs font-Passion-One"
                 >
                   <Image

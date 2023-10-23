@@ -15,9 +15,9 @@ import { useAppDispatch, useAppSelector } from "../../../../redux_tool";
 import { getProfile } from "../../../../redux_tool/redusProfile/profileThunk";
 
 const SideBar = (props: {
-  setOpenSubSideBar: Function;
-  openSubSideBar: boolean;
-  flag: string;
+  setOpenSubSideBar?: Function;
+  openSubSideBar?: boolean;
+  flag?: string;
 }) => {
   const Router = useRouter();
   const data = useAppSelector((state) => state.Profile);
@@ -32,10 +32,13 @@ const SideBar = (props: {
     if (
       props.openSubSideBar ||
       props.flag !== page[1] ||
-      window.innerWidth > 920
+      window.innerWidth > 960
     )
       Router.push(path);
-    else props.setOpenSubSideBar(true);
+    else {
+      if (props.setOpenSubSideBar)
+        props.setOpenSubSideBar(true);
+    }
   };
 
   const handleHover = () => {
@@ -53,7 +56,11 @@ const SideBar = (props: {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token || (parseJwt(token).isTwoFactorEnabled && !parseJwt(token).isTwoFaAuthenticated)) {
+    if (
+      !token ||
+      (parseJwt(token).isTwoFactorEnabled &&
+        !parseJwt(token).isTwoFaAuthenticated)
+    ) {
       Router.push("/signin");
       return;
     }
@@ -78,7 +85,11 @@ const SideBar = (props: {
 
   const dis = async () => {
     const token = localStorage.getItem("token");
-    if (!token || (parseJwt(token).isTwoFactorEnabled && !parseJwt(token).isTwoFaAuthenticated)) {
+    if (
+      !token ||
+      (parseJwt(token).isTwoFactorEnabled &&
+        !parseJwt(token).isTwoFaAuthenticated)
+    ) {
       Router.push("/signin");
       return;
     }
@@ -139,18 +150,18 @@ const SideBar = (props: {
         ))}
       </div>
       <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center">
-        <div className="w-[70px] h-[70px] rounded-2xl relative flex justify-center items-center">
+        <div className="w-[60px] bg-cover h-[60px] rounded-2xl relative flex justify-center items-center">
           <Image
             onClick={handleLogOut}
             onMouseEnter={handleHover}
+            width={500}
+            height={500}
             onMouseLeave={handleHoverOut}
             className={`${
               hovered ? "opacity-10" : "opacity-100"
-            } cursor-pointer rounded-2xl`}
+            } cursor-pointer rounded-2xl bg-cover h-full w-full`}
             src={data?.profile?.profile?.avatar}
             alt="profile pic"
-            width={500}
-            height={500}
           />
           {hovered && (
             <Image

@@ -58,6 +58,7 @@ const ExploreChannels = (props: {
         <SubModal
           open={subOpen}
           setOpen={setSubOpen}
+          setExploreClose={props.setOpen}
           type={status}
           name={name}
         />

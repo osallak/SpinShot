@@ -14,8 +14,8 @@ import { useAppDispatch, useAppSelector } from "../../../../redux_tool";
 import { getProfile } from "../../../../redux_tool/redusProfile/profileThunk";
 
 const MobileSideBar = (props: {
-  setOpenSubSideBar: Function;
-  openSubSideBar: boolean;
+  setOpenSubSideBar?: Function;
+  openSubSideBar?: boolean;
   flag: string;
 }) => {
   const Router = useRouter();
@@ -28,7 +28,10 @@ const MobileSideBar = (props: {
     event.preventDefault();
     const page = path.split("/");
     if (props.openSubSideBar || props.flag !== page[1]) Router.push(path);
-    else props.setOpenSubSideBar(true);
+    else {
+      if (props.setOpenSubSideBar)
+        props.setOpenSubSideBar(true);
+    }
   };
 
   const handleHover = () => {
@@ -106,28 +109,30 @@ const MobileSideBar = (props: {
           ))}
         </div>
         <div className="w-full h-[6%] min-h-[60px] py-2 flex justify-center items-center">
-          <Image
-            onClick={handleLogOut}
-            onMouseEnter={handleHover}
-            onMouseLeave={handleHoverOut}
-            src={data?.profile?.profile?.avatar}
-            width={500}
-            height={500}
-            alt="test1"
-            className={`w-9 rounded-xl ${
-              hovered ? "opacity-10" : "opacity-100"
-            }`}
-          />
-          {hovered && (
+          <div className="h-[55px] w-[45px] py-2 flex justify-center items-center">
             <Image
               onClick={handleLogOut}
               onMouseEnter={handleHover}
               onMouseLeave={handleHoverOut}
-              src={logout}
-              alt="logout"
-              className="absolute cursor-pointer w-4"
+              src={data?.profile?.profile?.avatar}
+              width={500}
+              height={500}
+              alt="test1"
+              className={`rounded-xl w-full h-full ${
+                hovered ? "opacity-10" : "opacity-100"
+              }`}
             />
-          )}
+            {hovered && (
+              <Image
+                onClick={handleLogOut}
+                onMouseEnter={handleHover}
+                onMouseLeave={handleHoverOut}
+                src={logout}
+                alt="logout"
+                className="absolute cursor-pointer w-4"
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>

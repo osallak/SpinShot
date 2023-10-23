@@ -242,6 +242,7 @@ export class UserService {
             },
           },
         },
+        logs: true,
       },
     });
     if (!user) throw new NotFoundException('record not found !');
@@ -267,6 +268,8 @@ export class UserService {
               opponentScore: true,
             },
           },
+          user: { include: { logs: true } },
+          opponent: { include: { logs: true } },
         },
       }),
       this.prisma.game.count({
@@ -275,7 +278,32 @@ export class UserService {
         },
       }),
     ]);
-    return serializePaginationResponse(games, totalCount, limit);
+
+    const userGames = [];
+    games.forEach((game) => {
+      if (game.userId === id) {
+        userGames.push({
+          opponent: game.opponent,
+          history: {
+            userScore: game.History.userScore,
+            opponentScore: game.History.opponentScore,
+          },
+          logs: game.user.logs,
+          startedAt: game.startedAt,
+        });
+      } else {
+        userGames.push({
+          opponent: game.user,
+          history: {
+            userScore: game.History.opponentScore,
+            opponentScore: game.History.userScore,
+          },
+          logs: game.opponent.logs,
+          startedAt: game.startedAt,
+        });
+      }});
+      console.log(userGames);
+    return serializePaginationResponse(userGames, totalCount, limit);
   }
 
   async update(id: string, data: UpdateUserDto): Promise<User> {

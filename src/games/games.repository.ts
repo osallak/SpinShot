@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { PrismaService } from 'nestjs-prisma';
 import { User } from 'src/types/user.types';
+import { achievements } from 'src/user/constants';
 
 @Injectable()
 export class GamesRepository {
@@ -16,11 +17,17 @@ export class GamesRepository {
       const [user, opponent] = await this.prismaService.$transaction([
         this.prismaService.user.findUnique({
           where: { id: payload.userID },
-          include: { logs: true },
+          include: {
+            logs: true,
+            HaveAchievement: { include: { Achiement: true } },
+          },
         }),
         this.prismaService.user.findUnique({
           where: { id: payload.opponentId },
-          include: { logs: true },
+          include: {
+            logs: true,
+            HaveAchievement: { include: { Achiement: true } },
+          },
         }),
       ]);
       if (!user || !opponent) return;
@@ -44,6 +51,11 @@ export class GamesRepository {
           gameId: game.id,
         },
       });
+
+      await this.achieveUser(user, opponent, {
+        user: payload.userScore,
+        opponent: payload.opponentScore,
+      });
     } catch (error) {
       this.logger.error(error?.message);
       this.logger.error(error?.code);
@@ -64,7 +76,10 @@ export class GamesRepository {
     }
   }
 
-  async achieveWinner(user: User): Promise<void> {
+  async achieveWinner(
+    user: User,
+    score: { user: number; opponent: number },
+  ): Promise<void> {
     try {
       await this.prismaService.logs.update({
         where: { id: user.logs.id },
@@ -73,14 +88,66 @@ export class GamesRepository {
           level: user.logs.level + 0.3,
         },
       });
+      this.checkAchievements(user, true, score.opponent);
     } catch (error) {
       this.logger.error(error?.message);
       this.logger.error(error?.code);
     }
-    // const achievements = await this.prismaService.haveAchievement.findMany({
-    //   where: { userId: user.id },
-    // });
-    // if ()
+  }
+
+  async checkAchievements(
+    user: User,
+    winner: boolean,
+    opponentScore: number,
+  ): Promise<void> {
+    try {
+      if (user.HaveAchievement.length === 0) return;
+      user.HaveAchievement.forEach(async (achievement) => {
+        if (
+          achievement.name === achievements[0].name &&
+          !achievement.achieved &&
+          winner
+        ) {
+          await this.prismaService.haveAchievement.update({
+            where: { id: achievement.id },
+            data: { achieved: true },
+          });
+          return;
+        }
+        if (
+          achievement.name === achievements[1].name &&
+          !achievement.achieved
+        ) {
+          if (user.logs.victories + user.logs.defeats >= 10) {
+            await this.prismaService.haveAchievement.update({
+              where: { id: achievement.id },
+              data: { achieved: true },
+            });
+            return;
+          }
+        }
+
+        if (
+          achievement.name === achievements[2].name &&
+          !achievement.achieved && winner
+        ) {
+          if (opponentScore === 0) {
+            await this.prismaService.haveAchievement.update({
+              where: { id: achievement.id },
+              data: { achieved: true },
+            });
+            return;
+          }
+        }
+
+        if (achievement.name === achievements[3].name) {
+          //todo
+        }
+      });
+    } catch (error) {
+      this.logger.error(error?.message);
+      this.logger.error(error?.code);
+    }
   }
 
   async achieveLoser(user: User): Promise<void> {
@@ -96,8 +163,11 @@ export class GamesRepository {
     score: { user: number; opponent: number },
   ): Promise<void> {
     if (score.user > score.opponent) {
-      await this.achieveWinner(user);
+      await this.achieveWinner(user, { user: score.user, opponent: score.opponent });
       await this.achieveLoser(opponent);
+    } else {
+      await this.achieveWinner(opponent, { user: score.opponent, opponent: score.user });
+      await this.achieveLoser(user);//play total of 10 online matches, vs friend
     }
   }
 }

@@ -73,8 +73,8 @@ export const SidbarIcon = [
   { icon: line },
   { icon: search, route: "/search" },
   { icon: profile, route: "/profile" },
-  { icon: message, route: "message" },
-  { icon: friend, route: "friend" },
+  { icon: message, route: "/messages/" },
+  { icon: friend, route: "/friend" },
   { icon: play, route: "/game" },
 ];
 
@@ -155,4 +155,4 @@ export const IdDeviceBreakpointsByWidth = {
 // ];
 
 export const SignOut = [{ icon: signout, name: "Sign out" }];
-export const userSerched = [{ icon: play, name: "let's play" }];
+export const letPlay = [{ icon: play, name: "let's play" }];

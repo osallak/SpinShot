@@ -25,18 +25,16 @@ const FormInput = (props: {
 
 
   return (
-    <div className="">
         <input
           name={props.name}
           onChange={props.handleChange}
-          className={`bg-very-dark-purple w-full rounded-[20px] px-5 h-14 placeholder:text-pearl ${ props.value ? "placeholder:text-opacity-100" : "placeholder:text-opacity-40"} outline-none`}
+          className={`bg-very-dark-purple  w-full rounded-[20px] px-5 h-full placeholder:text-pearl ${ props.value ? "placeholder:text-opacity-100" : "placeholder:text-opacity-40"} outline-none`}
           type="text"
           required
           placeholder={placeholder}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-    </div>
   );
 };
 

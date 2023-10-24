@@ -1,26 +1,23 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { SignOut, buttons, buttonsUser, letPlay } from "@/Components/ui/FolderDropDown/ArrayIcon";
+import parseJwt from "@/utils/parsJwt";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useAppDispatch } from "../../../redux_tool";
+import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
+import NavbarMobile from "../ui/FolderNavbar/navbarMobile";
+import SideBar from "../ui/folderSidebar/sideBar";
+import SidebarMobile from "../ui/folderSidebar/sidebarMobile";
+import UploadImage from "../ui/folderUploadImage/uploadImage";
 import SubSidebar from "../ui/profileSubsidebar/subSidebar";
+import SubsidebarSecond from "../ui/profileSubsidebar/subsidebarSecond";
+import TwoFactor from "../ui/twoFactorauth/TwoFactorAuth";
 import ImageProfile from "./imageProfile";
 import Levle from "./level";
 import PersonalInformation from "./personalInformation";
+import ResetPassword from "./resetPassword";
 import Achievements from "./userAchievements.tsx/achievements";
 import MatchHistory from "./userMatchHistory/matchHistory";
-import ResetPassword from "./resetPassword";
-import { useSelector } from "react-redux";
-import { useAppDispatch, useAppSelector } from "../../../redux_tool";
-import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
-import SideBar from "../ui/folderSidebar/sideBar";
-import SubsidebarSecond from "../ui/profileSubsidebar/subsidebarSecond";
-import SidebarMobile from "../ui/folderSidebar/sidebarMobile";
-import NavbarMobile from "../ui/FolderNavbar/navbarMobile";
-import UploadImage from "../ui/folderUploadImage/uploadImage";
-import { useRouter } from "next/router";
-import TwoFactor from "../ui/twoFactorauth/TwoFactorAuth";
-import parseJwt from "@/utils/parsJwt";
-import { buttonsUser } from "@/Components/ui/FolderDropDown/ArrayIcon";
-import { buttons } from "@/Components/ui/FolderDropDown/ArrayIcon";
-import { SignOut, userSerched } from "@/Components/ui/FolderDropDown/ArrayIcon";
 
 const ProfilePage = (props: { id: any }) => {
   const [isopen, setMenu] = useState(false);
@@ -33,15 +30,16 @@ const ProfilePage = (props: { id: any }) => {
   const [isActive, setisActive] = useState(false);
   const [open, setOpenDialog] = useState(false);
   const [upload, setUpload] = useState(false);
-  const [myImage, setMyImage] = useState<File | null>();
   const [width, setWidth] = useState<number>();
+  const [myImage, setMyImage] = useState<File | null>();
   const [username, setUsername] = useState("");
   const router = useRouter();
   const [error, setError] = useState(false);
-  const [opp, setId] = useState(false);
+  const [id, setId] = useState(false);
   const [table, setTable] = useState<Type[]>([]);
-  const [letPlay, setletPlay] = useState<TypePlay[]>([]);
+  const [table2, setTable2] = useState<TypePlay[]>([]);
   const [isClick, setClick] = useState(false);
+
 
   interface Type {
     id: number;
@@ -85,14 +83,17 @@ const ProfilePage = (props: { id: any }) => {
     setMenu(!isopen);
   };
   
+console.log(router.query.id)
+
   const swetshProfile = (tab: Type[], play: TypePlay[]) => {
     setTable(tab);
-    setletPlay(play);
+    setTable2(play);
+    setId(!id);
   };
   
   const usersearched = (tab: Type[], play: TypePlay[]) => {
-    setContent("Personal_Information");
-    setletPlay(play);
+    setId(!id);
+    setTable2(play);
     setTable(tab);
   };
   
@@ -101,7 +102,7 @@ const ProfilePage = (props: { id: any }) => {
       router.query.id ===
       parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
       ? usersearched(buttonsUser, SignOut)
-      : swetshProfile(buttons, userSerched);
+      : swetshProfile(buttons, letPlay);
     }
     setWidth(window.innerWidth);
   };
@@ -130,7 +131,7 @@ const ProfilePage = (props: { id: any }) => {
         >
           <div className={` flex flex-row p-1 w-full h-full `}>
             <div className="fixed h-full pb-4 ">
-              <SideBar setId={setId} />
+              <SideBar  />
             </div>
             <SubSidebar
               setContent={setContent}
@@ -147,6 +148,8 @@ const ProfilePage = (props: { id: any }) => {
                 handleClick={handleClick}
                 setOpned={setOpned}
                 opened={opened}
+                // setSearch={setSearch}
+                setPages={setPages}
               />
             )}
             <div
@@ -166,12 +169,13 @@ const ProfilePage = (props: { id: any }) => {
               <div className="flex flex-col  c-gb:h-full   overflow-auto ml-0 md:ml-[105px] c-gb:ml-0 ">
                 <div className="rounded-[20px] c-gb:flex c-gb:flex-row ">
                   <ImageProfile
-                    myImage={myImage}
                     isopen={isopen}
                     opne={opened}
                     setOpenDialog={setOpenDialog}
                     width={width}
                     username={username}
+                    myImage={myImage}
+                    id={id}
                   />
                   {open ? (
                     <UploadImage
@@ -182,7 +186,7 @@ const ProfilePage = (props: { id: any }) => {
                       Switch={setOpenDialog}
                     />
                   ) : null}
-                  <Levle opne={opened} width={width} letPlay={letPlay} />
+                  <Levle opne={opened} width={width} letPlay={table2} />
                 </div>
                 <div
                   className={` ${

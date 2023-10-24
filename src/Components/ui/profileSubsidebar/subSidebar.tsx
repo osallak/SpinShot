@@ -5,11 +5,13 @@ import securityIcon2 from "./../../../../public/securityIcon2.svg";
 
 import Security from "../upDatePasswd/security";
 import parseJwt from "@/utils/parsJwt";
+import { useRouter } from "next/router";
 
 const SubSidebar = (props: any) => {
 
   const [background, setBackground] = useState(false);
   const [subbackground, setSubBackground] = useState<number>(1);
+  const router = useRouter();
 
 const handle = (id: number, route: string) => {
   props.setClick(!props.isClick);
@@ -20,12 +22,24 @@ const handle = (id: number, route: string) => {
 };
 
 
+useEffect(() => {
+    if (router.query.id === parseJwt(JSON.stringify(localStorage.getItem("token"))).sub) {
+      setSubBackground(1)
+      props.setContent("Personal_Information")
+    }
+    else
+    {
+      setSubBackground(2);
+      props.setContent("Achievements")
+    }
+}, [router.query.id])
+
 const handlePasswd = (id: boolean, route: string) => {
   setBackground(true);
 };
 
 return (
-    <div className=" backdrop:blur  bg-white/10 space-y-10 w-[30%] hidden c-gb:block rounded-[20px]  ml-[110px]">
+    <div className=" backdrop:blur  bg-white/10 space-y-10 w-[30%] hidden c-gb:block rounded-[20px]  ml-[110px]  ">
       <div className="w-full flex flex-col h-[132px]">
         <div className="flex justify-center  w-full h-full items-center text-[35px] font-Poppins font-extrabold text-pearl">
           <div className="w-[80%]">

@@ -4,16 +4,18 @@ import SimpleButton from "@/Components/ui/Buttons/simpleButton";
 import FormInput from "@/Components/ui/formInput/FormInput";
 import ip from "@/utils/endPoint";
 import axios from "axios";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { store, useAppSelector } from "../../../redux_tool";
-import { updateUsename, updateFirstName, updateLastName } from "../../../redux_tool/redusProfile/profileSlice";
+import { updateFirstName, updateLastName, updateUsename } from "../../../redux_tool/redusProfile/profileSlice";
 
 const PersonalInformation = (props: any) => {
   // const dispatch = useAppDispatch();
   const data = useAppSelector((state) => state.Profile);
   console.log("data.profile", data.profile);
   const [country, setCountry] = useState("");
+  const router = useRouter();
   const [error, setError] = useState(false);
   const [firstName, setfirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -36,8 +38,12 @@ const PersonalInformation = (props: any) => {
   });
 
   const hendleUpdata = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
     try {
-      const token = localStorage.getItem("token");
       country ? (form["country"] = country) : (form["country"] = null);
       Object.keys(form).forEach((key) => {
         if (!form[key]) delete form[key];
@@ -68,10 +74,6 @@ const PersonalInformation = (props: any) => {
     });
   };
 
-  // const notify = () => {
-  //   toast.error("Input incorrect ");
-  // };
-
   useEffect(() => {
     console.log("data.profile", data.profile);
     if (data.profile) {
@@ -96,7 +98,7 @@ const PersonalInformation = (props: any) => {
           <div className="flex flex-col  text-pearl  w-full c-10xl:w-[80%] space-y-5 md:space-y-14  c-10xl:px-20  ">
             <div className="   c-10xl:space-x-[15%] w-full  ">
               <div className=" flex flex-col space-y-5 md:space-y-0 md:flex-row md:space-x-5">
-                <div className="w-full md:w-[49%] ">
+                <div className="w-full md:w-[49%] h-14 ">
                   <FormInput
                     handleChange={handleChange}
                     name={"firstName"}
@@ -104,7 +106,7 @@ const PersonalInformation = (props: any) => {
                     value={form?.firstName}
                   />
                 </div>
-                <div className="w-full md:w-[49%] ">
+                <div className="w-full md:w-[49%] h-14 ">
                   <FormInput
                     handleChange={handleChange}
                     name={"lastName"}

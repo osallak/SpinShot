@@ -19,13 +19,26 @@ const SidebarMobile = (props: {
   handleClick: Function;
   setOpned: Function;
   opened: boolean;
+  // setSearch: Function;
+  setPages: Function;
 }) => {
   const [icons, setIcons] = useState<any[]>([]);
   const [hovered, setHovered] = useState(false);
-  const [isSearch, setSearch] = useState(false);
   const Router = useRouter();
   // onClick={() => { props.opened == false ? props.handleClick(Icon.route) : props.setOpned(false); }}
   const data = useAppSelector((state) => state.Profile);
+  const [isSearch, setSearch] = useState(false);
+  const router = useRouter();
+
+  const handleClick = (route: string | undefined) => {
+    if (route == "/profile")
+    {
+      props.setOpned(true)
+      props.setPages(route);
+    }
+    else if (route)
+      router.push(route); 
+  };
 
 
   const handleHover = () => {

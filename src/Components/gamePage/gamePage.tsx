@@ -252,6 +252,7 @@ const GamePage = (props: any) => {
             handleClick={handleClick}
             setOpned={setOpned}
             opened={opened}
+            setPages={setPages}
           />
         )}
 

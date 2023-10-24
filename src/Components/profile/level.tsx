@@ -39,9 +39,11 @@ const Levle = (props: any) => {
   }, [data]);
 
   const handleLogOut = () => {
-    localStorage.removeItem("token")
-    router.push("/signin");
-  }
+    if (props.letPlay[0].name == "Sign out") {
+      localStorage.removeItem("token");
+      router.push("/signin");
+    } else router.push("/game");
+  };
 
   return (
     <div
@@ -65,7 +67,7 @@ const Levle = (props: any) => {
           ))}
         </div>
         <div className="  right-0 absolute p-8 hidden c-gb:block">
-          <DropdownUser onClick={handleLogOut} Array={props.letPlay}/>
+          <DropdownUser onClick={handleLogOut} Array={props.letPlay} />
         </div>
       </div>
       <div className=" flex items-center justify-center flex-col  rounded-[20px] w-full h-[100px] c-gb:h-[30%]">

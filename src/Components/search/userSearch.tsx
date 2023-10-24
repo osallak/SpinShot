@@ -1,38 +1,36 @@
-import React, { useEffect, useState } from "react";
-import test1 from "../../../public/test1.svg";
 import {
-  Button,
   Dialog,
-  DialogHeader,
   DialogBody,
   DialogFooter,
-  Option,
+  DialogHeader
 } from "@material-tailwind/react";
+import { useEffect, useState } from "react";
 
-import axios from "axios";
-import { textLimit } from "../profile/userMatchHistory/textLimit";
-import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
-import { useAppDispatch } from "../../../redux_tool";
-import { useRouter } from "next/router";
-import ip from "@/utils/endPoint";
 import { isStringEmptyOrWhitespace } from "@/lib/utils";
+import ip from "@/utils/endPoint";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { useAppDispatch } from "../../../redux_tool";
+import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
+import { textLimit } from "../profile/userMatchHistory/textLimit";
 
-const Search = (props: { isSearch: boolean }) => {
+const Search = (props:any) => {
   const [user, setUser] = useState("");
   const [resulta, setSearchResults] = useState<any>([]);
   const [width, setWidth] = useState<any>();
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  console.log("here : " ,props.isSearch)
+
   const handleSearch = async (targetValue__ : string ) => {
     const token = localStorage.getItem("token");
     try {
       if (isStringEmptyOrWhitespace(targetValue__))
         return;
-      console.log('serach val :', targetValue__);
       if (targetValue__)
       {
-        const response = await axios.get(`${ip}/users?keyword=${targetValue__}`, {
+        const response = await axios.get(`${ip}/users?keyword=${targetValue__}&limit=${10}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -46,10 +44,6 @@ const Search = (props: { isSearch: boolean }) => {
       }
   };
 
-
-  // useEffect(() => {
-  //   handleChange();
-  // })
 
   const handleChange = (e: any) => {
     const targetValue = e.target.value;
@@ -83,6 +77,8 @@ const Search = (props: { isSearch: boolean }) => {
     }
   }, [width, props.isSearch]);
 
+  
+
   return (
     <div className="">
       <Dialog
@@ -98,12 +94,12 @@ const Search = (props: { isSearch: boolean }) => {
           <div className=" w-[80%] ">
             <input
               type="text"
-              className="w-full h-14 rounded-full bg-very-dark-purple px-7 text-md text-pearl font-Poppins overflow-scroll"
+              className="w-full h-14 rounded-full bg-very-dark-purple px-7 text-md text-pearl font-Poppins outline-none ring-0 focus:ring-0"
               placeholder="Search..."
               onChange={(event) => handleChange(event)}
             />
           </div>
-          <div className="flex flex-col  w-[80%] bg-very-dark-purple rounded-3xl  font-Poppins font-semibold text-sm ">
+          <div className="flex flex-col  w-[80%] bg-very-dark-purple rounded-3xl  font-Poppins font-semibold text-sm  scrollbar-rounded-5 scrollbar scrollbar-track-transparent overflow-scroll h-[500px] ">
             {resulta?.data?.length > 0 && user !== "" ? (
               resulta?.data.map((index: any) => (
                 <div
@@ -128,7 +124,7 @@ const Search = (props: { isSearch: boolean }) => {
                   )}
                   <button
                     onClick={() => getInformation(index.id)}
-                    className="border sm:p-2 h-[70%] flex items-center justify-center rounded-full bg-peridot text-very-dark-purple "
+                    className=" sm:p-2 h-[60%] flex items-center justify-center rounded-full bg-peridot text-very-dark-purple text-xs sm:text-sm font-Passion-One w-12 sm:w-20"
                   >
                     profile
                   </button>

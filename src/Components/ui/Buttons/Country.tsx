@@ -108,7 +108,6 @@ const Country = (props:any) => {
               { isFlag && <h1>{isFlag}</h1>}
               <h1>
               {
-                // props.country && !isCountry ? props.country :
                 (isCountry.length > 25 ? textLimit(isCountry, 20) : isCountry)
               } 
               </h1>

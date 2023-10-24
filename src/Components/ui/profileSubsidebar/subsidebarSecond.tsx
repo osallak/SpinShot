@@ -1,16 +1,19 @@
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import securityIcon from "./../../../../public/securityIcon.svg";
 import securityIcon2 from "./../../../../public/securityIcon2.svg";
 import { buttons } from "@/Components/ui/FolderDropDown/ArrayIcon";
 import Security from  "../upDatePasswd/security"
+import { Router, useRouter } from "next/router";
+import parseJwt from "@/utils/parsJwt";
 
 const SubsidebarSecond = (props: any) => {
 
   const [isClick, setClick] = useState(false);
   const [background, setBackground] = useState(false);
   const [subbackground, setSubBackground] = useState<number>(0);
+  const router = useRouter();
 
   const handle = (id: number, route: string) => {
     route != "Security" ? setClick(false) : null;
@@ -21,13 +24,17 @@ const SubsidebarSecond = (props: any) => {
 
   const handlePasswd = (id: boolean, route: string) => {
     setBackground(true);
+    props.setPassword(true);
   };
 
-
+  const handleClick = () => {
+    router.push(`/profile/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}`);
+  }
+  
   return (
     <div className={` fixed top-[75px] md:top-2 md:ml-[105px] ml-[65px] w-[70%] z-50 h-[93%] md:h-[98%]  backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] `}>
       <div className=" text-[10px] sm:text-[20px] md:text-[35px] font-Poppins font-extrabold text-pearl p-6 space-y-3">
-        <h1>Profile</h1>
+        <button onClick={() => handleClick()}> Profile</button>
         <div className=" w-[70%] opacity-40">
           {" "}
           <div className="border"></div>{" "}

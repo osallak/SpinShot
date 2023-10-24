@@ -1,15 +1,15 @@
-import email from "./../../../public/email.svg";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { useAppSelector } from "../../../redux_tool";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import test1 from "../../../public/test1.svg";
-import pc from "../../../public/pc.jpeg";
-import ibenmain from "../../../public/issam_benmaina1_448x672.jpeg"
+import { useAppSelector } from "../../../redux_tool";
+import email from "./../../../public/email.svg";
 
 const ImageProfile = (props: any) => {
   const data = useAppSelector((state) => state.Profile);
   const [handelMous, setImage] = useState(false);
   const [image, setMyImage] = useState();
+  const router = useRouter();
 
   const handleMouseEnter = () => {
     setImage(true);
@@ -31,10 +31,6 @@ const ImageProfile = (props: any) => {
     }
   }, [data]);
 
-
-  console.log( "image ", props.myImage)
-  console.log( "image ", image)
-
   return (
     <div
       className={` ${
@@ -47,16 +43,16 @@ const ImageProfile = (props: any) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={` rounded-3xl  ${
-          props.isopen ? "w-[95px]" : "w-[120px]"
+          props.isopen ? "w-[100px]" : "w-[120px]"
         } c-gb:w-[10rem] c-10xl:w-[15rem]  relative transition-all duration-300 hover:opacity-40  `}
       >
-        <input type="" className="hidden " onClick={Open} />
+        {props.id && <input type="" className="hidden " onClick={Open} />}
         <div className=" flex justify-center items-center bg-very-dark-purple rounded-3xl  overflow-hidden">
           {handelMous && (
             <div
               className={`  rounded-2xl  duration-300  flex justify-center items-center flex-col  transition-all absolute  `}
             >
-              <Image className={``} src={email}  alt="" />
+              {props.id &&  <Image  src={email}  alt="" />}
             </div>
           )}
           {props.myImage ? (
@@ -68,18 +64,9 @@ const ImageProfile = (props: any) => {
                 height={150}
                 alt=""
               />
-            </picture>
+            </picture>    
           ) : (
-            <picture className={` bg-cover w-28 h-28 c-gb:w-36  c-gb:h-36 c-14xl:h-64 c-14xl:w-64 `}>
-              <img
-                className=" rounded-2xl w-full h-full" //h-20 w-20 md:h-36 md:w-36	c-14xl:w-64 c-14xl:h-64
-                src={image}
-                width={150}
-                height={150}
-                alt=""
-              />
-            </picture>
-            // <Image className="bg-cover w-full h-full" src={test1} alt="" />
+            <Image className="bg-cover w-full h-full" src={test1} alt="" />
           )}
         </div>
       </label>

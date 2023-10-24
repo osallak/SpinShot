@@ -13,7 +13,6 @@ const MatchHistory = () => {
   const [page, setPage] = useState<number>(1);
   const [country, setCountry] = useState(1);
 
-
   const array = [
     { id: 0, content: posts[0] },
     { id: 1, content: posts[1] },
@@ -21,10 +20,6 @@ const MatchHistory = () => {
     { id: 3, content: posts[3] },
     { id: 4, content: posts[4] },
   ];
-
-  useEffect(() => {
-    fetchData();
-  },[page]);
 
   const fetchData = async () => {
     try {
@@ -41,18 +36,25 @@ const MatchHistory = () => {
               Authorization: `Bearer ${token}`,
             },
           }
-        );
-        console.log(response.data);
-        setPosts(response.data.data);
-        setTotalPages(response.data.pagination.pageCount);
-        console.log(posts);
+          );
+          console.log(response.data);
+          setPosts(response.data.data);
+          setTotalPages(response.data.pagination.pageCount);
+          console.log(posts);
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    };
+  
+    useEffect(() => {
+      fetchData();
+      return () => {
+        setPosts([]);
+      };
+    },[page]);
 
-  const totalMatch =
+    const totalMatch =
     (posts[0]?.logs?.victories ?? 0) +
     (posts[0]?.logs?.defeats ?? 0);
 
@@ -88,10 +90,10 @@ const MatchHistory = () => {
         </div>
         <div className="h-full w-full ">
           {
-            array.length != 0 ?
+            array.length !== 0 ?
             array.map((option: any) => (
               <div key={option.id} className="w-full h-14 sm:h-28 ">
-              {option.content && <Matchs option={option} />}
+              { option && option.content && <Matchs option={option} />}
             </div>
           )) :
           <div className=" w-full h-full flex justify-center items-center">

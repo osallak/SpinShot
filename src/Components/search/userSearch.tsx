@@ -17,7 +17,7 @@ import { useRouter } from "next/router";
 import ip from "@/utils/endPoint";
 import { isStringEmptyOrWhitespace } from "@/lib/utils";
 
-const Search = (props: { isSearch: boolean, setId:Function }) => {
+const Search = (props: { isSearch: boolean }) => {
   const [user, setUser] = useState("");
   const [resulta, setSearchResults] = useState<any>([]);
   const [width, setWidth] = useState<any>();

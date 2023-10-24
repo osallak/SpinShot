@@ -1,17 +1,14 @@
+"use client";
 import SearchInput from "@/Components/ui/Inputs/searchInput";
-import allMessagesType from "@/types/messagesArrays";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { MouseEvent, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useState } from "react";
+import CreateChannel from "../../../public/CreateChannel.svg";
+import ExportChannels from "../../../public/ExportChannels.svg";
 import messagesIcon from "../../../public/messagesIcon.svg";
-import { chatAll } from "../context/recoilContext";
+import IconButton from "../ui/Buttons/iconButton";
 import Channels from "./channels";
 import Individual from "./individual";
-import IconButton from "../ui/Buttons/iconButton";
-import CreateChannel from "../../../public/CreateChannel.svg"
-import ExportChannels from "../../../public/ExportChannels.svg"
-
 
 const SubSideBar = (props: {
   open: boolean;
@@ -19,39 +16,29 @@ const SubSideBar = (props: {
   setFlag: Function;
   setIsIndividual: Function;
   isIndividual: string;
+  setRoomId: Function;
+  roomId: string;
   setId: Function;
+  reload: boolean;
+  setReload: Function;
+  id: string;
+  setIsLoaded: Function;
   loaded: boolean;
 }) => {
-  const [clicked, setClicked] = useState<number>();
   const [searchValue, setSearchValue] = useState("");
-  const [allMessages, setAllMessages] = useRecoilState(chatAll);
-  // const [chatPage, setChatPage] = useState("Individual");
-  // const [responseExploreChannels, setResponseExploreChannels] = useState()
 
-  const clickChat = (event: MouseEvent<HTMLButtonElement>, index: number) => {
-    event.preventDefault();
-    setClicked(index);
-  };
-
-  const exploreChannels = async () => {
-    // event.preventDefault();
-    // try {
-    //   const res = await axios.get(`http://e3r10p14.1337.ma:3001/room/all`, {
-    //     headers: {
-    //       Authorization: `Bearer ${ayoubToken}`
-    //     }
-    //   })
-    //   console.log("response from explore channel: ", res.data);
-    // } catch (error: any) {
-    //   console.log("error from explore channel: ", error);
-    // }
+  const exploreChannels = () => {
     props.setFlag("ExploreChannels");
     props.setOpen(!props.open);
   };
 
-  const createChannels = async () => {
-    // event.preventDefault();
+  const createChannels = () => {
     props.setFlag("CreateChannels");
+    props.setOpen(!props.open);
+  };
+
+  const inviteFriends = () => {
+    props.setFlag("Invite");
     props.setOpen(!props.open);
   };
 
@@ -64,7 +51,9 @@ const SubSideBar = (props: {
   };
 
   return (
-    <div className="bg-white/10 h-full lg:flex flex-col hidden rounded-2xl w-[25%] min-w-[350px]">
+    <div
+      className={`bg-white/10 h-full lg:flex hidden flex-col rounded-2xl w-[25%] lg:min-w-[350px] md:min-w-[250px] min-w-[150px]`}
+    >
       <div className="flex justify-center items-center flex-col w-full h-[10%] md:min-h-[100px] min-h-[70px]">
         <div className="w-full h-full flex-col px-6">
           <div className="w-full  pt-5 flex flex-row space-x-3 h-full">
@@ -117,13 +106,28 @@ const SubSideBar = (props: {
           </motion.button>
         </div>
       </div>
-      {props.isIndividual === "Channels" && (
-        <Channels searchValue={searchValue} loaded={props.loaded} />
+      {props.isIndividual === "Channels" ? (
+        <Channels
+          searchValue={searchValue}
+          loaded={props.loaded}
+          setRoomId={props.setRoomId}
+          roomId={props.roomId}
+          reload={props.reload}
+          setReload={props.setReload}
+          setIsLoaded={props.setIsLoaded}
+        />
+      ) : (
+        <Individual
+          searchValue={searchValue}
+          loaded={props.loaded}
+          setId={props.setId}
+          id={props.id}
+          reload={props.reload}
+          setReload={props.setReload}
+          setIsLoaded={props.setIsLoaded}
+        />
       )}
-      {props.isIndividual === "Individual" && (
-        <Individual searchValue={searchValue} loaded={props.loaded} setId={props.setId}/>
-      )}
-      <div className="flex justify-around items-center w-full h-[10%] min-h-[60px]">
+      <div className="flex justify-around items-center w-full py-2">
         <div className="w-[45%] h-10 flex justify-center items-center">
           <IconButton
             icon={CreateChannel}

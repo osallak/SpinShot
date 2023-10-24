@@ -1,7 +1,7 @@
 import NavGame from "@/Components/ui/FolderNavbar/navGame";
 import NavbarMobile from "@/Components/ui/FolderNavbar/navbarMobile";
 import SideBar from "@/Components/ui/folderSidebar/sideBar";
-import SidebarM from "@/Components/ui/folderSidebar/sidebarMobile";
+import SidebarMobile from "@/Components/ui/folderSidebar/sidebarMobile";
 import SubSidebarGame from "@/Components/ui/profileSubsidebar/subSidebarGame";
 import SubsidebarSecondGame from "@/Components/ui/profileSubsidebar/subsidebarSecondGame";
 import ip from "@/utils/endPoint";
@@ -73,6 +73,7 @@ const GamePage = (props: any) => {
   };
 
   const gameOverCallback = (data: any) => {
+    setScore(null);
     setClear(true);
     // console.log("game over ", data);
     setDataGame(null);
@@ -134,9 +135,14 @@ const GamePage = (props: any) => {
     setheight(window.innerHeight);
   };
 
-  const handleClick = (a: boolean, route: string | undefined) => {
-    setOpned(true);
-    route ? setPages(route) : null;
+  const handleClick = (route: string) => {
+    console.log("route: ", route);
+    {
+      route.includes("/game") && !opened ? setOpned(true) : setOpned(false);
+    }
+    setPages("/game");
+    // setOpned(true);
+    // route ? setPages(route) : null;
   };
 
   // useEffect(() => {
@@ -227,6 +233,7 @@ const GamePage = (props: any) => {
           isopen={isopen}
         />
       </div>
+  
       <div className={` flex flex-row c-gb:space-x-3 p-2 w-full  h-full `}>
         <SideBar />
         <SubSidebarGame
@@ -241,7 +248,7 @@ const GamePage = (props: any) => {
         />
 
         {isopen && (
-          <SidebarM
+          <SidebarMobile
             handleClick={handleClick}
             setOpned={setOpned}
             opened={opened}
@@ -265,7 +272,7 @@ const GamePage = (props: any) => {
             ref={divRef}
           ></div>
         </div>
-        {opened && (
+        {opened && pages == "/game" &&(
           <SubsidebarSecondGame
           // opened={opened}
           setOpned={setOpned}

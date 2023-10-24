@@ -4,7 +4,7 @@ import io, { Socket } from "socket.io-client";
 
 const SocketContext = createContext<Socket | null>(null);
 
-const SocketProvider: React.FC = ({ children }: any) => {
+const SocketProvider = ({ children }: any) => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {

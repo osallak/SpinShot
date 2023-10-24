@@ -5,15 +5,17 @@ import { RecoilRoot } from "recoil";
 import { store } from "../../redux_tool/store";
 import { SocketProvider } from "@/context/socket.context";
 
+import { Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
+    <RecoilRoot>
+      <Toaster />
       <Provider store={store}>
-      <RecoilRoot>
         <SocketProvider>
           <Component {...pageProps} />
         </SocketProvider>
-      </RecoilRoot>
       </Provider>
+    </RecoilRoot>
   );
 }

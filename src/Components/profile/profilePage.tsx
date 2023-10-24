@@ -75,9 +75,9 @@ const ProfilePage = (props: { id: any }) => {
   
   const handleClick = (route: string) => {
     {
-      route == "/profile" ? setOpned(true) : router.push(route);
+      route.includes("/profile") && !opened ? setOpned(true) : setOpned(false);
     }
-    setPages(route);
+    setPages("/profile");
   };
 
   const handleMenu = () => {
@@ -120,8 +120,6 @@ const ProfilePage = (props: { id: any }) => {
     }
   }, [dispatch, router.isReady, router.query.id]);
 
-
-  console.log("image : ", myImage);
   
   return (
     <>
@@ -214,6 +212,7 @@ const ProfilePage = (props: { id: any }) => {
             <div className="bg-white flex items-center"></div>
             {opened && pages == "/profile" && (
               <SubsidebarSecond
+                // isopen={}
                 isActive={isActive}
                 setisActive={setisActive}
                 setContent={setContent}

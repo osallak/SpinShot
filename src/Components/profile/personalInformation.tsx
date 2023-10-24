@@ -149,11 +149,9 @@ const PersonalInformation = (props: any) => {
           <SimpleButton content="Save" onclick={hendleUpdata} />
         </div>
       </div>
-      <div>
-        {error === true && (
-          <Toaster position="top-center" reverseOrder={false} />
-        )}
-      </div>
+      {/* <div>
+        {error === true && <Toaster position="top-center" reverseOrder={false} />}
+      </div> */}
     </div>
   );
 };

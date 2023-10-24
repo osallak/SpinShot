@@ -35,7 +35,7 @@ const SubsidebarSecondGame = (props:any) => {
 
 
   return (
-    <div className='fixed top-[70px] md:top-2 md:ml-[105px] ml-[65px] w-[70%] z-50  h-full  backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] text-pearl pb-5 '>
+    <div className='fixed top-[75px] md:top-2 md:ml-[105px] ml-[65px] w-[70%] z-50  h-[93%]  backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] text-pearl  '>
       <div className=" rounded-2xl h-full flex flex-col w-[100%] px-[10%] text-base sm:text-2xl ">
         <div className=" flex items-center h-[10%] ">
           <h1>Game</h1>

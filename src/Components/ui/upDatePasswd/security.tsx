@@ -1,8 +1,10 @@
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ToggleButton from "../Buttons/ToggleButton";
 import linechoose from "../../../../public/linechoose.svg";
 import linechoose2 from "../../../../public/linechoose2.svg";
+import axios from "axios";
+import ip from "@/utils/endPoint";
 
 const Security = (props: {
   handlePasswd: Function;

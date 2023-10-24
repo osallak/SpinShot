@@ -35,19 +35,19 @@ const NavGame = (props: any) => {
   console.log("data game zeb", props.dataGame);
 
   return (
-    <div className="  w-[96%] c-gb:w-[80%]  bg-very-dark-purple rounded-xl sm:rounded-3xl flex justify-between flex-row items-center px-[2%] absolute top-16 md:top-6 p-3 ">
+    <div className="  w-[96%] c-gb:w-[80%]  bg-very-dark-purple rounded-xl sm:rounded-3xl flex justify-between flex-row items-center px-[2%] absolute top-24 md:top-6 p-3 ">
       <div className="flex  flex-row items-center justify-between w-[50%] ">
         <div className="flex  c-gb:space-x-8  ">
           {data?.profile?.profile?.avatar ? (
             <picture>
               <img
-                className="w-14 h-14 rounded-xl"
+                className=" w-8 h-8 sm:w-14 sm:h-14 rounded-xl"
                 src={data?.profile?.profile?.avatar}
                 alt=""
               />
             </picture>
           ) : (
-              <Image className=" w-14 h-14 rounded-xl" src={test1} alt="" />
+              <Image className="  w-8 h-8 sm:w-14 sm:h-14 rounded-xl" src={test1} alt="" />
           )}
           <div className="p-1">
             <h1 className=" text-xs sm:text-lg c-3xl:text-3xl text-pearl">
@@ -95,13 +95,13 @@ const NavGame = (props: any) => {
           {props.dataGame?.profile?.avatar ? (
             <picture>
               <img
-                className=" w-14 h-14 rounded-xl"
+                className="  w-8 h-8 sm:w-14 sm:h-14 rounded-xl"
                 src={props.dataGame?.profile?.avatar}
                 alt=""
               />
             </picture>
           ) : (
-            <Image className=" w-14 h-14 rounded-xl" src={test1} alt="" />
+            <Image className=" w-8 h-8 sm:w-14 sm:h-14 rounded-xl" src={test1} alt="" />
           )}
         </div>
       </div>

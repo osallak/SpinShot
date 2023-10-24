@@ -1,220 +1,52 @@
 "use client";
 import SideBar from "@/Components/ui/folderSidebar/sideBar";
-import { default as dataConversation } from "@/types/messagesArrays";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
-import token from "@/utils/token";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { chatAll, conversationAtom, exploreChannelAtom, individualAtom, roomsAtom } from "../context/recoilContext";
+import { io } from "socket.io-client";
+import { exploreChannelAtom } from "../context/recoilContext";
 import NavBar from "../ui/FolderNavbar/navBar";
 import MobileSideBar from "../ui/folderSidebar/mobileSideBar";
+import ConversationChannel from "./conversationChannel";
 import ConversationIndividual from "./conversationIndividual";
 import CreateChannels from "./createChannels";
 import ExploreChannels from "./exploreChannels";
+import InviteFriends from "./inviteFriends";
+import MobileSubSideBar from "./mobileSubSideBar";
 import SubSideBar from "./subSideBar";
 
+let socket: any;
+let token: any;
 const Chat = () => {
-  const Router = useRouter();
-  const [storedToken, setToken] = useState("");
-  const [otherUserID, setOtherUserID] = useState("");
-  const [exploreOpen, setExploreOpen] = useState(false);
-  const [createOpen, setCreateOpen] = useState(false);
+  const router = useRouter();
   const [openSideBar, setOpenSideBar] = useState(false);
+  const [id, setId] = useState("");
+  const [roomId, setRoomId] = useState("");
+  const [isIndividual, setIsIndividual] = useState("Individual");
   const [open, setOpen] = useState(false);
   const [flag, setFlag] = useState("");
-  const [response, setResponse] = useState<dataConversation[]>([]);
-  const [userId, setUserId] = useState("");
-  const [userName, setUserName] = useState("");
-  const userIdRef = useRef<string>();
   const [loaded, setIsLoaded] = useState(false);
-  const [exploreChannel, setExploreChannel] = useRecoilState(exploreChannelAtom);
-  const [allMessages, setAllMessages] = useRecoilState(chatAll);
-  const [individual, setIndividual] = useRecoilState(individualAtom);
-  const [rooms, setRooms] = useRecoilState(roomsAtom);
-  const [conversation, setConversation] = useRecoilState(conversationAtom);
-  const [id, setId] = useState("");
-  const [isIndividual, setIsIndividual] = useState("Individual");
-  // const chatContainerRef = useRef<HTMLDivElement>(null);
-  // const [currentMsg, setCurrentMsg] = useState("");
-  // const Router = useRouter();
-  // const [message, setMessage] = useState("");
-  // const [chatHistory, setChatHistory] = useState<string[]>([]);
-
-  // const handleMessage = (event: ChangeEvent<HTMLInputElement>) => {
-  //   event.preventDefault();
-  //   setCurrentMessage(event.target.value);
-  // };
-
-  // function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
-  //   if (event.key === "Enter") {
-
-  //     handleSendMessage(event);
-  //   }
-  // }
-
-  // const inputRef = useRef<HTMLInputElement>(null);
-  // useEffect(() => {
-  //   const conversationDiv: any = chatContainerRef.current;
-  //   if (conversationDiv) {
-  //     conversationDiv.scrollTop = conversationDiv.scrollHeight;
-  //   }
-  // }, [chatHistory.length]);
-
-  // useEffect(() => {
-  //   const handleKeyPress = (event: any) => {
-  //     event.preventDefault(); // Prevent the "/" key from being typed into the input
-  //     if (event.key === "/") {
-  //       if (inputRef.current) {
-  //         inputRef.current.focus();
-  //       }
-  //     }
-  //   };
-
-  //   document.addEventListener("keydown", (event) => handleKeyPress);
-  //   return () => {
-  //     document.removeEventListener("keydown", handleKeyPress);
-  //   };
-  // }, []);
-
-  // const emailInput = useCallback((inputElement: any) => {
-  //   if (inputElement) {
-  //     inputElement.focus();
-  //   }
-  // }, []);
-
-  // const sendMessage = (event: MouseEvent<HTMLButtonElement>) => {
-  //   event.preventDefault();
-  //   setMessageContent(currentMessage);
-  //   console.log("Message Content : ", messageContent);
-  // }
-  // interface IMsgDataTypes {
-  //   user: String;
-  //   msg: String;
-  //   time: String;
-  // }
-
-  // const [chat, setChat] = useState<IMsgDataTypes[]>([]);
-
-  // const handleSendMessage = (
-  //   event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLInputElement>
-  //   ) => {
-  // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5hdm9vcyIsInN1YiI6IjQ4YTRkNDI2LWZiMjEtNDE5NC04ZWQ2LTZiZjRhY2Y0M2I1NSIsImlzcyI6InNwaW5zaG90IiwiaWF0IjoxNjk0ODA4OTM1LCJleHAiOjE2OTQ4OTUzMzV9.zsDFfyE2t1gLbQ9DDAJr92X88pegk7fOCt93rM2BH9A'
-  // const socket = io("e3r10p14.1337.ma:8001", {
-  //   extraHeaders: {
-  //     Authorization: `Bearer ${token}`,
-  //   },
-  // });
-  // socket.on("connect", () => {
-  //   console.log(parseJwt(token));
-  //   socket.on("pm", (data) => {console.log(data)});
-  //   socket.on("exception", (data) => {console.log(data)})
-  // });
-  //     event.preventDefault();
-  //     if (message.trim() !== "") {
-  //       socket.on("connect", () => {
-  //       console.log("socket connected");
-  //       const msgData: IMsgDataTypes = {
-  //         user: "ataji",
-  //         msg: currentMsg,
-  //         time:
-  //           new Date(Date.now()).getHours() +
-  //           ":" +
-  //           new Date(Date.now()).getMinutes(),
-  //       };
-  //       socket.emit("hello", msgData);
-  //     });
-  //     socket.on("hello", (data: IMsgDataTypes) => {
-  //       setChat((pre) => [...pre, data]);
-  //     });
-  //     setMessage("");
-  //   }
-  // };
-
-  // const socketInitializer = () => {
-  //   socket.on("connect", () => {
-  //     const msgData: IMsgDataTypes = {
-  //       user: "ataji",
-  //       msg: currentMsg,
-  //       time:
-  //         new Date(Date.now()).getHours() +
-  //         ":" +
-  //         new Date(Date.now()).getMinutes(),
-  //     };
-  //     socket.emit("hello", msgData);
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   socket.on("hello", (data: IMsgDataTypes) => {
-  //     setChat((pre) => [...pre, data]);
-  //   });
-  // }, [socket]);
-
-  // useEffect(() => socketInitializer(), []);
-
-  // const featchDataConversation = async (id: string) => {
-  //   // const token = localStorage.getItem("token");
-  //   // if (!token) {
-  //   //   Router.push("/Signin");
-  //   //   return;
-  //   // }
-  //   const jwtToken = parseJwt(token);
-  //   try {
-  //     const result = await axios.get(
-  //       `${ip}/chat/individual/${id}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         params: {
-  //           id: jwtToken.sub,
-  //         },
-  //       }
-  //     );
-  //     setResponse(result.data);
-  //     setConversation(result.data);
-  //     setUserId(jwtToken.sub);
-  //     console.log("response from conversation here:====>    ", result.data);
-  //   } catch (error) {
-  //     console.log("error of fetching data fron conversation: ", error);
-  //   }
-  // };
-
-  const fetchDataSubSideBar = async () => {
-    // const token = localStorage.getItem("token");
-    // console.log("token from chat Page: ", token);
-    // if (!token) {
-    //     Router.push("/Signin");
-    //     return;
-    //   }
-    const jwtToken = parseJwt(token);
-    try {
-      const res = await axios.get(`${ip}/chat/all`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          id: jwtToken.sub,
-        },
-      });
-      setIndividual(res?.data?.individual);
-      setId(res.data.individual[0].other.id);
-      setRooms(res?.data?.room);
-      setAllMessages(res.data);
-    } catch (error) {
-      console.log("error of fetching data from subsidebar: ", error);
-    }
-  };
+  const [exploreChannel, setExploreChannel] =
+    useRecoilState(exploreChannelAtom);
+  const [reload, setReload] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [openSubSideBar, setOpenSubSideBar] = useState(false);
 
   const fetchDataExploreChannel = async () => {
-    // const token = localStorage.getItem("token");
-    // if (!token) {
-    //   Router.push("/Signin");
-    //   return;
-    // }
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
     if (open === true) {
       try {
         const res = await axios.get(`${ip}/room/explore`, {
@@ -223,15 +55,35 @@ const Chat = () => {
           },
         });
         setExploreChannel(res.data);
-      } catch (error: any) {
-        console.log("error from explore chan   nel: ", error);
-      }
+      } catch (error: any) {}
     }
   };
 
   useEffect(() => {
-    fetchDataSubSideBar();
-    setIsLoaded(true)
+    token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
+    socket = io(`${ip}/chat`, {
+      extraHeaders: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+    socket.on("connect", () => console.log("connected"));
+    socket.on("pm", (data: any) => {
+      setReload(true);
+    });
+    socket.on("gm", (data: any) => {
+      setReload(true);
+    });
+    socket.on("exception", (data: any) => console.log("exception"));
+    socket.on("disconnect", (data: any) => console.log("disconnect"));
   }, []);
 
   useEffect(() => {
@@ -239,30 +91,92 @@ const Chat = () => {
   }, [open]);
 
   return (
-    <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 md:pl-3 pl-0 py-0 pr-0 items-center flex-row">
-      <SideBar />
-      {openSideBar && <MobileSideBar />}
+    <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 md:pl-3 pl-0 py-0 pr-0 items-center flex-row relative">
+      <SideBar
+        setOpenSubSideBar={setOpenSubSideBar}
+        openSubSideBar={openSubSideBar}
+        flag="messages"
+      />
+      {openSideBar && (
+        <MobileSideBar
+          setOpenSubSideBar={setOpenSubSideBar}
+          openSubSideBar={openSubSideBar}
+          flag="messages"
+        />
+      )}
+      {openSubSideBar && (
+        <div className="h-full md:w-[300px] sm:w-[250px] w-[200px] lg:hidden flex items-end absolute md:left-[90px] left-16 drop-shadow-2xl z-40">
+          <div className="bg-very-dark-purple h-[91%] z-50 md:h-full flex flex-col rounded-l-2xl w-full">
+            <MobileSubSideBar
+              setOpenSubSideBar={setOpenSubSideBar}
+              openSubSideBar={openSubSideBar}
+              open={open}
+              setOpen={setOpen}
+              setFlag={setFlag}
+              setIsIndividual={setIsIndividual}
+              isIndividual={isIndividual}
+              setRoomId={setRoomId}
+              roomId={roomId}
+              setId={setId}
+              reload={reload}
+              setReload={setReload}
+              id={id}
+              setIsLoaded={setIsLoaded}
+              loaded={loaded}
+            />
+          </div>
+        </div>
+      )}
       <SubSideBar
         open={open}
         setOpen={setOpen}
         setFlag={setFlag}
         setIsIndividual={setIsIndividual}
         isIndividual={isIndividual}
+        setRoomId={setRoomId}
+        roomId={roomId}
         setId={setId}
+        reload={reload}
+        setReload={setReload}
+        id={id}
+        setIsLoaded={setIsLoaded}
         loaded={loaded}
       />
-      {flag === "ExploreChannels" && (
-        <ExploreChannels open={open} setOpen={setOpen} />
-      )}
-      {flag === "CreateChannels" && (
+      {flag === "ExploreChannels" ? (
+        <ExploreChannels
+          open={open}
+          setOpen={setOpen}
+          error={error}
+          errorMessage={errorMessage}
+        />
+      ) : flag === "CreateChannels" ? (
         <CreateChannels open={open} setOpen={setOpen} />
+      ) : (
+        <InviteFriends open={open} setOpen={setOpen} id={id} roomId={roomId} />
       )}
       <div className="w-full h-full">
-        <NavBar open={openSideBar} setOpen={setOpenSideBar} />
-        {isIndividual === "Individual" ? <ConversationIndividual
-          userName={"three"}
-          id={id}
-        /> : ""}
+        <NavBar
+          open={openSideBar}
+          setOpen={setOpenSideBar}
+          setOpenSubSideBar={setOpenSubSideBar}
+        />
+        {isIndividual === "Individual" ? (
+          <ConversationIndividual
+            userName={"three"}
+            id={id}
+            socket={socket}
+            setReload={setReload}
+            reload={reload}
+          />
+        ) : (
+          <ConversationChannel
+            userName={"three"}
+            id={roomId}
+            socket={socket}
+            setReload={setReload}
+            reload={reload}
+          />
+        )}
       </div>
     </div>
   );

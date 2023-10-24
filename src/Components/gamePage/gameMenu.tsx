@@ -31,7 +31,7 @@ const Gamemenu = (props: any) => {
         className="bg-pearl space-y-10"
       >
         <DialogHeader className=" flex justify-center items-center text-very-dark-purple font-Passion-One text-3xl">
-          Wellcome
+          Welcome
         </DialogHeader>
         <DialogBody className=" flex justify-center items-center flex-row text-lg font-Poppins ">
         choose your map

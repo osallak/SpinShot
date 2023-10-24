@@ -25,7 +25,7 @@ const SubsidebarSecond = (props: any) => {
 
 
   return (
-    <div className=" fixed top-[70px] md:top-2 md:ml-[105px] ml-[65px] w-[70%] z-50  h-full c-gb:h-full  backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] ">
+    <div className={` fixed top-[75px] md:top-2 md:ml-[105px] ml-[65px] w-[70%] z-50 h-[93%] md:h-[98%]  backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] `}>
       <div className=" text-[10px] sm:text-[20px] md:text-[35px] font-Poppins font-extrabold text-pearl p-6 space-y-3">
         <h1>Profile</h1>
         <div className=" w-[70%] opacity-40">
@@ -45,7 +45,7 @@ const SubsidebarSecond = (props: any) => {
               }`}
               onClick={() => handle(button.id, button.route)}
             >
-              <div className="w-[80%] h-full flex justify-start items-center text-[10px] sm:text-[20px]">
+              <div className="w-[80%] h-full flex justify-start items-center text-[10px] sm:text-[20px] ">
                 {button.text}
                 {button.text === "Security" ? (
                   <div

@@ -1,17 +1,17 @@
 "use client";
 import logoWhite from "../../../../public/logoWhite.svg";
 import Image from "next/image";
-import search from "../../../../public/search.svg";
-import friend from "../../../../public/friend.svg";
-import message from "../../../../public/message.svg";
-import profile from "../../../../public/profile.svg";
-import game from "../../../../public/game.svg";
 import test1 from "../../../../public/test1.svg";
 import logout from "../../../../public/logout.svg";
 import { MouseEvent, useEffect, useState } from "react";
 import parseJwt from "@/utils/parsJwt";
 import { useRouter } from "next/router";
 import { useAppSelector } from "../../../../redux_tool";
+import friend from "../../../../public/friend.svg";
+import search from "../../../../public/search.svg";
+import message from "../../../../public/message.svg";
+import profile from "../../../../public/profile.svg";
+import game from "../../../../public/game.svg";
 import Search from "@/Components/search/userSearch";
 
 const SideBar = (props:any) => {
@@ -74,7 +74,7 @@ const SideBar = (props:any) => {
                   alt={option.icon}
                   className="opacity-40 hover:opacity-100"
                 />{" "}
-                <Search isSearch={isSearch} setId={props.setId}/>
+                <Search isSearch={isSearch} />
               </button>
             ) : (
               <button onClick={(event) => changePage(event, option.route)}>
@@ -91,7 +91,7 @@ const SideBar = (props:any) => {
       </div>
       <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center">
         <div className="w-[70px] h-[70px] rounded-2xl relative flex justify-center items-center">
-          <picture>
+        <picture>
 
         <img
           onClick={handleLogOut}

@@ -36,15 +36,7 @@ const ResetPassword = () => {
   console.log(status);
 
   const hendleChange = () => {
-    console.log("11")
-    checkPassword();
-    console.log("22")
-    if (status?.status == 200) {
       upDatePasswd()
-    }
-    else {
-      toast.error("Password incorrect ");
-    }
     // const parss = /^.{6,}$/;
     // {
     //   password == "123456" && parss.test(ConfirmPassword)
@@ -53,28 +45,28 @@ const ResetPassword = () => {
     // }
   };
 
-  const checkPassword = async () => { 
-    try {
-      const token = localStorage.getItem("token");
-      if (token)
-      {
-        const response = await axios.put(
-          `${ip}/users/me/password`,
-          {
-            password: password,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-          );
-          setStatus(response);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const checkPassword = async () => { 
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     if (token)
+  //     {
+  //       const response = await axios.put(
+  //         `${ip}/users/me/password`,
+  //         {
+  //           password: password,
+  //         },
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //         );
+  //         setStatus(response);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const upDatePasswd = async () => {
     try {
@@ -93,6 +85,7 @@ const ResetPassword = () => {
             },
           }
           );
+          console.log(response);
       }
     } catch (error) {
       console.error(error);

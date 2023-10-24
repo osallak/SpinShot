@@ -52,7 +52,7 @@ return (
                 {bu.text}
                 {bu.text === "Security" ? (
                   <div
-                    className={`flex justify-end items-center rounded-2xl h-20 w-[100%]`}
+                    className={`flex justify-end items-center rounded-2xl h-20 w-[100%] `}
                     onClick={() => props.setClick(!props.isClick)}
                   >
                     <div className="">

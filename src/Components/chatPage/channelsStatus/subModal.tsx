@@ -1,55 +1,57 @@
 import ip from "@/utils/endPoint";
-import token from "@/utils/token";
+import parseJwt from "@/utils/parsJwt";
 import { Dialog, Transition } from "@headlessui/react";
 import axios from "axios";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { ChangeEvent, Fragment, useState } from "react";
+import toast from "react-hot-toast";
 import lock from "../../../../public/lock.svg";
 
 const SubModal = (props: {
   open: boolean;
   setOpen: Function;
+  setExploreClose: Function;
   type: string;
   name: string;
 }) => {
   const [password, setPassword] = useState("");
+  const router = useRouter();
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   function closeModal() {
     props.setOpen(false);
   }
 
   const joinChannel = async (type: string) => {
-    if (type === "PUBLIC") {
-      try {
-        const res = await axios.post(
-          `${ip}/room/join`,
-          { type, name: props.name },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("res from room join : ", res);
-        props.setOpen(false);
-      } catch (error: any) {
-        console.log("error from room join : ", error);
-      }
-    } else if (type === "PROTECTED")
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
     try {
-      const res = await axios.post(
-        `${ip}/room/join`,
-        { type, name: props.name, password },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-        );
-        console.log("res from room join : ", res);
-        props.setOpen(false);
+      const params: any = {
+        type: type,
+        name: props.name,
+      };
+      if (type === "PROTECTED") params["password"] = password;
+      const res = await axios.post(`${ip}/room/join`, params, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      props.setExploreClose(false);
+      props.setOpen(false);
+      toast.success(`welcome to ${props.name}`);
     } catch (error: any) {
-      console.log("error from room join : ", error);
+      setError(true);
+      setErrorMessage(error.response.data);
     }
   };
 
@@ -58,11 +60,9 @@ const SubModal = (props: {
     setPassword(event.target.value);
   };
 
-  console.log("status", props.type);
-
   return (
     <Transition appear show={props.open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={closeModal}>
+      <Dialog as="div" className="relative z-50" onClose={closeModal}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -93,6 +93,11 @@ const SubModal = (props: {
                       <span className="font-Poppins text-very-dark-purple px-4 font-semibold w-full lg:text-lg md:text-md sm:text-sm text-xs">
                         Enter the password of the channel
                       </span>
+                      {error && (
+                        <span className="text-red-900 font-poppins">
+                          {errorMessage}
+                        </span>
+                      )}
                       <div className="border w-full md:h-10 sm:h-9 h-8 rounded-full bg-very-dark-purple flex flex-row justify-center items-center pl-4">
                         <Image
                           src={lock}
@@ -121,6 +126,31 @@ const SubModal = (props: {
                       <span className="font-Poppins text-very-dark-purple px-4 font-semibold w-full lg:text-lg md:text-md sm:text-sm text-xs">
                         welcome to this channel
                       </span>
+                      {error && (
+                        <span className="text-red-900 font-poppins">
+                          {errorMessage}
+                        </span>
+                      )}
+                      <div className="w-full md:h-10 sm:h-9 h-8 flex justify-center items-center">
+                        <button
+                          onClick={() => joinChannel(props.type)}
+                          className="flex justify-center items-center md:w-[100px] sm:w-[85px] w-[70px] h-full bg-peridot font-Passion-One text-very-dark-purple rounded-full lg:text-lg md:text-md sm:text-sm text-xs focus:outline-none outline-none"
+                        >
+                          Confirme
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  {props.type === "PRIVATE" && (
+                    <div className="flex justify-center items-center flex-col space-y-2">
+                      <span>
+                        If you are invited to this channel you can enter
+                      </span>
+                      {error && (
+                        <span className="text-red-900 font-poppins">
+                          {errorMessage}
+                        </span>
+                      )}
                       <div className="w-full md:h-10 sm:h-9 h-8 flex justify-center items-center">
                         <button
                           onClick={() => joinChannel(props.type)}

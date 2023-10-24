@@ -5,6 +5,8 @@ import { getDate } from "./date";
 
 const Matchs = (props: { option: any }) => {
   const data_user = useAppSelector((state) => state.Profile);
+
+  console.log("--->", props.option);
   
   return (
     <div className="w-full h-full flex flex-row justify-between items-center  ">
@@ -12,7 +14,7 @@ const Matchs = (props: { option: any }) => {
         <picture>
           <img
             className=" w-[30px] h-[30px] sm:w-[50px] sm:h-[50px] c-3xl:w-[80px] c-3xl:h-[80px] rounded-2xl"
-            src={props.option.content?.opponent?.avatar}
+            src={props?.option?.content?.opponent?.avatar}
             alt=""
           />
         </picture>
@@ -20,9 +22,9 @@ const Matchs = (props: { option: any }) => {
       <div className="flex flex-col ">
         <div className="flex flex-row ">
           <h1 className="">
-            {textLimit(props.option.content?.opponent?.username, 8)}
+            {textLimit(props?.option?.content?.opponent?.username, 8)}
           </h1>
-          <h1 className="">({props.option.content?.opponent?.logs?.rank})</h1>
+          <h1 className="">({props?.option?.content?.opponent?.logs?.rank})</h1>
         </div>
         <div className="flex flex-row ">
           <h1 className="">{data_user?.profile?.username}</h1>
@@ -31,10 +33,10 @@ const Matchs = (props: { option: any }) => {
       </div>
       <div className="flex flex-col ">
         <div className="flex flex-row">
-          <h1 className="">{props.option.content?.history.opponentScore}</h1>
+          <h1 className="">{props?.option?.content?.history?.opponentScore}</h1>
         </div>
         <div className="flex flex-row">
-          <h1 className="">{props.option.content?.history?.userScore}</h1>
+          <h1 className="">{props?.option?.content?.history?.userScore}</h1>
         </div>
       </div>
       <div className="flex flex-col">

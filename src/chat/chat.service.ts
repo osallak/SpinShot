@@ -55,8 +55,8 @@ export class ChatService {
     }
   }
 
-  addUserToWorld(socket: Socket) {
-    const payload: JwtAuthPayload | undefined = this.extractJwtToken(socket);
+  async addUserToWorld(socket: Socket) {
+    const payload = await this.extractJwtToken(socket);
     if (!payload) {
       return false;
     }
@@ -71,8 +71,8 @@ export class ChatService {
     }
   }
 
-  deleteUserFromWorld(socket: Socket) {
-    const payload = this.extractJwtToken(socket) as JwtAuthPayload;
+  async deleteUserFromWorld(socket: Socket) {
+    const payload = (await this.extractJwtToken(socket)) as JwtAuthPayload;
     if (!payload) return;
     const user = this.World.get((payload as JwtAuthPayload).sub);
     if (user) {
@@ -102,6 +102,22 @@ export class ChatService {
           rightUserId: toFrom[1],
           status: FriendshipStatus.ACCEPTED,
         },
+        select: {
+          leftUser: {
+            select: {
+              id: true,
+              username: true,
+              avatar: true,
+            },
+          },
+          rightUser: {
+            select: {
+              id: true,
+              username: true,
+              avatar: true,
+            },
+          },
+        },
       });
     } catch {
       const receiver: Socket[] = this.getSocketsAssociatedWithUser(from);
@@ -112,22 +128,10 @@ export class ChatService {
       }
     }
     if (res && res.length > 0) {
-      return true;
+      return res;
     } else {
-      return false;
+      return undefined;
     }
-  }
-
-  getLastMessageSent(client: Socket): string {
-    const payload = this.extractJwtToken(client);
-
-    if (!payload) {
-      return '';
-    }
-
-    const user = this.World.get((payload as JwtAuthPayload).sub);
-
-    return user.getLastMessageSent();
   }
 
   async saveMessageInDatabase(body: SendMessageDto) {
@@ -148,10 +152,17 @@ export class ChatService {
       event: PRIVATE_MESSAGE,
       content: body,
     };
-    let isFriend: boolean = false;
+    let isFriend: any = undefined;
     try {
       isFriend = await this.isFriend(body.to, body.from);
-      if (isFriend) {
+      if (isFriend[0]) {
+        if (isFriend[0].leftUser.id == body.from) {
+          event.content.senderUsername = isFriend[0].leftUser.username;
+          event.content.senderAvatar = isFriend[0].leftUser.avatar;
+        } else {
+          event.content.senderUsername = isFriend[0].rightUser.username;
+          event.content.senderAvatar = isFriend[0].rightUser.avatar;
+        }
         const receiver = this.getSocketsAssociatedWithUser(body.to) ?? [];
         for (let i = 0; i < receiver.length; ++i) {
           receiver[i].emit(event.event, JSON.stringify(body));
@@ -173,6 +184,7 @@ export class ChatService {
         }
       }
     } catch (e) {
+      console.log(e);
       let user: ChatUser = this.World.get(body.from);
       const sender: Array<Socket> = this.getSocketsAssociatedWithUser(
         body.from,
@@ -218,7 +230,7 @@ export class ChatService {
     }
   }
 
-  extractJwtToken(client: Socket): JwtAuthPayload | undefined {
+  async extractJwtToken(client: Socket): Promise<JwtAuthPayload | undefined> {
     const bearerToken = client.handshake.headers?.authorization?.split(' ')[1];
     if (!bearerToken) {
       client.disconnect();
@@ -229,6 +241,13 @@ export class ChatService {
         bearerToken,
         this.configService.get('JWT_SECRET'),
       );
+      const uu = await this.userService.findOneById(
+        (decoded as JwtAuthPayload).sub,
+      );
+      if (!uu) {
+        client.disconnect();
+        return undefined;
+      }
       return decoded as JwtAuthPayload;
     } catch {
       client.disconnect();
@@ -408,6 +427,16 @@ export class ChatService {
                 },
               ],
             },
+            select: {
+              mutedAt: true,
+              muteDuration: true,
+              User: {
+                select: {
+                  username: true,
+                  avatar: true,
+                },
+              },
+            },
           },
         );
         if (sender) {
@@ -430,6 +459,8 @@ export class ChatService {
             message: 'You are not a member of this room',
           });
         }
+        body.senderUsername = sender?.User?.username;
+        body.senderAvatar = sender?.User?.avatar;
         roomMembers?.forEach((member) => {
           if (member?.userId !== body.from) {
             let memberSockets = this.getSocketsAssociatedWithUser(

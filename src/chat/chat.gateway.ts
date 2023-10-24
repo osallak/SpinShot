@@ -10,8 +10,11 @@ import {
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { ChatService } from './chat.service';
-import { Logger, ValidationPipe, UseGuards } from '@nestjs/common';
-import { WsBadRequestException } from './exceptions/ws-exceptions';
+import { Logger, ValidationPipe, UseGuards, UseFilters } from '@nestjs/common';
+import {
+  WsBadRequestException,
+  WsExceptionsFilter,
+} from './exceptions/ws-exceptions';
 import { ValidationError } from 'class-validator';
 import { SendMessageDto, sendRoomMessageDto } from './dtos/send-message.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -25,7 +28,9 @@ import {
 } from './chat.configuration';
 
 import { WsGuard } from './chat.guard';
+import { WebsocketExceptionsFilter } from 'src/games/filter/ws.filter';
 
+@UseFilters(WsExceptionsFilter)
 @WebSocketGateway(OPTIONS)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
@@ -41,7 +46,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @UseGuards(WsGuard)
   @SubscribeMessage(PRIVATE_MESSAGE)
   async handlePrivateMessage(
-    @MessageBody() body: SendMessageDto,
+    @MessageBody(
+      new ValidationPipe({
+        exceptionFactory: (errors: ValidationError[]) => {
+          return new WsBadRequestException(INVALID_DATA_MESSAGE);
+        },
+      }),
+    )
+    body: SendMessageDto,
     @ConnectedSocket() socket: Socket,
   ) {
     return this.chatService.sendPrivateMessage(body);

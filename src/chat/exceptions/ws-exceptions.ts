@@ -1,15 +1,29 @@
-import { WsException } from '@nestjs/websockets';
-import { BaseWsExceptionFilter } from '@nestjs/websockets';
-import { Catch, ArgumentsHost } from '@nestjs/common';
+import { ArgumentsHost, Catch, HttpException } from '@nestjs/common';
+import { BaseWsExceptionFilter, WsException } from '@nestjs/websockets';
 import { WsExceptionType } from '../types/exceptions.type';
-import { BaseExceptionFilter } from '@nestjs/core';
+import { Socket } from 'socket.io';
 
-@Catch()
-export class WsExceptionFilter extends BaseExceptionFilter {
-  catch(exception: unknown, host: ArgumentsHost) {
-    super.catch(exception, host);
+@Catch(WsException, HttpException)
+export class WsExceptionsFilter extends BaseWsExceptionFilter {
+  catch(exception: WsException | HttpException, host: ArgumentsHost) {
+    const client: Socket = host.switchToWs().getClient();
+    const error =
+      exception instanceof WsException
+        ? exception.getError()
+        : exception.getResponse();
+    const details =
+      error instanceof Object
+        ? { ...error }
+        : { event: 'error', statusCode: 500, message: error };
+    client.emit("exception",
+      JSON.stringify({
+        ...details,
+      }),
+    );
   }
 }
+
+
 
 export class WsTypeException extends WsException {
   readonly type: WsExceptionType;

@@ -1,10 +1,12 @@
-import { IsDateString, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
 
 export class SendMessageDto {
   @IsNotEmpty()
+  @IsUUID()
   from: string;
 
   @IsNotEmpty()
+  @IsUUID()
   to: string;
 
   @IsNotEmpty()
@@ -12,10 +14,13 @@ export class SendMessageDto {
 
   @IsNotEmpty()
   timestamp: string;
+
+  senderUsername?: string;
+  senderAvatar?: string;
 }
 
 export class sendRoomMessageDto {
-  @IsNotEmpty()
+  @IsUUID()
   from: string;
 
   @IsNotEmpty()
@@ -26,4 +31,7 @@ export class sendRoomMessageDto {
 
   @IsNotEmpty()
   timestamp: string;
+
+  senderUsername?: string;
+  senderAvatar?: string;
 }

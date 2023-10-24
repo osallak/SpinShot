@@ -3,7 +3,7 @@ import { SignOut, buttons, buttonsUser, letPlay } from "@/Components/ui/FolderDr
 import parseJwt from "@/utils/parsJwt";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../../redux_tool";
+import { useAppDispatch, useAppSelector } from "../../../redux_tool";
 import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
 import NavbarMobile from "../ui/FolderNavbar/navbarMobile";
 import SideBar from "../ui/folderSidebar/sideBar";
@@ -20,6 +20,7 @@ import Achievements from "./userAchievements.tsx/achievements";
 import MatchHistory from "./userMatchHistory/matchHistory";
 
 const ProfilePage = (props: { id: any }) => {
+  const data = useAppSelector((state) => state.Profile);
   const [isopen, setMenu] = useState(false);
   const [valid, setValid] = useState(false);
   const [opened, setOpned] = useState(false);
@@ -40,7 +41,6 @@ const ProfilePage = (props: { id: any }) => {
   const [table2, setTable2] = useState<TypePlay[]>([]);
   const [isClick, setClick] = useState(false);
 
-
   interface Type {
     id: number;
     text: string;
@@ -51,9 +51,10 @@ const ProfilePage = (props: { id: any }) => {
     icon: any;
     name: string;
   }
-  
+  console.log("data from profilePage: ", data.profile);
   
   const handleSearch = async () => {
+    console.log("handle search");
     const token = localStorage.getItem("token");
     const { id } = router.query;
     if (!token) {
@@ -61,11 +62,12 @@ const ProfilePage = (props: { id: any }) => {
       return;
     }
     try {
+      console.log("navoos profilePage: ", data.profile);
       await dispatch(getProfile(id)).unwrap();
       router.push(`/profile/${id}`);
       setValid(true);
     } catch (error) {
-      console.log(error);
+      console.log("navoos di" , error);
       // router.push("/error");
       return;
     }
@@ -83,8 +85,6 @@ const ProfilePage = (props: { id: any }) => {
     setMenu(!isopen);
   };
   
-console.log(router.query.id)
-
   const swetshProfile = (tab: Type[], play: TypePlay[]) => {
     setTable(tab);
     setTable2(play);

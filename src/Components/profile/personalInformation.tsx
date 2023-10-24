@@ -116,8 +116,8 @@ const PersonalInformation = (props: any) => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col space-y-10 md:space-y-0 md:flex-row  c-10xl:space-x-[10%] items-center">
-              <div className="w-full md:w-[49%] ">
+            <div className="flex flex-col space-y-10 md:space-y-0 md:flex-row  c-10xl:space-x-[10%] items-center ">
+              <div className="w-full md:w-[49%] h-14">
                 <FormInput
                   handleChange={handleChange}
                   name={"username"}
@@ -126,7 +126,7 @@ const PersonalInformation = (props: any) => {
                 />
               </div>
             </div>
-            <div className="flex flex-col space-y-8 md:space-y-0 md:flex-row   c-10xl:space-x-[15%] items-center">
+            <div className="flex flex-col space-y-8 md:space-y-0 md:flex-row   c-10xl:space-x-[15%] items-center ">
               <div className=" w-full">
                 <input
                   className=" bg-very-dark-purple w-full rounded-[20px] px-5 h-14 placeholder:text-pearl placeholder:text-opacity-40 outline-none"

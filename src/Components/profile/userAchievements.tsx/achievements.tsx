@@ -8,16 +8,18 @@ import Untouchable from "./untouchable";
 import Rookie from "./rookie";
 
 const Achievements = () => {
-  const achievement_data = useAppSelector((state) => state.Profile);
+  const profileData = useAppSelector((state) => state.Profile);
   const [level, setLevle] = useState<number>();
+
+  console.log("profileData: ", profileData);
 
   const getMyRank = (rank: number) => {
     setLevle(Math.floor(rank));
   };
 
   useEffect(() => {
-    getMyRank(achievement_data.profile?.profile?.level);
-  }, [achievement_data]);
+    getMyRank(profileData.profile?.level);
+  });
 
   return (
     <div className=" flex flex-col h-[1200px] c-gb:h-[910px]">

@@ -1,9 +1,7 @@
 "use client";
 import IMsgDataTypes from "@/types/iMsgDataTypes";
-import {
-  default as individualConversationType,
-  default as individualType,
-} from "@/types/individulaTypes";
+import individualType from "@/types/individualTypes";
+import individualConversationType from "@/types/individualConversationType";
 import { dropDownContent } from "@/utils/dropDownContent";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
@@ -28,6 +26,7 @@ import DropDown from "../ui/FolderDropDown/Dropdown";
 
 let token: any;
 const ConversationIndividual = (props: {
+	userId: string;
   userName: string;
   id: string;
   socket: any;
@@ -42,7 +41,7 @@ const ConversationIndividual = (props: {
     individualConversationAtom
   );
   const [individual, setIndividual] = useRecoilState(individualAtom);
-  const [userId, setUserId] = useState("");
+  // const [userId, setUserId] = useState("");
 
   const getTime = (time: string): string => {
     const date = new Date(Number(time));
@@ -59,6 +58,7 @@ const ConversationIndividual = (props: {
 
   const handleSendMessage = () => {
     setMessage("");
+		const token = localStorage.getItem("token");
     props.setReload(true);
     const messageData: IMsgDataTypes = {
       from: `${parseJwt(JSON.stringify(token)).sub}`,
@@ -66,7 +66,6 @@ const ConversationIndividual = (props: {
       content: currentMsg,
       timestamp: String(Date.now()),
     };
-
     setIndividual((prev: individualType[]) => {
       const newIndividual: individualType[] = prev.map((item: any) => {
         if (item.other.id === props.id) {
@@ -80,8 +79,16 @@ const ConversationIndividual = (props: {
       });
       return newIndividual;
     });
-    props.socket.emit("pm", messageData);
-  };
+    setIndividualConversation((prev: individualConversationType[]) => {
+		const newIndividualConversation: individualConversationType = {
+			sentAt: messageData.timestamp,
+			sender: messageData.from,
+			message: messageData.content,
+		};
+		return [...prev, newIndividualConversation];
+    });
+	props.socket.emit("pm", messageData);
+};
 
   const keySendMessage = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
@@ -89,33 +96,34 @@ const ConversationIndividual = (props: {
     }
   };
 
-  const fetchDataConversation = async () => {
-    token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/signin");
-      return;
-    }
-    const twoFA = parseJwt(JSON.stringify(token));
-    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
-      router.push("/signin");
-      return;
-    }
-    const jwtToken = parseJwt(token);
-    setUserId(jwtToken.sub);
-    try {
-      if (props.id && props.id !== "") {
-        const result = await axios.get(`${ip}/chat/individual/${props.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            id: jwtToken.sub,
-          },
-        });
-        setIndividualConversation(result.data);
-      }
-    } catch (error) {}
-  };
+//   const fetchDataConversation = async () => {
+//     token = localStorage.getItem("token");
+//     if (!token) {
+//       router.push("/signin");
+//       return;
+//     }
+//     const twoFA = parseJwt(JSON.stringify(token));
+//     if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+//       router.push("/signin");
+//       return;
+//     }
+//     console.log("data fetched in every change");
+//     const jwtToken = parseJwt(token);
+//     setUserId(jwtToken.sub);
+//     try {
+//       if (props.id && props.id !== "") {
+//         const result = await axios.get(`${ip}/chat/individual/${props.id}`, {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//           params: {
+//             id: jwtToken.sub,
+//           },
+//         });
+//         setIndividualConversation(result.data);
+//       }
+//     } catch (error) {}
+//   };
 
   const goToUser = (event: MouseEvent<HTMLButtonElement>, id: string) => {
     event.preventDefault();
@@ -132,10 +140,10 @@ const ConversationIndividual = (props: {
     setCurrentMsg(message);
   }, [message]);
 
-  useEffect(() => {
-    fetchDataConversation();
-    props.setReload(false);
-  }, [props.id, props.reload]);
+//   useEffect(() => {
+//     fetchDataConversation();
+//     // props.setReload(false);
+//   }, [props.id]);
 
   useEffect(() => {
     const conversationDiv: any = chatContainerRef.current;
@@ -204,28 +212,28 @@ const ConversationIndividual = (props: {
                     <div key={index}>
                       <div
                         className={`flex ${
-                          items.sender != userId
+                          items.sender != props.userId
                             ? "flex-row-reverse space-x-reverse space-x-5"
                             : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
                         } justify-end`}
                       >
                         <div
                           className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] md:min-h-[70px] min-h-[50px] flex justify-center rounded-xl ${
-                            items.sender != userId
+                            items.sender != props.userId
                               ? "items-start bg-peridot text-very-dark-purple font-bold"
                               : "items-end bg-very-dark-purple text-pearl font-medium"
                           } flex-col md:space-y-1 space-y-0 md:p-2 p-1`}
                         >
                           <div
                             className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
-                              items.sender != userId
+                              items.sender != props.userId
                                 ? "flex-row space-x-2"
                                 : "flex-row-reverse space-x-reverse space-x-2"
                             }`}
                           >
                             <span
                               className={`${
-                                items.sender !== userId
+                                items.sender !== props.userId
                                   ? "text-very-dark-purple pl-3"
                                   : "text-pearl pr-3"
                               }`}
@@ -249,7 +257,7 @@ const ConversationIndividual = (props: {
                             </span>
                             <span
                               className={`text-[10px] font-light h-full ${
-                                items.sender !== userId
+                                items.sender !== props.userId
                                   ? "text-very-dark-purple"
                                   : "text-pearl"
                               }`}
@@ -259,7 +267,7 @@ const ConversationIndividual = (props: {
                           </div>
                           <span
                             className={`px-3 font-poppins font-light ${
-                              items.sender === userId
+                              items.sender === props.userId
                                 ? "text-pearl"
                                 : "text-very-dark-purple"
                             } md:text-lg sm:text-base text-sm`}

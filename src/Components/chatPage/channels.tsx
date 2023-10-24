@@ -36,38 +36,38 @@ const Channels = (props: {
     return res;
   };
 
-  const fetchDataSubSideBar = async () => {
-    if (router.query.id) {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        router.push("/signin");
-        return;
-      }
-      const twoFA = parseJwt(JSON.stringify(token));
-      if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
-        router.push("/signin");
-        return;
-      }
-      try {
-        const res = await axios.get(`${ip}/chat/all`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            id: twoFA.sub,
-          },
-        });
-        setChannel(res?.data?.room);
-        props.setReload(true);
-        props.setRoomId(res?.data?.room[0]?.id);
-      } catch (error) {}
-    }
-  };
+//   const fetchDataSubSideBar = async () => {
+//     if (router.query.id) {
+//       const token = localStorage.getItem("token");
+//       if (!token) {
+//         router.push("/signin");
+//         return;
+//       }
+//       const twoFA = parseJwt(JSON.stringify(token));
+//       if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+//         router.push("/signin");
+//         return;
+//       }
+//       try {
+//         const res = await axios.get(`${ip}/chat/all`, {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//           params: {
+//             id: twoFA.sub,
+//           },
+//         });
+//         setChannel(res?.data?.room);
+//         props.setReload(true);
+//         props.setRoomId(res?.data?.room[0]?.id);
+//       } catch (error) {}
+//     }
+//   };
 
-  useEffect(() => {
-    fetchDataSubSideBar();
-    props.setIsLoaded(true);
-  }, [router.query.id, router.isReady, props.searchValue]);
+//   useEffect(() => {
+//     fetchDataSubSideBar();
+//     props.setIsLoaded(true);
+//   }, [router.query.id, router.isReady, props.searchValue]);
 
   return (
     <div className="w-[99%] xl:px-4 px-2 hover:overflow-auto overflow-hidden flex items-center h-[68%] min-h-[100px]">

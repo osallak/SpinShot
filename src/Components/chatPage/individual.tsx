@@ -1,5 +1,5 @@
 "use client";
-import individualType from "@/types/individulaTypes";
+import individualType from "@/types/individualTypes";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
@@ -34,65 +34,6 @@ const Individual = (props: {
     setClicked(index);
     props.setId(id);
   };
-
-  const fetchDataSubSideBar = async () => {
-    if (router.query.id) {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        router.push("/signin");
-        return;
-      }
-      const twoFA = parseJwt(JSON.stringify(token));
-      if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
-        router.push("/signin");
-        return;
-      }
-      try {
-        const res = await axios.get(`${ip}/chat/all`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            id: twoFA.sub,
-          },
-        });
-        setIndividual(res?.data?.individual);
-        props.setReload(true);
-        const returnedId = res.data?.individual.find(
-          (items: any) => items.other.id === router.query.id
-        );
-        if (returnedId) props.setId(returnedId.other.id);
-        else {
-          if (router.query.id === parseJwt(token).sub) {
-            props.setId(res?.data?.individual[0]?.other?.id);
-          } else {
-            const fromFriends: any = currentFriend.find(
-              (items: any) => items.id === router.query.id
-            );
-            if (fromFriends) props.setId(fromFriends.id);
-            setIndividual((prev: individualType[]) => {
-              const newConv: individualType = {
-                message: "",
-                other: {
-                  avatar: fromFriends.avatar,
-                  id: fromFriends.id,
-                  username: fromFriends.username,
-                },
-                sender: "",
-                sentAt: "",
-              };
-              return [newConv, ...prev] as any;
-            });
-          }
-        }
-      } catch (error) {}
-    }
-  };
-
-  useEffect(() => {
-    fetchDataSubSideBar();
-    props.setIsLoaded(true);
-  }, [router.query.id, router.isReady]);
 
   return (
     <div className="w-[99%] xl:px-4 px-2 hover:overflow-auto overflow-hidden h-[68%] min-h-[100px] flex items-center">

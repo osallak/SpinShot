@@ -155,7 +155,7 @@ export class ChatService {
     let isFriend: any = undefined;
     try {
       isFriend = await this.isFriend(body.to, body.from);
-      if (isFriend[0]) {
+      if (isFriend && isFriend[0]) {
         if (isFriend[0].leftUser.id == body.from) {
           event.content.senderUsername = isFriend[0].leftUser.username;
           event.content.senderAvatar = isFriend[0].leftUser.avatar;

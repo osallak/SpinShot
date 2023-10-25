@@ -7,12 +7,12 @@ import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import {
-  KeyboardEvent,
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
+	KeyboardEvent,
+	MouseEvent,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
 } from "react";
 import { useRecoilState } from "recoil";
 import admin from "../../../public/adminIcon.svg";
@@ -24,9 +24,9 @@ import settings from "../../../public/settingIcon.svg";
 import threePoint from "../../../public/threePoint.svg";
 import threePointforPeridot from "../../../public/threePointforPeridot.svg";
 import {
-  blockedUsersAtom,
-  channelAtom,
-  channelConversationAtom,
+	blockedUsersAtom,
+	channelAtom,
+	channelConversationAtom,
 } from "../context/recoilContextChannel";
 import DropDownChannel from "../ui/FolderDropDown/DropDownChannel";
 import SubUsersList from "./subUsersList";
@@ -34,11 +34,13 @@ import UsersList from "./usersList";
 
 let token: any;
 const ConversationChannel = (props: {
+  userId: string;
   userName: string;
   id: string;
   socket: any;
   setReload: Function;
   reload: boolean;
+  openSubSideBar: boolean;
 }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [currentMsg, setCurrentMsg] = useState("");
@@ -50,7 +52,6 @@ const ConversationChannel = (props: {
   const [usersList, setUsersList] = useState<usersListType[]>([]);
   const [type, setType] = useState("");
   const [channel, setChannel] = useRecoilState(channelAtom);
-  const [userId, setUserId] = useState("");
   const [blockedUsers, setBlockedUsers] = useRecoilState(blockedUsersAtom);
   const [setting, setSettings] = useState(false);
   const [content, setContent] = useState<any[]>([]);
@@ -85,6 +86,13 @@ const ConversationChannel = (props: {
   };
 
   const handleSendMessage = () => {
+    const token = localStorage.getItem("token");
+		const jwtToken = parseJwt(JSON.stringify(token));
+		if (!token || jwtToken.isTwoFactorEnabled && !jwtToken.isTwoFaAuthenticated) {
+			router.push("/signin");
+			return;
+		}
+    if (currentMsg === "") return;
     setMessage("");
     props.setReload(true);
     const messageData: any = {
@@ -92,7 +100,58 @@ const ConversationChannel = (props: {
       roomName: `${props.id}`,
       content: currentMsg,
       timestamp: String(Date.now()),
+      senderUsername: props.userName,
+      senderAvatar: "",
     };
+    setChannel((prev: channelType[]) => {
+      const newChannel = prev.map((item: channelType) => {
+        if (item.id === props.id) {
+          if (item.messages.length !== 0) {
+            const updatedMessages = item.messages.map((message) => {
+              return {
+                ...message,
+                message: currentMsg,
+                sentAt: messageData.timestamp,
+                user: {
+                  avatar: "",
+                  id: props.userId,
+                  username: props.userName,
+                },
+              };
+            });
+            return { ...item, messages: updatedMessages };
+          } else {
+            return {
+              ...item,
+              messages: [
+                {
+                  message: currentMsg,
+                  sentAt: messageData.timestamp,
+                  user: {
+                    avatar: "",
+                    id: props.userId,
+                    username: props.userName,
+                  },
+                },
+              ],
+            };
+          }
+        } else return item;
+      });
+      return newChannel;
+    });
+    setConversationChannel((prev: messagesType[]) => {
+      const newConversationChannel: messagesType = {
+        message: messageData.content,
+        sentAt: messageData.timestamp,
+        user: {
+          avatar: "",
+          id: props.userId,
+          username: props.userName,
+        },
+      };
+      return [...prev, newConversationChannel];
+    });
     props.socket.emit("gm", messageData);
   };
 
@@ -100,36 +159,6 @@ const ConversationChannel = (props: {
     if (event.key === "Enter") {
       handleSendMessage();
     }
-  };
-
-  const fetchDataConversation = async () => {
-    token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/signin");
-      return;
-    }
-    const twoFA = parseJwt(JSON.stringify(token));
-    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
-      router.push("/signin");
-      return;
-    }
-    const jwtToken = parseJwt(token);
-    setUserId(jwtToken.sub);
-    try {
-      if (props.id && props.id !== "") {
-        const result = await axios.get(`${ip}/room/individual/${props.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            id: props.id,
-          },
-        });
-        result.data.messages.reverse();
-        setConversationChannel(result.data.messages);
-        setBlockedUsers(result?.data?.blockedUsers);
-      }
-    } catch (error) {}
   };
 
   const fetchUsersList = async () => {
@@ -213,11 +242,6 @@ const ConversationChannel = (props: {
   }, [message]);
 
   useEffect(() => {
-    fetchDataConversation();
-    props.setReload(false);
-  }, [props.id, props.reload]);
-
-  useEffect(() => {
     const conversationDiv: any = chatContainerRef.current;
     if (conversationDiv) {
       conversationDiv.scrollTop = conversationDiv.scrollHeight;
@@ -232,10 +256,10 @@ const ConversationChannel = (props: {
           setOpen={setOpenUsersList}
           id={props.id}
           data={usersList}
-          userId={userId}
+          userId={props.userId}
         />
       )}
-      <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
+      <div className={`bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col ${props.openSubSideBar && "opacity-5"}`}>
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">
             <div className="flex justify-center items-center space-x-2 flex-row">
@@ -288,28 +312,28 @@ const ConversationChannel = (props: {
                     <div
                       key={index}
                       className={`flex ${
-                        items.user.id != userId
+                        items.user.id != props.userId
                           ? "flex-row-reverse space-x-reverse space-x-5"
                           : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
                       } justify-end`}
                     >
                       <div
                         className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] md:min-h-[70px] min-h-[50px] flex justify-between rounded-xl ${
-                          items.user.id != userId
+                          items.user.id != props.userId
                             ? "items-center bg-peridot text-very-dark-purple font-bold flex-row space-x-reverse"
                             : "items-center bg-very-dark-purple text-pearl font-medium flex-row-reverse"
                         } flex-row md:space-y-1 space-y-0 md:p-2 p-1`}
                       >
                         <div
                           className={`flex flex-col x-pp:w-[650px] 2xl:w-[550px] xl:w-[450px] lg:w-[80%] w-[90%]  ${
-                            items.user.id != userId
+                            items.user.id != props.userId
                               ? "items-start bg-peridot text-very-dark-purple font-bold"
                               : "items-end bg-very-dark-purple text-pearl font-medium"
                           }`}
                         >
                           <div
                             className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
-                              items.user.id != userId
+                              items.user.id != props.userId
                                 ? "flex-row space-x-2"
                                 : "flex-row-reverse space-x-reverse space-x-2"
                             }`}
@@ -317,18 +341,18 @@ const ConversationChannel = (props: {
                             <button
                               onClick={() => goToUser(items.user.id)}
                               className={`font-bold ${
-                                items.user.id !== userId
+                                items.user.id !== props.userId
                                   ? "text-very-dark-purple pl-3"
                                   : "text-pearl pr-3"
                               }`}
                             >
-                              {items.user.id === userId
+                              {items.user.id === props.userId
                                 ? "you"
                                 : items.user.username}
                             </button>
                             <span
                               className={`text-[10px] font-light h-full ${
-                                items.user.id !== userId
+                                items.user.id !== props.userId
                                   ? "text-very-dark-purple"
                                   : "text-pearl"
                               }`}
@@ -338,7 +362,7 @@ const ConversationChannel = (props: {
                           </div>
                           <span
                             className={`px-3 font-poppins font-light ${
-                              items.user.id === userId
+                              items.user.id === props.userId
                                 ? "text-pearl"
                                 : "text-very-dark-purple"
                             } md:text-lg sm:text-base text-sm`}
@@ -346,7 +370,7 @@ const ConversationChannel = (props: {
                             {items.message}
                           </span>
                         </div>
-                        {items.user.id === userId ? (
+                        {items.user.id === props.userId ? (
                           <button
                             onClick={(event) => handleOpenLeaveList(event)}
                           >

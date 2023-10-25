@@ -59,7 +59,6 @@ const Signin = () => {
         password,
       });
       const token = parseJwt(res?.data?.token);
-      console.log("res.data.token: ", res.data.token)
       setTmpToken(res?.data?.token);
       if (token.isTwoFactorEnabled === true) {
         Router.push("/twoFactorAuthentication");

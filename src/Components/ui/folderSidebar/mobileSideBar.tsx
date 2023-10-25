@@ -12,6 +12,7 @@ import profile from "../../../../public/profile.svg";
 import search from "../../../../public/search.svg";
 import { useAppDispatch, useAppSelector } from "../../../../redux_tool";
 import { getProfile } from "../../../../redux_tool/redusProfile/profileThunk";
+import Search from "@/Components/search/userSearch";
 
 const MobileSideBar = (props: {
   setOpenSubSideBar?: Function;
@@ -23,14 +24,17 @@ const MobileSideBar = (props: {
   const [icons, setIcons] = useState<any>([]);
   const data = useAppSelector((state) => state.Profile);
   const dispatch = useAppDispatch();
+  const [isSearch, setSearch] = useState(false);
 
   const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {
     event.preventDefault();
     const page = path.split("/");
+    if (props.openSubSideBar && props.flag === page[1]) {
+      if (props.setOpenSubSideBar) props.setOpenSubSideBar(false);
+    }
     if (props.openSubSideBar || props.flag !== page[1]) Router.push(path);
     else {
-      if (props.setOpenSubSideBar)
-        props.setOpenSubSideBar(true);
+      if (props.setOpenSubSideBar) props.setOpenSubSideBar(true);
     }
   };
 
@@ -94,13 +98,14 @@ const MobileSideBar = (props: {
               key={index}
               className="w-full h-[40px] flex items-center justify-center opacity-40 hover:opacity-100"
             >
-              {option.route != "/Search" ? (
-                <button onClick={(event) => changePage(event, option.route)}>
+              {option.route === "/search" ? (
+                <button onClick={() => setSearch(!isSearch)}>
                   {" "}
                   <Image src={option.icon} alt="" className="w-5" />{" "}
+                  <Search isSearch={isSearch} />
                 </button>
               ) : (
-                <button>
+                <button onClick={(event) => changePage(event, option.route)}>
                   {" "}
                   <Image src={option.icon} alt="" className="w-5" />{" "}
                 </button>

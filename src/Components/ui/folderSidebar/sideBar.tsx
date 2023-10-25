@@ -14,9 +14,9 @@ import profile from "../../../../public/profile.svg";
 import game from "../../../../public/game.svg";
 import Search from "@/Components/search/userSearch";
 
-const SideBar = (props:any) => {
+const SideBar = (props: any) => {
   const Router = useRouter();
-  const data = useAppSelector((state) => (state.Profile))
+  const data = useAppSelector((state) => state.Profile);
   const [hovered, setHovered] = useState(false);
   const [isSearch, setSearch] = useState(false);
 
@@ -24,7 +24,19 @@ const SideBar = (props:any) => {
 
   const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {
     event.preventDefault();
-    Router.push(path);
+    const page = path.split("/");
+    if (props.openSubSideBar && props.flag === page[1]) {
+      if (props.setOpenSubSideBar) props.setOpenSubSideBar(false);
+    }
+    if (
+      props.openSubSideBar ||
+      props.flag !== page[1] ||
+      window.innerWidth > 960
+    )
+      Router.push(path);
+    else {
+      if (props.setOpenSubSideBar) props.setOpenSubSideBar(true);
+    }
   };
 
   const handleHover = () => {
@@ -43,12 +55,27 @@ const SideBar = (props:any) => {
   useEffect(() => {
     setIcons([
       { icon: search, route: "/search" },
-    { icon: profile, route: `/profile/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}` },
-    { icon: message, route: `/messages/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}` },
-    { icon: friend, route: "/friends" },
-    { icon: game, route: `/game/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}` },
-    ])
-  }, [])
+      {
+        icon: profile,
+        route: `/profile/${
+          parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+        }`,
+      },
+      {
+        icon: message,
+        route: `/messages/${
+          parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+        }`,
+      },
+      { icon: friend, route: "/friends" },
+      {
+        icon: game,
+        route: `/game/${
+          parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+        }`,
+      },
+    ]);
+  }, []);
 
   return (
     <div
@@ -56,7 +83,14 @@ const SideBar = (props:any) => {
     >
       <div className="w-full h-[10%] min-h-[100px] flex justify-center items-center flex-col">
         <div className="flex justify-center items-center h-full">
-          <Image src={logoWhite} alt="white logo" className="h-[75px] aspect-square w-auto" width={200} height={200} priority={true}/>
+          <Image
+            src={logoWhite}
+            alt="white logo"
+            className="h-[75px] aspect-square w-auto"
+            width={200}
+            height={200}
+            priority={true}
+          />
         </div>
         <div className="w-[80%] border border-pearl border-opacity-40"></div>
       </div>
@@ -91,29 +125,30 @@ const SideBar = (props:any) => {
       </div>
       <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center">
         <div className="w-[70px] h-[70px] rounded-2xl relative flex justify-center items-center">
-        <picture>
-
-        <img
-          onClick={handleLogOut}
-          onMouseEnter={handleHover}
-          onMouseLeave={handleHoverOut}
-          className={`${hovered ? "opacity-10" : "opacity-100"} cursor-pointer rounded-2xl`}
-          src={data?.profile?.profile?.avatar}
-          alt="profile pic"
-          width={500}
-          height={500}
-          />
+          <picture>
+            <img
+              onClick={handleLogOut}
+              onMouseEnter={handleHover}
+              onMouseLeave={handleHoverOut}
+              className={`${
+                hovered ? "opacity-10" : "opacity-100"
+              } cursor-pointer rounded-2xl`}
+              src={data?.profile?.profile?.avatar}
+              alt="profile pic"
+              width={500}
+              height={500}
+            />
           </picture>
-        {hovered && (
-          <Image
-            onClick={handleLogOut}
-            onMouseEnter={handleHover}
-            onMouseLeave={handleHoverOut}
-            src={logout}
-            alt="logout"
-            className="absolute cursor-pointer rounded-2xl"
-          />
-        )}
+          {hovered && (
+            <Image
+              onClick={handleLogOut}
+              onMouseEnter={handleHover}
+              onMouseLeave={handleHoverOut}
+              src={logout}
+              alt="logout"
+              className="absolute cursor-pointer rounded-2xl"
+            />
+          )}
         </div>
       </div>
     </div>

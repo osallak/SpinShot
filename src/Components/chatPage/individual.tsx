@@ -1,11 +1,8 @@
 "use client";
-import individualType from "@/types/individulaTypes";
-import ip from "@/utils/endPoint";
-import parseJwt from "@/utils/parsJwt";
-import axios from "axios";
+import individualType from "@/types/individualTypes";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useState } from "react";
 import { useRecoilState } from "recoil";
 import { currentFriendsAtom } from "../context/recoilContext";
 import { individualAtom } from "../context/recoilContextIndividual";
@@ -18,81 +15,19 @@ const Individual = (props: {
   reload: boolean;
   setReload: Function;
   setIsLoaded: Function;
+  setOpen: Function;
 }) => {
   const [individual, setIndividual] = useRecoilState(individualAtom);
-  const [clicked, setClicked] = useState<number>(0);
-  const router = useRouter();
-  const [currentFriend, setCurrentFriends] = useRecoilState(currentFriendsAtom);
   const [lastMessage, setLastMessage] = useState("");
 
   const clickChat = (
     event: MouseEvent<HTMLButtonElement>,
-    index: number,
     id: string
   ) => {
+	props.setOpen(false);
     event.preventDefault();
-    setClicked(index);
     props.setId(id);
   };
-
-  const fetchDataSubSideBar = async () => {
-    if (router.query.id) {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        router.push("/signin");
-        return;
-      }
-      const twoFA = parseJwt(JSON.stringify(token));
-      if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
-        router.push("/signin");
-        return;
-      }
-      try {
-        const res = await axios.get(`${ip}/chat/all`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            id: twoFA.sub,
-          },
-        });
-        setIndividual(res?.data?.individual);
-        props.setReload(true);
-        const returnedId = res.data?.individual.find(
-          (items: any) => items.other.id === router.query.id
-        );
-        if (returnedId) props.setId(returnedId.other.id);
-        else {
-          if (router.query.id === parseJwt(token).sub) {
-            props.setId(res?.data?.individual[0]?.other?.id);
-          } else {
-            const fromFriends: any = currentFriend.find(
-              (items: any) => items.id === router.query.id
-            );
-            if (fromFriends) props.setId(fromFriends.id);
-            setIndividual((prev: individualType[]) => {
-              const newConv: individualType = {
-                message: "",
-                other: {
-                  avatar: fromFriends.avatar,
-                  id: fromFriends.id,
-                  username: fromFriends.username,
-                },
-                sender: "",
-                sentAt: "",
-              };
-              return [newConv, ...prev] as any;
-            });
-          }
-        }
-      } catch (error) {}
-    }
-  };
-
-  useEffect(() => {
-    fetchDataSubSideBar();
-    props.setIsLoaded(true);
-  }, [router.query.id, router.isReady]);
 
   return (
     <div className="w-[99%] xl:px-4 px-2 hover:overflow-auto overflow-hidden h-[68%] min-h-[100px] flex items-center">
@@ -103,7 +38,7 @@ const Individual = (props: {
               (individual as individualType[])?.map(
                 (items: individualType, index: number) => (
                   <button
-                    onClick={(event) => clickChat(event, index, items.other.id)}
+                    onClick={(event) => clickChat(event, items.other.id)}
                     key={index}
                     className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl md:h-20 h-14 ${
                       items.other.id === props.id
@@ -111,13 +46,15 @@ const Individual = (props: {
                         : "bg-transparent"
                     }`}
                   >
+					<div className="rounded-xl lg:h-[60px] md:h-[50px] h-[40px] lg:w-[60px] md:w-[50px] w-[40px] ">
                     <Image
                       src={items.other.avatar}
                       alt="test"
                       width={500}
                       height={500}
-                      className="md:w-14 sm:w-12 w-10 rounded-xl"
+                      className="h-full w-full rounded-xl"
                     />
+					</div>
                     <div className="flex justify-start items-start md:space-y-1 space-y-0 flex-col">
                       <p className="font-poppins flex justify-start text-pearl md:text-lg text-base font-semibold">
                         {items.other.username}
@@ -152,7 +89,7 @@ const Individual = (props: {
                   >
                     <button
                       onClick={(event) =>
-                        clickChat(event, index, items.other.id)
+                        clickChat(event, items.other.id)
                       }
                       key={index}
                       className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${

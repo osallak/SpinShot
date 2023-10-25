@@ -1,9 +1,6 @@
 import channelType from "@/types/channelTypes";
-import ip from "@/utils/endPoint";
-import parseJwt from "@/utils/parsJwt";
-import axios from "axios";
 import { useRouter } from "next/router";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useState } from "react";
 import { useRecoilState } from "recoil";
 import { channelAtom } from "../context/recoilContextChannel";
 
@@ -15,6 +12,7 @@ const Channels = (props: {
   reload: boolean;
   setReload: Function;
   setIsLoaded: Function;
+  setOpen: Function;
 }) => {
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [clicked, setClicked] = useState<number>(0);
@@ -27,47 +25,17 @@ const Channels = (props: {
   ) => {
     event.preventDefault();
     setClicked(index);
+	props.setOpen(false);
     props.setRoomId(id);
   };
 
   const sp = (name: string) => {
-    const res = name.split(" ");
-    if (res.length > 2) for (let i = 0; i < res.length; i++) res.pop();
-    return res;
-  };
-
-  const fetchDataSubSideBar = async () => {
-    if (router.query.id) {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        router.push("/signin");
-        return;
-      }
-      const twoFA = parseJwt(JSON.stringify(token));
-      if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
-        router.push("/signin");
-        return;
-      }
-      try {
-        const res = await axios.get(`${ip}/chat/all`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            id: twoFA.sub,
-          },
-        });
-        setChannel(res?.data?.room);
-        props.setReload(true);
-        props.setRoomId(res?.data?.room[0]?.id);
-      } catch (error) {}
+    if (name) {
+      const res = name.split(" ");
+      if (res.length > 2) for (let i = 0; i < res.length; i++) res.pop();
+      return res;
     }
   };
-
-  useEffect(() => {
-    fetchDataSubSideBar();
-    props.setIsLoaded(true);
-  }, [router.query.id, router.isReady, props.searchValue]);
 
   return (
     <div className="w-[99%] xl:px-4 px-2 hover:overflow-auto overflow-hidden flex items-center h-[68%] min-h-[100px]">
@@ -89,7 +57,7 @@ const Channels = (props: {
                     <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] h-full flex justify-center items-center">
                       <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] lg:h-[70px] md:h-[60px] sm:h-[50px] h-[40px] md:rounded-2xl rounded-xl bg-white/20 flex justify-center items-center">
                         <div className="font-Poppins md:text-4xl sm:text-3xl text-2xl font-thin text-very-dark-purple flex justify-center items-center">
-                          {sp(items.id).map((charName, index) => (
+                          {sp(items.id)?.map((charName, index) => (
                             <p key={index} className="uppercase">
                               {charName[0]}
                             </p>
@@ -144,7 +112,7 @@ const Channels = (props: {
                       <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] h-full flex justify-center items-center">
                         <div className="lg:w-[70px] md:w-[60px] sm:w-[50px] w-[40px] lg:h-[70px] md:h-[60px] sm:h-[50px] h-[40px] md:rounded-2xl rounded-xl bg-white/20 flex justify-center items-center">
                           <div className="font-Poppins md:text-4xl sm:text-3xl text-2xl font-thin text-very-dark-purple flex justify-center items-center">
-                            {sp(items.id).map((charName, index) => (
+                            {sp(items.id)?.map((charName, index) => (
                               <p key={index} className="uppercase">
                                 {charName[0]}
                               </p>

@@ -81,11 +81,10 @@ const Chat = () => {
       },
     });
     socket.on("connect", () => console.log("connected"));
-		console.log('----------------------- here ------------------');
-		
+	
     socket.on("pm", (data: any) => {
       const parsedData = JSON.parse(data);
-      console.log("***********************");
+			setId(parsedData.from);
 
 			setIndividual((prev: individualType[]) => {
         if (prev.length === 0) {
@@ -199,7 +198,7 @@ const Chat = () => {
       });
       setReload(true);
     });
-    socket.on("exception", (data: any) => console.log("exception"));
+    socket.on("exception", (data: any) => console.log("exception", data));
     socket.on("disconnect", (data: any) => console.log("disconnect"));
   };
 

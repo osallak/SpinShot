@@ -100,7 +100,6 @@ const ConversationIndividual = (props: {
       };
       return [...prev, newIndividualConversation];
     });
-		console.log("I sent the message *****");
     props.socket.emit("pm", messageData);
   };
 

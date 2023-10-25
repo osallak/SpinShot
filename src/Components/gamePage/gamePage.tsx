@@ -16,11 +16,10 @@ import Matchmaking from "./matchmaking";
 import { SocketContext } from "@/context/socket.context";
 import Counter from "./counter";
 
-
 let game: GameModel | null = null;
 
 const GamePage = (props: any) => {
-  const socket:any = useContext(SocketContext);
+  const socket: any = useContext(SocketContext);
   const [isopen, setMenu] = useState(false);
   const [opened, setOpned] = useState(false);
   const [mode, setMode] = useState<string>();
@@ -53,18 +52,20 @@ const GamePage = (props: any) => {
   };
 
   const errorEventCallback = (error: string) => {
+    console.log("error event");
     toast.error(error);
   };
 
   const cancelJoinCallback = () => {
+    console.log("cancel join");
     setCount(true);
     gameOver && setGameOver(false);
     setCancelJoin(true);
   };
-  
+
   const gameStartedCallback = (data: any) => {
+    console.log("game started");
     setCount(true);
-    // console.log("hana bdit ok");
     setWinnerCardState(true);
     setCancelJoin(false);
     setLoserCardState(true);
@@ -80,7 +81,6 @@ const GamePage = (props: any) => {
   const gameOverCallback = (data: any) => {
     setScore(null);
     setClear(true);
-    // console.log("game over ", data);
     setDataGame(null);
     setGamerState(data);
     setGameJustFinished(true);
@@ -90,7 +90,7 @@ const GamePage = (props: any) => {
     // setIsClick(true);
   };
 
-  const handleData = async (data:any) => {
+  const handleData = async (data: any) => {
     // console.log("after");
     const token = localStorage.getItem("token");
     if (!token) {
@@ -100,17 +100,14 @@ const GamePage = (props: any) => {
     try {
       // console.log("matchData men handleData", data);
       if (data?.opponent || data?.opponnet) {
-        let url = undefined
-        if (data?.opponnet)
-          url = `${ip}/users/profile/${data?.opponnet}`;
-        else
-          url = `${ip}/users/profile/${data?.opponent}`;
+        let url = undefined;
+        if (data?.opponnet) url = `${ip}/users/profile/${data?.opponnet}`;
+        else url = `${ip}/users/profile/${data?.opponent}`;
         const respo = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("setting 3afak: ", respo?.data);
         setDataGame(respo?.data);
         // console.log("after setting:", dataGame);
       }
@@ -146,31 +143,29 @@ const GamePage = (props: any) => {
   //     route.includes("/game") && !opened ? setOpned(true) : setOpned(false);
   //   }
   //   setPages("/game");
-    // setOpned(true);
-    // route ? setPages(route) : null;
+  // setOpned(true);
+  // route ? setPages(route) : null;
   // };
 
   // useEffect(() => {
-    // console.log("1111111");
-    // handleData();
-    // getDataOfUser();
-    // setDepend(false);
+  // console.log("1111111");
+  // handleData();
+  // getDataOfUser();
+  // setDepend(false);
   // }, []);
 
   useEffect(() => {
-    if (!socket)
-    return;
-    console.log("socket: ", socket);
+    if (!socket) return;
     handleResize();
     // const token = localStorage.getItem("token");
     // let socket: Socket = io(`ws://${socketIp}/games`, {
     //   extraHeaders: { Authorization: `Bearer ${token}` },
     // });
     socket.on("connect", () => {
+      console.log("socket: ", socket);
       console.log("connected......");
       socket.emit("message", "Message received on the server...");
     });
-
     socket.on("cancel-join", cancelJoinCallback);
     socket.on("error", errorEventCallback);
     socket.on("gameOver", gameOverCallback);
@@ -185,7 +180,7 @@ const GamePage = (props: any) => {
       // console.log("score update ", data);
       setScore(data);
       // game?.updateState(data);
-    })
+    });
     // setSocket(socket);
 
     if (typeof window !== "undefined") {
@@ -195,9 +190,9 @@ const GamePage = (props: any) => {
       };
     }
 
-    // return () => {
-    //   socket.disconnect();
-    // };
+    return () => {
+      socket.disconnect();
+    };
   }, [socket]);
 
   useEffect(() => {
@@ -221,19 +216,17 @@ const GamePage = (props: any) => {
     };
   }, []);
 
-
   useEffect(() => {
-    if (start){
+    if (start) {
       const timer = setInterval(() => {
         setCounter((prevCounter) => prevCounter - 1);
       }, 1000);
-    
+
       // return () => {
       //   clearInterval(timer);
       // };
     }
   }, [start]);
-
 
   return (
     <div
@@ -249,7 +242,7 @@ const GamePage = (props: any) => {
           isopen={isopen}
         />
       </div>
-  
+
       <div className={` flex flex-row c-gb:space-x-3 p-2 w-full  h-full `}>
         <SideBar />
         <SubSidebarGame
@@ -289,10 +282,10 @@ const GamePage = (props: any) => {
             ref={divRef}
           ></div>
         </div>
-        {opened && pages == "/game" &&(
+        {opened && pages == "/game" && (
           <SubsidebarSecondGame
-          // opened={opened}
-          setOpned={setOpned}
+            // opened={opened}
+            setOpned={setOpned}
             // depend={depend}
             matchData={matchData}
             // setDepend={setDepend}
@@ -331,10 +324,7 @@ const GamePage = (props: any) => {
         />
       )}
 
-      {
-        start && 
-        <Counter counter={counter} start={start}/>
-      }
+      {start && <Counter counter={counter} start={start} />}
       <Toaster />
     </div>
   );

@@ -49,7 +49,7 @@ const UploadImage = (props: {
     }
   };
 
-  const hendleUpdata = async () => {
+  const HandleUpdata = async () => {
     props.Switch(!open);
     try {
       const token = localStorage.getItem("token");
@@ -116,7 +116,7 @@ const UploadImage = (props: {
         <DialogFooter className="space-x-3">
           <button
             className=" bg-peridot rounded-full w-28 h-9"
-            onClick={hendleUpdata}
+            onClick={HandleUpdata}
           >
             <span className="text-very-dark-purple font-Passion-One text-lg">
               Verify

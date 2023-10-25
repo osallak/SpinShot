@@ -2,7 +2,7 @@ import {
   Dialog,
   DialogBody,
   DialogFooter,
-  DialogHeader
+  DialogHeader,
 } from "@material-tailwind/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -16,28 +16,27 @@ const Matchmaking = (props: any) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-
   // useEffect(() => {
 
   // }, [props.matchData, props.dataGame])
   const handleClick = () => {
     // setClear(true);
-
+    console.log("socket: ", props.socket);
+    console.log("leave queue");
     props.socket.emit("leaveQueue", () => console.log("leave queue"));
     props.socket.on("exception", () => console.log("exception: "));
     if (props.matchData) {
       props.socket.emit("leave");
     }
     // props.socket.emit("leave", () => {
-      //   console.log('leave');
-      // });
-      // props.setGameOver(true);
-      props.socket.on("disconnect", () => console.log("disconnect: "));
+    //   console.log('leave');
+    // });
+    // props.setGameOver(true);
+    props.socket.on("disconnect", () => console.log("disconnect: "));
     props.setIsClick(!props.isClick);
     props.setmatchData(null);
     props.setDataGame(null);
   };
-
 
   const getDataOfUaer = async () => {
     const token = localStorage.getItem("token");
@@ -54,7 +53,7 @@ const Matchmaking = (props: any) => {
   };
 
   // const cleanUp = () => {
-    // setClear(false);
+  // setClear(false);
   // }
 
   useEffect(() => {

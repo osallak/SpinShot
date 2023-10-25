@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SimpleButton from "../Buttons/simpleButton";
 import Maps from "./maps";
+import toast from "react-hot-toast";
 
 const SubSidebarGame = (props: any) => {
+  useEffect(() => {}, [props.matchData, props.socket]);
 
-  useEffect(() => {
-    
-  }, [props.matchData])
-
-  const hendleUpdata = () => {
+  const HandleUpdate = () => {
     console.log("socket game: ", props.socket);
-    props.socket.emit("joinQueue", {map: props.map});
+    console.log("socket status: ", props.socket.connected);
+    if (props.socket.connected) {
+      console.log("joined the Queue");
+      props.socket.emit("joinQueue", { map: props.map });
+    } else {
+      toast.error("You are not connected to the server");
+    }
     props.setIsClick(!props.isClick);
     // props.setDepend(true);
   };
@@ -21,7 +25,11 @@ const SubSidebarGame = (props: any) => {
     map3: "",
   });
 
-  const changeBackgroundmap = (mapId: string, type: string,  newColor: string) => {
+  const changeBackgroundmap = (
+    mapId: string,
+    type: string,
+    newColor: string
+  ) => {
     const updatedBackgroundmap: {
       [key: string]: string;
       map1: string;
@@ -62,7 +70,11 @@ const SubSidebarGame = (props: any) => {
         </div>
         <div className="absolute h-[4%]  w-[17%] top-[85%] flex justify-center items-center ">
           <div className="w-[150px] h-full">
-            <SimpleButton content="Play" onclick={hendleUpdata} gameSession={props.matchData}/>
+            <SimpleButton
+              content="Play"
+              onclick={HandleUpdate}
+              gameSession={props.matchData}
+            />
           </div>
         </div>
       </div>

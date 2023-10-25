@@ -36,7 +36,7 @@ const PersonalInformation = (props: any) => {
     country: null,
   });
 
-  const hendleUpdata = async () => {
+  const HandleUpdate = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/signin");
@@ -146,7 +146,7 @@ const PersonalInformation = (props: any) => {
       </div>
       <div className=" h-12 flex md:justify-end  justify-center items-center sm:px-28 ">
         <div className={`  w-24 sm:w-32  h-full`}>
-          <SimpleButton content="Save" onclick={hendleUpdata} />
+          <SimpleButton content="Save" onclick={HandleUpdate} />
         </div>
       </div>
       {/* <div>

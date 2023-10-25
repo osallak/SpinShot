@@ -37,10 +37,10 @@ const ResetPassword = () => {
 
 
 
-  const hendleChange = () => {
+  const HandleChange = () => {
     const parss = /^.{6,}$/;
     if ((!isStringEmptyOrWhitespace(NewPassword) && !isStringEmptyOrWhitespace(ConfirmPassword) && !isStringEmptyOrWhitespace(password)) && (parss.test(NewPassword) && parss.test(ConfirmPassword) && parss.test(password)) && (NewPassword == ConfirmPassword))
-      hendleUpdata()
+      HandleUpdata()
     else
       toast.error("Password incorrect ");
   };
@@ -68,7 +68,7 @@ const ResetPassword = () => {
   //   }
   // };
 
-  const hendleUpdata = async () => {
+  const HandleUpdata = async () => {
     try {
       console.log('ana hna');
       const token = localStorage.getItem("token");
@@ -145,7 +145,7 @@ const ResetPassword = () => {
       </div>
       <div className=" h-12 flex c-gb:justify-end  justify-center items-center sm:px-28 ">
         <div className={`  w-24 sm:w-32  h-full`}>
-          <SimpleButton content="Save" onclick={hendleChange} />
+          <SimpleButton content="Save" onclick={HandleChange} />
         </div>
         <div>
           <Toaster position="top-center" reverseOrder={false} />

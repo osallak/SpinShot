@@ -7,7 +7,7 @@ const Matchs = (props: { option: any }) => {
   const data_user = useAppSelector((state) => state.Profile);
   
   return (
-    <div className="w-full h-full flex flex-row justify-between items-center  ">
+    <div className="w-full h-full flex flex-row justify-between items-center px-5 c-gb:px-0 ">
       <div>
         <picture>
           <img

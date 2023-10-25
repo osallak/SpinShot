@@ -4,12 +4,13 @@ import Maps from './maps';
 
 const SubsidebarSecondGame = (props:any) => {
 
-  const hendleUpdata = () => {
+  const HandleUpdate = () => {
     props.socket.emit("joinQueue", {map: props.map});
     props.setIsClick(!props.isClick);
     props.setOpned(false);
     // props.setDepend(true);
   };
+
   const [backgroundmap, setBackgroundmap] = useState({
     map1: "very-dark-purple",
     map2: "",
@@ -59,7 +60,7 @@ const SubsidebarSecondGame = (props:any) => {
         </div>
         <div className="absolute h-[4%]  w-full top-[85%] flex justify-center items-center ">
           <div className="w-[100px] h-full">
-            <SimpleButton content="Play" onclick={hendleUpdata} gameSession={props.matchData} />
+            <SimpleButton content="Play" onclick={HandleUpdate} gameSession={props.matchData} />
           </div>
         </div>
       </div>

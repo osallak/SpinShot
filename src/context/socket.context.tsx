@@ -1,5 +1,5 @@
-import { socketIp } from "@/utils/endPoint";
-import React, { createContext, useEffect, useState } from "react";
+import ip from "@/utils/endPoint";
+import { createContext, useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
 
 const SocketContext = createContext<Socket | null>(null);
@@ -9,7 +9,7 @@ const SocketProvider = ({ children }: any) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const newSocket = io(`ws://${socketIp}/games`, {
+    const newSocket = io(`${ip}/games`, {
       extraHeaders: { Authorization: `Bearer ${token}` },
     });
     setSocket(newSocket);

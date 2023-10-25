@@ -29,6 +29,7 @@ const MatchHistory = () => {
       if (token) {
         const my_token = parseJwt(token);
         const id = my_token.sub;
+        console.log("id", id);
         const response = await axios.get(
           `${ip}/users/games/${id}?page=${page}&limit=${5}`,
           {
@@ -37,6 +38,8 @@ const MatchHistory = () => {
             },
           }
           );
+          console.log("page\n");
+          console.log("response.data.data", response.data);
           setPosts(response.data.data);
           setTotalPages(response.data.pagination.pageCount);
         }
@@ -46,15 +49,8 @@ const MatchHistory = () => {
     };
 
 
-
-
     useEffect(() => {
       fetchData();
-
-      return () => {
-        // if (posts)
-        // setPosts(null);
-      };
     },[page]);
 
     const totalMatch =

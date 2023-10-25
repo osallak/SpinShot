@@ -9,7 +9,7 @@ import { atom } from "recoil";
 
 export const individualAtom = atom({
   key: `individualAtom-${Math.random()}`,
-  default: [] as any[],
+  default: [] as any,
 });
 
 // export const individualConversationContext = createContext<

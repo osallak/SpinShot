@@ -7,12 +7,12 @@ import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import {
-  KeyboardEvent,
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
+	KeyboardEvent,
+	MouseEvent,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
 } from "react";
 import { useRecoilState } from "recoil";
 import admin from "../../../public/adminIcon.svg";
@@ -24,9 +24,9 @@ import settings from "../../../public/settingIcon.svg";
 import threePoint from "../../../public/threePoint.svg";
 import threePointforPeridot from "../../../public/threePointforPeridot.svg";
 import {
-  blockedUsersAtom,
-  channelAtom,
-  channelConversationAtom,
+	blockedUsersAtom,
+	channelAtom,
+	channelConversationAtom,
 } from "../context/recoilContextChannel";
 import DropDownChannel from "../ui/FolderDropDown/DropDownChannel";
 import SubUsersList from "./subUsersList";
@@ -34,7 +34,7 @@ import UsersList from "./usersList";
 
 let token: any;
 const ConversationChannel = (props: {
-	userId: string;
+  userId: string;
   userName: string;
   id: string;
   socket: any;
@@ -83,31 +83,15 @@ const ConversationChannel = (props: {
   const goToUser = (id: string) => {
     router.push(`/profile/${id}`);
   };
-  
-  [
-    {
-        "id": "channel",
-        "type": "PUBLIC",
-        "messages": [
-            {
-                "message": "salam",
-                "user": {
-                    "id": "88490282-fb23-4a18-b65b-024fb3a9b73c",
-                    "username": "second",
-                    "avatar": "https://cdn.intra.42.fr/users/060b0294e206cdf590243044aa096671/larbi.jpeg"
-                },
-                "sentAt": "1698178490324"
-            }
-        ]
-    }
-]
 
   const handleSendMessage = () => {
-	const token = localStorage.getItem("token");
-	if (!token) {
-	  router.push("/signin");
-	  return;
-	}
+    const token = localStorage.getItem("token");
+		const jwtToken = parseJwt(JSON.stringify(token));
+		if (!token || jwtToken.isTwoFactorEnabled && !jwtToken.isTwoFaAuthenticated) {
+			router.push("/signin");
+			return;
+		}
+    if (currentMsg === "") return;
     setMessage("");
     props.setReload(true);
     const messageData: any = {
@@ -115,19 +99,58 @@ const ConversationChannel = (props: {
       roomName: `${props.id}`,
       content: currentMsg,
       timestamp: String(Date.now()),
+      senderUsername: props.userName,
+      senderAvatar: "",
     };
-	setConversationChannel((prev: messagesType[]) => {
-		const newConversationChannel: messagesType = {
-			message: messageData.content,
-			sentAt: messageData.timestamp,
-			user: {
-				avatar: "",
-				id: props.userId,
-				username: props.userName,
-			}
-		}
-		return [...prev, newConversationChannel]
-	})
+    setChannel((prev: channelType[]) => {
+      const newChannel = prev.map((item: channelType) => {
+        if (item.id === props.id) {
+          if (item.messages.length !== 0) {
+            const updatedMessages = item.messages.map((message) => {
+              return {
+                ...message,
+                message: currentMsg,
+                sentAt: messageData.timestamp,
+                user: {
+                  avatar: "",
+                  id: props.userId,
+                  username: props.userName,
+                },
+              };
+            });
+            return { ...item, messages: updatedMessages };
+          } else {
+            return {
+              ...item,
+              messages: [
+                {
+                  message: currentMsg,
+                  sentAt: messageData.timestamp,
+                  user: {
+                    avatar: "",
+                    id: props.userId,
+                    username: props.userName,
+                  },
+                },
+              ],
+            };
+          }
+        } else return item;
+      });
+      return newChannel;
+    });
+    setConversationChannel((prev: messagesType[]) => {
+      const newConversationChannel: messagesType = {
+        message: messageData.content,
+        sentAt: messageData.timestamp,
+        user: {
+          avatar: "",
+          id: props.userId,
+          username: props.userName,
+        },
+      };
+      return [...prev, newConversationChannel];
+    });
     props.socket.emit("gm", messageData);
   };
 
@@ -136,36 +159,6 @@ const ConversationChannel = (props: {
       handleSendMessage();
     }
   };
-
-//   const fetchDataConversation = async () => {
-//     token = localStorage.getItem("token");
-//     if (!token) {
-//       router.push("/signin");
-//       return;
-//     }
-//     const twoFA = parseJwt(JSON.stringify(token));
-//     if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
-//       router.push("/signin");
-//       return;
-//     }
-//     const jwtToken = parseJwt(token);
-//     setUserId(jwtToken.sub);
-//     try {
-//       if (props.id && props.id !== "") {
-//         const result = await axios.get(`${ip}/room/individual/${props.id}`, {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//           },
-//           params: {
-//             id: props.id,
-//           },
-//         });
-//         result.data.messages.reverse();
-//         setConversationChannel(result.data.messages);
-//         setBlockedUsers(result?.data?.blockedUsers);
-//       }
-//     } catch (error) {}
-//   };
 
   const fetchUsersList = async () => {
     token = localStorage.getItem("token");
@@ -246,11 +239,6 @@ const ConversationChannel = (props: {
   useEffect(() => {
     setCurrentMsg(message);
   }, [message]);
-
-//   useEffect(() => {
-//     fetchDataConversation();
-//     props.setReload(false);
-//   }, [props.id, props.reload]);
 
   useEffect(() => {
     const conversationDiv: any = chatContainerRef.current;

@@ -26,7 +26,7 @@ import DropDown from "../ui/FolderDropDown/Dropdown";
 
 let token: any;
 const ConversationIndividual = (props: {
-	userId: string;
+  userId: string;
   userName: string;
   id: string;
   socket: any;
@@ -57,15 +57,27 @@ const ConversationIndividual = (props: {
   };
 
   const handleSendMessage = () => {
+    const token = localStorage.getItem("token");
+    const jwtToken = parseJwt(JSON.stringify(token));
+    if (
+      !token ||
+      (jwtToken.isTwoFactorEnabled && !jwtToken.isTwoFaAuthenticated)
+    ) {
+      router.push("/signin");
+      return;
+    }
+    if (currentMsg === "") return;
     setMessage("");
-		const token = localStorage.getItem("token");
     props.setReload(true);
+	
     const messageData: IMsgDataTypes = {
       from: `${parseJwt(JSON.stringify(token)).sub}`,
       to: `${props.id}`,
       content: currentMsg,
       timestamp: String(Date.now()),
+      senderUsername: props.userName,
     };
+
     setIndividual((prev: individualType[]) => {
       const newIndividual: individualType[] = prev.map((item: any) => {
         if (item.other.id === props.id) {
@@ -79,51 +91,24 @@ const ConversationIndividual = (props: {
       });
       return newIndividual;
     });
+		
     setIndividualConversation((prev: individualConversationType[]) => {
-		const newIndividualConversation: individualConversationType = {
-			sentAt: messageData.timestamp,
-			sender: messageData.from,
-			message: messageData.content,
-		};
-		return [...prev, newIndividualConversation];
+      const newIndividualConversation: individualConversationType = {
+        sentAt: messageData.timestamp,
+        sender: messageData.from,
+        message: messageData.content,
+      };
+      return [...prev, newIndividualConversation];
     });
-	props.socket.emit("pm", messageData);
-};
+		console.log("I sent the message *****");
+    props.socket.emit("pm", messageData);
+  };
 
   const keySendMessage = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       handleSendMessage();
     }
   };
-
-//   const fetchDataConversation = async () => {
-//     token = localStorage.getItem("token");
-//     if (!token) {
-//       router.push("/signin");
-//       return;
-//     }
-//     const twoFA = parseJwt(JSON.stringify(token));
-//     if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
-//       router.push("/signin");
-//       return;
-//     }
-//     console.log("data fetched in every change");
-//     const jwtToken = parseJwt(token);
-//     setUserId(jwtToken.sub);
-//     try {
-//       if (props.id && props.id !== "") {
-//         const result = await axios.get(`${ip}/chat/individual/${props.id}`, {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//           },
-//           params: {
-//             id: jwtToken.sub,
-//           },
-//         });
-//         setIndividualConversation(result.data);
-//       }
-//     } catch (error) {}
-//   };
 
   const goToUser = (event: MouseEvent<HTMLButtonElement>, id: string) => {
     event.preventDefault();
@@ -139,11 +124,6 @@ const ConversationIndividual = (props: {
   useEffect(() => {
     setCurrentMsg(message);
   }, [message]);
-
-//   useEffect(() => {
-//     fetchDataConversation();
-//     // props.setReload(false);
-//   }, [props.id]);
 
   useEffect(() => {
     const conversationDiv: any = chatContainerRef.current;
@@ -166,14 +146,16 @@ const ConversationIndividual = (props: {
                     onClick={(event) => goToUser(event, props.id)}
                   >
                     {items.other.id === props.id && (
+											<div className="lg:h-[60px] md:h-[50px] h-[40px] lg:w-[60px] md:w-[50px] w-[40px] rounded-xl">
                       <Image
                         key={index}
                         width={500}
                         height={500}
                         src={items.other.avatar}
                         alt="profile pic"
-                        className="md:w-14 sm:w-12 w-10 rounded-xl"
+                        className="w-full h-full rounded-xl"
                       />
+											</div>
                     )}
                   </button>
                 )

@@ -1,11 +1,8 @@
 "use client";
 import individualType from "@/types/individualTypes";
-import ip from "@/utils/endPoint";
-import parseJwt from "@/utils/parsJwt";
-import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useState } from "react";
 import { useRecoilState } from "recoil";
 import { currentFriendsAtom } from "../context/recoilContext";
 import { individualAtom } from "../context/recoilContextIndividual";
@@ -20,9 +17,6 @@ const Individual = (props: {
   setIsLoaded: Function;
 }) => {
   const [individual, setIndividual] = useRecoilState(individualAtom);
-  const [clicked, setClicked] = useState<number>(0);
-  const router = useRouter();
-  const [currentFriend, setCurrentFriends] = useRecoilState(currentFriendsAtom);
   const [lastMessage, setLastMessage] = useState("");
 
   const clickChat = (
@@ -31,7 +25,6 @@ const Individual = (props: {
     id: string
   ) => {
     event.preventDefault();
-    setClicked(index);
     props.setId(id);
   };
 
@@ -52,13 +45,15 @@ const Individual = (props: {
                         : "bg-transparent"
                     }`}
                   >
+					<div className="rounded-xl lg:h-[60px] md:h-[50px] h-[40px] lg:w-[60px] md:w-[50px] w-[40px] ">
                     <Image
                       src={items.other.avatar}
                       alt="test"
                       width={500}
                       height={500}
-                      className="md:w-14 sm:w-12 w-10 rounded-xl"
+                      className="h-full w-full rounded-xl"
                     />
+					</div>
                     <div className="flex justify-start items-start md:space-y-1 space-y-0 flex-col">
                       <p className="font-poppins flex justify-start text-pearl md:text-lg text-base font-semibold">
                         {items.other.username}

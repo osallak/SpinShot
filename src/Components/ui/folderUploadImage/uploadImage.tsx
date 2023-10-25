@@ -17,6 +17,8 @@ import axios from "axios";
 import ip from "@/utils/endPoint";
 import { useRouter } from "next/router";
 import parseJwt from "@/utils/parsJwt";
+import { store } from "../../../../redux_tool";
+import { updateImage } from "../../../../redux_tool/redusProfile/profileSlice";
 
 const UploadImage = (props: {
   upload: boolean;
@@ -42,6 +44,7 @@ const UploadImage = (props: {
     props.setMyImage(event.target.files[0]);
     if (event.target.files && event.target.files[0]) {
       setMyImage((prev: any) => event.target.files[0]);
+      store.dispatch(updateImage(event.target.files[0]));
       props.setMyImage(event.target.files[0]);
     }
   };

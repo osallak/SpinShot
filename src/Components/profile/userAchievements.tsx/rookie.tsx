@@ -12,15 +12,13 @@ const Rookie = () => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true);
-      setAchievement(data?.profile.achievements);
-    }, 100);
+    setLoaded(true);
+    setAchievement(data?.profile.achievements);
   }, [data]);
 
   return (
     <>
-      {loaded && (
+      {achievements && achievements.length > 0 && (
         <div
           className={`  bg-very-dark-purple h-[150px] sm:h-[200px] c-gb:h-[300px] rounded-[20px] w-[85%] c-gb:w-full  flex flex-row justify-between`}
         >
@@ -33,7 +31,7 @@ const Rookie = () => {
             <h1 className=" text-[8px] sm:text-sm">WIN YOUR FIRST MATCH</h1>
           </div>
           <div className="flex justify-center items-center  ">
-            {1 ? (
+            {achievements[0]?.achieved ? (
               <Image className="      " src={rookieWin} alt="" />
             ) : (
               <Image className="      " src={rookieLose} alt="" />

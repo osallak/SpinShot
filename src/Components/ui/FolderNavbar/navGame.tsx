@@ -26,13 +26,10 @@ const NavGame = (props: any) => {
     }
   };
 
-  // console.log("data game zeb", props.matchData);
-
   useEffect(() => {
     getData();
   }, [props?.score]);
 
-  console.log("data game zeb", props.dataGame);
 
   return (
     <div className="  w-[96%] c-gb:w-[80%]  bg-very-dark-purple rounded-xl sm:rounded-3xl flex justify-between flex-row items-center px-[2%] absolute top-24 md:top-6 p-3 ">

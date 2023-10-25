@@ -24,6 +24,7 @@ const ProfilePage = (props: { id: any }) => {
   const [isopen, setMenu] = useState(false);
   const [valid, setValid] = useState(false);
   const [opened, setOpned] = useState(false);
+  const [indexOpned, setIndexOpned] = useState<number>();
   const [content, setContent] = useState("Personal_Information");
   const [password, setPassword] = useState(false);
   const [pages, setPages] = useState("");
@@ -51,10 +52,8 @@ const ProfilePage = (props: { id: any }) => {
     icon: any;
     name: string;
   }
-  console.log("data from profilePage: ", data.profile);
   
   const handleSearch = async () => {
-    console.log("handle search");
     const token = localStorage.getItem("token");
     const { id } = router.query;
     if (!token) {
@@ -62,12 +61,11 @@ const ProfilePage = (props: { id: any }) => {
       return;
     }
     try {
-      console.log("navoos profilePage: ", data.profile);
       await dispatch(getProfile(id)).unwrap();
       router.push(`/profile/${id}`);
       setValid(true);
     } catch (error) {
-      console.log("navoos di" , error);
+      console.log(error);
       // router.push("/error");
       return;
     }
@@ -145,7 +143,7 @@ const ProfilePage = (props: { id: any }) => {
             />
             {isopen && (
               <SidebarMobile
-                handleClick={handleClick}
+                // handleClick={handleClick}
                 setOpned={setOpned}
                 opened={opened}
                 // setSearch={setSearch}
@@ -216,7 +214,9 @@ const ProfilePage = (props: { id: any }) => {
             <div className="bg-white flex items-center"></div>
             {opened && pages == "/profile" && (
               <SubsidebarSecond
+                opened={opened}
                 // isopen={}
+                setOpned={setOpned}
                 isActive={isActive}
                 setisActive={setisActive}
                 setContent={setContent}

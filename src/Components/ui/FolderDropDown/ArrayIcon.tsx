@@ -69,13 +69,13 @@ export const buttons = [
 ];
 
 export const SidbarIcon = [
-  { icon: logo },
-  { icon: line },
-  { icon: search, route: "/search" },
-  { icon: profile, route: "/profile" },
-  { icon: message, route: "/messages/" },
-  { icon: friend, route: "/friend" },
-  { icon: play, route: "/game" },
+  {icon: logo },
+  {icon: line },
+  {icon: search, route: "/search" },
+  {id: 0, icon: profile, route: "/profile" },
+  {id: 1, icon: message, route: "/messages/" },
+  {id: 2, icon: friend, route: "/friend" },
+  {id: 3, icon: play, route: "/game" },
 ];
 
 export const resetPassword = [
@@ -155,4 +155,4 @@ export const IdDeviceBreakpointsByWidth = {
 // ];
 
 export const SignOut = [{ icon: signout, name: "Sign out" }];
-export const letPlay = [{ icon: play, name: "let's play" }];
+export const letPlay = [{ icon: play, name: "Invite" }];

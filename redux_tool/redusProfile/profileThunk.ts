@@ -9,7 +9,6 @@ export const getProfile = createAsyncThunk(
   "profile",
   async (user:any) => {
     try {
-      console.log("getProfile ..", user);
       const token = localStorage.getItem('token');
       if (token)
       {
@@ -19,11 +18,10 @@ export const getProfile = createAsyncThunk(
             'Authorization': `Bearer ${token}`,
           }
             },)
-            console.log("getProfile", respo);
             return respo.data;
           }
         } catch (error: any) {
-            console.log("getting error", error);
+            console.log(error);
             throw error
         }
     }

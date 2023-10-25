@@ -55,11 +55,11 @@ const ImageProfile = (props: any) => {
               {props.id &&  <Image  src={email}  alt="" />}
             </div>
           )}
-          {props.myImage ? (
-            <picture className={` bg-cover w-28 h-28 c-gb:w-36  c-gb:h-36 c-14xl:h-64 c-14xl:w-64 `}>
+          {image ? (
+            <picture className={`  bg-cover w-28 h-28 c-gb:w-36  c-gb:h-36 c-14xl:h-64 c-14xl:w-64 `}>
               <img
-                className=" rounded-2xl w-full h-full" //h-20 w-20 md:h-36 md:w-36	c-14xl:w-64 c-14xl:h-64
-                src={URL.createObjectURL(props.myImage)}
+                className="  rounded-2xl w-full h-full" //h-20 w-20 md:h-36 md:w-36	c-14xl:w-64 c-14xl:h-64
+                src={image}
                 width={150}
                 height={150}
                 alt=""

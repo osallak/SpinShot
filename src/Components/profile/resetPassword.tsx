@@ -35,11 +35,11 @@ const ResetPassword = () => {
   };
 
 
-  console.log(status);
+
 
   const hendleChange = () => {
     const parss = /^.{6,}$/;
-    if (NewPassword == ConfirmPassword && parss.test(ConfirmPassword) && !isStringEmptyOrWhitespace(NewPassword) && !isStringEmptyOrWhitespace(ConfirmPassword) && !isStringEmptyOrWhitespace(password))
+    if ((!isStringEmptyOrWhitespace(NewPassword) && !isStringEmptyOrWhitespace(ConfirmPassword) && !isStringEmptyOrWhitespace(password)) && (parss.test(NewPassword) && parss.test(ConfirmPassword) && parss.test(password)) && (NewPassword == ConfirmPassword))
       hendleUpdata()
     else
       toast.error("Password incorrect ");
@@ -69,8 +69,8 @@ const ResetPassword = () => {
   // };
 
   const hendleUpdata = async () => {
-    console.log("ss", password, NewPassword, ConfirmPassword);
     try {
+      console.log('ana hna');
       const token = localStorage.getItem("token");
       if (token)
       {
@@ -86,7 +86,7 @@ const ResetPassword = () => {
             },
           }
           );
-          console.log(response);
+          console.log("sssss ..", response.status);
       }
     } catch (error) {
       console.error(error);

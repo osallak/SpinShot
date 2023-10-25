@@ -13,7 +13,6 @@ import { updateFirstName, updateLastName, updateUsename } from "../../../redux_t
 const PersonalInformation = (props: any) => {
   // const dispatch = useAppDispatch();
   const data = useAppSelector((state) => state.Profile);
-  console.log("data.profile", data.profile);
   const [country, setCountry] = useState("");
   const router = useRouter();
   const [error, setError] = useState(false);
@@ -75,7 +74,6 @@ const PersonalInformation = (props: any) => {
   };
 
   useEffect(() => {
-    console.log("data.profile", data.profile);
     if (data.profile) {
       const tmp = {
         firstName: data.profile?.profile?.name?.givenName,

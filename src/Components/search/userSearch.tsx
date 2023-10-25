@@ -21,8 +21,6 @@ const Search = (props:any) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  console.log("here : " ,props.isSearch)
-
   const handleSearch = async (targetValue__ : string ) => {
     const token = localStorage.getItem("token");
     try {

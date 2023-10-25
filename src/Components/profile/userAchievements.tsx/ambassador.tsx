@@ -10,15 +10,13 @@ const Ambassador = () => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true);
-      setAchievement(data?.profile.achievements);
-    }, 100);
+    setLoaded(true);
+    setAchievement(data?.profile.achievements);
   }, [data]);
 
   return (
     <>
-      {loaded && (
+      {achievements && achievements.length > 3 && (
         <div className=" bg-very-dark-purple h-[150px] sm:h-[200px] c-gb:h-[300px]  rounded-[20px] w-[85%] c-gb:w-full flex flex-row  justify-between">
           <div
             className={` ${

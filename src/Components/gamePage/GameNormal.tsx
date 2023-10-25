@@ -78,8 +78,6 @@ const GameNormal = () => {
           Math.max(150 / 2, mouseX)
           );
         }
-        console.log( mouseX);
-        console.log( newX);
         Body.setPosition(paddle1, { x: newX, y: 730 });
       }
       

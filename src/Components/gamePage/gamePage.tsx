@@ -14,6 +14,7 @@ import Gamemenu from "./gameMenu";
 import GameModel from "./gameModel";
 import Matchmaking from "./matchmaking";
 import { SocketContext } from "@/context/socket.context";
+import Counter from "./counter";
 
 
 let game: GameModel | null = null;
@@ -43,6 +44,8 @@ const GamePage = (props: any) => {
   const [gameJustFinished, setGameJustFinished] = useState(false);
   const [score, setScore] = useState<any>(null);
   const [clear, setClear] = useState(false);
+  const [counter, setCounter] = useState(3);
+  const [start, setCount] = useState(false);
 
   const handleMenu = () => {
     setOpned(false);
@@ -54,11 +57,13 @@ const GamePage = (props: any) => {
   };
 
   const cancelJoinCallback = () => {
+    setCount(true);
     gameOver && setGameOver(false);
     setCancelJoin(true);
   };
   
   const gameStartedCallback = (data: any) => {
+    setCount(true);
     // console.log("hana bdit ok");
     setWinnerCardState(true);
     setCancelJoin(false);
@@ -135,15 +140,15 @@ const GamePage = (props: any) => {
     setheight(window.innerHeight);
   };
 
-  const handleClick = (route: string) => {
-    console.log("route: ", route);
-    {
-      route.includes("/game") && !opened ? setOpned(true) : setOpned(false);
-    }
-    setPages("/game");
+  // const handleClick = (route: string) => {
+  //   console.log("route: ", route);
+  //   {
+  //     route.includes("/game") && !opened ? setOpned(true) : setOpned(false);
+  //   }
+  //   setPages("/game");
     // setOpned(true);
     // route ? setPages(route) : null;
-  };
+  // };
 
   // useEffect(() => {
     // console.log("1111111");
@@ -171,6 +176,7 @@ const GamePage = (props: any) => {
     socket.on("gameOver", gameOverCallback);
     socket.on("match", gameStartedCallback);
     socket.on("gameState", (data: any) => {
+      setCount(false);
       // console.log("game state ", data);
       // setScore(data);
       game?.updateState(data);
@@ -215,9 +221,19 @@ const GamePage = (props: any) => {
     };
   }, []);
 
-  // {
-  //   console.log(matchData, dataGame);
-  // }
+
+  useEffect(() => {
+    if (start){
+      const timer = setInterval(() => {
+        setCounter((prevCounter) => prevCounter - 1);
+      }, 1000);
+    
+      // return () => {
+      //   clearInterval(timer);
+      // };
+    }
+  }, [start]);
+
 
   return (
     <div
@@ -249,7 +265,7 @@ const GamePage = (props: any) => {
 
         {isopen && (
           <SidebarMobile
-            handleClick={handleClick}
+            // handleClick={handleClick}
             setOpned={setOpned}
             opened={opened}
             setPages={setPages}
@@ -314,6 +330,11 @@ const GamePage = (props: any) => {
           gameState={"You Lose"}
         />
       )}
+
+      {
+        start && 
+        <Counter counter={counter} start={start}/>
+      }
       <Toaster />
     </div>
   );

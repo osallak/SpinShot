@@ -5,6 +5,7 @@ import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import ip from "@/utils/endPoint";
 import Matchs from "./matchs";
+import { clear } from "console";
 
 const MatchHistory = () => {
 
@@ -21,14 +22,13 @@ const MatchHistory = () => {
     { id: 4, content: posts[4] },
   ];
 
+
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      console.log(token);
       if (token) {
         const my_token = parseJwt(token);
         const id = my_token.sub;
-        console.log(id);
         const response = await axios.get(
           `${ip}/users/games/${id}?page=${page}&limit=${5}`,
           {
@@ -37,20 +37,23 @@ const MatchHistory = () => {
             },
           }
           );
-          console.log(response.data);
           setPosts(response.data.data);
           setTotalPages(response.data.pagination.pageCount);
-          console.log(posts);
         }
       } catch (error) {
         console.error(error);
       }
     };
-  
+
+
+
+
     useEffect(() => {
       fetchData();
+
       return () => {
-        setPosts([]);
+        // if (posts)
+        // setPosts(null);
       };
     },[page]);
 

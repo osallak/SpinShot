@@ -11,8 +11,6 @@ const Achievements = () => {
   const profileData = useAppSelector((state) => state.Profile);
   const [level, setLevle] = useState<number>();
 
-  console.log("profileData: ", profileData);
-
   const getMyRank = (rank: number) => {
     setLevle(Math.floor(rank));
   };

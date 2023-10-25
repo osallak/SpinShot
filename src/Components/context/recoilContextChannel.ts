@@ -14,7 +14,7 @@ export const channelConversationContext = createContext<messagesType[] | []>([])
 
 export const channelConversationAtom = atom({
     key: `channelConversationAtom-${Math.random()}`,
-    default: [],
+    default: [] as any[],
 })
 
 export const blockedUsersContext = createContext<string[] | []>([]);

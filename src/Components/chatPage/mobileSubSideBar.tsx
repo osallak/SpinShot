@@ -56,12 +56,12 @@ const MobileSubSideBar = (props: {
     <div
       className={`h-full w-full md:pl-3 md:pt-3 md:pb-3 sm:pt-1 sm:pl-2 pl-1 pt-1 pb-2`}
     >
-      <div className="h-full w-full bg-white/10 flex flex-col rounded-l-2xl">
+      <div className="h-full w-full bg-white/10 flex flex-col rounded-2xl">
         <div className="flex justify-center items-center flex-col w-full h-[10%] min-h-[70px] ">
           <div className="w-full h-full flex-col lg:px-6 md:px-4 px-2">
             <button
               onClick={() => props.setOpenSubSideBar(false)}
-              className=" w-full h-[30%] flex justify-end items-center"
+              className=" w-full h-[30%] flex justify-end items-center py-3"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -137,6 +137,7 @@ const MobileSubSideBar = (props: {
             reload={props.reload}
             setReload={props.setReload}
             setIsLoaded={props.setIsLoaded}
+            setOpen={props.setOpenSubSideBar}
           />
         ) : (
           <Individual
@@ -147,6 +148,7 @@ const MobileSubSideBar = (props: {
             reload={props.reload}
             setReload={props.setReload}
             setIsLoaded={props.setIsLoaded}
+            setOpen={props.setOpenSubSideBar}
           />
         )}
         <div className="flex justify-around items-center w-full space-x-1 px-1">

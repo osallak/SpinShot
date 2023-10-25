@@ -11,8 +11,3 @@ export default interface individualType {
     sentAt: string;
 }
 
-export default interface individualConversationType {
-    sentAt: string;
-    sender: string;
-    message: string;
-}

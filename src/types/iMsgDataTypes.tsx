@@ -3,6 +3,8 @@ export default interface IMsgDataTypes {
     to: string;
     content: string;
     timestamp: string;
+	senderUsername?: string;
+	senderAvatar?: string;
   }
 
 
@@ -11,4 +13,6 @@ export default interface IMsgDataTypes {
     roomName: string;
     content: string;
     timestamp: string;
+	senderUsername?: string;
+	senderAvatar?: string;
   }

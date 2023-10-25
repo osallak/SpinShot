@@ -1,13 +1,9 @@
 "use client";
 import IMsgDataTypes from "@/types/iMsgDataTypes";
-import {
-  default as individualConversationType,
-  default as individualType,
-} from "@/types/individulaTypes";
+import individualConversationType from "@/types/individualConversationType";
+import individualType from "@/types/individualTypes";
 import { dropDownContent } from "@/utils/dropDownContent";
-import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
-import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import {
@@ -28,11 +24,13 @@ import DropDown from "../ui/FolderDropDown/Dropdown";
 
 let token: any;
 const ConversationIndividual = (props: {
+  userId: string;
   userName: string;
   id: string;
   socket: any;
   setReload: Function;
   reload: boolean;
+  openSubSideBar: boolean;
 }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [currentMsg, setCurrentMsg] = useState("");
@@ -42,7 +40,7 @@ const ConversationIndividual = (props: {
     individualConversationAtom
   );
   const [individual, setIndividual] = useRecoilState(individualAtom);
-  const [userId, setUserId] = useState("");
+  // const [userId, setUserId] = useState("");
 
   const getTime = (time: string): string => {
     const date = new Date(Number(time));
@@ -58,13 +56,25 @@ const ConversationIndividual = (props: {
   };
 
   const handleSendMessage = () => {
+    const token = localStorage.getItem("token");
+    const jwtToken = parseJwt(JSON.stringify(token));
+    if (
+      !token ||
+      (jwtToken.isTwoFactorEnabled && !jwtToken.isTwoFaAuthenticated)
+    ) {
+      router.push("/signin");
+      return;
+    }
+    if (currentMsg === "") return;
     setMessage("");
     props.setReload(true);
+
     const messageData: IMsgDataTypes = {
       from: `${parseJwt(JSON.stringify(token)).sub}`,
       to: `${props.id}`,
       content: currentMsg,
       timestamp: String(Date.now()),
+      senderUsername: props.userName,
     };
 
     setIndividual((prev: individualType[]) => {
@@ -80,6 +90,15 @@ const ConversationIndividual = (props: {
       });
       return newIndividual;
     });
+
+    setIndividualConversation((prev: individualConversationType[]) => {
+      const newIndividualConversation: individualConversationType = {
+        sentAt: messageData.timestamp,
+        sender: messageData.from,
+        message: messageData.content,
+      };
+      return [...prev, newIndividualConversation];
+    });
     props.socket.emit("pm", messageData);
   };
 
@@ -87,34 +106,6 @@ const ConversationIndividual = (props: {
     if (event.key === "Enter") {
       handleSendMessage();
     }
-  };
-
-  const fetchDataConversation = async () => {
-    token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/signin");
-      return;
-    }
-    const twoFA = parseJwt(JSON.stringify(token));
-    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
-      router.push("/signin");
-      return;
-    }
-    const jwtToken = parseJwt(token);
-    setUserId(jwtToken.sub);
-    try {
-      if (props.id && props.id !== "") {
-        const result = await axios.get(`${ip}/chat/individual/${props.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            id: jwtToken.sub,
-          },
-        });
-        setIndividualConversation(result.data);
-      }
-    } catch (error) {}
   };
 
   const goToUser = (event: MouseEvent<HTMLButtonElement>, id: string) => {
@@ -133,11 +124,6 @@ const ConversationIndividual = (props: {
   }, [message]);
 
   useEffect(() => {
-    fetchDataConversation();
-    props.setReload(false);
-  }, [props.id, props.reload]);
-
-  useEffect(() => {
     const conversationDiv: any = chatContainerRef.current;
     if (conversationDiv) {
       conversationDiv.scrollTop = conversationDiv.scrollHeight;
@@ -145,7 +131,7 @@ const ConversationIndividual = (props: {
   }, [individualConversation.length]);
 
   return (
-    <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2 relative">
+    <div className={`w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2 relative ${props.openSubSideBar && "opacity-5"}`}>
       <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">
@@ -158,14 +144,16 @@ const ConversationIndividual = (props: {
                     onClick={(event) => goToUser(event, props.id)}
                   >
                     {items.other.id === props.id && (
-                      <Image
-                        key={index}
-                        width={500}
-                        height={500}
-                        src={items.other.avatar}
-                        alt="profile pic"
-                        className="md:w-14 sm:w-12 w-10 rounded-xl"
-                      />
+                      <div className="lg:h-[60px] md:h-[50px] h-[40px] lg:w-[60px] md:w-[50px] w-[40px] rounded-xl">
+                        <Image
+                          key={index}
+                          width={500}
+                          height={500}
+                          src={items.other.avatar}
+                          alt="profile pic"
+                          className="w-full h-full rounded-xl"
+                        />
+                      </div>
                     )}
                   </button>
                 )
@@ -204,28 +192,28 @@ const ConversationIndividual = (props: {
                     <div key={index}>
                       <div
                         className={`flex ${
-                          items.sender != userId
+                          items.sender != props.userId
                             ? "flex-row-reverse space-x-reverse space-x-5"
                             : "flex-row md:space-x-5 sm:space-x-3 space-x-1"
                         } justify-end`}
                       >
                         <div
                           className={`x-pp:w-[700px] 2xl:w-[600px] xl:w-[500px] lg:w-[70%] w-[80%] md:min-h-[70px] min-h-[50px] flex justify-center rounded-xl ${
-                            items.sender != userId
+                            items.sender != props.userId
                               ? "items-start bg-peridot text-very-dark-purple font-bold"
                               : "items-end bg-very-dark-purple text-pearl font-medium"
                           } flex-col md:space-y-1 space-y-0 md:p-2 p-1`}
                         >
                           <div
                             className={`font-Poppins md:text-base sm:text-sm text-xs sm:h-5 h-4 flex justify-center items-center ${
-                              items.sender != userId
+                              items.sender != props.userId
                                 ? "flex-row space-x-2"
                                 : "flex-row-reverse space-x-reverse space-x-2"
                             }`}
                           >
                             <span
                               className={`${
-                                items.sender !== userId
+                                items.sender !== props.userId
                                   ? "text-very-dark-purple pl-3"
                                   : "text-pearl pr-3"
                               }`}
@@ -249,7 +237,7 @@ const ConversationIndividual = (props: {
                             </span>
                             <span
                               className={`text-[10px] font-light h-full ${
-                                items.sender !== userId
+                                items.sender !== props.userId
                                   ? "text-very-dark-purple"
                                   : "text-pearl"
                               }`}
@@ -259,7 +247,7 @@ const ConversationIndividual = (props: {
                           </div>
                           <span
                             className={`px-3 font-poppins font-light ${
-                              items.sender === userId
+                              items.sender === props.userId
                                 ? "text-pearl"
                                 : "text-very-dark-purple"
                             } md:text-lg sm:text-base text-sm`}

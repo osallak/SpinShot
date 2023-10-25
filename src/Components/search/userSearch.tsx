@@ -2,7 +2,7 @@ import {
   Dialog,
   DialogBody,
   DialogFooter,
-  DialogHeader
+  DialogHeader,
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 
@@ -13,40 +13,50 @@ import { useRouter } from "next/router";
 import { useAppDispatch } from "../../../redux_tool";
 import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
 import { textLimit } from "../profile/userMatchHistory/textLimit";
+import parseJwt from "@/utils/parsJwt";
 
-const Search = (props:any) => {
+const Search = (props: any) => {
   const [user, setUser] = useState("");
   const [resulta, setSearchResults] = useState<any>([]);
   const [width, setWidth] = useState<any>();
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const handleSearch = async (targetValue__ : string ) => {
+  const handleSearch = async (targetValue__: string) => {
     const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
     try {
-      if (isStringEmptyOrWhitespace(targetValue__))
-        return;
-      if (targetValue__)
-      {
-        const response = await axios.get(`${ip}/users?keyword=${targetValue__}&limit=${10}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      if (isStringEmptyOrWhitespace(targetValue__)) return;
+      if (targetValue__) {
+        const response = await axios.get(
+          `${ip}/users?keyword=${targetValue__}&limit=${10}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         console.log(response.data);
-        
+
         setSearchResults(response.data);
       }
-      } catch (error) {
-        console.error(error);
-      }
+    } catch (error) {
+      console.error(error);
+    }
   };
-
 
   const handleChange = (e: any) => {
     const targetValue = e.target.value;
-      setUser(targetValue);
-      handleSearch(targetValue);
+    setUser(targetValue);
+    handleSearch(targetValue);
   };
 
   const handelClear = () => {
@@ -65,8 +75,7 @@ const Search = (props:any) => {
   };
 
   useEffect(() => {
-    if(!props.isSearch)
-      handelClear();
+    if (!props.isSearch) handelClear();
     if (typeof window !== "undefined") {
       window.addEventListener("resize", handleResize);
       return () => {
@@ -74,8 +83,6 @@ const Search = (props:any) => {
       };
     }
   }, [width, props.isSearch]);
-
-  
 
   return (
     <div className="">
@@ -118,7 +125,9 @@ const Search = (props:any) => {
                       {textLimit(index?.username, 5)}
                     </h1>
                   ) : (
-                    <h1 className="text-white">{textLimit(index?.username, 13)}</h1>
+                    <h1 className="text-white">
+                      {textLimit(index?.username, 13)}
+                    </h1>
                   )}
                   <button
                     onClick={() => getInformation(index.id)}

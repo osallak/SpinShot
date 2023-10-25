@@ -15,6 +15,7 @@ import GameModel from "./gameModel";
 import Matchmaking from "./matchmaking";
 import { SocketContext } from "@/context/socket.context";
 import Counter from "./counter";
+import parseJwt from "@/utils/parsJwt";
 
 let game: GameModel | null = null;
 
@@ -22,7 +23,7 @@ const GamePage = (props: any) => {
   const socket: any = useContext(SocketContext);
   const [isopen, setMenu] = useState(false);
   const [opened, setOpned] = useState(false);
-  const [mode, setMode] = useState<string>();
+  // const [mode, setMode] = useState<string>();
   const [map, setMap] = useState<string>("normal");
   const [width, setWidth] = useState<number>();
   const [height, setheight] = useState<number>();
@@ -30,7 +31,7 @@ const GamePage = (props: any) => {
   // const [socket, setSocket] = useState<Socket | null>(null);
   const [pages, setPages] = useState("game");
   const [isClick, setIsClick] = useState(false);
-  const [cancelJoin, setCancelJoin] = useState(false);
+  // const [cancelJoin, setCancelJoin] = useState(false);
   const [matchData, setmatchData] = useState<any>(null);
   const router = useRouter();
   const [dataGame, setDataGame] = useState<any>();
@@ -40,7 +41,7 @@ const GamePage = (props: any) => {
   const [gamerState, setGamerState] = useState<any>(null);
   const [winnerCardState, setWinnerCardState] = useState(true);
   const [loserCardState, setLoserCardState] = useState(true);
-  const [gameJustFinished, setGameJustFinished] = useState(false);
+  // const [gameJustFinished, setGameJustFinished] = useState(false);
   const [score, setScore] = useState<any>(null);
   const [clear, setClear] = useState(false);
   const [counter, setCounter] = useState(3);
@@ -60,16 +61,16 @@ const GamePage = (props: any) => {
     console.log("cancel join");
     setCount(true);
     gameOver && setGameOver(false);
-    setCancelJoin(true);
+    // setCancelJoin(true);
   };
 
   const gameStartedCallback = (data: any) => {
     console.log("game started");
     setCount(true);
     setWinnerCardState(true);
-    setCancelJoin(false);
+    // setCancelJoin(false);
     setLoserCardState(true);
-    setGameJustFinished(false);
+    // setGameJustFinished(false);
     setIsClick(false);
     setGamerState(null);
     setGameOver(false);
@@ -83,7 +84,7 @@ const GamePage = (props: any) => {
     setClear(true);
     setDataGame(null);
     setGamerState(data);
-    setGameJustFinished(true);
+    // setGameJustFinished(true);
     // setLoser(data);
     setmatchData(null);
     setGameOver(true);
@@ -94,7 +95,12 @@ const GamePage = (props: any) => {
     // console.log("after");
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/Signin");
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
       return;
     }
     try {
@@ -190,9 +196,9 @@ const GamePage = (props: any) => {
       };
     }
 
-    return () => {
-      socket.disconnect();
-    };
+    // return () => {
+    //   socket.disconnect();
+    // };
   }, [socket]);
 
   useEffect(() => {
@@ -258,6 +264,7 @@ const GamePage = (props: any) => {
 
         {isopen && (
           <SidebarMobile
+            currentPage={"/gamek"}
             // handleClick={handleClick}
             setOpned={setOpned}
             opened={opened}

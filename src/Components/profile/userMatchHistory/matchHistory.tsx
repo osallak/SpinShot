@@ -6,13 +6,14 @@ import axios from "axios";
 import ip from "@/utils/endPoint";
 import Matchs from "./matchs";
 import { clear } from "console";
+import { useRouter } from "next/router";
 
 const MatchHistory = () => {
-
   const [totalPages, setTotalPages] = useState(0);
   const [posts, setPosts] = useState<any>([]);
   const [page, setPage] = useState<number>(1);
   const [country, setCountry] = useState(1);
+  const router = useRouter();
 
   const array = [
     { id: 0, content: posts[0] },
@@ -22,40 +23,43 @@ const MatchHistory = () => {
     { id: 4, content: posts[4] },
   ];
 
-
   const fetchData = async () => {
     try {
       const token = localStorage.getItem("token");
-      if (token) {
-        const my_token = parseJwt(token);
-        const id = my_token.sub;
-        console.log("id", id);
-        const response = await axios.get(
-          `${ip}/users/games/${id}?page=${page}&limit=${5}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-          );
-          console.log("page\n");
-          console.log("response.data.data", response.data);
-          setPosts(response.data.data);
-          setTotalPages(response.data.pagination.pageCount);
-        }
-      } catch (error) {
-        console.error(error);
+      if (!token) {
+        router.push("/signin");
+        return;
       }
-    };
+      const twoFA = parseJwt(JSON.stringify(token));
+      if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+        router.push("/signin");
+        return;
+      }
+      const my_token = parseJwt(token);
+      const id = my_token.sub;
+      const response = await axios.get(
+        `${ip}/users/games/${id}?page=${page}&limit=${5}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("page\n");
+      console.log("response.data.data", response.data);
+      setPosts(response.data.data);
+      setTotalPages(response.data.pagination.pageCount);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  useEffect(() => {
+    fetchData();
+  }, [page]);
 
-    useEffect(() => {
-      fetchData();
-    },[page]);
-
-    const totalMatch =
-    (posts[0]?.logs?.victories ?? 0) +
-    (posts[0]?.logs?.defeats ?? 0);
+  const totalMatch =
+    (posts[0]?.logs?.victories ?? 0) + (posts[0]?.logs?.defeats ?? 0);
 
   return (
     <div className="  h-[1100px] c-gb:h-[900px] relative space-y-5 text-[10px] sm:text-sm md:text-lg c-3xl:text-2xl text-pearl">
@@ -80,25 +84,23 @@ const MatchHistory = () => {
               <div className="h-[70%]"></div>
               <div className="w-[50%] flex flex-col items-center">
                 <h1>Loses</h1>
-                <h1 className="text-red-900">
-                  {posts[0]?.logs?.defeats ?? 0}
-                </h1>
+                <h1 className="text-red-900">{posts[0]?.logs?.defeats ?? 0}</h1>
               </div>
             </div>
           </div>
         </div>
         <div className="h-full w-full ">
-          {
-            array.length !== 0 ?
+          {array.length !== 0 ? (
             array.map((option: any) => (
               <div key={option.id} className="w-full h-14 sm:h-28 ">
-              { option && option.content && <Matchs option={option} />}
+                {option && option.content && <Matchs option={option} />}
+              </div>
+            ))
+          ) : (
+            <div className=" w-full h-full flex justify-center items-center">
+              there is no match History
             </div>
-          )) :
-          <div className=" w-full h-full flex justify-center items-center">
-            there is no match History
-          </div>
-        }
+          )}
         </div>
       </div>
       <div className=" flex justify-center items-center w-full">

@@ -62,6 +62,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
       setQrCode(URL.createObjectURL(blob));
     } catch (e) {}
   };
+
   const handleResize = () => {
     {
       window.innerWidth > 540 ? setSize(250) : setSize(150);
@@ -138,12 +139,20 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
                   height={200}
                 />
               </div>
-            ) : !qrCode ? <span className="font-Poppins text-3xl sm:text-3xl text-very-dark-purple">Loading Qr ...</span> : (
+            ) : !qrCode ? (
+              <span className="font-Poppins text-3xl sm:text-3xl text-very-dark-purple">
+                Loading Qr ...
+              </span>
+            ) : (
               <span className="font-Poppins text-3xl sm:text-3xl text-very-dark-purple">
                 Qr already generated
               </span>
             )}
-            {invalidTwoFa && <span className="font-Poppins text-3xl sm:text-3xl text-red-500">Invalid 2FA</span>}
+            {invalidTwoFa && (
+              <span className="font-Poppins text-3xl sm:text-3xl text-red-500">
+                Invalid 2FA
+              </span>
+            )}
             <div className="flex flex-row  space-x-5 sm:px-5 ">
               <PinInput
                 length={6}

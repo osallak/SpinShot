@@ -9,6 +9,7 @@ import toast, { Toaster } from "react-hot-toast";
 import ip from "@/utils/endPoint";
 import { useRouter } from "next/router";
 import { isStringEmptyOrWhitespace } from "@/lib/utils";
+import parseJwt from "@/utils/parsJwt";
 
 const ResetPassword = () => {
   const [showPasswd, setShowPasswd] = useState(false);
@@ -34,68 +35,53 @@ const ResetPassword = () => {
     ("");
   };
 
-
-
-
   const HandleChange = () => {
     const parss = /^.{6,}$/;
-    if ((!isStringEmptyOrWhitespace(NewPassword) && !isStringEmptyOrWhitespace(ConfirmPassword) && !isStringEmptyOrWhitespace(password)) && (parss.test(NewPassword) && parss.test(ConfirmPassword) && parss.test(password)) && (NewPassword == ConfirmPassword))
-      HandleUpdata()
-    else
-      toast.error("Password incorrect ");
+    if (
+      !isStringEmptyOrWhitespace(NewPassword) &&
+      !isStringEmptyOrWhitespace(ConfirmPassword) &&
+      !isStringEmptyOrWhitespace(password) &&
+      parss.test(NewPassword) &&
+      parss.test(ConfirmPassword) &&
+      parss.test(password) &&
+      NewPassword == ConfirmPassword
+    )
+      HandleUpdata();
+    else toast.error("Password incorrect ");
   };
-
-  // const checkPassword = async () => { 
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     if (token)
-  //     {
-  //       const response = await axios.put(
-  //         `${ip}/users/me/password`,
-  //         {
-  //           password: password,
-  //         },
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //         );
-  //         setStatus(response);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   const HandleUpdata = async () => {
     try {
-      console.log('ana hna');
       const token = localStorage.getItem("token");
-      if (token)
-      {
-        const response = await axios.patch(
-          `${ip}/users`,
-          {
-            oldPassword: password,
-            password: ConfirmPassword,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-          );
-          console.log("sssss ..", response.status);
+      if (!token) {
+        router.push("/signin");
+        return;
       }
+      const twoFA = parseJwt(JSON.stringify(token));
+      if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+        router.push("/signin");
+        return;
+      }
+
+      const response = await axios.patch(
+        `${ip}/users`,
+        {
+          oldPassword: password,
+          password: ConfirmPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Password changed successfully");
     } catch (error) {
-      console.error(error);
+      if ((error as any).code === "ERR_BAD_REQUEST") {
+        toast.error("Password incorrect ");
+      }
     }
   };
-
-  // const notify = () => {
-  //   toast.error("Password incorrect ");
-  // };
 
   return (
     <div className=" space-y-20 md:space-y-36  h-[910px] ">
@@ -151,7 +137,7 @@ const ResetPassword = () => {
           <Toaster position="top-center" reverseOrder={false} />
         </div>
       </div>
-        {/* <Toaster
+      {/* <Toaster
           position="top-right"
           reverseOrder={false}
         /> */}

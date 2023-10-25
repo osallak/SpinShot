@@ -27,9 +27,9 @@ import MatchHistory from "./userMatchHistory/matchHistory";
 const ProfilePage = (props: { id: any }) => {
   const data = useAppSelector((state) => state.Profile);
   const [isopen, setMenu] = useState(false);
-  const [valid, setValid] = useState(false);
+  // const [valid, setValid] = useState(false);
   const [opened, setOpned] = useState(false);
-  const [indexOpned, setIndexOpned] = useState<number>();
+  // const [indexOpned, setIndexOpned] = useState<number>();
   const [content, setContent] = useState("Personal_Information");
   const [password, setPassword] = useState(false);
   const [pages, setPages] = useState("");
@@ -41,7 +41,7 @@ const ProfilePage = (props: { id: any }) => {
   const [myImage, setMyImage] = useState<File | null>();
   const [username, setUsername] = useState("");
   const router = useRouter();
-  const [error, setError] = useState(false);
+  // const [error, setError] = useState(false);
   const [id, setId] = useState(false);
   const [table, setTable] = useState<Type[]>([]);
   const [table2, setTable2] = useState<TypePlay[]>([]);
@@ -68,7 +68,7 @@ const ProfilePage = (props: { id: any }) => {
     try {
       await dispatch(getProfile(id)).unwrap();
       router.push(`/profile/${id}`);
-      setValid(true);
+      // setValid(true);
     } catch (error) {
       console.log(error);
       // router.push("/error");
@@ -76,12 +76,12 @@ const ProfilePage = (props: { id: any }) => {
     }
   };
 
-  const handleClick = (route: string) => {
-    {
-      route.includes("/profile") && !opened ? setOpned(true) : setOpned(false);
-    }
-    setPages("/profile");
-  };
+  // const handleClick = (route: string) => {
+  //   {
+  //     route.includes("/profile") && !opened ? setOpned(true) : setOpned(false);
+  //   }
+  //   setPages("/profile");
+  // };
 
   const handleMenu = () => {
     setOpned(false);
@@ -146,6 +146,7 @@ const ProfilePage = (props: { id: any }) => {
           />
           {isopen && (
             <SidebarMobile
+              currentPage={"/profile"}
               // handleClick={handleClick}
               setOpned={setOpned}
               opened={opened}
@@ -205,8 +206,7 @@ const ProfilePage = (props: { id: any }) => {
                 ) : content == "Achievements" ? (
                   <Achievements />
                 ) : content == "Match_History" ? (
-                  // <MatchHistory />
-                  <>jnsdgjdf</>
+                  <MatchHistory />
                 ) : content == "Security" && table.length > 2 ? (
                   password == true ? (
                     <ResetPassword />

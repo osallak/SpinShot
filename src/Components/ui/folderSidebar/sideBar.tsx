@@ -19,7 +19,6 @@ const SideBar = (props: any) => {
   const data = useAppSelector((state) => state.Profile);
   const [hovered, setHovered] = useState(false);
   const [isSearch, setSearch] = useState(false);
-
   const [icons, setIcons] = useState<any[]>([]);
 
   const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {

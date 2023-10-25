@@ -8,25 +8,20 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { store, useAppSelector } from "../../../redux_tool";
-import { updateFirstName, updateLastName, updateUsename } from "../../../redux_tool/redusProfile/profileSlice";
+import {
+  updateFirstName,
+  updateLastName,
+  updateUsename,
+} from "../../../redux_tool/redusProfile/profileSlice";
+import parseJwt from "@/utils/parsJwt";
 
 const PersonalInformation = (props: any) => {
-  // const dispatch = useAppDispatch();
   const data = useAppSelector((state) => state.Profile);
   const [country, setCountry] = useState("");
   const router = useRouter();
-  const [error, setError] = useState(false);
-  const [firstName, setfirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  // const [errorMessage, setErrorMessage] = useState("");
-
-  // const parseinInput = () => {
-  //   const namePattern = /^[A-Za-z\s]+$/;
-  //   if (!namePattern.test(firstName)) return 1;
-  //   else if (!namePattern.test(lastName)) return 1;
-  //   else if (!namePattern.test(userName)) return 1;
-  //   return 0;
-  // };
+  // const [error, setError] = useState(false);
+  // const [firstName, setfirstName] = useState("");
+  // const [lastName, setLastName] = useState("");
 
   const [form, setForm] = useState<any>({
     firstName: null,
@@ -39,6 +34,11 @@ const PersonalInformation = (props: any) => {
   const HandleUpdate = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
       router.push("/signin");
       return;
     }
@@ -57,9 +57,10 @@ const PersonalInformation = (props: any) => {
       store.dispatch(updateUsename(form?.username));
       store.dispatch(updateFirstName(form?.firstName));
       store.dispatch(updateLastName(form?.lastName));
+      toast.success("Your profile has been updated");
     } catch (error: any) {
       console.error(error);
-      setError(true);
+      // setError(true);
       if (error?.response?.status === 409) {
         toast.error("Username already in use");
       }

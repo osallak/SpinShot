@@ -33,11 +33,11 @@ const Rookie = () => {
             <h1 className=" text-sm sm:text-2xl">SPINSHOT ROOKIE</h1>
             <h1 className=" text-[8px] sm:text-sm">WIN YOUR FIRST MATCH</h1>
           </div>
-          <div className="flex justify-center items-center  ">
+          <div className="flex justify-center items-center ">
             {achievements[1]?.achieved ? (
-              <Image className="      " src={rookieWin} alt="" />
+              <Image className=" " src={rookieWin} alt="" />
             ) : (
-              <Image className="      " src={rookieLose} alt="" />
+              <Image className="  " src={rookieLose} alt="" />
             )}
           </div>
         </div>

@@ -73,6 +73,12 @@ const Signin = () => {
     }
   };
 
+  const handleKeyPress = (event: any) => {
+	if (event.key === "Enter") {
+	  RedirectionFunction(event);
+	}
+  }
+
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     Router.push(
@@ -142,6 +148,7 @@ const Signin = () => {
                         Border={SignIn.Border}
                         Color={SignIn.Color}
                         BorderSize={2}
+						handleKeyPress={(event) => handleKeyPress(event)}
                       />
                     </div>
                   ))}

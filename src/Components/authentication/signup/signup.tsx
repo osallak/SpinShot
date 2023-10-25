@@ -92,6 +92,12 @@ const Signup = () => {
     }
   };
 
+  const handleKeyPress = (event: any) => {
+    if (event.key === "Enter") {
+      RedirectionFunction(event, "/signin");
+    }
+  };
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const handleResize = () => {
@@ -160,6 +166,7 @@ const Signup = () => {
                       Color={SignUp.Color}
                       BorderSize={2}
                       Reg={SignUp.Reg}
+                      handleKeyPress={(event) => handleKeyPress(event)}
                     />
                   </div>
                 ))}
@@ -178,6 +185,7 @@ const Signup = () => {
                     Color="transparent"
                     BorderSize={2}
                     Reg={/^.{6,}$/}
+					handleKeyPress={(event) => handleKeyPress(event)}
                   />
                 </div>
                 {ConfirmPassword && !isMatch && (

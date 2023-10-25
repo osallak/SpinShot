@@ -15,15 +15,16 @@ const Individual = (props: {
   reload: boolean;
   setReload: Function;
   setIsLoaded: Function;
+  setOpen: Function;
 }) => {
   const [individual, setIndividual] = useRecoilState(individualAtom);
   const [lastMessage, setLastMessage] = useState("");
 
   const clickChat = (
     event: MouseEvent<HTMLButtonElement>,
-    index: number,
     id: string
   ) => {
+	props.setOpen(false);
     event.preventDefault();
     props.setId(id);
   };
@@ -37,7 +38,7 @@ const Individual = (props: {
               (individual as individualType[])?.map(
                 (items: individualType, index: number) => (
                   <button
-                    onClick={(event) => clickChat(event, index, items.other.id)}
+                    onClick={(event) => clickChat(event, items.other.id)}
                     key={index}
                     className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl md:h-20 h-14 ${
                       items.other.id === props.id
@@ -88,7 +89,7 @@ const Individual = (props: {
                   >
                     <button
                       onClick={(event) =>
-                        clickChat(event, index, items.other.id)
+                        clickChat(event, items.other.id)
                       }
                       key={index}
                       className={`flex w-full justify-start space-x-3 xl:p-3 p-2 items-center outline-none flex-row rounded-2xl ${

@@ -115,6 +115,7 @@ const SubSideBar = (props: {
           reload={props.reload}
           setReload={props.setReload}
           setIsLoaded={props.setIsLoaded}
+          setOpen={props.setOpen}
         />
       ) : (
         <Individual
@@ -125,6 +126,7 @@ const SubSideBar = (props: {
           reload={props.reload}
           setReload={props.setReload}
           setIsLoaded={props.setIsLoaded}
+          setOpen={props.setOpen}
         />
       )}
       <div className="flex justify-around items-center w-full py-2">

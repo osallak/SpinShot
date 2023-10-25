@@ -29,6 +29,9 @@ const SideBar = (props: {
   const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {
     event.preventDefault();
     const page = path.split("/");
+    if (props.openSubSideBar && props.flag === page[1]) {
+      if (props.setOpenSubSideBar) props.setOpenSubSideBar(false);
+    }
     if (
       props.openSubSideBar ||
       props.flag !== page[1] ||
@@ -36,8 +39,7 @@ const SideBar = (props: {
     )
       Router.push(path);
     else {
-      if (props.setOpenSubSideBar)
-        props.setOpenSubSideBar(true);
+      if (props.setOpenSubSideBar) props.setOpenSubSideBar(true);
     }
   };
 

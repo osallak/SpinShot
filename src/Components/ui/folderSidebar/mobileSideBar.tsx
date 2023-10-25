@@ -29,10 +29,12 @@ const MobileSideBar = (props: {
   const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {
     event.preventDefault();
     const page = path.split("/");
+    if (props.openSubSideBar && props.flag === page[1]) {
+      if (props.setOpenSubSideBar) props.setOpenSubSideBar(false);
+    }
     if (props.openSubSideBar || props.flag !== page[1]) Router.push(path);
     else {
-      if (props.setOpenSubSideBar)
-        props.setOpenSubSideBar(true);
+      if (props.setOpenSubSideBar) props.setOpenSubSideBar(true);
     }
   };
 
@@ -100,10 +102,10 @@ const MobileSideBar = (props: {
                 <button onClick={() => setSearch(!isSearch)}>
                   {" "}
                   <Image src={option.icon} alt="" className="w-5" />{" "}
-				  <Search isSearch={isSearch} />
+                  <Search isSearch={isSearch} />
                 </button>
               ) : (
-                <button onClick={(event) => (changePage(event, option.route))}>
+                <button onClick={(event) => changePage(event, option.route)}>
                   {" "}
                   <Image src={option.icon} alt="" className="w-5" />{" "}
                 </button>

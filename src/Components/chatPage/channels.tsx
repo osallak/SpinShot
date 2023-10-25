@@ -12,6 +12,7 @@ const Channels = (props: {
   reload: boolean;
   setReload: Function;
   setIsLoaded: Function;
+  setOpen: Function;
 }) => {
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [clicked, setClicked] = useState<number>(0);
@@ -24,6 +25,7 @@ const Channels = (props: {
   ) => {
     event.preventDefault();
     setClicked(index);
+	props.setOpen(false);
     props.setRoomId(id);
   };
 

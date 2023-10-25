@@ -1,11 +1,9 @@
 "use client";
 import IMsgDataTypes from "@/types/iMsgDataTypes";
-import individualType from "@/types/individualTypes";
 import individualConversationType from "@/types/individualConversationType";
+import individualType from "@/types/individualTypes";
 import { dropDownContent } from "@/utils/dropDownContent";
-import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
-import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import {
@@ -32,6 +30,7 @@ const ConversationIndividual = (props: {
   socket: any;
   setReload: Function;
   reload: boolean;
+  openSubSideBar: boolean;
 }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [currentMsg, setCurrentMsg] = useState("");
@@ -69,7 +68,7 @@ const ConversationIndividual = (props: {
     if (currentMsg === "") return;
     setMessage("");
     props.setReload(true);
-	
+
     const messageData: IMsgDataTypes = {
       from: `${parseJwt(JSON.stringify(token)).sub}`,
       to: `${props.id}`,
@@ -91,7 +90,7 @@ const ConversationIndividual = (props: {
       });
       return newIndividual;
     });
-		
+
     setIndividualConversation((prev: individualConversationType[]) => {
       const newIndividualConversation: individualConversationType = {
         sentAt: messageData.timestamp,
@@ -132,7 +131,7 @@ const ConversationIndividual = (props: {
   }, [individualConversation.length]);
 
   return (
-    <div className="w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2 relative">
+    <div className={`w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2 relative ${props.openSubSideBar && "opacity-5"}`}>
       <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">
@@ -145,16 +144,16 @@ const ConversationIndividual = (props: {
                     onClick={(event) => goToUser(event, props.id)}
                   >
                     {items.other.id === props.id && (
-											<div className="lg:h-[60px] md:h-[50px] h-[40px] lg:w-[60px] md:w-[50px] w-[40px] rounded-xl">
-                      <Image
-                        key={index}
-                        width={500}
-                        height={500}
-                        src={items.other.avatar}
-                        alt="profile pic"
-                        className="w-full h-full rounded-xl"
-                      />
-											</div>
+                      <div className="lg:h-[60px] md:h-[50px] h-[40px] lg:w-[60px] md:w-[50px] w-[40px] rounded-xl">
+                        <Image
+                          key={index}
+                          width={500}
+                          height={500}
+                          src={items.other.avatar}
+                          alt="profile pic"
+                          className="w-full h-full rounded-xl"
+                        />
+                      </div>
                     )}
                   </button>
                 )

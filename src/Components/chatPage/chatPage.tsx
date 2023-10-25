@@ -1,16 +1,29 @@
 "use client";
 import SideBar from "@/Components/ui/folderSidebar/sideBar";
+import messagesType from "@/types/channelConversationType";
+import channelType from "@/types/channelTypes";
+import individualConversationType from "@/types/individualConversationType";
+import individualType from "@/types/individualTypes";
 import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { io } from "socket.io-client";
+import { Socket, io } from "socket.io-client";
 import {
   currentFriendsAtom,
   exploreChannelAtom,
 } from "../context/recoilContext";
+import {
+  blockedUsersAtom,
+  channelAtom,
+  channelConversationAtom,
+} from "../context/recoilContextChannel";
+import {
+  individualAtom,
+  individualConversationAtom,
+} from "../context/recoilContextIndividual";
 import NavBar from "../ui/FolderNavbar/navBar";
 import MobileSideBar from "../ui/folderSidebar/mobileSideBar";
 import ConversationChannel from "./conversationChannel";
@@ -20,20 +33,6 @@ import ExploreChannels from "./exploreChannels";
 import InviteFriends from "./inviteFriends";
 import MobileSubSideBar from "./mobileSubSideBar";
 import SubSideBar from "./subSideBar";
-import {
-  individualAtom,
-  individualConversationAtom,
-} from "../context/recoilContextIndividual";
-import individualConversationType from "@/types/individualConversationType";
-import individualType from "@/types/individualTypes";
-import {
-  blockedUsersAtom,
-  channelAtom,
-  channelConversationAtom,
-} from "../context/recoilContextChannel";
-import conversationChannelType from "@/types/messagesArrays";
-import messagesType from "@/types/channelConversationType";
-import channelType from "@/types/channelTypes";
 
 let socket: any;
 let token: any;
@@ -81,12 +80,12 @@ const Chat = () => {
       },
     });
     socket.on("connect", () => console.log("connected"));
-	
-    socket.on("pm", (data: any) => {
-      const parsedData = JSON.parse(data);
-			setId(parsedData.from);
 
-			setIndividual((prev: individualType[]) => {
+    socket.on("pm", (data: Socket) => {
+      const parsedData = JSON.parse(String(data));
+      setId(parsedData.from);
+
+      setIndividual((prev: individualType[]) => {
         if (prev.length === 0) {
           const newIndividual = {
             message: parsedData.content,
@@ -407,7 +406,7 @@ const Chat = () => {
       )}
       {openSubSideBar && (
         <div className="h-full md:w-[300px] sm:w-[250px] w-[200px] lg:hidden flex items-end absolute md:left-[90px] left-16 drop-shadow-2xl z-40">
-          <div className="bg-very-dark-purple h-[91%] z-50 md:h-full flex flex-col rounded-l-2xl w-full">
+          <div className="h-[91%] z-50 md:h-full flex flex-col rounded-l-2xl w-full">
             <MobileSubSideBar
               setOpenSubSideBar={setOpenSubSideBar}
               openSubSideBar={openSubSideBar}
@@ -469,6 +468,7 @@ const Chat = () => {
             socket={socket}
             setReload={setReload}
             reload={reload}
+            openSubSideBar={openSubSideBar}
           />
         ) : (
           <ConversationChannel
@@ -478,6 +478,7 @@ const Chat = () => {
             socket={socket}
             setReload={setReload}
             reload={reload}
+            openSubSideBar={openSubSideBar}
           />
         )}
       </div>

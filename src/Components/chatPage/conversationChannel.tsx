@@ -40,6 +40,7 @@ const ConversationChannel = (props: {
   socket: any;
   setReload: Function;
   reload: boolean;
+  openSubSideBar: boolean;
 }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [currentMsg, setCurrentMsg] = useState("");
@@ -258,7 +259,7 @@ const ConversationChannel = (props: {
           userId={props.userId}
         />
       )}
-      <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
+      <div className={`bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col ${props.openSubSideBar && "opacity-5"}`}>
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">
             <div className="flex justify-center items-center space-x-2 flex-row">

@@ -22,6 +22,7 @@ export class GamesService {
 
   async join(client: Socket, map: MapEnum) {
     let id = this.getIdBySocket(client);
+    console.log("id when join:", id);
     if (!id) return;
 
     if (this.matchingQueue.find((p) => p.id === id) || this.isPlaying(id)) {
@@ -50,12 +51,14 @@ export class GamesService {
     };
 
     const game = new PongEngine(gameOptions);
+    game.gameId = generateGameId();
     game.cleanUpGameService = this.cleanupSingleGame.bind(this);
     game.saveGameCallback = this.saveGame.bind(this);
-    id = generateGameId();
-    this.games.set(id, game);
+    console.log("generate gameId", game.id);
+    this.games.set(game.id, game);
     this.eventEmitter.emit('userUpdate', {status: UserStatus.INGAME, id: gameOptions.firstPlayerId});
     this.eventEmitter.emit('userUpdate', {status: UserStatus.INGAME, id: gameOptions.secondPlayerId});
+    console.log("game is playing ...");
     game.play();
   }
 
@@ -187,7 +190,7 @@ export class GamesService {
 
   connect(client: Socket, id: string): void {
     this.lobby.set(id, client);
-    this.eventEmitter.emit('userUpdate', {status: UserStatus.ONLINE, id});
+    // this.eventEmitter.emit('userUpdate', {status: UserStatus.ONLINE, id});
 
     this.handleAlreadyInGame(id, client);
   }

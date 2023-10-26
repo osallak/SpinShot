@@ -18,7 +18,7 @@ type position = {
 
 @Injectable()
 export class PongEngine {
-  private readonly id: string;
+  private _id: string;
   private engine: Matter.engine;
   private runner: Matter.runner;
   private ball: Matter.body;
@@ -62,6 +62,12 @@ export class PongEngine {
     top: firstPaddle 
     buttom: secondPaddle
   */
+ set gameId(id: string) {
+  this._id = id;
+ }
+ get id() {
+  return this._id;
+ }
   constructor(gameSettings: {
     firstClient: Socket;
     secondClient: Socket;
@@ -331,13 +337,13 @@ export class PongEngine {
           ? this.firstPlayerId
           : this.secondPlayerId,
     };
-
+    console.log(`game ${this.id} is over`);
     this.firstClient && this.firstClient.emit('gameOver', gameOver);
     this.firstClient && this.secondClient.emit('gameOver', gameOver);
 
     Matter.Events.off(this.engine, 'collisionStart', this.handleCollisionStart);
     Matter.Events.off(this.engine, 'afterUpdate', this.handleAfterUpdate);
-    this.saveGameCallback &&
+    this.id && this.saveGameCallback &&
       this.saveGameCallback({
         userId: this.firstPlayerId,
         opponentId: this.secondPlayerId,
@@ -345,7 +351,7 @@ export class PongEngine {
         userScore: this.firstScore,
         opponentScore: this.secondScore,
       });
-    this.cleanUpGameService && this.cleanUpGameService(this.id);
+    this.id && this.cleanUpGameService && this.cleanUpGameService(this.id);
   }
 
   private sendScore() {

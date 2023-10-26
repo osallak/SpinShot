@@ -254,7 +254,40 @@ export class UserService {
     query: PaginationQueryDto,
   ): Promise<PaginationResponse<any>> {
     const { limit } = query;
-    const [games, totalCount] = await this.prisma.$transaction([
+    let wins = 0,
+      loses = 0;
+    const userMatches = await this.prisma.game.findMany({
+      where: {
+        OR: [{ userId: id }, { opponentId: id }],
+      },
+      select: {
+        userId: true,
+        History: {
+          select: {
+            userId: true,
+            opponentId: true,
+            userScore: true,
+            opponentScore: true,
+          },
+        },
+      },
+    });
+    userMatches.forEach((match) => {
+      if (match.userId === id) {
+        if (match.History?.userScore > match.History?.opponentScore) {
+          wins++;
+        } else {
+          loses++;
+        }
+      } else {
+        if (match.History?.userScore > match.History?.opponentScore) {
+          loses++;
+        } else {
+          wins++;
+        }
+      }
+    });
+    const [games, totalCount]: any = await this.prisma.$transaction([
       this.prisma.game.findMany({
         skip: query.getSkip(),
         take: limit,
@@ -271,6 +304,9 @@ export class UserService {
           user: { include: { logs: true } },
           opponent: { include: { logs: true } },
         },
+        orderBy: {
+          startedAt: 'desc',
+        },
       }),
       this.prisma.game.count({
         where: {
@@ -279,14 +315,15 @@ export class UserService {
       }),
     ]);
 
+    console.log('games: ', games);
     const userGames = [];
     games.forEach((game) => {
       if (game.userId === id) {
         userGames.push({
           opponent: game.opponent,
           history: {
-            userScore: game.History.userScore,
-            opponentScore: game.History.opponentScore,
+            userScore: game.History?.userScore,
+            opponentScore: game.History?.opponentScore,
           },
           logs: game.user.logs,
           startedAt: game.startedAt,
@@ -295,15 +332,21 @@ export class UserService {
         userGames.push({
           opponent: game.user,
           history: {
-            userScore: game.History.opponentScore,
-            opponentScore: game.History.userScore,
+            userScore: game.History?.opponentScore,
+            opponentScore: game.History?.userScore,
           },
           logs: game.opponent.logs,
           startedAt: game.startedAt,
         });
       }
     });
-    return serializePaginationResponse(userGames, totalCount, limit);
+    return serializePaginationResponse(
+      userGames,
+      totalCount,
+      limit,
+      wins,
+      loses,
+    );
   }
 
   async update(id: string, data: UpdateUserDto): Promise<User> {

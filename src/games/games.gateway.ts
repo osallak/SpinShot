@@ -76,12 +76,14 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
     @MessageBody() data: MapSelectionDto,
   ): void {
+    console.log("join queue", client.id);
     this.gamesService.join(client, data.map);
   }
 
   @UseGuards(WsJwtGuard)
   @SubscribeMessage('leaveQueue')
   leaveQueue(@ConnectedSocket() client: Socket): void {
+    console.log("leave queue", client.id);
     this.gamesService.handleCancelJoin(client);
   }
 

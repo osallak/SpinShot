@@ -5,6 +5,8 @@ export type PaginationResponse<T> = {
     totalCount: number;
     pageSize: number;
   };
+  wins ?: number;
+  loses ?: number;
 };
 
 export class Response {

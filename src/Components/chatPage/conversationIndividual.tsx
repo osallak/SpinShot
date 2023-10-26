@@ -6,6 +6,8 @@ import { dropDownContent } from "@/utils/dropDownContent";
 import parseJwt from "@/utils/parsJwt";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import axios from "axios";
+import ip from "@/utils/endPoint";
 import {
   KeyboardEvent,
   MouseEvent,
@@ -25,7 +27,6 @@ import DropDown from "../ui/FolderDropDown/Dropdown";
 let token: any;
 const ConversationIndividual = (props: {
   userId: string;
-  userName: string;
   id: string;
   socket: any;
   setReload: Function;
@@ -36,11 +37,11 @@ const ConversationIndividual = (props: {
   const [currentMsg, setCurrentMsg] = useState("");
   const router = useRouter();
   const [message, setMessage] = useState("");
+  const [userName, setUserName] = useState("");
   const [individualConversation, setIndividualConversation] = useRecoilState(
     individualConversationAtom
   );
   const [individual, setIndividual] = useRecoilState(individualAtom);
-  // const [userId, setUserId] = useState("");
 
   const getTime = (time: string): string => {
     const date = new Date(Number(time));
@@ -74,9 +75,9 @@ const ConversationIndividual = (props: {
       to: `${props.id}`,
       content: currentMsg,
       timestamp: String(Date.now()),
-      senderUsername: props.userName,
+      senderUsername: userName,
     };
-
+	console.log(messageData);
     setIndividual((prev: individualType[]) => {
       const newIndividual: individualType[] = prev.map((item: any) => {
         if (item.other.id === props.id) {
@@ -117,6 +118,24 @@ const ConversationIndividual = (props: {
     if (inputElement) {
       inputElement.focus();
     }
+  }, []);
+
+  const getUserName = async () => {
+    try {
+      const senderId = parseJwt(JSON.stringify(localStorage.getItem('token'))).sub;
+      const userNameRes = await axios.get(`${ip}/users/profile/${senderId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      console.log("-->", userNameRes.data.username);
+      setUserName((prev) => userNameRes.data.username);
+    } catch (error : any) {
+	}
+  };
+
+  useEffect(() => {
+    getUserName();
   }, []);
 
   useEffect(() => {

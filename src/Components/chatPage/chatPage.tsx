@@ -278,15 +278,18 @@ const Chat = () => {
         const returnedId = res.data?.individual.find(
           (items: any) => items.other.id === router.query.id
         );
-        if (returnedId) setId(returnedId.other.id);
-        else {
+        if (returnedId) {
+          setId(returnedId.other.id);
+        } else {
           if (router.query.id === parseJwt(token).sub) {
             setId(res?.data?.individual[0]?.other?.id);
           } else {
             const fromFriends: any = currentFriend.find(
               (items: any) => items.id === router.query.id
             );
-            if (fromFriends) setId(fromFriends.id);
+            if (fromFriends) {
+              setId(fromFriends.id);
+            }
             setIndividual((prev: individualType[]) => {
               const newConv: individualType = {
                 message: "",
@@ -463,7 +466,6 @@ const Chat = () => {
         {isIndividual === "Individual" ? (
           <ConversationIndividual
             userId={userId}
-            userName={"three"}
             id={id}
             socket={socket}
             setReload={setReload}
@@ -473,7 +475,6 @@ const Chat = () => {
         ) : (
           <ConversationChannel
             userId={userId}
-            userName={"three"}
             id={roomId}
             socket={socket}
             setReload={setReload}

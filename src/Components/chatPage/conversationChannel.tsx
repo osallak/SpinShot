@@ -35,7 +35,6 @@ import UsersList from "./usersList";
 let token: any;
 const ConversationChannel = (props: {
   userId: string;
-  userName: string;
   id: string;
   socket: any;
   setReload: Function;
@@ -56,6 +55,7 @@ const ConversationChannel = (props: {
   const [setting, setSettings] = useState(false);
   const [content, setContent] = useState<any[]>([]);
   const [openUsersList, setOpenUsersList] = useState(false);
+  const [userName, setUserName] = useState("");
   const [openSubUsersList, setOpenSubUsersList] = useState(false);
   const [openLeaveList, setOpenLeaveList] = useState(false);
   const [targetId, setTargetId] = useState("");
@@ -100,7 +100,7 @@ const ConversationChannel = (props: {
       roomName: `${props.id}`,
       content: currentMsg,
       timestamp: String(Date.now()),
-      senderUsername: props.userName,
+      senderUsername: userName,
       senderAvatar: "",
     };
     setChannel((prev: channelType[]) => {
@@ -115,7 +115,7 @@ const ConversationChannel = (props: {
                 user: {
                   avatar: "",
                   id: props.userId,
-                  username: props.userName,
+                  username: userName,
                 },
               };
             });
@@ -130,7 +130,7 @@ const ConversationChannel = (props: {
                   user: {
                     avatar: "",
                     id: props.userId,
-                    username: props.userName,
+                    username: userName,
                   },
                 },
               ],
@@ -147,7 +147,7 @@ const ConversationChannel = (props: {
         user: {
           avatar: "",
           id: props.userId,
-          username: props.userName,
+          username: userName,
         },
       };
       return [...prev, newConversationChannel];
@@ -231,6 +231,24 @@ const ConversationChannel = (props: {
     if (inputElement) {
       inputElement.focus();
     }
+  }, []);
+
+  const getUserName = async () => {
+    try {
+      const senderId = parseJwt(JSON.stringify(localStorage.getItem('token'))).sub;
+      const userNameRes = await axios.get(`${ip}/users/profile/${senderId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      console.log("-->", userNameRes.data.username);
+      setUserName((prev) => userNameRes.data.username);
+    } catch (error : any) {
+	}
+  };
+
+  useEffect(() => {
+    getUserName();
   }, []);
 
   useEffect(() => {

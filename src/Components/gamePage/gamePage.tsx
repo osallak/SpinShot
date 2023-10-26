@@ -16,6 +16,7 @@ import Matchmaking from "./matchmaking";
 import { SocketContext } from "@/context/socket.context";
 import Counter from "./counter";
 import { Socket, io } from "socket.io-client";
+import parseJwt from "@/utils/parsJwt";
 
 let game: GameModel | null = null;
 let socket: Socket;
@@ -24,7 +25,7 @@ const GamePage = (props: any) => {
   // const socket: any = useContext(SocketContext);
   const [isopen, setMenu] = useState(false);
   const [opened, setOpned] = useState(false);
-  const [mode, setMode] = useState<string>();
+  // const [mode, setMode] = useState<string>();
   const [map, setMap] = useState<string>("normal");
   const [width, setWidth] = useState<number>();
   const [height, setheight] = useState<number>();
@@ -32,17 +33,17 @@ const GamePage = (props: any) => {
   // const [socket, setSocket] = useState<Socket | null>(null);
   const [pages, setPages] = useState("game");
   const [isClick, setIsClick] = useState(false);
-  const [cancelJoin, setCancelJoin] = useState(false);
+  // const [cancelJoin, setCancelJoin] = useState(false);
   const [matchData, setmatchData] = useState<any>(null);
   const router = useRouter();
-  const [dataGame, setDataGame] = useState<any>();
+  const [dataOpponent, setDataOfOpponent] = useState<any>();
   const [isClick2, setIsClick2] = useState(true);
   // const [depend, setDepend] = useState(false);
   const [gameOver, setGameOver] = useState(true);
   const [gamerState, setGamerState] = useState<any>(null);
   const [winnerCardState, setWinnerCardState] = useState(true);
   const [loserCardState, setLoserCardState] = useState(true);
-  const [gameJustFinished, setGameJustFinished] = useState(false);
+  // const [gameJustFinished, setGameJustFinished] = useState(false);
   const [score, setScore] = useState<any>(null);
   const [clear, setClear] = useState(false);
   const [counter, setCounter] = useState(3);
@@ -62,30 +63,32 @@ const GamePage = (props: any) => {
     console.log("cancel join");
     setCount(true);
     gameOver && setGameOver(false);
-    setCancelJoin(true);
+    // setCancelJoin(true);
   };
 
   const gameStartedCallback = (data: any) => {
     console.log("game started");
     setCount(true);
     setWinnerCardState(true);
-    setCancelJoin(false);
+    // setCancelJoin(false);
     setLoserCardState(true);
-    setGameJustFinished(false);
+    // setGameJustFinished(false);
+    console.log("game start data: ", data);
     setIsClick(false);
     setGamerState(null);
     setGameOver(false);
     setmatchData(data);
     handleData(data);
-    setDataGame(dataGame);
+    // setDataOfOpponent(data);
   };
 
   const gameOverCallback = (data: any) => {
+    console.log("game over data: ", data);
     setScore(null);
     setClear(true);
-    setDataGame(null);
+    setDataOfOpponent(null);
     setGamerState(data);
-    setGameJustFinished(true);
+    // setGameJustFinished(true);
     // setLoser(data);
     setmatchData(null);
     setGameOver(true);
@@ -96,7 +99,12 @@ const GamePage = (props: any) => {
     // console.log("after");
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/Signin");
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
       return;
     }
     try {
@@ -110,8 +118,8 @@ const GamePage = (props: any) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setDataGame(respo?.data);
-        // console.log("after setting:", dataGame);
+        setDataOfOpponent(respo?.data);
+        // console.log("after setting:", dataOpponent);
       }
     } catch (error) {
       // console.log("errrror dzeb")
@@ -196,9 +204,9 @@ const GamePage = (props: any) => {
       };
     }
 
-    return () => {
-      socket.disconnect();
-    };
+    // return () => {
+    //   socket.disconnect();
+    // };
   }, [socket]);
 
   useEffect(() => {
@@ -210,7 +218,7 @@ const GamePage = (props: any) => {
   }, [width, height, isopen, map, socket]);
 
   const cleanUp = () => {
-    setDataGame(null);
+    setDataOfOpponent(null);
     setmatchData(null);
   };
 
@@ -264,6 +272,7 @@ const GamePage = (props: any) => {
 
         {isopen && (
           <SidebarMobile
+            currentPage={"/gamek"}
             // handleClick={handleClick}
             setOpned={setOpned}
             opened={opened}
@@ -281,7 +290,7 @@ const GamePage = (props: any) => {
           <div
             className={`flex justify-center items-center w-[96%] c-gb:w-[80% h-[15%] `}
           >
-            <NavGame dataGame={dataGame} score={score} />
+            <NavGame dataOpponent={dataOpponent} score={score} />
           </div>
           <div
             className={`h-[80%] w-[80%] flex justify-center items-center relative `}
@@ -307,10 +316,10 @@ const GamePage = (props: any) => {
             isClick={isClick}
             setIsClick={setIsClick}
             socket={socket}
-            dataGame={dataGame}
-            setDataGame={setDataGame}
-            setmatchData={setmatchData}
-            matchData={matchData}
+            dataOpponent={dataOpponent}
+            setDataOfOpponent={setDataOfOpponent}
+            // setmatchData={setmatchData}
+            // matchData={matchData}
             setClear={setClear}
           />
         )}

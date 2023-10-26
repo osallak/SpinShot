@@ -4,7 +4,6 @@ import { Provider } from "react-redux";
 import { RecoilRoot } from "recoil";
 import { store } from "../../redux_tool/store";
 import { SocketProvider } from "@/context/socket.context";
-
 import { Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps }: AppProps) {

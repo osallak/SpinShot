@@ -69,13 +69,13 @@ export const buttons = [
 ];
 
 export const SidbarIcon = [
-  {icon: logo },
-  {icon: line },
-  {icon: search, route: "/search" },
-  {id: 0, icon: profile, route: "/profile" },
-  {id: 1, icon: message, route: "/messages/" },
-  {id: 2, icon: friend, route: "/friend" },
-  {id: 3, icon: play, route: "/game" },
+  { icon: logo },
+  { icon: line },
+  { icon: search, route: "/search" },
+  { id: 0, icon: profile, route: "/profile" },
+  { id: 1, icon: message, route: "/messages" },
+  { id: 2, icon: friend, route: "/friend" },
+  { id: 3, icon: play, route: "/game" },
 ];
 
 export const resetPassword = [
@@ -85,31 +85,29 @@ export const resetPassword = [
 ];
 
 export const Information = [
-  {number: 1, text: "Username"},
-  {number: 2, text: "Email"},
-  {number: 3, text: "country"},
-  {number: 4, text: "avatar"},
+  { number: 1, text: "Username" },
+  { number: 2, text: "Email" },
+  { number: 3, text: "country" },
+  { number: 4, text: "avatar" },
 ];
 
 export const logos = [
-  {id: 1, logo: grandMasterLogo, rank: "GRAND MASTER"},
-  {id: 2, logo: masterLogo, rank: "MASTER"},
-  {id: 3, logo: veteraneLogo, rank: "VETERAN"},
-  {id: 4, logo: proLogo, rank: "PRO"},
-  {id: 5, logo: eliteLogo, rank: "ELITE"},
+  { id: 1, logo: grandMasterLogo, rank: "GRAND MASTER" },
+  { id: 2, logo: masterLogo, rank: "MASTER" },
+  { id: 3, logo: veteraneLogo, rank: "VETERAN" },
+  { id: 4, logo: proLogo, rank: "PRO" },
+  { id: 5, logo: eliteLogo, rank: "ELITE" },
 ];
 
-
 export const IdDeviceBreakpointsByWidth = {
-  max : 1024,
-  laptop_max : 1440,
-  laptop_min : 992,
-  tablet_min : 768,
-  tablet_max : 991,
-  mobile_max : 767,
-  default_min : 768 // Unrecognized device
+  max: 1024,
+  laptop_max: 1440,
+  laptop_min: 992,
+  tablet_min: 768,
+  tablet_max: 991,
+  mobile_max: 767,
+  default_min: 768, // Unrecognized device
 };
-
 
 // export const ArrayAvatar = [
 //   {id: 1, icon: test1},

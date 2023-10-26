@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
-import SimpleButton from '../Buttons/simpleButton'
-import Maps from './maps';
+import React, { useState } from "react";
+import SimpleButton from "../Buttons/simpleButton";
+import Maps from "./maps";
 
-const SubsidebarSecondGame = (props:any) => {
-
+const SubsidebarSecondGame = (props: any) => {
   const HandleUpdate = () => {
-    props.socket.emit("joinQueue", {map: props.map});
+    props.socket.emit("joinQueue", { map: props.map });
     props.setIsClick(!props.isClick);
     props.setOpned(false);
     // props.setDepend(true);
@@ -17,7 +16,11 @@ const SubsidebarSecondGame = (props:any) => {
     map3: "",
   });
 
-  const changeBackgroundmap = (mapId: string, type: string,  newColor: string) => {
+  const changeBackgroundmap = (
+    mapId: string,
+    type: string,
+    newColor: string
+  ) => {
     const updatedBackgroundmap: {
       [key: string]: string;
       map1: string;
@@ -33,10 +36,8 @@ const SubsidebarSecondGame = (props:any) => {
     setBackgroundmap(updatedBackgroundmap);
   };
 
-
-
   return (
-    <div className='fixed top-[75px] md:top-2 md:ml-[105px] ml-[65px] w-[70%] z-50  h-[93%]  backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] text-pearl  '>
+    <div className="fixed top-[75px] md:top-2 md:ml-[105px] ml-[65px] w-[70%] z-50  h-[93%] md:h-[98%] backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] text-pearl  ">
       <div className=" rounded-2xl h-full flex flex-col w-[100%] px-[10%] text-base sm:text-2xl ">
         <div className=" flex items-center h-[10%] ">
           <h1>Game</h1>
@@ -60,12 +61,16 @@ const SubsidebarSecondGame = (props:any) => {
         </div>
         <div className="absolute h-[4%]  w-full top-[85%] flex justify-center items-center ">
           <div className="w-[100px] h-full">
-            <SimpleButton content="Play" onclick={HandleUpdate} gameSession={props.matchData} />
+            <SimpleButton
+              content="Play"
+              onclick={HandleUpdate}
+              gameSession={props.matchData}
+            />
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SubsidebarSecondGame
+export default SubsidebarSecondGame;

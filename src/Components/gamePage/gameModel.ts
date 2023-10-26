@@ -76,8 +76,7 @@ class GameModel {
       // console.log("mouse x", this.mouse.position.x);
       if (x >= min && x <= max) {
         this.socket?.emit("movePlayer", {
-          x:
-            this.normalize(this.mouse.position.x, 0, this.width, 0, 650)
+          x: this.normalize(this.mouse.position.x, 0, this.width, 0, 650),
         });
         // Body.setPosition(this.player1, {
         //   x: this.mouse.position.x,

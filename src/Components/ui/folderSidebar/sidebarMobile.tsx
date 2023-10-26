@@ -16,13 +16,11 @@ import { useRouter } from "next/router";
 import logout from "../../../../public/logout.svg";
 
 const SidebarMobile = (props: {
-  // handleClick: Function;
+  currentPage: string;
   setOpned: Function;
   opened: boolean;
-  // setSearch: Function;
   setPages: Function;
 }) => {
-
   const [hovered, setHovered] = useState(false);
   const Router = useRouter();
   const data = useAppSelector((state) => state.Profile);
@@ -43,29 +41,15 @@ const SidebarMobile = (props: {
   };
 
   const handleClick = (route: string | undefined) => {
-    console.log("opned: 1", props.opened);
-
-    {
-    }
-
-
-    if ((route == "/profile" || route == "/game" ) && props.opened == false )
-    {
-      console.log("hada zob ");
+    if (route == undefined) return;
+    if (props.opened == true) props.setOpned(false);
+    if (props.currentPage == route && props.opened == false) {
       props.setOpned(true);
-      console.log("opned:2 ", route);
       props.setPages(route);
-      console.log("opned:3 ", props.opened);
-    }
-    else
-    {
-      console.log("hada l9lawi");
-      console.log("opned:4 ", route);
+    } else {
       const id = parseJwt(JSON.stringify(localStorage.getItem("token"))).sub;
-      // props.setOpned(true)
-      router.push(route + "/" + id); 
+      router.push(route + "/" + id);
     }
-
   };
 
   return (
@@ -73,54 +57,58 @@ const SidebarMobile = (props: {
       <div className=" flex items-center justify-between flex-col w-[60px] h-full c-gb:h-full  backdrop:blur   bg-white/10 md:hidden  rounded-xl mr-1 ">
         <div className=" space-y-6">
           <div className=" space-y-6 mt-2  ">
-          {SidbarIcon.map((Icon, index) => (
-            <div
-              key={index}
-              className="flex justify-center items-center opacity-40  hover:opacity-100 m-2"
-            >
-              {Icon.route == "/search" ? (
-                <button onClick={() => setSearch(!isSearch)}>
-                  <Search isSearch={isSearch} />
+            {SidbarIcon.map((Icon, index) => (
+              <div
+                key={index}
+                className="flex justify-center items-center opacity-40  hover:opacity-100 m-2"
+              >
+                {Icon.route == "/search" ? (
+                  <button onClick={() => setSearch(!isSearch)}>
+                    <Search isSearch={isSearch} />
 
-                  <Image src={Icon.icon} alt="" />
-                </button>
-              ) : (
-                <button
-                  className={``}
-                  onClick={() => {props.opened == false ? handleClick(Icon.route) : props.setOpned(false)  }}
-                >
-                  <Image src={Icon.icon} alt="" />
-                </button>
-              )}
-            </div>
-          ))}
+                    <Image src={Icon.icon} alt="" />
+                  </button>
+                ) : (
+                  <button
+                    className={``}
+                    onClick={() => {
+                      props.opened == false
+                        ? handleClick(Icon.route)
+                        : props.setOpned(false);
+                    }}
+                  >
+                    <Image src={Icon.icon} alt="" />
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
         </div>
         <div className="w-[70px] h-[70px] rounded-2xl relative flex justify-center items-center">
-        <picture>
-          <img
-            onClick={handleLogOut}
-            onMouseEnter={handleHover}
-            onMouseLeave={handleHoverOut}
-            className={`${
-              hovered ? "opacity-10" : "opacity-100"
-            } cursor-pointer rounded-xl`}
-            src={data?.profile?.profile?.avatar}
-            alt="profile pic"
-            width={40}
-            height={40}
-          />
-        </picture>
-        {hovered && (
-          <Image
-            onClick={handleLogOut}
-            onMouseEnter={handleHover}
-            onMouseLeave={handleHoverOut}
-            src={logout}
-            alt="logout"
-            className="absolute cursor-pointer rounded-2xl"
-          />
-        )}
+          <picture>
+            <img
+              onClick={handleLogOut}
+              onMouseEnter={handleHover}
+              onMouseLeave={handleHoverOut}
+              className={`${
+                hovered ? "opacity-10" : "opacity-100"
+              } cursor-pointer rounded-xl`}
+              src={data?.profile?.profile?.avatar}
+              alt="profile pic"
+              width={40}
+              height={40}
+            />
+          </picture>
+          {hovered && (
+            <Image
+              onClick={handleLogOut}
+              onMouseEnter={handleHover}
+              onMouseLeave={handleHoverOut}
+              src={logout}
+              alt="logout"
+              className="absolute cursor-pointer rounded-2xl"
+            />
+          )}
         </div>
       </div>
     </div>

@@ -23,13 +23,15 @@ import PersonalInformation from "./personalInformation";
 import ResetPassword from "./resetPassword";
 import Achievements from "./userAchievements.tsx/achievements";
 import MatchHistory from "./userMatchHistory/matchHistory";
+import InviteUsers from "./inviteUsers";
+import InviteFriends from "./inviteUsers";
 
 const ProfilePage = (props: { id: any }) => {
   const data = useAppSelector((state) => state.Profile);
   const [isopen, setMenu] = useState(false);
-  const [valid, setValid] = useState(false);
+  // const [valid, setValid] = useState(false);
   const [opened, setOpned] = useState(false);
-  const [indexOpned, setIndexOpned] = useState<number>();
+  // const [indexOpned, setIndexOpned] = useState<number>();
   const [content, setContent] = useState("Personal_Information");
   const [password, setPassword] = useState(false);
   const [pages, setPages] = useState("");
@@ -41,11 +43,12 @@ const ProfilePage = (props: { id: any }) => {
   const [myImage, setMyImage] = useState<File | null>();
   const [username, setUsername] = useState("");
   const router = useRouter();
-  const [error, setError] = useState(false);
+  // const [error, setError] = useState(false);
   const [id, setId] = useState(false);
   const [table, setTable] = useState<Type[]>([]);
   const [table2, setTable2] = useState<TypePlay[]>([]);
   const [isClick, setClick] = useState(false);
+  const [invite, setInvite] = useState(false);
 
   interface Type {
     id: number;
@@ -68,7 +71,7 @@ const ProfilePage = (props: { id: any }) => {
     try {
       await dispatch(getProfile(id)).unwrap();
       router.push(`/profile/${id}`);
-      setValid(true);
+      // setValid(true);
     } catch (error) {
       console.log(error);
       // router.push("/error");
@@ -76,12 +79,12 @@ const ProfilePage = (props: { id: any }) => {
     }
   };
 
-  const handleClick = (route: string) => {
-    {
-      route.includes("/profile") && !opened ? setOpned(true) : setOpned(false);
-    }
-    setPages("/profile");
-  };
+  // const handleClick = (route: string) => {
+  //   {
+  //     route.includes("/profile") && !opened ? setOpned(true) : setOpned(false);
+  //   }
+  //   setPages("/profile");
+  // };
 
   const handleMenu = () => {
     setOpned(false);
@@ -146,6 +149,7 @@ const ProfilePage = (props: { id: any }) => {
           />
           {isopen && (
             <SidebarMobile
+              currentPage={"/profile"}
               // handleClick={handleClick}
               setOpned={setOpned}
               opened={opened}
@@ -187,7 +191,13 @@ const ProfilePage = (props: { id: any }) => {
                     Switch={setOpenDialog}
                   />
                 ) : null}
-                <Levle opne={opened} width={width} letPlay={table2} />
+                <Levle
+                  opne={opened}
+                  width={width}
+                  letPlay={table2}
+                  invite={invite}
+                  setInvite={setInvite}
+                />
               </div>
               <div
                 className={` ${
@@ -206,7 +216,6 @@ const ProfilePage = (props: { id: any }) => {
                   <Achievements />
                 ) : content == "Match_History" ? (
                   <MatchHistory />
-                  // <>jnsdgjdf</>
                 ) : content == "Security" && table.length > 2 ? (
                   password == true ? (
                     <ResetPassword />
@@ -233,6 +242,7 @@ const ProfilePage = (props: { id: any }) => {
               <TwoFactor isActive={isActive} Switch={setisActive} />
             </div>
           )}
+          {<InviteFriends invite={invite} setInvite={setInvite} />}
         </div>
       </div>
     </>

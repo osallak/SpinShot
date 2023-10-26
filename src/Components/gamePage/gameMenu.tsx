@@ -8,19 +8,18 @@ import {
   DialogFooter,
   Option,
 } from "@material-tailwind/react";
-import { useAppDispatch, useAppSelector } from "../../../redux_tool";
-import { useRouter } from "next/router";
-import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
-import { parseJwt } from "../../../redux_tool/extractToken";
-import ip from "@/utils/endPoint";
-import axios from "axios";
-import { constants } from "buffer";
+// import { useAppDispatch, useAppSelector } from "../../../redux_tool";
+// import { useRouter } from "next/router";
+// import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
+// import { parseJwt } from "../../../redux_tool/extractToken";
+// import ip from "@/utils/endPoint";
+// import axios from "axios";
+// import { constants } from "buffer";
 
 const Gamemenu = (props: any) => {
-
   const handleClick = () => {
     props.setIsClick2(false);
-  }
+  };
 
   return (
     <div className="">
@@ -34,7 +33,7 @@ const Gamemenu = (props: any) => {
           Welcome
         </DialogHeader>
         <DialogBody className=" flex justify-center items-center flex-row text-lg font-Poppins ">
-        choose your map
+          choose your map
         </DialogBody>
         <DialogFooter className="">
           <button

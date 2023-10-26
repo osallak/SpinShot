@@ -205,8 +205,8 @@ const ProfilePage = (props: { id: any }) => {
                 ) : content == "Achievements" ? (
                   <Achievements />
                 ) : content == "Match_History" ? (
-                  // <MatchHistory />
-                  <>jnsdgjdf</>
+                  <MatchHistory />
+                  // <>jnsdgjdf</>
                 ) : content == "Security" && table.length > 2 ? (
                   password == true ? (
                     <ResetPassword />

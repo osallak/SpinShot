@@ -8,14 +8,14 @@ const SocketProvider = ({ children }: any) => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const newSocket = io(`${ip}/games`, {
-      extraHeaders: { Authorization: `Bearer ${token}` },
-    });
-    setSocket(newSocket);
-    return () => {
-      newSocket.disconnect();
-    };
+    // const token = localStorage.getItem("token");
+    // const newSocket = io(`${ip}/games`, {
+    //   extraHeaders: { Authorization: `Bearer ${token}` },
+    // });
+    // setSocket(newSocket);
+    // return () => {
+    //   newSocket.disconnect();
+    // };
   }, []);
 
   return (

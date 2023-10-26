@@ -55,7 +55,6 @@ const ConversationIndividual = (props: {
       Math.floor(hours / 10) === 0 ? "0" + hours.toString() : hours.toString();
     return parsedHours + ":" + parsedMinutes;
   };
-
   const handleSendMessage = () => {
     const token = localStorage.getItem("token");
     const jwtToken = parseJwt(JSON.stringify(token));
@@ -77,7 +76,7 @@ const ConversationIndividual = (props: {
       timestamp: String(Date.now()),
       senderUsername: userName,
     };
-	console.log(messageData);
+	
     setIndividual((prev: individualType[]) => {
       const newIndividual: individualType[] = prev.map((item: any) => {
         if (item.other.id === props.id) {
@@ -128,7 +127,6 @@ const ConversationIndividual = (props: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      console.log("-->", userNameRes.data.username);
       setUserName((prev) => userNameRes.data.username);
     } catch (error : any) {
 	}

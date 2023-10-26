@@ -80,7 +80,6 @@ const Chat = () => {
       },
     });
     socket.on("connect", () => console.log("connected"));
-
     socket.on("pm", (data: Socket) => {
       const parsedData = JSON.parse(String(data));
       setId(parsedData.from);
@@ -198,7 +197,7 @@ const Chat = () => {
       setReload(true);
     });
     socket.on("exception", (data: any) => console.log("exception", data));
-    socket.on("disconnect", (data: any) => console.log("disconnect"));
+    // socket.on("disconnect", (data: any) => console.log("disconnect"));
   };
 
   const fetchDataExploreChannel = async () => {
@@ -391,6 +390,15 @@ const Chat = () => {
 
   useEffect(() => {
     useSocket();
+	return () => {
+		console.log('disconnected !!');
+		
+		socket.off('connect');
+		socket.off('pm');
+		socket.off('gm');
+		socket.off('exception');
+		socket.disconnect();
+	}
   }, []);
 
   return (

@@ -241,7 +241,6 @@ const ConversationChannel = (props: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      console.log("-->", userNameRes.data.username);
       setUserName((prev) => userNameRes.data.username);
     } catch (error : any) {
 	}

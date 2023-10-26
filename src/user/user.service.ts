@@ -253,6 +253,7 @@ export class UserService {
     id: string,
     query: PaginationQueryDto,
   ): Promise<PaginationResponse<any>> {
+    // console.log(id);
     const { limit } = query;
     const [games, totalCount] = await this.prisma.$transaction([
       this.prisma.game.findMany({
@@ -303,6 +304,7 @@ export class UserService {
         });
       }
     });
+    // console.log(userGames);
     return serializePaginationResponse(userGames, totalCount, limit);
   }
 

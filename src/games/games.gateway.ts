@@ -50,7 +50,7 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
 
-    this.logger.log(`user ${id} connected`);
+    this.logger.warn(`user ${id} connected`);
     this.gamesService.connect(client, id);
   }
 
@@ -76,13 +76,28 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
     @MessageBody() data: MapSelectionDto,
   ): void {
-    this.gamesService.join(client, data.map);
+    console.log("new user in queue:", data.id);
+    // console.log("----------------------------------------------------------------------------");
+    // console.log("join");
+    // console.log("lobby: ", this.gamesService.lobby);
+    this.gamesService.join(client, data);
+  //  for (const so of this.gamesService.matchingQueue) {
+  //       console.log("socket id", so.client.id);
+  //   }
+  //   console.log("----------------------------------------------------------------------------");
   }
 
   @UseGuards(WsJwtGuard)
   @SubscribeMessage('leaveQueue')
   leaveQueue(@ConnectedSocket() client: Socket): void {
     this.gamesService.handleCancelJoin(client);
+    console.log("user left queue:", this.gamesService.getIdBySocket(client));
+    // console.log("----------------------------------------------------------------------------");
+    // console.log("leave");
+    // for (const so of this.gamesService.matchingQueue.values()) {
+    //     console.log("socket id", so.id);
+    // }
+    // console.log("----------------------------------------------------------------------------");
   }
 
   @UseGuards(WsJwtGuard)
@@ -118,9 +133,9 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.gamesService.handleDeclineInvite(client, data.id);
   }
 
-  @UseGuards(WsJwtGuard)
-  @SubscribeMessage('leave')
-  handleLeave(@ConnectedSocket() client: Socket): void {
-    this.gamesService.leave(client);
-  }
+  // @UseGuards(WsJwtGuard)
+  // @SubscribeMessage('leave')
+  // handleLeave(@ConnectedSocket() client: Socket): void {
+  //   this.gamesService.leave(client);
+  // }
 }

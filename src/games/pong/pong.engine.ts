@@ -3,6 +3,7 @@ import Matter from 'matter-js';
 import { Socket } from 'socket.io';
 import { MapEnum } from '../types/map-enum.type';
 import { MoveDirection } from '../types/walls-position.enum';
+import { v4 as uuidv4 } from 'uuid';
 import {
   BALL_RADUIS,
   HEIGHT,
@@ -18,7 +19,7 @@ type position = {
 
 @Injectable()
 export class PongEngine {
-  private readonly id: string;
+  private id: string;
   private engine: Matter.engine;
   private runner: Matter.runner;
   private ball: Matter.body;
@@ -62,6 +63,7 @@ export class PongEngine {
     top: firstPaddle 
     buttom: secondPaddle
   */
+
   constructor(gameSettings: {
     firstClient: Socket;
     secondClient: Socket;
@@ -146,6 +148,7 @@ export class PongEngine {
     this.initMatter(); //engine world ...etc
     this.initMovingObjects(); //paddles and ball
     this.initStaticObjects(); //including obstacles/walls
+    // this.id = uuidv4();
   }
 
   private listen() {
@@ -298,7 +301,7 @@ export class PongEngine {
 
     playerId === this.firstPlayerId ? this.firstScore++ : this.secondScore++;
 
-    if (this.firstScore >= 5 || this.secondScore >= 5) {
+    if (this.firstScore >= 1 || this.secondScore >= 1) {
       this.gameOver();
       return;
     } else {
@@ -337,7 +340,8 @@ export class PongEngine {
 
     Matter.Events.off(this.engine, 'collisionStart', this.handleCollisionStart);
     Matter.Events.off(this.engine, 'afterUpdate', this.handleAfterUpdate);
-    this.saveGameCallback &&
+    console.log("pong engine id", this.id);
+    this.id && this.saveGameCallback &&
       this.saveGameCallback({
         userId: this.firstPlayerId,
         opponentId: this.secondPlayerId,
@@ -346,6 +350,7 @@ export class PongEngine {
         opponentScore: this.secondScore,
       });
     this.cleanUpGameService && this.cleanUpGameService(this.id);
+    this.id = null;
   }
 
   private sendScore() {
@@ -423,6 +428,10 @@ export class PongEngine {
 
   get gameId() {
     return this.id;
+  }
+
+  set gameId(id: string) {
+    this.id = id;
   }
 
   public reconnect(id: string, client: Socket) {

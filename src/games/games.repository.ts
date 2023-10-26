@@ -12,6 +12,7 @@ export class GamesRepository {
   constructor(private readonly prismaService: PrismaService) {}
   @OnEvent('saveGame')
   public async saveGame(payload: any) {
+    console.log("save game triggerd");
     try {
       const [user, opponent] = await this.prismaService.$transaction([
         this.prismaService.user.findUnique({
@@ -80,11 +81,12 @@ export class GamesRepository {
     score: { user: number; opponent: number },
   ): Promise<void> {
     try {
+      // console.log("achieve winner user id", user.logs.id);
       await this.prismaService.logs.update({
         where: { id: user.logs.id },
         data: {
-          victories: user.logs.victories + 1,
-          level: user.logs.level + 0.3,
+          victories: {increment: 1},
+          level: user.logs.level + 0.3
         },
       });
       this.checkAchievements(user, true, score.opponent);
@@ -175,9 +177,10 @@ export class GamesRepository {
   }
 
   async achieveLoser(user: User): Promise<void> {
+    // console.log("achieve loser user id", user.logs.id);
     await this.prismaService.logs.update({
       where: { id: user.logs.id },
-      data: { defeats: user.logs.defeats + 1 },
+      data: { defeats: {increment: 1} },
     });
   }
 
@@ -186,13 +189,16 @@ export class GamesRepository {
     opponent: User,
     score: { user: number; opponent: number },
   ): Promise<void> {
+    // console.log("achive user", user);
     if (score.user > score.opponent) {
+      // console.log("achieve winner", user);
       await this.achieveWinner(user, {
         user: score.user,
         opponent: score.opponent,
       });
       await this.achieveLoser(opponent);
     } else {
+      // console.log("achieve winner", opponent);
       await this.achieveWinner(opponent, {
         user: score.opponent,
         opponent: score.user,

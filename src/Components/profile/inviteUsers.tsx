@@ -43,6 +43,7 @@ const InviteFriends = (props: {
     try {
       await axios.post(
         `${ip}/room/setInvite`,
+        { userId: router.query.id, roomname: roomname },
         // { userId: props.id, roomName: props.roomId },
         {
           headers: {
@@ -61,7 +62,7 @@ const InviteFriends = (props: {
   return (
     <Dialog
       size="md"
-      open={props.setInvite}
+      open={props.invite}
       handler={handleOpen}
       className=" bg-pearl outline-none ring-0"
     >

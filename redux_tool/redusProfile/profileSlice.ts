@@ -27,7 +27,7 @@ export const ProfileSlice = createSlice({
       state.profile.profile.name.lastName = action.payload;
     },
     updateImage: (state, action: PayloadAction<any>) => {
-      state.profile.profile.name.lastName = action.payload;
+      state.profile.profile.avatar = action.payload;
     },
   },
 
@@ -39,5 +39,11 @@ export const ProfileSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setProfile, updateUsename, updateFirstName, updateLastName, updateImage} = ProfileSlice.actions;
+export const {
+  setProfile,
+  updateUsename,
+  updateFirstName,
+  updateLastName,
+  updateImage,
+} = ProfileSlice.actions;
 export default ProfileSlice.reducer;

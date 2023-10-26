@@ -7,16 +7,20 @@ import { useAppSelector } from "../../../redux_tool";
 
 import toast, { Toaster } from "react-hot-toast";
 import ip from "@/utils/endPoint";
+import { useRouter } from "next/router";
+import { isStringEmptyOrWhitespace } from "@/lib/utils";
+import parseJwt from "@/utils/parsJwt";
 
 const ResetPassword = () => {
   const [showPasswd, setShowPasswd] = useState(false);
   const [showNewPasswd, setShowNewPasswd] = useState(false);
   const [showConfPassw, setShowConfPassw] = useState(false);
+  const [status, setStatus] = useState<any>();
   const profile_data = useAppSelector((state) => state.Profile);
-
   const [password, setPassword] = useState("");
   const [NewPassword, setNewPassword] = useState("");
   const [ConfirmPassword, setConfermPassword] = useState("");
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     {
@@ -31,45 +35,57 @@ const ResetPassword = () => {
     ("");
   };
 
-  const hendleChange = () => {
-    hendleUpdata()
-    // const parss = /^.{6,}$/;
-    // {
-    //   password == "123456" && parss.test(ConfirmPassword)
-    //     ? hendleUpdata()
-    //     : notify();
-    // }
+  const HandleChange = () => {
+    const parss = /^.{6,}$/;
+    if (
+      !isStringEmptyOrWhitespace(NewPassword) &&
+      !isStringEmptyOrWhitespace(ConfirmPassword) &&
+      !isStringEmptyOrWhitespace(password) &&
+      parss.test(NewPassword) &&
+      parss.test(ConfirmPassword) &&
+      parss.test(password) &&
+      NewPassword == ConfirmPassword
+    )
+      HandleUpdata();
+    else toast.error("Password incorrect ");
   };
 
-  const hendleUpdata = async () => {
+  const HandleUpdata = async () => {
     try {
       const token = localStorage.getItem("token");
-      if (token)
-      {
-        const response = await axios.patch(
-          `${ip}/users`,
-          {
-            password: ConfirmPassword,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-          );
+      if (!token) {
+        router.push("/signin");
+        return;
       }
+      const twoFA = parseJwt(JSON.stringify(token));
+      if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+        router.push("/signin");
+        return;
+      }
+
+      const response = await axios.patch(
+        `${ip}/users`,
+        {
+          oldPassword: password,
+          password: ConfirmPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Password changed successfully");
     } catch (error) {
-      console.error(error);
+      if ((error as any).code === "ERR_BAD_REQUEST") {
+        toast.error("Password incorrect ");
+      }
     }
   };
 
-  // const notify = () => {
-  //   toast.error("Password incorrect ");
-  // };
-
   return (
     <div className=" space-y-20 md:space-y-36  h-[910px] ">
-      <div className=" text-pearl text-[15px] sm:text-2xl  h-[14%] md:h-[18%] c-gb:h-[25%] flex items-center c-10xl:px-24 px-16">
+      <div className=" text-pearl text-[15px] sm:text-2xl  md:h-40 h-32 flex items-center c-10xl:px-24 px-16">
         <h1 className="">Reset Password</h1>
       </div>
       <div className=" text-pearl h-[18%] c-gb:h-[25%] space-y-10 justify-center  items-center flex c-10xl:px-24 px-16 flex-col">
@@ -115,13 +131,13 @@ const ResetPassword = () => {
       </div>
       <div className=" h-12 flex c-gb:justify-end  justify-center items-center sm:px-28 ">
         <div className={`  w-24 sm:w-32  h-full`}>
-          <SimpleButton content="Save" onclick={hendleChange} />
+          <SimpleButton content="Save" onclick={HandleChange} />
         </div>
-        {/* <div>
+        <div>
           <Toaster position="top-center" reverseOrder={false} />
-        </div> */}
+        </div>
       </div>
-        {/* <Toaster
+      {/* <Toaster
           position="top-right"
           reverseOrder={false}
         /> */}

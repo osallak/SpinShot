@@ -61,9 +61,10 @@ module.exports = withMT({
         'c-11xl': '1976px',
         'c-12xl': '2230px',
         'c-13xl': '1193px',
-        'c-14xl': '1960px',
+        'c-14xl': '1965px',
       }
     },
   },
   plugins: [require("daisyui")],
+  plugins: [require('tailwind-scrollbar'),],
 });

@@ -13,7 +13,6 @@ const Levle = (props: any) => {
   const [rank, setRank] = useState<number>(0);
   const router = useRouter();
 
-
   const isValueNaN = (value: any) => {
     return isNaN(value);
   };
@@ -42,7 +41,9 @@ const Levle = (props: any) => {
     if (props.letPlay[0].name == "Sign out") {
       localStorage.removeItem("token");
       router.push("/signin");
-    } else router.push("/game");
+    } else {
+      props.setInvite(true);
+    }
   };
 
   return (

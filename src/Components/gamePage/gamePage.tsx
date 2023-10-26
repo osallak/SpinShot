@@ -34,7 +34,7 @@ const GamePage = (props: any) => {
   // const [cancelJoin, setCancelJoin] = useState(false);
   const [matchData, setmatchData] = useState<any>(null);
   const router = useRouter();
-  const [dataGame, setDataGame] = useState<any>();
+  const [dataOpponent, setDataOfOpponent] = useState<any>();
   const [isClick2, setIsClick2] = useState(true);
   // const [depend, setDepend] = useState(false);
   const [gameOver, setGameOver] = useState(true);
@@ -71,18 +71,20 @@ const GamePage = (props: any) => {
     // setCancelJoin(false);
     setLoserCardState(true);
     // setGameJustFinished(false);
+    console.log("game start data: ", data);
     setIsClick(false);
     setGamerState(null);
     setGameOver(false);
     setmatchData(data);
     handleData(data);
-    setDataGame(dataGame);
+    // setDataOfOpponent(data);
   };
 
   const gameOverCallback = (data: any) => {
+    console.log("game over data: ", data);
     setScore(null);
     setClear(true);
-    setDataGame(null);
+    setDataOfOpponent(null);
     setGamerState(data);
     // setGameJustFinished(true);
     // setLoser(data);
@@ -114,8 +116,8 @@ const GamePage = (props: any) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setDataGame(respo?.data);
-        // console.log("after setting:", dataGame);
+        setDataOfOpponent(respo?.data);
+        // console.log("after setting:", dataOpponent);
       }
     } catch (error) {
       // console.log("errrror dzeb")
@@ -210,7 +212,7 @@ const GamePage = (props: any) => {
   }, [width, height, isopen, map, socket]);
 
   const cleanUp = () => {
-    setDataGame(null);
+    setDataOfOpponent(null);
     setmatchData(null);
   };
 
@@ -282,7 +284,7 @@ const GamePage = (props: any) => {
           <div
             className={`flex justify-center items-center w-[96%] c-gb:w-[80% h-[15%] `}
           >
-            <NavGame dataGame={dataGame} score={score} />
+            <NavGame dataOpponent={dataOpponent} score={score} />
           </div>
           <div
             className={`h-[80%] w-[80%] flex justify-center items-center relative `}
@@ -308,10 +310,10 @@ const GamePage = (props: any) => {
             isClick={isClick}
             setIsClick={setIsClick}
             socket={socket}
-            dataGame={dataGame}
-            setDataGame={setDataGame}
-            setmatchData={setmatchData}
-            matchData={matchData}
+            dataOpponent={dataOpponent}
+            setDataOfOpponent={setDataOfOpponent}
+            // setmatchData={setmatchData}
+            // matchData={matchData}
             setClear={setClear}
           />
         )}

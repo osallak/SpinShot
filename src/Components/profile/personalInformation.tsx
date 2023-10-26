@@ -90,7 +90,7 @@ const PersonalInformation = (props: any) => {
   return (
     <div className="space-y-52  md:space-y-14 h-[910px]  ">
       <div className=" ">
-        <div className="text-pearl text-[15px] sm:text-2xl md:h-52 h-32 flex items-center c-10xl:px-24 px-8 sm:px-14">
+        <div className="text-pearl text-[15px] sm:text-2xl md:h-40 h-32 flex items-center c-10xl:px-24 px-8 sm:px-14">
           <span>Personal information</span>
         </div>
         <div className="flex flex-row justify-center px-4 sm:px-14  c-10xl:px-32 ">

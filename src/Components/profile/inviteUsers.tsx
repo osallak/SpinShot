@@ -13,17 +13,17 @@ import { ChangeEvent, useState } from "react";
 import toast from "react-hot-toast";
 
 const InviteFriends = (props: {
-  open: boolean;
-  setOpen: Function;
-  id: string; //user serched id
-  roomId: string; //room id
+  invite: boolean;
+  setInvite: Function;
+  //   id: string; //user serched id
+  //   roomId: string; //room id
 }) => {
   const [roomname, setRoomname] = useState("");
   const router = useRouter();
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleOpen = () => props.setOpen(!props.open);
+  const handleOpen = () => props.setInvite(!props.invite);
 
   const handleRoomname = (event: ChangeEvent<HTMLInputElement>) => {
     setRoomname(event.target.value);
@@ -42,15 +42,15 @@ const InviteFriends = (props: {
     }
     try {
       await axios.post(
-        `${ip}/room/invite`,
-        { userId: props.id, roomName: props.roomId },
+        `${ip}/room/setInvite`,
+        // { userId: props.id, roomName: props.roomId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      props.setOpen(false);
+      props.setInvite(false);
       toast.success("user invited successfully");
     } catch (error: any) {
       setError(true);
@@ -61,7 +61,7 @@ const InviteFriends = (props: {
   return (
     <Dialog
       size="md"
-      open={props.open}
+      open={props.setInvite}
       handler={handleOpen}
       className=" bg-pearl outline-none ring-0"
     >

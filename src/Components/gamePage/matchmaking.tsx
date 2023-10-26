@@ -7,35 +7,36 @@ import {
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux_tool";
-import { parseJwt } from "../../../redux_tool/extractToken";
+// import { parseJwt } from "../../../redux_tool/extractToken";
 import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
+import parseJwt from "@/utils/parsJwt";
 
 const Matchmaking = (props: any) => {
-  const data = useAppSelector((state) => state.Profile);
+  const dataUser = useAppSelector((state) => state.Profile);
   // const [clear, setClear] = useState(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   // useEffect(() => {
 
-  // }, [props.matchData, props.dataGame])
+  // }, [props.matchData, props.dataOpponent])
   const handleClick = () => {
     // setClear(true);
-    console.log("socket: ", props.socket);
-    console.log("leave queue");
+    // console.log("socket: ", props.socket);
+    // console.log("leave queue");
     props.socket.emit("leaveQueue", () => console.log("leave queue"));
     props.socket.on("exception", () => console.log("exception: "));
-    if (props.matchData) {
-      props.socket.emit("leave");
-    }
+    // if (props.matchData) {
+    //   props.socket.emit("leave");
+    // }
     // props.socket.emit("leave", () => {
     //   console.log('leave');
     // });
     // props.setGameOver(true);
     props.socket.on("disconnect", () => console.log("disconnect: "));
     props.setIsClick(!props.isClick);
-    props.setmatchData(null);
-    props.setDataGame(null);
+    // props.setmatchData(null);
+    props.setDataOfOpponent(null);
   };
 
   const getDataOfUaer = async () => {
@@ -63,7 +64,7 @@ const Matchmaking = (props: any) => {
     //     cleanUp();
     //   }
     // };
-  }, [props.matchData, props.dataGame]);
+  }, [props.dataOpponent]);
 
   return (
     <div className="">
@@ -84,13 +85,13 @@ const Matchmaking = (props: any) => {
                   className="rounded-full bg-cover "
                   width={150}
                   height={150}
-                  src={data.profile?.profile?.avatar}
+                  src={dataUser.profile?.profile?.avatar}
                   alt=""
                 />
               </picture>
             </div>
             <h1 className="text-very-dark-purple font-Passion-One text-xl">
-              {data.profile?.username}
+              {dataUser.profile?.username}
             </h1>
           </div>
           <div className="text-3xl text-very-dark-purple font-Passion-One">
@@ -103,13 +104,13 @@ const Matchmaking = (props: any) => {
                   className="rounded-full bg-cover"
                   width={150}
                   height={150}
-                  src={props.dataGame?.profile?.avatar}
+                  src={props.dataOpponent?.profile?.avatar}
                   alt=""
                 />
               </picture>
             </div>
             <h1 className="text-very-dark-purple font-Passion-One text-xl">
-              {props.dataGame?.username}
+              {props.dataOpponent?.username}
             </h1>
           </div>
         </DialogBody>

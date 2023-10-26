@@ -23,6 +23,8 @@ import PersonalInformation from "./personalInformation";
 import ResetPassword from "./resetPassword";
 import Achievements from "./userAchievements.tsx/achievements";
 import MatchHistory from "./userMatchHistory/matchHistory";
+import InviteUsers from "./inviteUsers";
+import InviteFriends from "./inviteUsers";
 
 const ProfilePage = (props: { id: any }) => {
   const data = useAppSelector((state) => state.Profile);
@@ -46,6 +48,7 @@ const ProfilePage = (props: { id: any }) => {
   const [table, setTable] = useState<Type[]>([]);
   const [table2, setTable2] = useState<TypePlay[]>([]);
   const [isClick, setClick] = useState(false);
+  const [invite, setInvite] = useState(false);
 
   interface Type {
     id: number;
@@ -188,7 +191,13 @@ const ProfilePage = (props: { id: any }) => {
                     Switch={setOpenDialog}
                   />
                 ) : null}
-                <Levle opne={opened} width={width} letPlay={table2} />
+                <Levle
+                  opne={opened}
+                  width={width}
+                  letPlay={table2}
+                  invite={invite}
+                  setInvite={setInvite}
+                />
               </div>
               <div
                 className={` ${
@@ -233,6 +242,7 @@ const ProfilePage = (props: { id: any }) => {
               <TwoFactor isActive={isActive} Switch={setisActive} />
             </div>
           )}
+          {<InviteFriends invite={invite} setInvite={setInvite} />}
         </div>
       </div>
     </>

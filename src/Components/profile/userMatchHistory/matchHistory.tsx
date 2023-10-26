@@ -63,7 +63,7 @@ const MatchHistory = () => {
 
   return (
     <div className="  h-[1100px] c-gb:h-[900px] relative space-y-5 text-[10px] sm:text-sm md:text-lg c-3xl:text-2xl text-pearl">
-      <div className=" l text-[15px] sm:text-2xl h-[8%] c-gb:h-[18%]  flex items-end c-10xl:px-24 px-16 ">
+      <div className="  text-[15px] sm:text-2xl md:h-40 h-32  flex items-center c-10xl:px-24 px-16 ">
         <h1>Match History</h1>
       </div>
       <div className="h-[70%] flex flex-col c-gb:flex-row  ">

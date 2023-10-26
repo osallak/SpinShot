@@ -85,7 +85,7 @@ const ResetPassword = () => {
 
   return (
     <div className=" space-y-20 md:space-y-36  h-[910px] ">
-      <div className=" text-pearl text-[15px] sm:text-2xl  h-[14%] md:h-[18%] c-gb:h-[25%] flex items-center c-10xl:px-24 px-16">
+      <div className=" text-pearl text-[15px] sm:text-2xl  md:h-40 h-32 flex items-center c-10xl:px-24 px-16">
         <h1 className="">Reset Password</h1>
       </div>
       <div className=" text-pearl h-[18%] c-gb:h-[25%] space-y-10 justify-center  items-center flex c-10xl:px-24 px-16 flex-col">

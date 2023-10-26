@@ -9,12 +9,9 @@ import { useRouter } from "next/router";
 const Rookie = () => {
   const data = useAppSelector((state) => state.Profile);
   const [achievements, setAchievement] = useState<any>();
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    setLoaded(true);
-    console.log("achievements: rooki", data?.profile);
-    setAchievement(data?.profile.achievements);
+    setAchievement(data?.profile?.achievements);
   }, [data]);
 
   // console.log("achievements: rooki", achievements[0].achieved);

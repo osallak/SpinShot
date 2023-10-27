@@ -19,10 +19,10 @@ import { Socket, io } from "socket.io-client";
 import parseJwt from "@/utils/parsJwt";
 
 let game: GameModel | null = null;
-let socket: Socket;
+// let socket: Socket;
 
 const GamePage = (props: any) => {
-  // const socket: any = useContext(SocketContext);
+  const socket: any = useContext(SocketContext);
   const [isopen, setMenu] = useState(false);
   const [opened, setOpned] = useState(false);
   // const [mode, setMode] = useState<string>();
@@ -164,11 +164,12 @@ const GamePage = (props: any) => {
   // setDepend(false);
   // }, []);
   const initializeSocket = () => {
-    socket = io(`${ip}/games`, {
-      extraHeaders: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    if (!socket) return;
+    // socket = io(`${ip}/games`, {
+    //   extraHeaders: {
+    //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+    //   },
+    // });
     socket.on("connect", () => {
       console.log("connected......");
     });
@@ -207,7 +208,7 @@ const GamePage = (props: any) => {
     // return () => {
     //   socket.disconnect();
     // };
-  }, [socket]);
+  }, [socket?.connected]);
 
   useEffect(() => {
     // handleData();
@@ -215,7 +216,7 @@ const GamePage = (props: any) => {
     return () => {
       game?.destroy();
     };
-  }, [width, height, isopen, map, socket]);
+  }, [width, height, isopen, map, socket?.connected]);
 
   const cleanUp = () => {
     setDataOfOpponent(null);
@@ -239,6 +240,9 @@ const GamePage = (props: any) => {
       // return () => {
       //   clearInterval(timer);
       // };
+    }
+    return () => {
+      setCounter(6);
     }
   }, [start]);
 

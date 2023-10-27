@@ -14,7 +14,7 @@ import { MouseEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 import timeMute from "../../../public/timeMute.svg";
-import { parseJwt } from "../../../redux_tool/extractToken";
+import parseJwt from "@/utils/parsJwt";
 import { channelAtom } from "../context/recoilContextChannel";
 
 const SubUsersList = (props: {

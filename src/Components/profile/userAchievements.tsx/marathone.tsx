@@ -47,7 +47,7 @@ const Marathone = (props: any) => {
                     : "text-pearl opacity-40"
                 }`}
               >
-                {props.level}/10
+                {achievements[3].level}/10
               </h1>
               <div className="border h-3 md:h-5 rounded-full p-[0.5px] flex justfy-center items-center ">
                 <div

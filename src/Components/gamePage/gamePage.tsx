@@ -15,12 +15,14 @@ import GameModel from "./gameModel";
 import Matchmaking from "./matchmaking";
 import { SocketContext } from "@/context/socket.context";
 import Counter from "./counter";
+import { Socket, io } from "socket.io-client";
 import parseJwt from "@/utils/parsJwt";
 
 let game: GameModel | null = null;
+let socket: Socket;
 
 const GamePage = (props: any) => {
-  const socket: any = useContext(SocketContext);
+  // const socket: any = useContext(SocketContext);
   const [isopen, setMenu] = useState(false);
   const [opened, setOpned] = useState(false);
   // const [mode, setMode] = useState<string>();
@@ -161,18 +163,14 @@ const GamePage = (props: any) => {
   // getDataOfUser();
   // setDepend(false);
   // }, []);
-
-  useEffect(() => {
-    if (!socket) return;
-    handleResize();
-    // const token = localStorage.getItem("token");
-    // let socket: Socket = io(`ws://${socketIp}/games`, {
-    //   extraHeaders: { Authorization: `Bearer ${token}` },
-    // });
+  const initializeSocket = () => {
+    socket = io(`${ip}/games`, {
+      extraHeaders: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
     socket.on("connect", () => {
-      console.log("socket: ", socket);
       console.log("connected......");
-      socket.emit("message", "Message received on the server...");
     });
     socket.on("cancel-join", cancelJoinCallback);
     socket.on("error", errorEventCallback);
@@ -184,13 +182,21 @@ const GamePage = (props: any) => {
       // setScore(data);
       game?.updateState(data);
     });
+
     socket.on("scoreUpdate", (data: any) => {
       // console.log("score update ", data);
       setScore(data);
       // game?.updateState(data);
     });
-    // setSocket(socket);
+    return null;
+  };
+  useEffect(() => {
+    initializeSocket();
+  }, []);
 
+  useEffect(() => {
+    // initializeSocket();
+    handleResize();
     if (typeof window !== "undefined") {
       window.addEventListener("resize", handleResize);
       return () => {

@@ -34,8 +34,8 @@ const ConversationIndividual = (props: {
   openSubSideBar: boolean;
 }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const [currentMsg, setCurrentMsg] = useState("");
   const router = useRouter();
+  const [userStatus, setUserStatus] = useState("");
   const [message, setMessage] = useState("");
   const [userName, setUserName] = useState("");
   const [individualConversation, setIndividualConversation] = useRecoilState(
@@ -65,14 +65,13 @@ const ConversationIndividual = (props: {
       router.push("/signin");
       return;
     }
-    if (currentMsg === "") return;
-    setMessage("");
+    if (message === "") return;
     props.setReload(true);
 
     const messageData: IMsgDataTypes = {
       from: `${parseJwt(JSON.stringify(token)).sub}`,
       to: `${props.id}`,
-      content: currentMsg,
+      content: message,
       timestamp: String(Date.now()),
       senderUsername: userName,
     };
@@ -84,7 +83,7 @@ const ConversationIndividual = (props: {
             other: item.other,
             sender: item.sender,
             sentAt: item.sentAt,
-            message: currentMsg,
+            message: message,
           };
         } else return item;
       });
@@ -100,6 +99,7 @@ const ConversationIndividual = (props: {
       return [...prev, newIndividualConversation];
     });
     props.socket.emit("pm", messageData);
+    setMessage("");
   };
 
   const keySendMessage = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -132,13 +132,36 @@ const ConversationIndividual = (props: {
 	}
   };
 
+  const playerStatus = async () => {
+	const token = localStorage.getItem("token");
+	const jwtToken = parseJwt(JSON.stringify(token));
+	if (!token || (jwtToken.isTwoFactorEnabled && !jwtToken.isTwoFaAuthenticated)) {
+		router.push("/signin")
+		return;
+	}
+	try {
+		const res = await axios.get(`${ip}/users/status/${props.id}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+			params: {
+				id: props.id,
+			}
+		})
+		setUserStatus(res.data.status);
+		console.log('res from player status: ' , res);
+	} catch (error: any) {
+		console.log('error from player status : ', error)
+	}
+  }
+
   useEffect(() => {
     getUserName();
   }, []);
 
   useEffect(() => {
-    setCurrentMsg(message);
-  }, [message]);
+	playerStatus();
+  })
 
   useEffect(() => {
     const conversationDiv: any = chatContainerRef.current;
@@ -189,7 +212,7 @@ const ConversationIndividual = (props: {
                   ))}
                 </p>
                 <p className="font-Poppins md:text-lg sm:text-sm text-xs text-pearl text-opacity-40 font-thin">
-                  Online
+                  {userStatus}
                 </p>
               </div>
             </div>

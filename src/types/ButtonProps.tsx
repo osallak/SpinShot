@@ -12,6 +12,7 @@ export type OthersProps = {
   onclick: (event: MouseEvent<HTMLButtonElement>) => void;
   content: string;
   onkeydown?: (event: KeyboardEvent<HTMLButtonElement>) => void;
+  gameSession ?: any;
 };
 
 export type PasswordProps = {

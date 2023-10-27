@@ -1,11 +1,7 @@
-TODO : profile
-- handle size of image must be take one size to display and upload image ok
-- handle password (don't change password if the current passwoed == the new password) ok
-- handle error of building and error display in console ok
-- clening the code ok
-- handle pagination of user ...ok...
-- handle achivement of user 
-- modify the redux syntaxe 
-- handle tow factor auth 
-- handle sign out button 
-- handle api errors (bad request, ...etc) 
+TODO : game
+
+- game can't be started without map
+
+- clear old profile and get new one
+
+- handle error event as well as cancel-join

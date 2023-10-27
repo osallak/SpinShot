@@ -31,7 +31,9 @@ const DropdownChat = () => {
               <div key={index} className={`px-4 py-2 divide-y-4`}>
                 <button className=" flex justify-row  text-pearl opacity-40 hover:opacity-100">
                   <div className="pr-4">
-                    <Image src={option.icon} alt="" />
+                    <picture>
+                    <img src={option.icon} alt="" />
+                    </picture>
                   </div>
                   <span> {option.name} </span>
                   <div

@@ -1,47 +1,62 @@
-import React, { useEffect, useState } from "react";
-import test1 from "../../../public/test1.svg";
 import {
-  Button,
   Dialog,
-  DialogHeader,
   DialogBody,
   DialogFooter,
-  Option,
+  DialogHeader,
 } from "@material-tailwind/react";
+import { useEffect, useState } from "react";
 
-import axios from "axios";
-import { textLimit } from "../profile/userMatchHistory/textLimit";
-import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
-import { useAppDispatch } from "../../../redux_tool";
-import { useRouter } from "next/router";
+import { isStringEmptyOrWhitespace } from "@/lib/utils";
 import ip from "@/utils/endPoint";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { useAppDispatch } from "../../../redux_tool";
+import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
+import { textLimit } from "../profile/userMatchHistory/textLimit";
+import parseJwt from "@/utils/parsJwt";
 
-const Search = (props: { isSearch: boolean }) => {
+const Search = (props: any) => {
   const [user, setUser] = useState("");
   const [resulta, setSearchResults] = useState<any>([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [width, setWidth] = useState<any>();
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const handleSearch = async () => {
+  const handleSearch = async (targetValue__: string) => {
     const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
     try {
-      const response = await axios.get(`${ip}/users?keyword=${user}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setSearchResults(response.data);
+      if (isStringEmptyOrWhitespace(targetValue__)) return;
+      if (targetValue__) {
+        const response = await axios.get(
+          `${ip}/users?keyword=${targetValue__}&limit=${10}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data);
+
+        setSearchResults(response.data);
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleChange = (e: any) => {
-    setUser(e.target.value);
-    setSearchTerm(e.target.value);
-    handleSearch();
+    const targetValue = e.target.value;
+    setUser(targetValue);
+    handleSearch(targetValue);
   };
 
   const handelClear = () => {
@@ -54,25 +69,27 @@ const Search = (props: { isSearch: boolean }) => {
   };
 
   const getInformation = (item: any) => {
+    handelClear();
     dispatch(getProfile(item));
     router.push(`/profile/${item}`);
   };
 
   useEffect(() => {
+    if (!props.isSearch) handelClear();
     if (typeof window !== "undefined") {
       window.addEventListener("resize", handleResize);
       return () => {
         window.removeEventListener("resize", handleResize);
       };
     }
-  }, [width, searchTerm]);
+  }, [width, props.isSearch]);
 
   return (
     <div className="">
       <Dialog
         open={props.isSearch}
         handler={() => {}}
-        size="xs"
+        size="sm"
         className="bg-pearl"
       >
         <DialogHeader className="flex justify-center items-center">
@@ -82,12 +99,12 @@ const Search = (props: { isSearch: boolean }) => {
           <div className=" w-[80%] ">
             <input
               type="text"
-              className="w-full h-14 rounded-full bg-very-dark-purple px-7 text-md text-pearl font-Poppins overflow-scroll"
+              className="w-full h-14 rounded-full bg-very-dark-purple px-7 text-md text-pearl font-Poppins outline-none ring-0 focus:ring-0"
               placeholder="Search..."
               onChange={(event) => handleChange(event)}
             />
           </div>
-          <div className="flex flex-col  w-[80%] bg-very-dark-purple rounded-3xl  font-Poppins font-semibold text-sm ">
+          <div className="flex flex-col  w-[80%] bg-very-dark-purple rounded-3xl  font-Poppins font-semibold text-sm  scrollbar-rounded-5 scrollbar scrollbar-track-transparent overflow-scroll h-[500px] ">
             {resulta?.data?.length > 0 && user !== "" ? (
               resulta?.data.map((index: any) => (
                 <div
@@ -97,7 +114,7 @@ const Search = (props: { isSearch: boolean }) => {
                   <div className="flex flex-row justify-center items-center ">
                     <picture className="text-xs">
                       <img
-                        className=" w-10 h-10 sm:w-14 sm:h-14 p-2 rounded-xl"
+                        className=" w-10 h-10 sm:w-14 sm:h-14 p-2 rounded-2xl"
                         src={index?.avatar}
                         alt="Oops"
                       />
@@ -105,14 +122,16 @@ const Search = (props: { isSearch: boolean }) => {
                   </div>
                   {width < 450 ? (
                     <h1 className="text-white">
-                      {textLimit(index?.username, 3)}
+                      {textLimit(index?.username, 5)}
                     </h1>
                   ) : (
-                    <h1 className="text-white">{index?.username}</h1>
+                    <h1 className="text-white">
+                      {textLimit(index?.username, 13)}
+                    </h1>
                   )}
                   <button
                     onClick={() => getInformation(index.id)}
-                    className="border  sm:p-2 rounded-full bg-peridot text-very-dark-purple "
+                    className=" sm:p-2 h-[60%] flex items-center justify-center rounded-full bg-peridot text-very-dark-purple text-xs sm:text-sm font-Passion-One w-12 sm:w-20"
                   >
                     profile
                   </button>

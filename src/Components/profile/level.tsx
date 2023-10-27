@@ -13,7 +13,6 @@ const Levle = (props: any) => {
   const [rank, setRank] = useState<number>(0);
   const router = useRouter();
 
-
   const isValueNaN = (value: any) => {
     return isNaN(value);
   };
@@ -39,9 +38,13 @@ const Levle = (props: any) => {
   }, [data]);
 
   const handleLogOut = () => {
-    localStorage.removeItem("token")
-    router.push("/signin");
-  }
+    if (props.letPlay[0].name == "Sign out") {
+      localStorage.removeItem("token");
+      router.push("/signin");
+    } else {
+      props.setInvite(true);
+    }
+  };
 
   return (
     <div
@@ -65,7 +68,7 @@ const Levle = (props: any) => {
           ))}
         </div>
         <div className="  right-0 absolute p-8 hidden c-gb:block">
-          <DropdownUser onClick={handleLogOut} Array={SignOut} />
+          <DropdownUser onClick={handleLogOut} Array={props.letPlay} />
         </div>
       </div>
       <div className=" flex items-center justify-center flex-col  rounded-[20px] w-full h-[100px] c-gb:h-[30%]">

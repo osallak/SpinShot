@@ -5,11 +5,13 @@ import securityIcon2 from "./../../../../public/securityIcon2.svg";
 
 import Security from "../upDatePasswd/security";
 import parseJwt from "@/utils/parsJwt";
+import { useRouter } from "next/router";
 
 const SubSidebar = (props: any) => {
 
   const [background, setBackground] = useState(false);
   const [subbackground, setSubBackground] = useState<number>(1);
+  const router = useRouter();
 
 const handle = (id: number, route: string) => {
   props.setClick(!props.isClick);
@@ -19,12 +21,25 @@ const handle = (id: number, route: string) => {
   props.setPassword(true);
 };
 
+
+useEffect(() => {
+    if (router.query.id === parseJwt(JSON.stringify(localStorage.getItem("token"))).sub) {
+      setSubBackground(1)
+      props.setContent("Personal_Information")
+    }
+    else
+    {
+      setSubBackground(2);
+      props.setContent("Achievements")
+    }
+}, [router.query.id])
+
 const handlePasswd = (id: boolean, route: string) => {
   setBackground(true);
 };
 
 return (
-    <div className=" backdrop:blur  bg-white/10 space-y-10 w-[30%] hidden c-gb:block rounded-[20px]  ml-[110px]">
+    <div className=" backdrop:blur  bg-white/10 space-y-10 w-[30%] hidden c-gb:block rounded-[20px]  ml-[110px]  ">
       <div className="w-full flex flex-col h-[132px]">
         <div className="flex justify-center  w-full h-full items-center text-[35px] font-Poppins font-extrabold text-pearl">
           <div className="w-[80%]">
@@ -36,20 +51,20 @@ return (
         </div>
       </div>
       <div className={`font-Poppins font-semibold text-pearl `}>
-        {props.table.map((button: any) => (
+        {props.table.map((bu: any) => (
           <div
-            key={button.id}
+            key={bu.id}
             className={`flex justify-center items-center rounded-2xl w-full h-20   `}
           >
             <button
               className={` w-[90%] h-full  rounded-2xl flex justify-center items-center  ${
-                subbackground === button.id ? " bg-very-dark-purple" : ""
+                subbackground === bu.id ? " bg-very-dark-purple" : ""
               }`}
-              onClick={() => handle(button.id, button.route)}
+              onClick={() => handle(bu.id, bu.route)}
             >
               <div className="w-[80%] h-full flex justify-start items-center c-ml:text-xl 2xl:text-base xl:text-sm text-xs">
-                {button.text}
-                {button.text === "Security" ? (
+                {bu.text}
+                {bu.text === "Security" ? (
                   <div
                     className={`flex justify-end items-center rounded-2xl h-20 w-[100%] `}
                     onClick={() => props.setClick(!props.isClick)}

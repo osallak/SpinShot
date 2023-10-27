@@ -63,7 +63,7 @@ const Chat = () => {
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [userId, setUserId] = useState("");
 
-  const useSocket = () => {
+  const initializeSocket = () => {
     token = localStorage.getItem("token");
     if (!token) {
       router.push("/signin");
@@ -389,7 +389,7 @@ const Chat = () => {
   }, [open]);
 
   useEffect(() => {
-    useSocket();
+    initializeSocket();
 	return () => {
 		console.log('disconnected !!');
 		socket.off('connect');

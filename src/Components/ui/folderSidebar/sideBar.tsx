@@ -1,30 +1,25 @@
 "use client";
-import Search from "@/Components/search/userSearch";
-import parseJwt from "@/utils/parsJwt";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import { MouseEvent, useEffect, useState } from "react";
-import friend from "../../../../public/friend.svg";
-import game from "../../../../public/game.svg";
 import logoWhite from "../../../../public/logoWhite.svg";
+import Image from "next/image";
+import test1 from "../../../../public/test1.svg";
 import logout from "../../../../public/logout.svg";
+import { MouseEvent, useEffect, useState } from "react";
+import parseJwt from "@/utils/parsJwt";
+import { useRouter } from "next/router";
+import { useAppSelector } from "../../../../redux_tool";
+import friend from "../../../../public/friend.svg";
+import search from "../../../../public/search.svg";
 import message from "../../../../public/message.svg";
 import profile from "../../../../public/profile.svg";
-import search from "../../../../public/search.svg";
-import { useAppDispatch, useAppSelector } from "../../../../redux_tool";
-import { getProfile } from "../../../../redux_tool/redusProfile/profileThunk";
+import game from "../../../../public/game.svg";
+import Search from "@/Components/search/userSearch";
 
-const SideBar = (props: {
-  setOpenSubSideBar?: Function;
-  openSubSideBar?: boolean;
-  flag?: string;
-}) => {
+const SideBar = (props: any) => {
   const Router = useRouter();
   const data = useAppSelector((state) => state.Profile);
   const [hovered, setHovered] = useState(false);
   const [isSearch, setSearch] = useState(false);
-  const [icons, setIcons] = useState<any>([]);
-  const dispatch = useAppDispatch();
+  const [icons, setIcons] = useState<any[]>([]);
 
   const changePage = (event: MouseEvent<HTMLButtonElement>, path: string) => {
     event.preventDefault();
@@ -57,15 +52,6 @@ const SideBar = (props: {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (
-      !token ||
-      (parseJwt(token).isTwoFactorEnabled &&
-        !parseJwt(token).isTwoFaAuthenticated)
-    ) {
-      Router.push("/signin");
-      return;
-    }
     setIcons([
       { icon: search, route: "/search" },
       {
@@ -81,28 +67,13 @@ const SideBar = (props: {
         }`,
       },
       { icon: friend, route: "/friends" },
-      { icon: game, route: "/game" },
+      {
+        icon: game,
+        route: `/game/${
+          parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+        }`,
+      },
     ]);
-  }, []);
-
-  const dis = async () => {
-    const token = localStorage.getItem("token");
-    if (
-      !token ||
-      (parseJwt(token).isTwoFactorEnabled &&
-        !parseJwt(token).isTwoFaAuthenticated)
-    ) {
-      Router.push("/signin");
-      return;
-    }
-    const sub = parseJwt(JSON.stringify(token)).sub;
-    try {
-      await dispatch(getProfile(sub));
-    } catch (error: any) {}
-  };
-
-  useEffect(() => {
-    dis();
   }, []);
 
   return (
@@ -123,7 +94,7 @@ const SideBar = (props: {
         <div className="w-[80%] border border-pearl border-opacity-40"></div>
       </div>
       <div className="w-full h-[82%] min-h-[150px] py-5  overflow-hidden flex flex-col items-center">
-        {icons.map((option: any, index: number) => (
+        {icons.map((option, index) => (
           <div
             key={index}
             className="w-full h-[60px] flex items-center justify-center"
@@ -152,19 +123,21 @@ const SideBar = (props: {
         ))}
       </div>
       <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center">
-        <div className="w-[60px] bg-cover h-[60px] rounded-2xl relative flex justify-center items-center">
-          <Image
-            onClick={handleLogOut}
-            onMouseEnter={handleHover}
-            width={500}
-            height={500}
-            onMouseLeave={handleHoverOut}
-            className={`${
-              hovered ? "opacity-10" : "opacity-100"
-            } cursor-pointer rounded-2xl bg-cover h-full w-full`}
-            src={data?.profile?.profile?.avatar}
-            alt="profile pic"
-          />
+        <div className="w-[70px] h-[70px] rounded-2xl relative flex justify-center items-center">
+          <picture>
+            <img
+              onClick={handleLogOut}
+              onMouseEnter={handleHover}
+              onMouseLeave={handleHoverOut}
+              className={`${
+                hovered ? "opacity-10" : "opacity-100"
+              } cursor-pointer rounded-2xl`}
+              src={data?.profile?.profile?.avatar}
+              alt="profile pic"
+              width={500}
+              height={500}
+            />
+          </picture>
           {hovered && (
             <Image
               onClick={handleLogOut}

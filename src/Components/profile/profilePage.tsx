@@ -242,7 +242,7 @@ const ProfilePage = (props: { id: any }) => {
               <TwoFactor isActive={isActive} Switch={setisActive} />
             </div>
           )}
-          {<InviteFriends invite={invite} setInvite={setInvite} />}
+          {/* {<InviteFriends invite={invite} setInvite={setInvite} />} */}
         </div>
       </div>
     </>

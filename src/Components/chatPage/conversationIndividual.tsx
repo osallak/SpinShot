@@ -161,7 +161,7 @@ const ConversationIndividual = (props: {
 
   useEffect(() => {
 	playerStatus();
-  })
+  }, [])
 
   useEffect(() => {
     const conversationDiv: any = chatContainerRef.current;

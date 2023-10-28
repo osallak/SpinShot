@@ -36,8 +36,11 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {}
 
   extractClient(client: Socket): string | null {
-    const { authorization } = client?.handshake?.headers;
-    if (!authorization) throw new Error('jwt malformed');
+    // const { authorization } = client?.handshake?.headers;
+    // client.handshake.
+    const token = client.handshake.auth['token'];
+    if (!token) throw new Error('jwt malformed');
+    // if (!authorization) throw new Error('jwt malformed');
     const payload = WsJwtGuard.validateToken(client);
     return payload.sub ?? null;
   }
@@ -50,7 +53,7 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
 
-    this.logger.log(`user ${id} connected`);
+    this.logger.error(`user ${id} connected`);
     this.gamesService.connect(client, id);
   }
 
@@ -118,9 +121,9 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.gamesService.handleDeclineInvite(client, data.id);
   }
 
-  @UseGuards(WsJwtGuard)
-  @SubscribeMessage('leave')
-  handleLeave(@ConnectedSocket() client: Socket): void {
-    this.gamesService.leave(client);
-  }
+  // @UseGuards(WsJwtGuard)
+  // @SubscribeMessage('leave')
+  // handleLeave(@ConnectedSocket() client: Socket): void {
+  //   this.gamesService.leave(client);
+  // }
 }

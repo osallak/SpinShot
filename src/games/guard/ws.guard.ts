@@ -20,14 +20,15 @@ export class WsJwtGuard implements CanActivate {
   }
 
   static validateToken(client: Socket): JwtAuthPayload{
-    const { authorization } = client?.handshake?.headers;
-    if (!authorization)
+    const { token } = client.handshake.auth;
+    // const { authorization } = client?.handshake?.headers;
+    if (!token)
       throw new WsException({
         statusCode: 400,
         message: 'Invalid token',
       });
-    const token: string = authorization.split(' ')[1];
-    if (!token) throw new WsException('Invalid token');
+    // const token: string = authorization.split(' ')[1];
+    // if (!token) throw new WsException('Invalid token');
     const payload = verify(token, WsJwtGuard.jwtSecret);
     return payload as JwtAuthPayload;
   }

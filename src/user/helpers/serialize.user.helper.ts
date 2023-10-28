@@ -24,6 +24,8 @@ export function serializePaginationResponse<T>(
   data: T,
   totalCount: number,
   pageSize: number,
+  wins ?: number,
+  loses ?: number,
 ): PaginationResponse<T> {
   return {
     data,
@@ -32,5 +34,7 @@ export function serializePaginationResponse<T>(
       totalCount: totalCount,
       pageSize: pageSize,
     },
+    wins,
+    loses,
   };
 }

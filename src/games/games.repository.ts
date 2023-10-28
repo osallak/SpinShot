@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, ParseUUIDPipe } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { FriendshipStatus } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
@@ -13,9 +13,10 @@ export class GamesRepository {
   @OnEvent('saveGame')
   public async saveGame(payload: any) {
     try {
+      if (!payload || !payload.userId || !payload.opponentId) return;
       const [user, opponent] = await this.prismaService.$transaction([
         this.prismaService.user.findUnique({
-          where: { id: payload.userID },
+          where: { id: payload.userId },
           include: {
             logs: true,
             HaveAchievement: { include: { Achivement: true } },
@@ -63,7 +64,7 @@ export class GamesRepository {
 
   @OnEvent('userUpdate')
   async updateUser(payload: any): Promise<void> {
-    if (!payload.id) return;
+    if (!payload || !payload.id) return;
     try {
       await this.prismaService.user.update({
         where: { id: payload.id },
@@ -81,16 +82,16 @@ export class GamesRepository {
   ): Promise<void> {
     try {
       await this.prismaService.logs.update({
-        where: { id: user.logs.id },
+        where: {userId: user.id},
         data: {
+          defeats: user.logs.defeats,
           victories: user.logs.victories + 1,
-          level: user.logs.level + 0.3,
+          level: user.logs.level + 0.3
         },
       });
       this.checkAchievements(user, true, score.opponent);
     } catch (error) {
-      this.logger.error(error?.message);
-      this.logger.error(error?.code);
+      this.logger.error(error);
     }
   }
 
@@ -123,8 +124,15 @@ export class GamesRepository {
               where: { id: achievement.id },
               data: { achieved: true },
             });
-            return;
+          } else {
+            await this.prismaService.haveAchievement.update({
+              where: {id: achievement.id},
+              data: {
+                level: {increment: 1},
+              }
+            });
           }
+          return;
         }
 
         if (
@@ -175,10 +183,18 @@ export class GamesRepository {
   }
 
   async achieveLoser(user: User): Promise<void> {
+    try {
     await this.prismaService.logs.update({
-      where: { id: user.logs.id },
-      data: { defeats: user.logs.defeats + 1 },
+      where: {userId: user.id},
+      data: {
+        defeats: user.logs.defeats + 1,
+        victories: user.logs.victories,
+        level: user.logs.level,
+      },
     });
+    } catch(error) {
+      console.log(error);
+    }
   }
 
   async achieveUser(

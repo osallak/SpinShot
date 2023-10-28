@@ -3,6 +3,7 @@ import Matter from 'matter-js';
 import { Socket } from 'socket.io';
 import { MapEnum } from '../types/map-enum.type';
 import { MoveDirection } from '../types/walls-position.enum';
+import { v4 as uuidv4 } from 'uuid';
 import {
   BALL_RADUIS,
   HEIGHT,
@@ -18,7 +19,7 @@ type position = {
 
 @Injectable()
 export class PongEngine {
-  private readonly id: string;
+  private _id: string;
   private engine: Matter.engine;
   private runner: Matter.runner;
   private ball: Matter.body;
@@ -62,6 +63,12 @@ export class PongEngine {
     top: firstPaddle 
     buttom: secondPaddle
   */
+ set gameId(id: string) {
+  this._id = id;
+ }
+ get id() {
+  return this._id;
+ }
   constructor(gameSettings: {
     firstClient: Socket;
     secondClient: Socket;
@@ -146,6 +153,7 @@ export class PongEngine {
     this.initMatter(); //engine world ...etc
     this.initMovingObjects(); //paddles and ball
     this.initStaticObjects(); //including obstacles/walls
+    // this.id = uuidv4();
   }
 
   private listen() {
@@ -331,13 +339,12 @@ export class PongEngine {
           ? this.firstPlayerId
           : this.secondPlayerId,
     };
-
     this.firstClient && this.firstClient.emit('gameOver', gameOver);
     this.firstClient && this.secondClient.emit('gameOver', gameOver);
 
     Matter.Events.off(this.engine, 'collisionStart', this.handleCollisionStart);
     Matter.Events.off(this.engine, 'afterUpdate', this.handleAfterUpdate);
-    this.saveGameCallback &&
+    this.id && this.saveGameCallback &&
       this.saveGameCallback({
         userId: this.firstPlayerId,
         opponentId: this.secondPlayerId,
@@ -345,7 +352,8 @@ export class PongEngine {
         userScore: this.firstScore,
         opponentScore: this.secondScore,
       });
-    this.cleanUpGameService && this.cleanUpGameService(this.id);
+    this.id && this.cleanUpGameService && this.cleanUpGameService(this.id);
+    this.gameId = "0";
   }
 
   private sendScore() {
@@ -421,9 +429,7 @@ export class PongEngine {
     return this.secondClient;
   }
 
-  get gameId() {
-    return this.id;
-  }
+
 
   public reconnect(id: string, client: Socket) {
     if (this.firstPlayerId === id) {

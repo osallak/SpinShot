@@ -61,7 +61,7 @@ const InviteFriends = (props: {
   return (
     <Dialog
       size="md"
-      open={props.setInvite}
+      open={props.invite}
       handler={handleOpen}
       className=" bg-pearl outline-none ring-0"
     >

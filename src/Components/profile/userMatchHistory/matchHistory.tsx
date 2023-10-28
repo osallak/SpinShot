@@ -46,6 +46,7 @@ const MatchHistory = () => {
           },
         }
       );
+      setNavoos(response.data);
       setPosts(response.data.data);
       setTotalPages(response.data.pagination.pageCount);
     } catch (error) {

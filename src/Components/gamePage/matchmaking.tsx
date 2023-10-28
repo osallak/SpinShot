@@ -5,13 +5,15 @@ import {
   DialogHeader,
 } from "@material-tailwind/react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux_tool";
 // import { parseJwt } from "../../../redux_tool/extractToken";
 import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
 import parseJwt from "@/utils/parsJwt";
+import { SocketContext } from "@/context/socket.context";
 
 const Matchmaking = (props: any) => {
+  const {socket, setSocket} = useContext(SocketContext);
   const dataUser = useAppSelector((state) => state.Profile);
   // const [clear, setClear] = useState(false);
   const dispatch = useAppDispatch();
@@ -21,19 +23,20 @@ const Matchmaking = (props: any) => {
 
   // }, [props.matchData, props.dataOpponent])
   const handleClick = () => {
+    if (!socket) return;
     // setClear(true);
-    // console.log("socket: ", props.socket);
+    // console.log("socket: ", socket);
     // console.log("leave queue");
-    props.socket.emit("leaveQueue", () => console.log("leave queue"));
-    props.socket.on("exception", () => console.log("exception: "));
+    socket.emit("leaveQueue", () => console.log("leave queue"));
+    socket.on("exception", () => console.log("exception: "));
     // if (props.matchData) {
-    //   props.socket.emit("leave");
+    //   socket.emit("leave");
     // }
-    // props.socket.emit("leave", () => {
+    // socket.emit("leave", () => {
     //   console.log('leave');
     // });
     // props.setGameOver(true);
-    props.socket.on("disconnect", () => console.log("disconnect: "));
+    socket.on("disconnect", () => console.log("disconnect: "));
     props.setIsClick(!props.isClick);
     // props.setmatchData(null);
     props.setDataOfOpponent(null);

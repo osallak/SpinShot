@@ -1,26 +1,43 @@
 import ip from "@/utils/endPoint";
 import { createContext, useEffect, useState } from "react";
-import io, { Socket, } from "socket.io-client";
+import io, { Socket } from "socket.io-client";
+import { useAppSelector } from "../../redux_tool";
 
-const SocketContext = createContext<Socket | null>(null);
+const SocketContext = createContext<any>(null);
+let socket = io(`${ip}/games`, {
+  // extraHeaders: {},
+  autoConnect: false,
+});
+
+export const setSocket = (s: Socket) => {
+  socket = s;
+}
 
 const SocketProvider = ({ children }: any) => {
-  const [socket, setSocket] = useState<Socket | null>(null);
- 
+
   useEffect(() => {
-    localStorage.setItem("debug", "*");
-    const newSocket = io(`${ip}/games`, {
-      extraHeaders: {  },
-      autoConnect: false,
-    });
-    setSocket(newSocket);
-    return () => {
-      newSocket.disconnect();
-    };
+    try {
+      if (!socket) {
+        console.log("setting the socket context");
+        const s = io(`${ip}/games`, {
+          // extraHeaders: {},
+          autoConnect: false,
+        });
+        setSocket(s);
+      }
+      return () => {
+        if (socket) socket.disconnect();
+      };
+    } catch (e) {
+      console.log(e);
+    }
   }, []);
 
   return (
-    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+    <SocketContext.Provider value={{
+      socket,
+      setSocket
+    }}>{children}</SocketContext.Provider>
   );
 };
 

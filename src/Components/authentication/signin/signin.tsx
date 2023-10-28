@@ -17,6 +17,15 @@ import { useRecoilState } from "recoil";
 import { store, useAppDispatch } from "../../../../redux_tool";
 import { updateAuthStatus } from "../../../../redux_tool/redusProfile/profileSlice";
 
+export const saveState = (state:any) => {
+    try {
+      const serialState = JSON.stringify(state);
+      localStorage.setItem('auth_status', serialState);
+    } catch(err) {
+        console.log(err);
+    }
+};
+
 const Signin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -53,7 +62,6 @@ const Signin = () => {
   ];
   const [tmpToken, setTmpToken] = useRecoilState(globalToken);
 
-  const dispatcher = useAppDispatch();
 
   const RedirectionFunction = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -68,6 +76,7 @@ const Signin = () => {
         Router.push("/twoFactorAuthentication");
       } else if (token.isTwoFactorEnabled === false) {
         localStorage.setItem("token", res?.data?.token);
+        // saveState(true);
         store.dispatch(updateAuthStatus(true));
         Router.push(`/profile/${token.sub}`);
       }

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { getProfile } from "./profileThunk";
+import { Socket } from "socket.io-client";
 
 export interface ProfileState {
   profile: any;
@@ -34,6 +35,7 @@ export const ProfileSlice = createSlice({
     updateAuthStatus(state, action: PayloadAction<boolean>) {
       state.auth_status = action.payload;
     }
+    
   
   },
 

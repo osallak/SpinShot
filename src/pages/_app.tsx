@@ -7,6 +7,8 @@ import { SocketContext, SocketProvider } from "@/context/socket.context";
 import { Toaster } from "react-hot-toast";
 import { useContext, useEffect } from "react";
 import { useAppSelector } from "../../redux_tool";
+import { io } from "socket.io-client";
+import ip from "@/utils/endPoint";
 
 type FuncProps = {
   children: React.ReactNode;
@@ -14,22 +16,23 @@ type FuncProps = {
 
 const Func = ({ children }: FuncProps) => {
   const auth_status = useAppSelector((state) => state.Profile.auth_status);
-  const socket = useContext(SocketContext);
+  let { socket, setSocket } = useContext(SocketContext);
   useEffect(() => {
-    if (!socket) return;
+    const s = io(`${ip}/games`, {
+      // extraHeaders: {},
+      autoConnect: false,
+    });
     if (auth_status === true) {
-      console.log("auth_status:", auth_status);
-      console.log("token:", localStorage.getItem("token"));
-      console.log("socket:", socket);
-      socket.auth = {
+      console.log("connecting ...");
+      s.auth = {
         token: localStorage.getItem("token"),
-      }
-      console.log("socket.auth:", socket.auth);
-      socket.on("connect_error", (err:any) => {
+      };
+      s.on("connect_error", (err: any) => {
         console.log(`connect_error due to ${err.message}`);
       });
-      socket.connect();
-
+      s.connect();
+      setSocket(s);
+      console.log("socket::", socket);
     }
   }, [auth_status]);
 

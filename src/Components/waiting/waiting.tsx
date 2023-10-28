@@ -6,6 +6,8 @@ import parseJwt from "@/utils/parsJwt";
 import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
 import { globalToken } from "../context/recoilContext";
+import { store } from "../../../redux_tool";
+import { updateAuthStatus } from "../../../redux_tool/redusProfile/profileSlice";
 
 const WaitingPage = () => {
   const router = useRouter();
@@ -14,7 +16,6 @@ const WaitingPage = () => {
   const code = router.query.code;
   const fetchData = async () => {
     if (!code) return;
-    console.log("code from waiting page: ", code)
     try {
       const res = await axios.get(`${ip}/auth/42?code=${code}`);
       setTmpToken(res?.data?.token);
@@ -22,7 +23,8 @@ const WaitingPage = () => {
       if (token.isTwoFactorEnabled === true) {
         router.push("/twoFactorAuthentication");
       } else {
-				console.log("token from waiting page: ", token);
+
+        store.dispatch(updateAuthStatus(true));
         localStorage.setItem("token", res?.data?.token);
         router.push(`/profile/${token.sub}`);
       } 

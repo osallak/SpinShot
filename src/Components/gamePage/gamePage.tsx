@@ -130,48 +130,15 @@ const GamePage = (props: any) => {
     }
   };
 
-  // const getDataOfUser = async () => {
-  //   const token = localStorage.getItem("token");
-  //   if (!token) {
-  //     router.push("/Signin");
-  //     return;
-  //   }
-  //   try {
-  //     await dispatch(getProfile(parseJwt(JSON.stringify(token)).sub)).unwrap();
-  //   } catch (error) {
-  //     console.log(error);
-  //     return;
-  //   }
-  // };
 
   const handleResize = () => {
     setWidth(window.innerWidth);
     setheight(window.innerHeight);
   };
 
-  // const handleClick = (route: string) => {
-  //   console.log("route: ", route);
-  //   {
-  //     route.includes("/game") && !opened ? setOpned(true) : setOpned(false);
-  //   }
-  //   setPages("/game");
-  // setOpned(true);
-  // route ? setPages(route) : null;
-  // };
 
-  // useEffect(() => {
-  // console.log("1111111");
-  // handleData();
-  // getDataOfUser();
-  // setDepend(false);
-  // }, []);
   const initializeSocket = () => {
-    if (!socket) return;
-    // socket = io(`${ip}/games`, {
-    //   extraHeaders: {
-    //     Authorization: `Bearer ${localStorage.getItem("token")}`,
-    //   },
-    // });
+    
     socket.on("connect", () => {
       console.log("connected......");
     });

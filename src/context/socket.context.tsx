@@ -9,23 +9,52 @@ let socket = io(`${ip}/games`, {
   autoConnect: false,
 });
 
+let chatSocket = io(`${ip}/chat`, {
+  // extraHeaders: {},
+  autoConnect: false,
+});
+
 export const setSocket = (s: Socket) => {
   socket = s;
+};
+
+export const setGlobalSocketAuth = (token: string) => {
+  socket.auth = {
+    token: token,
+  };
+}
+
+export const setChatSocket = (s: Socket) => {
+  chatSocket = s;
+};
+
+export const getGlobalSocket = () => {
+  return socket;
+}
+
+export const connectGlobalSocket = () => {
+  socket.connect();
+}
+
+export const connectChatSocket = () => {
+  chatSocket.connect();
+}
+
+export const setChatSocketAuth = (token: string) => {
+  chatSocket.auth = {
+    token: token,
+  };
+}
+
+export const getChatSocket = () => {
+  return chatSocket;
 }
 
 const SocketProvider = ({ children }: any) => {
-
   useEffect(() => {
     try {
-      if (!socket) {
-        console.log("setting the socket context");
-        const s = io(`${ip}/games`, {
-          // extraHeaders: {},
-          autoConnect: false,
-        });
-        setSocket(s);
-      }
       return () => {
+        if (chatSocket) chatSocket.disconnect();
         if (socket) socket.disconnect();
       };
     } catch (e) {
@@ -34,10 +63,22 @@ const SocketProvider = ({ children }: any) => {
   }, []);
 
   return (
-    <SocketContext.Provider value={{
-      socket,
-      setSocket
-    }}>{children}</SocketContext.Provider>
+    <SocketContext.Provider
+      value={{
+        socket,
+        setSocket,
+        chatSocket,
+        setChatSocket,
+        setGlobalSocketAuth,
+        getGlobalSocket,
+        connectGlobalSocket,
+        setChatSocketAuth,
+        getChatSocket,
+        connectChatSocket,
+      }}
+    >
+      {children}
+    </SocketContext.Provider>
   );
 };
 

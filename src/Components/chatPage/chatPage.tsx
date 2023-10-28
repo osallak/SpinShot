@@ -8,9 +8,9 @@ import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { Socket, io } from "socket.io-client";
+// import { chatSocket, io } from "chatSocket.io-client";
 import {
   currentFriendsAtom,
   exploreChannelAtom,
@@ -33,11 +33,14 @@ import ExploreChannels from "./exploreChannels";
 import InviteFriends from "./inviteFriends";
 import MobileSubSideBar from "./mobileSubSideBar";
 import SubSideBar from "./subSideBar";
+import { SocketContext } from "@/context/socket.context";
+// import { chatSocketContext } from "@/context/chatSocket.context";
 
-let socket: any;
+// let chatSocket: any;
 let token: any;
 const Chat = () => {
   const router = useRouter();
+  const {chatSocket} = useContext(SocketContext);
   const [openSideBar, setOpenSideBar] = useState(false);
   const [id, setId] = useState("");
   const [roomId, setRoomId] = useState("");
@@ -63,7 +66,7 @@ const Chat = () => {
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [userId, setUserId] = useState("");
 
-  const initializeSocket = () => {
+  const initializechatSocket = () => {
     token = localStorage.getItem("token");
     if (!token) {
       router.push("/signin");
@@ -74,13 +77,8 @@ const Chat = () => {
       router.push("/signin");
       return;
     }
-    socket = io(`${ip}/chat`, {
-      extraHeaders: {
-        authorization: `Bearer ${token}`,
-      },
-    });
-    socket.on("connect", () => console.log("connected"));
-    socket.on("pm", (data: Socket) => {
+    chatSocket.on("connect", () => console.log("connected"));
+    chatSocket.on("pm", (data: any) => {
       const parsedData = JSON.parse(String(data));
       setId(parsedData.from);
 
@@ -143,7 +141,7 @@ const Chat = () => {
       });
     });
 
-    socket.on("gm", (data: any) => {
+    chatSocket.on("gm", (data: any) => {
       const parsedData = JSON.parse(data);
       setChannel((prev: channelType[]) => {
         const newChannel = prev.map((item: channelType) => {
@@ -196,8 +194,8 @@ const Chat = () => {
       });
       setReload(true);
     });
-    socket.on("exception", (data: any) => console.log("exception", data));
-    // socket.on("disconnect", (data: any) => console.log("disconnect"));
+    chatSocket.on("exception", (data: any) => console.log("exception", data));
+    // chatSocket.on("disconnect", (data: any) => console.log("disconnect"));
   };
 
   const fetchDataExploreChannel = async () => {
@@ -389,15 +387,15 @@ const Chat = () => {
   }, [open]);
 
   useEffect(() => {
-    initializeSocket();
-	return () => {
-		console.log('disconnected !!');
-		socket.off('connect');
-		socket.off('pm');
-		socket.off('gm');
-		socket.off('exception');
-		socket.disconnect();
-	}
+    initializechatSocket();
+    // return () => {
+    //   console.log("disconnected !!");
+    //   chatSocket.off("connect");
+    //   chatSocket.off("pm");
+    //   chatSocket.off("gm");
+    //   chatSocket.off("exception");
+    //   chatSocket.disconnect();
+    // };
   }, []);
 
   return (
@@ -474,7 +472,7 @@ const Chat = () => {
           <ConversationIndividual
             userId={userId}
             id={id}
-            socket={socket}
+            socket={chatSocket}
             setReload={setReload}
             reload={reload}
             openSubSideBar={openSubSideBar}
@@ -483,7 +481,7 @@ const Chat = () => {
           <ConversationChannel
             userId={userId}
             id={roomId}
-            socket={socket}
+            socket={chatSocket}
             setReload={setReload}
             reload={reload}
             openSubSideBar={openSubSideBar}

@@ -17,6 +17,7 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
   Color,
   BorderSize,
   Reg,
+  handleKeyPress,
 }) => {
   const [ShowPassword, setShowPassword] = useState(false);
   const [ValidReg, setValidReg] = useState(true);
@@ -61,6 +62,7 @@ const ConfirmationPassword: React.FC<ConfirmProps> = ({
           <Image src={icon} alt="username or Email" className="h-5 w-5" />
         </div>
         <input
+			onKeyDown={ event => handleKeyPress(event)}
           type={type == "password" && ShowPassword ? "text" : type}
           value={value}
           onChange={(event) => HandleChange(event)}

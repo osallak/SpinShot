@@ -12,6 +12,7 @@ export type InputsProps = {
   Color: string;
   BorderSize: number;
   Reg?: RegExp;
+  handleKeyPress: (event: any) => void;
 };
 
 
@@ -29,4 +30,5 @@ export type ConfirmProps = {
   Color: string;
   BorderSize: number;
   Reg: RegExp;
+  handleKeyPress: (event: any) => void;
 };

@@ -35,7 +35,6 @@ import UsersList from "./usersList";
 let token: any;
 const ConversationChannel = (props: {
   userId: string;
-  userName: string;
   id: string;
   socket: any;
   setReload: Function;
@@ -43,9 +42,8 @@ const ConversationChannel = (props: {
   openSubSideBar: boolean;
 }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const [currentMsg, setCurrentMsg] = useState("");
   const router = useRouter();
-  const [message, setMessage] = useState("");
+  const [currentMessage, setCurrentMessage] = useState("");
   const [conversationChannel, setConversationChannel] = useRecoilState(
     channelConversationAtom
   );
@@ -56,6 +54,7 @@ const ConversationChannel = (props: {
   const [setting, setSettings] = useState(false);
   const [content, setContent] = useState<any[]>([]);
   const [openUsersList, setOpenUsersList] = useState(false);
+  const [userName, setUserName] = useState("");
   const [openSubUsersList, setOpenSubUsersList] = useState(false);
   const [openLeaveList, setOpenLeaveList] = useState(false);
   const [targetId, setTargetId] = useState("");
@@ -92,15 +91,14 @@ const ConversationChannel = (props: {
 			router.push("/signin");
 			return;
 		}
-    if (currentMsg === "") return;
-    setMessage("");
+    if (currentMessage === "") return;
     props.setReload(true);
     const messageData: any = {
       from: `${parseJwt(JSON.stringify(token)).sub}`,
       roomName: `${props.id}`,
-      content: currentMsg,
+      content: currentMessage,
       timestamp: String(Date.now()),
-      senderUsername: props.userName,
+      senderUsername: userName,
       senderAvatar: "",
     };
     setChannel((prev: channelType[]) => {
@@ -110,12 +108,12 @@ const ConversationChannel = (props: {
             const updatedMessages = item.messages.map((message) => {
               return {
                 ...message,
-                message: currentMsg,
+                message: currentMessage,
                 sentAt: messageData.timestamp,
                 user: {
                   avatar: "",
                   id: props.userId,
-                  username: props.userName,
+                  username: userName,
                 },
               };
             });
@@ -125,12 +123,12 @@ const ConversationChannel = (props: {
               ...item,
               messages: [
                 {
-                  message: currentMsg,
+                  message: currentMessage,
                   sentAt: messageData.timestamp,
                   user: {
                     avatar: "",
                     id: props.userId,
-                    username: props.userName,
+                    username: userName,
                   },
                 },
               ],
@@ -147,12 +145,13 @@ const ConversationChannel = (props: {
         user: {
           avatar: "",
           id: props.userId,
-          username: props.userName,
+          username: userName,
         },
       };
       return [...prev, newConversationChannel];
     });
     props.socket.emit("gm", messageData);
+    setCurrentMessage("");
   };
 
   const keySendMessage = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -233,13 +232,26 @@ const ConversationChannel = (props: {
     }
   }, []);
 
+  const getUserName = async () => {
+    try {
+      const senderId = parseJwt(JSON.stringify(localStorage.getItem('token'))).sub;
+      const userNameRes = await axios.get(`${ip}/users/profile/${senderId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      setUserName((prev) => userNameRes.data.username);
+    } catch (error : any) {
+	}
+  };
+
+  useEffect(() => {
+    getUserName();
+  }, []);
+
   useEffect(() => {
     getTypeOfChannel();
   }, [props.id]);
-
-  useEffect(() => {
-    setCurrentMsg(message);
-  }, [message]);
 
   useEffect(() => {
     const conversationDiv: any = chatContainerRef.current;
@@ -432,8 +444,8 @@ const ConversationChannel = (props: {
                   className="text-pearl caret-peridot w-full h-full outline-none placeholder:text-pearl font-light placeholder:opacity-50 font-Poppins md:text-lg sm:text-md text-sm bg-transparent"
                   type="text"
                   onKeyDown={(event) => keySendMessage(event)}
-                  value={message}
-                  onChange={(event) => setMessage(event.target.value)}
+                  value={currentMessage}
+                  onChange={(event) => setCurrentMessage(event.target.value)}
                 />
               </div>
               <button onClick={(event) => handleSendMessage()}>

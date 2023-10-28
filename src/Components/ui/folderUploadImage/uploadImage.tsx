@@ -44,10 +44,13 @@ const UploadImage = (props: {
     props.setMyImage(event.target.files[0]);
     if (event.target.files && event.target.files[0]) {
       setMyImage((prev: any) => event.target.files[0]);
-      store.dispatch(updateImage(event.target.files[0]));
+      console.log("image", event.target.files[0]);
+      // store.dispatch(updateImage(event.target.files[0]));
       props.setMyImage(event.target.files[0]);
     }
   };
+
+  console.log("push image", image);
 
   const HandleUpdata = async () => {
     props.Switch(!open);

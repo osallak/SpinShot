@@ -4,13 +4,11 @@ import { useAppSelector } from "../../../../redux_tool";
 import marathonLose from "../../../../public/marathonLose.svg";
 import marathonWin from "../../../../public/marathonWin.svg";
 
-const Marathone = (props: any) => {
+const Marathone = () => {
   const data = useAppSelector((state) => state.Profile);
   const [achievements, setAchievement] = useState<any>();
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    setLoaded(true);
     setAchievement(data?.profile.achievements);
   }, [data]);
 
@@ -23,7 +21,7 @@ const Marathone = (props: any) => {
           >
             <h1
               className={` ${
-                achievements[3]?.achieved
+                achievements[1]?.achieved
                   ? "text-pearl "
                   : "text-pearl opacity-40"
               } text-sm sm:text-2xl`}
@@ -32,7 +30,7 @@ const Marathone = (props: any) => {
             </h1>
             <h1
               className={` ${
-                achievements[3]?.achieved
+                achievements[1]?.achieved
                   ? "text-pearl "
                   : "text-pearl opacity-40"
               } text-[8px] sm:text-sm`}
@@ -42,23 +40,23 @@ const Marathone = (props: any) => {
             <div className="w-full ">
               <h1
                 className={`${
-                  achievements[3]?.achieved
+                  achievements[1]?.achieved
                     ? "text-pearl "
                     : "text-pearl opacity-40"
                 }`}
               >
-                {props.level}/10
+                {achievements[1].level}/10
               </h1>
               <div className="border h-3 md:h-5 rounded-full p-[0.5px] flex justfy-center items-center ">
                 <div
-                  style={{ width: `${props.level}%` }}
+                  style={{ width: `${achievements[1].level}%` }}
                   className=" rounded-full  h-full  bg-peridot"
                 ></div>
               </div>
             </div>
           </div>
           <div className="flex justify-center items-center">
-            {achievements[3]?.achieved ? (
+            {achievements[1]?.achieved ? (
               <Image className=" " src={marathonWin} alt="" />
             ) : (
               <Image className="   " src={marathonLose} alt="" />

@@ -5,6 +5,10 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../../redux_tool";
 import { useRouter } from "next/router";
+import parseJwt from "@/utils/parsJwt";
+import toast from "react-hot-toast";
+import axios from "axios";
+import ip from "@/utils/endPoint";
 
 const Levle = (props: any) => {
   const opned = props.opne;
@@ -37,14 +41,44 @@ const Levle = (props: any) => {
     getMyRank(data.profile?.profile?.level);
   }, [data]);
 
-  const handleLogOut = () => {
-    if (props.letPlay[0].name == "Sign out") {
-      localStorage.removeItem("token");
-      router.push("/signin");
-    } else {
-      props.setInvite(true);
-    }
-  };
+  // const sendInvitation = async () => {
+  //   const token = localStorage.getItem("token");
+  //   if (!token) {
+  //     router.push("/signin");
+  //     return;
+  //   }
+  //   const twoFA = parseJwt(JSON.stringify(token));
+  //   if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+  //     router.push("/signin");
+  //     return;
+  //   }
+  //   try {
+  //     await axios.post(`${ip}/friends/${router.query.id}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     toast.success("user invited successfully");
+  //   } catch (error: any) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // const HandleState = (name: any) => {
+  //   console.log("--->", name);
+  // if (props.letPlay[0].name == "Sign out") {
+  //   localStorage.removeItem("token");
+  //   router.push("/signin");
+  // } else {
+  //   if (props.letPlay[0].name == "Invite to channel") {
+  //     console.log("1");
+  //     props.setInvite(true);
+  //   } else if (props.letPlay[1].name == "Invite") {
+  //     console.log("2");
+  //     sendInvitation();
+  //   }
+  // }
+  // };
 
   return (
     <div
@@ -67,8 +101,8 @@ const Levle = (props: any) => {
             </div>
           ))}
         </div>
-        <div className="  right-0 absolute p-8 hidden c-gb:block">
-          <DropdownUser onClick={handleLogOut} Array={props.letPlay} />
+        <div className="  right-0 absolute p-8 hidden c-gb:block ">
+          <DropdownUser setInvite={props.setInvite} Array={props.letPlay} />
         </div>
       </div>
       <div className=" flex items-center justify-center flex-col  rounded-[20px] w-full h-[100px] c-gb:h-[30%]">

@@ -16,6 +16,7 @@ import Matchmaking from "./matchmaking";
 import { SocketContext } from "@/context/socket.context";
 import Counter from "./counter";
 import parseJwt from "@/utils/parsJwt";
+import { Main } from "next/document";
 
 let game: GameModel | null = null;
 
@@ -44,8 +45,8 @@ const GamePage = (props: any) => {
   // const [gameJustFinished, setGameJustFinished] = useState(false);
   const [score, setScore] = useState<any>(null);
   const [clear, setClear] = useState(false);
-  const [counter, setCounter] = useState(3);
-  const [start, setCount] = useState(false);
+
+  const [start, setStart] = useState(false);
 
   const handleMenu = () => {
     setOpned(false);
@@ -59,14 +60,14 @@ const GamePage = (props: any) => {
 
   const cancelJoinCallback = () => {
     console.log("cancel join");
-    setCount(true);
+    setStart(true);
     gameOver && setGameOver(false);
     // setCancelJoin(true);
   };
 
   const gameStartedCallback = (data: any) => {
     console.log("game started");
-    setCount(true);
+    setStart(true);
     setWinnerCardState(true);
     // setCancelJoin(false);
     setLoserCardState(true);
@@ -179,7 +180,7 @@ const GamePage = (props: any) => {
     socket.on("gameOver", gameOverCallback);
     socket.on("match", gameStartedCallback);
     socket.on("gameState", (data: any) => {
-      setCount(false);
+      setStart(false);
       // console.log("game state ", data);
       // setScore(data);
       game?.updateState(data);
@@ -222,19 +223,7 @@ const GamePage = (props: any) => {
         cleanUp();
       }
     };
-  }, []);
-
-  useEffect(() => {
-    if (start) {
-      const timer = setInterval(() => {
-        setCounter((prevCounter) => prevCounter - 1);
-      }, 1000);
-
-      // return () => {
-      //   clearInterval(timer);
-      // };
-    }
-  }, [start]);
+  });
 
   return (
     <div
@@ -266,7 +255,7 @@ const GamePage = (props: any) => {
 
         {isopen && (
           <SidebarMobile
-            currentPage={"/gamek"}
+            currentPage={"/game"}
             // handleClick={handleClick}
             setOpned={setOpned}
             opened={opened}
@@ -287,6 +276,7 @@ const GamePage = (props: any) => {
             <NavGame dataOpponent={dataOpponent} score={score} />
           </div>
           <div
+            id="game"
             className={`h-[80%] w-[80%] flex justify-center items-center relative `}
             ref={divRef}
           ></div>
@@ -333,8 +323,9 @@ const GamePage = (props: any) => {
         />
       )}
 
-      {start && <Counter counter={counter} start={start} />}
+      {start && <Counter setStart={setStart} start={start} />}
       <Toaster />
+      {/* <Main /> */}
     </div>
   );
 };

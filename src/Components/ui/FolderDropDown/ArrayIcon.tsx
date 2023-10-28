@@ -153,4 +153,9 @@ export const IdDeviceBreakpointsByWidth = {
 // ];
 
 export const SignOut = [{ icon: signout, name: "Sign out" }];
-export const letPlay = [{ icon: play, name: "Invite" }];
+export const letPlay = [
+  { icon: play, name: "Invite" },
+  { icon: play, name: "Block" },
+  { icon: play, name: "Unblock" },
+  { icon: play, name: "Invite to channel" },
+];

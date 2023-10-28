@@ -4,10 +4,12 @@ import { getProfile } from "./profileThunk";
 
 export interface ProfileState {
   profile: any;
+  // auth_status: boolean;
 }
 
 const initialState: ProfileState = {
   profile: {},
+  // auth_status: false,
 };
 
 export const ProfileSlice = createSlice({
@@ -29,6 +31,9 @@ export const ProfileSlice = createSlice({
     updateImage: (state, action: PayloadAction<any>) => {
       state.profile.profile.avatar = action.payload;
     },
+    // upDateStateAuth: (state, action: PayloadAction<any>) => {
+    //   state.auth_status = action.payload;
+    // },
   },
 
   extraReducers: (builder) => {
@@ -45,5 +50,6 @@ export const {
   updateFirstName,
   updateLastName,
   updateImage,
+  // upDateStateAuth,
 } = ProfileSlice.actions;
 export default ProfileSlice.reducer;

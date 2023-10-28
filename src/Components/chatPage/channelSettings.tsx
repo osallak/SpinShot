@@ -8,8 +8,9 @@ import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 import eyeSlash from "../../../public/eye-slash.svg";
 import eye from "../../../public/eye.svg";
-import { parseJwt } from "../../../redux_tool/extractToken";
+
 import { channelAtom } from "../context/recoilContextChannel";
+import parseJwt from "@/utils/parsJwt";
 
 const ChannelSettings = (props: {
   open: boolean;

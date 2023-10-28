@@ -7,10 +7,8 @@ import untouchableWin from "../../../../public/untouchableWin.svg";
 const Untouchable = () => {
   const data = useAppSelector((state) => state.Profile);
   const [achievements, setAchievement] = useState<any>();
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    setLoaded(true);
     setAchievement(data?.profile.achievements);
   }, [data]);
 

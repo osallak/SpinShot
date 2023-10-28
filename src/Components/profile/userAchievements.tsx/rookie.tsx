@@ -14,8 +14,6 @@ const Rookie = () => {
     setAchievement(data?.profile?.achievements);
   }, [data]);
 
-  // console.log("achievements: rooki", achievements[0].achieved);
-
   return (
     <>
       {achievements && achievements.length > 0 && (
@@ -24,14 +22,14 @@ const Rookie = () => {
         >
           <div
             className={` ${
-              achievements[1]?.achieved ? "text-pearl" : "text-pearl opacity-40"
+              achievements[0]?.achieved ? "text-pearl" : "text-pearl opacity-40"
             } p-4 sm:p-10 space-y-[20%]`}
           >
             <h1 className=" text-sm sm:text-2xl">SPINSHOT ROOKIE</h1>
             <h1 className=" text-[8px] sm:text-sm">WIN YOUR FIRST MATCH</h1>
           </div>
           <div className="flex justify-center items-center ">
-            {achievements[1]?.achieved ? (
+            {achievements[0]?.achieved ? (
               <Image className=" " src={rookieWin} alt="" />
             ) : (
               <Image className="  " src={rookieLose} alt="" />

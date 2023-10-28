@@ -25,6 +25,7 @@ import Achievements from "./userAchievements.tsx/achievements";
 import MatchHistory from "./userMatchHistory/matchHistory";
 import InviteUsers from "./inviteUsers";
 import InviteFriends from "./inviteUsers";
+import InviteToChannel from "./inviteUsers";
 
 const ProfilePage = (props: { id: any }) => {
   const data = useAppSelector((state) => state.Profile);
@@ -65,7 +66,12 @@ const ProfilePage = (props: { id: any }) => {
     const token = localStorage.getItem("token");
     const { id } = router.query;
     if (!token) {
-      router.push("/Signin");
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
       return;
     }
     try {
@@ -242,7 +248,7 @@ const ProfilePage = (props: { id: any }) => {
               <TwoFactor isActive={isActive} Switch={setisActive} />
             </div>
           )}
-          {<InviteFriends invite={invite} setInvite={setInvite} />}
+          {<InviteToChannel invite={invite} setInvite={setInvite} />}
         </div>
       </div>
     </>

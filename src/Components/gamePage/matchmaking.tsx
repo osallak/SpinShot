@@ -7,6 +7,8 @@ import {
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux_tool";
+import { Spinner } from "@material-tailwind/react";
+
 // import { parseJwt } from "../../../redux_tool/extractToken";
 import { getProfile } from "../../../redux_tool/redusProfile/profileThunk";
 import parseJwt from "@/utils/parsJwt";
@@ -99,15 +101,7 @@ const Matchmaking = (props: any) => {
           </div>
           <div className="flex flex-col items-center">
             <div className="bg-cover rounded-2xl ">
-              <picture>
-                <img
-                  className="rounded-full bg-cover"
-                  width={150}
-                  height={150}
-                  src={props.dataOpponent?.profile?.avatar}
-                  alt=""
-                />
-              </picture>
+              <Spinner className="h-12 w-12" />
             </div>
             <h1 className="text-very-dark-purple font-Passion-One text-xl">
               {props.dataOpponent?.username}

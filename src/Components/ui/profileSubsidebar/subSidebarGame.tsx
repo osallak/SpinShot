@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import SimpleButton from "../Buttons/simpleButton";
 import Maps from "./maps";
 import toast from "react-hot-toast";
+import play from "./../../../../public/playIcon.svg";
+import Image from "next/image";
 
 const SubSidebarGame = (props: any) => {
   useEffect(() => {}, [props.matchData, props.socket]);
@@ -48,7 +50,8 @@ const SubSidebarGame = (props: any) => {
   return (
     <div className=" c-gb:block hidden w-[30%]  text-pearl text-3xl">
       <div className="bg-white/10 rounded-2xl h-full flex flex-col w-[100%] px-[10%]  ">
-        <div className=" flex items-center  h-[10%] ">
+        <div className=" flex items-center  h-[10%] space-x-3">
+          <Image src={play} alt="" width={40} />
           <h1>Game</h1>
         </div>
         <div className="flex items-center justify-center ">

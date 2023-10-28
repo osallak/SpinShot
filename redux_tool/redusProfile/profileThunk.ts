@@ -14,7 +14,7 @@ export const getProfile = createAsyncThunk("profile", async (user: any) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("data zab ...", respo.data);
+      console.log("data -> ", respo.data);
       return respo.data;
     }
   } catch (error: any) {

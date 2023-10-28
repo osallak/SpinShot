@@ -1,13 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { getProfile } from "./profileThunk";
+import { Socket } from "socket.io-client";
 
 export interface ProfileState {
   profile: any;
+  auth_status : boolean;
 }
 
 const initialState: ProfileState = {
   profile: {},
+  auth_status: false,
 };
 
 export const ProfileSlice = createSlice({
@@ -29,6 +32,11 @@ export const ProfileSlice = createSlice({
     updateImage: (state, action: PayloadAction<any>) => {
       state.profile.profile.name.lastName = action.payload;
     },
+    updateAuthStatus(state, action: PayloadAction<boolean>) {
+      state.auth_status = action.payload;
+    }
+    
+  
   },
 
   extraReducers: (builder) => {
@@ -39,5 +47,5 @@ export const ProfileSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setProfile, updateUsename, updateFirstName, updateLastName, updateImage} = ProfileSlice.actions;
+export const { setProfile, updateUsename, updateFirstName, updateLastName, updateImage, updateAuthStatus} = ProfileSlice.actions;
 export default ProfileSlice.reducer;

@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { Fragment, KeyboardEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
-import { parseJwt } from "../../../redux_tool/extractToken";
+import parseJwt from "@/utils/parsJwt";
 import { createChannelAtom } from "../context/recoilContext";
 import SwitchButton from "../ui/Buttons/SwitchButton";
 

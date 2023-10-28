@@ -17,12 +17,14 @@ import { SocketContext } from "@/context/socket.context";
 import Counter from "./counter";
 import { Socket, io } from "socket.io-client";
 import parseJwt from "@/utils/parsJwt";
+import { useAppSelector } from "../../../redux_tool";
 
 let game: GameModel | null = null;
-let socket: Socket;
+// let socket: Socket;
 
 const GamePage = (props: any) => {
-  // const socket: any = useContext(SocketContext);
+  const auth_status = useAppSelector((state) => state.Profile.auth_status);
+  const {socket, setSocket} = useContext(SocketContext);
   const [isopen, setMenu] = useState(false);
   const [opened, setOpned] = useState(false);
   // const [mode, setMode] = useState<string>();
@@ -164,11 +166,12 @@ const GamePage = (props: any) => {
   // setDepend(false);
   // }, []);
   const initializeSocket = () => {
-    socket = io(`${ip}/games`, {
-      extraHeaders: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    if (!socket) return;
+    // socket = io(`${ip}/games`, {
+    //   extraHeaders: {
+    //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+    //   },
+    // });
     socket.on("connect", () => {
       console.log("connected......");
     });
@@ -191,11 +194,11 @@ const GamePage = (props: any) => {
     return null;
   };
   useEffect(() => {
+    console.log("auth_status:", auth_status);
     initializeSocket();
   }, []);
 
   useEffect(() => {
-    // initializeSocket();
     handleResize();
     if (typeof window !== "undefined") {
       window.addEventListener("resize", handleResize);
@@ -204,10 +207,7 @@ const GamePage = (props: any) => {
       };
     }
 
-    // return () => {
-    //   socket.disconnect();
-    // };
-  }, [socket]);
+  }, []);
 
   useEffect(() => {
     // handleData();
@@ -215,7 +215,7 @@ const GamePage = (props: any) => {
     return () => {
       game?.destroy();
     };
-  }, [width, height, isopen, map, socket]);
+  }, [width, height, isopen, map]);
 
   const cleanUp = () => {
     setDataOfOpponent(null);
@@ -239,6 +239,9 @@ const GamePage = (props: any) => {
       // return () => {
       //   clearInterval(timer);
       // };
+    }
+    return () => {
+      setCounter(3);
     }
   }, [start]);
 
@@ -266,7 +269,7 @@ const GamePage = (props: any) => {
           setMap={setMap}
           setIsClick={setIsClick}
           isClick={isClick}
-          socket={socket}
+          // socket={socket}
           map={map}
         />
 
@@ -307,7 +310,7 @@ const GamePage = (props: any) => {
             setMap={setMap}
             setIsClick={setIsClick}
             isClick={isClick}
-            socket={socket}
+            // socket={socket}
             map={map}
           />
         )}
@@ -315,7 +318,7 @@ const GamePage = (props: any) => {
           <Matchmaking
             isClick={isClick}
             setIsClick={setIsClick}
-            socket={socket}
+            // socket={socket}
             dataOpponent={dataOpponent}
             setDataOfOpponent={setDataOfOpponent}
             // setmatchData={setmatchData}

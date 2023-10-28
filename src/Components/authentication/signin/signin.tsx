@@ -14,6 +14,8 @@ import { useRecoilState } from "recoil";
 import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
 import lock from "../../../../public/lock.svg";
 import mail from "../../../../public/mail.svg";
+import { store } from "../../../../redux_tool";
+import { updateAuthStatus } from "../../../../redux_tool/redusProfile/profileSlice";
 
 const Signin = () => {
   const [username, setUsername] = useState("");
@@ -51,6 +53,7 @@ const Signin = () => {
   ];
   const [tmpToken, setTmpToken] = useRecoilState(globalToken);
 
+
   const RedirectionFunction = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
@@ -64,6 +67,8 @@ const Signin = () => {
         Router.push("/twoFactorAuthentication");
       } else if (token.isTwoFactorEnabled === false) {
         localStorage.setItem("token", res?.data?.token);
+        // saveState(true);
+        store.dispatch(updateAuthStatus(true));
         Router.push(`/profile/${token.sub}`);
       }
     } catch (error: any) {

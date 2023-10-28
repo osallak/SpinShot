@@ -315,7 +315,6 @@ export class UserService {
       }),
     ]);
 
-    console.log('games: ', games);
     const userGames = [];
     games.forEach((game) => {
       if (game.userId === id) {

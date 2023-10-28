@@ -3,6 +3,7 @@ import Matter from 'matter-js';
 import { Socket } from 'socket.io';
 import { MapEnum } from '../types/map-enum.type';
 import { MoveDirection } from '../types/walls-position.enum';
+import { v4 as uuidv4 } from 'uuid';
 import {
   BALL_RADUIS,
   HEIGHT,
@@ -152,6 +153,7 @@ export class PongEngine {
     this.initMatter(); //engine world ...etc
     this.initMovingObjects(); //paddles and ball
     this.initStaticObjects(); //including obstacles/walls
+    // this.id = uuidv4();
   }
 
   private listen() {
@@ -337,7 +339,6 @@ export class PongEngine {
           ? this.firstPlayerId
           : this.secondPlayerId,
     };
-    console.log(`game ${this.id} is over`);
     this.firstClient && this.firstClient.emit('gameOver', gameOver);
     this.firstClient && this.secondClient.emit('gameOver', gameOver);
 
@@ -352,6 +353,7 @@ export class PongEngine {
         opponentScore: this.secondScore,
       });
     this.id && this.cleanUpGameService && this.cleanUpGameService(this.id);
+    this.gameId = "0";
   }
 
   private sendScore() {
@@ -427,9 +429,7 @@ export class PongEngine {
     return this.secondClient;
   }
 
-  get gameId() {
-    return this.id;
-  }
+
 
   public reconnect(id: string, client: Socket) {
     if (this.firstPlayerId === id) {

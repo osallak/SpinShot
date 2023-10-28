@@ -24,7 +24,7 @@ export class FriendsController {
   constructor(private readonly friendsService: FriendsService) {}
 
   @AddFriendDoc()
-  @Post('/:id')
+  @Post('/add/:id')
   @UseGuards(JwtAuthGuard, FriendsGuard)
   async addFriend(
     @Param('id') id: string,

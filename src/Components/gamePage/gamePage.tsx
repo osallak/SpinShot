@@ -161,8 +161,16 @@ const GamePage = (props: any) => {
     return null;
   };
   useEffect(() => {
-    console.log("auth_status:", auth_status);
     initializeSocket();
+    return () => {
+      socket.off("connect");
+      socket.off("cancel-join");
+      socket.off("error");
+      socket.off("gameOver");
+      socket.off("match");
+      socket.off("gameState");
+      socket.off("scoreUpdate");
+    }
   }, []);
 
   useEffect(() => {

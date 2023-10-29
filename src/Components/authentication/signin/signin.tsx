@@ -86,9 +86,7 @@ const Signin = () => {
 
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    Router.push(
-      "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fwaiting&response_type=code"
-    );
+    Router.push(`https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-6be28a100ed05da2dfee2938f8dd3c333c0cabba47a2898c4f06953393209b2d&redirect_uri=http%3A%2F%2Fe1r12p4.1337.ma%3A3000%2Fwaiting&response_type=code`);
   };
 
   const redirection = (e: MouseEvent<HTMLButtonElement>) => {

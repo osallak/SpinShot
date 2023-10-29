@@ -26,6 +26,7 @@ import {
 } from "../context/recoilContextIndividual";
 import DropDown from "../ui/FolderDropDown/Dropdown";
 import { SocketContext } from "@/context/socket.context";
+import toast from "react-hot-toast";
 
 let token: any;
 const ConversationIndividual = (props: {
@@ -47,9 +48,13 @@ const ConversationIndividual = (props: {
   );
   const [individual, setIndividual] = useRecoilState(individualAtom);
   const myHandleClick = () => {
+    if (!localStorage.getItem("token")) {
+      toast.error("You need to login first");
+      return;
+    }
     console.log("invite:", { id: props.id});
     socket.emit("invite", {id: props.id});
-    router.push(`/game/${router.query.id}`);
+    // router.push(`/game/${router.query.id}`);
   }
   const dropDownContent = [
     { content: "Let's Play", click: myHandleClick, icon: game},

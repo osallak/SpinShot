@@ -3,6 +3,10 @@ import { createContext, useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
 import { useAppSelector } from "../../redux_tool";
 import toast from "react-hot-toast";
+import { Dialog, DialogBody, DialogFooter, DialogHeader } from "@material-tailwind/react";
+import parseJwt from "@/utils/parsJwt";
+import { useRouter } from "next/router";
+import { PassThrough } from "stream";
 
 const SocketContext = createContext<any>(null);
 let socket = io(`${ip}/games`, {
@@ -51,23 +55,100 @@ export const getChatSocket = () => {
   return chatSocket;
 }
 
+export const GameInvite = (props: any) => {
+  return (
+      <div className="">
+        <Dialog
+          open={props.openDialog}
+          handler={() => {}}
+          size="sm"
+          className="bg-pearl space-y-10"
+        >
+          <DialogHeader className=" flex justify-center items-center text-very-dark-purple font-Passion-One text-3xl">
+            Game Invite
+          </DialogHeader>
+          <DialogFooter className="">
+            <button
+              className=" bg-peridot rounded-full w-28 h-9"
+              onClick={props.handleDeclineInvitation}
+            >
+              <span className="text-very-dark-purple font-Passion-One text-lg">
+                Decline
+              </span>
+            </button>
+            <button
+              className=" bg-peridot rounded-full w-28 h-9"
+              onClick={props.handleAcceptInvitation}
+            >
+              <span className="text-very-dark-purple font-Passion-One text-lg">
+                Accept 
+              </span>
+            </button>
+
+          </DialogFooter>
+        </Dialog>
+      </div>
+  )
+}
+
 const SocketProvider = ({ children }: any) => {
+  const [gameInvite, setGameInvite] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [otherUserId, setOtherUserId] = useState<any>("");
+  const router = useRouter();
+  const handleAcceptInvitation = () => {
+    socket.emit("accept-invite", {id: otherUserId});
+    setOpenDialog(false);
+  };
+  const handleDeclineInvitation =() => {
+    try {
+      socket.emit("decline-invite", {id: otherUserId});
+      console.log("decline");
+      setOpenDialog(false);
+    } catch(e) {
+
+    }
+  };
+  useEffect(() => {
+      socket.on("error", (data: any) => {
+        toast.error(data);
+      })
+      socket.on("invite", (data: any) => {
+        console.log("other user: ", data.senderId);
+        setOtherUserId(data.senderId);
+        console.log("invited");
+        setGameInvite(prev => !prev);
+        setOpenDialog(prev => {
+          if (prev) return prev;
+          return !prev;
+        });
+      });
+      socket.on("invite-canceled", (data: any) => {
+        console.log("invite cancelled");
+        toast.error("invite was declined");
+      });
+      socket.on("invite-accepted", (data: any) => {
+        if (!localStorage || !localStorage.getItem("token")) {
+          toast.error("you are not authenticated");
+          return;
+        };
+        console.log("accepted:", parseJwt(localStorage.getItem("token")!).sub);
+        router.push(`/game/${parseJwt(localStorage.getItem("token")!).sub}`);
+      });
+      return () => {
+        // setOtherUserId("");
+        console.log("clean up");
+        socket.off("invite");
+        socket.off("invite-accepted");
+        socket.off("invite-canceled");
+
+      }
+  }, [gameInvite])
+
   useEffect(() => {
     try {
-      socket.on("invite", (data: any) => {
-        toast.custom(<div className="bg-very-dark-purple fixed z-[1000] w-auto h-auto flex justify-center flex-col rounded-xl p-4 space-y-2">
-        <p className="text-pearl font-Poppins font-bold xl:text-2xl lg:text-xl md:text-base sm:text-base text-xs">
-          You have been invited to a game by user 
-        </p>
-        <div className="flex justify-between">
-          <button className="text-cyan-800 bg-pearl rounded-xl p-2 hover:bg-green-300 hover:w-7 hover:h-7">Accept</button>
-          <button className="text-red-800 bg-pearl rounded-xl p-2 hover:bg-red-300">Decline</button>
-        </div>
-        </div>, {
-          duration: Infinity,
-        })
-      })
       return () => {
+        console.log("global cleanup");
         if (chatSocket) chatSocket.disconnect();
         if (socket) socket.disconnect();
       };
@@ -75,8 +156,11 @@ const SocketProvider = ({ children }: any) => {
       console.log(e);
     }
   }, []);
-
+  {
+    console.log("outside game event", openDialog);
+  }
   return (
+    <>
     <SocketContext.Provider
       value={{
         socket,
@@ -93,6 +177,8 @@ const SocketProvider = ({ children }: any) => {
     >
       {children}
     </SocketContext.Provider>
+    {openDialog && <GameInvite handleAcceptInvitation={handleAcceptInvitation} handleDeclineInvitation={handleDeclineInvitation} openDialog={openDialog} />}
+  </>
   );
 };
 

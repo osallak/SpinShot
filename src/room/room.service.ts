@@ -86,7 +86,7 @@ export class RoomService {
         });
         resolve(null);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         reject({
           status: 500,
           message: 'Internal Server Error',
@@ -120,7 +120,7 @@ export class RoomService {
         });
         resolve(null);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         reject({
           status: 500,
           message: 'Internal Server Error',
@@ -264,7 +264,7 @@ export class RoomService {
           message: 'Joined Successfully',
         });
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         reject({
           status: e?.status,
           message: e?.message,
@@ -345,7 +345,7 @@ export class RoomService {
           message: 'User Group Status Updated',
         });
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         reject({
           status: 500,
           message: 'Internal Server Error',
@@ -379,7 +379,7 @@ export class RoomService {
           resolve(true);
         }
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         resolve(null);
       }
     });
@@ -460,7 +460,7 @@ export class RoomService {
         );
         resolve(res as Response);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         reject(e as Response);
       }
     });
@@ -519,7 +519,7 @@ export class RoomService {
           data: rooms,
         });
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         reject({
           status: 500,
           message: 'Internal Server Error',
@@ -620,7 +620,7 @@ export class RoomService {
           },
         });
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     });
   }
@@ -697,7 +697,7 @@ export class RoomService {
           message: 'User Kicked Successfully',
         });
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         reject({
           status: 500,
           message: 'Internal Server Error',
@@ -757,7 +757,7 @@ export class RoomService {
           message: 'Room Protected',
         });
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         reject({
           status: 500,
           message: 'Internal Server Error',
@@ -820,7 +820,7 @@ export class RoomService {
           message: 'User Elevated',
         });
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         reject({
           status: 500,
           message: 'Internal Server Error',
@@ -861,7 +861,7 @@ export class RoomService {
           });
         resolve(roomMembers);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         reject([]);
       }
     });
@@ -932,7 +932,7 @@ export class RoomService {
           message: 'Room Deleted',
         });
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         return reject({
           status: 500,
           message: 'Internal Server Error',
@@ -1021,7 +1021,7 @@ export class RoomService {
           message: 'User Invited',
         });
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         return reject({
           status: 500,
           message: 'Internal Server Error',

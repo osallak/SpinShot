@@ -5,9 +5,10 @@ import { Strategy } from 'passport-42';
 import { HOST } from 'src/global/constants/global.constants';
 import { User } from 'src/types';
 import { FortyTwoProfile } from '../interfaces';
+import { UserService } from 'src/user/user.service';
 @Injectable()
 export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
-  constructor(configService: ConfigService) {
+  constructor(configService: ConfigService, private readonly userService:UserService) {
     super({
       clientID: configService.get('INTRA_CLIENT_ID'),
       clientSecret: configService.get('INTRA_APP_SECRET'),

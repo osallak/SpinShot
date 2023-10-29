@@ -188,7 +188,7 @@ export class TwoFactorAuthService {
           data: user.twoFactorAuth,
         });
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         return reject({
           status: 500,
           message: 'Internal Server Error',

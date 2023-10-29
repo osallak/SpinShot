@@ -184,7 +184,7 @@ export class UserService {
     return true;
   }
 
-  async create42User(data: any): Promise<User> {
+  public async create42User(data: any): Promise<User> {
     const user = await this.findOneByUsername(data.username);
     if (user) data.username = 'user' + '_' + uuidv4().slice(0, 8);
 
@@ -204,6 +204,7 @@ export class UserService {
         },
       },
     });
+    // console.log("createUser:", createUser);
     if (!createUser) throw new InternalServerErrorException();
     const haveAchievement = await this.initAcheivements(createUser);
     if (!haveAchievement) throw new InternalServerErrorException();
@@ -457,6 +458,7 @@ export class UserService {
         },
       },
     });
+    const haveAchievement = await this.initAcheivements(user);
     return user;
   }
   async verifyPassword(id: string, password: string): Promise<boolean> {

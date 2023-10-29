@@ -120,7 +120,7 @@ const Chat = () => {
     setReload(true);
   };
   const updateIndividualConversation = (data: any) => {
-    console.log("data:", data);
+    // console.log("data:", data);
     const parsedData = JSON.parse(String(data));
     setId(parsedData.from);
 

@@ -52,7 +52,7 @@ const ConversationIndividual = (props: {
       toast.error("You need to login first");
       return;
     }
-    console.log("invite:", { id: props.id});
+    // console.log("invite:", { id: props.id});
     socket.emit("invite", {id: props.id});
     // router.push(`/game/${router.query.id}`);
   }
@@ -165,9 +165,9 @@ const ConversationIndividual = (props: {
 			}
 		})
 		setUserStatus(res.data.status);
-		console.log('res from player status: ' , res);
+		// console.log('res from player status: ' , res);
 	} catch (error: any) {
-		console.log('error from player status : ', error)
+		// console.log('error from player status : ', error)
 	}
   }
 

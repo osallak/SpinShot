@@ -35,19 +35,19 @@ const Func = ({ children }: FuncProps) => {
         setChatSocket(sc);
         setChatSocketAuth(localStorage.getItem("token") as string);
         connectChatSocket();
-        console.log("chat socket", getChatSocket());
+        // console.log("chat socket", getChatSocket());
       }
       if (!s.connected) {
         s.auth = {
           token: localStorage.getItem("token"),
         };
         s.on("connect_error", (err: any) => {
-          console.log(`connect_error due to ${err.message}`);
+          // console.log(`connect_error due to ${err.message}`);
         });
         setSocket(s);
         setGlobalSocketAuth(localStorage.getItem("token") as string);
         connectGlobalSocket();
-        console.log("game socket", getGlobalSocket());
+        // console.log("game socket", getGlobalSocket());
       }
     }
   }, [auth_status]);

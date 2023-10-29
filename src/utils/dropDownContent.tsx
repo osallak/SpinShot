@@ -17,15 +17,15 @@ export const dropDownContent = [
 const kickUser = () => {};
 
 const banUser = () => {
-  console.log("user baned");
+  // console.log("user baned");
 };
 
 const muteUser = () => {
-  console.log("user muted");
+  // console.log("user muted");
 };
 
 const addAdmin = () => {
-  console.log("user added as admin");
+  // console.log("user added as admin");
 };
 
 export const roomContent = [

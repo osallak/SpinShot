@@ -103,7 +103,7 @@ const SocketProvider = ({ children }: any) => {
   const handleDeclineInvitation =() => {
     try {
       socket.emit("decline-invite", {id: otherUserId});
-      console.log("decline");
+      // console.log("decline");
       setOpenDialog(false);
     } catch(e) {
 
@@ -114,9 +114,9 @@ const SocketProvider = ({ children }: any) => {
         toast.error(data);
       })
       socket.on("invite", (data: any) => {
-        console.log("other user: ", data.senderId);
+        // console.log("other user: ", data.senderId);
         setOtherUserId(data.senderId);
-        console.log("invited");
+        // console.log("invited");
         setGameInvite(prev => !prev);
         setOpenDialog(prev => {
           if (prev) return prev;
@@ -124,7 +124,7 @@ const SocketProvider = ({ children }: any) => {
         });
       });
       socket.on("invite-canceled", (data: any) => {
-        console.log("invite cancelled");
+        // console.log("invite cancelled");
         toast.error("invite was declined");
       });
       socket.on("invite-accepted", (data: any) => {
@@ -132,12 +132,12 @@ const SocketProvider = ({ children }: any) => {
           toast.error("you are not authenticated");
           return;
         };
-        console.log("accepted:", parseJwt(localStorage.getItem("token")!).sub);
+        // console.log("accepted:", parseJwt(localStorage.getItem("token")!).sub);
         router.push(`/game/${parseJwt(localStorage.getItem("token")!).sub}`);
       });
       return () => {
         // setOtherUserId("");
-        console.log("clean up");
+        // console.log("clean up");
         socket.off("invite");
         socket.off("invite-accepted");
         socket.off("invite-canceled");
@@ -148,17 +148,17 @@ const SocketProvider = ({ children }: any) => {
   useEffect(() => {
     try {
       return () => {
-        console.log("global cleanup");
+        // console.log("global cleanup");
         if (chatSocket) chatSocket.disconnect();
         if (socket) socket.disconnect();
       };
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   }, []);
-  {
-    console.log("outside game event", openDialog);
-  }
+  // {
+  //   // console.log("outside game event", openDialog);
+  // }
   return (
     <>
     <SocketContext.Provider

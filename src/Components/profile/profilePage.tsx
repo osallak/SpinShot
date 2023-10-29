@@ -73,7 +73,7 @@ const ProfilePage = (props: { id: any }) => {
       router.push(`/profile/${id}`);
       // setValid(true);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       // router.push("/error");
       return;
     }

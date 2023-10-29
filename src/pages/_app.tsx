@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { RecoilRoot } from "recoil";
 import { store } from "../../redux_tool/store";
 import { SocketContext, SocketProvider, getChatSocket} from "@/context/socket.context";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useContext, useEffect } from "react";
 import { useAppSelector } from "../../redux_tool";
 import { io } from "socket.io-client";

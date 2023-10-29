@@ -1,8 +1,9 @@
 "use client";
 import IMsgDataTypes from "@/types/iMsgDataTypes";
+import game from "../../../public/game.svg";
 import individualConversationType from "@/types/individualConversationType";
 import individualType from "@/types/individualTypes";
-import { dropDownContent } from "@/utils/dropDownContent";
+// import { dropDownContent } from "@/utils/dropDownContent";
 import parseJwt from "@/utils/parsJwt";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -12,6 +13,7 @@ import {
   KeyboardEvent,
   MouseEvent,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -23,6 +25,7 @@ import {
   individualConversationAtom,
 } from "../context/recoilContextIndividual";
 import DropDown from "../ui/FolderDropDown/Dropdown";
+import { SocketContext } from "@/context/socket.context";
 
 let token: any;
 const ConversationIndividual = (props: {
@@ -34,6 +37,7 @@ const ConversationIndividual = (props: {
   openSubSideBar: boolean;
 }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const {socket} = useContext(SocketContext);
   const router = useRouter();
   const [userStatus, setUserStatus] = useState("");
   const [message, setMessage] = useState("");
@@ -42,7 +46,14 @@ const ConversationIndividual = (props: {
     individualConversationAtom
   );
   const [individual, setIndividual] = useRecoilState(individualAtom);
-
+  const myHandleClick = () => {
+    console.log("invite:", { id: props.id});
+    socket.emit("invite", {id: props.id});
+    router.push(`/game/${router.query.id}`);
+  }
+  const dropDownContent = [
+    { content: "Let's Play", click: myHandleClick, icon: game},
+  ];
   const getTime = (time: string): string => {
     const date = new Date(Number(time));
     let hours = date.getHours();
@@ -162,6 +173,7 @@ const ConversationIndividual = (props: {
   useEffect(() => {
 	playerStatus();
   }, [])
+
 
   useEffect(() => {
     const conversationDiv: any = chatContainerRef.current;

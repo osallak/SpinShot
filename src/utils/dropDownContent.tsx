@@ -1,15 +1,17 @@
+import { useContext } from "react";
 import admin from "../../public/adminIcon.svg";
 import ban from "../../public/banIcon.svg";
 import game from "../../public/game.svg";
 import kick from "../../public/kickIcon.svg";
 import mute from "../../public/muteIcon.svg";
+import { SocketContext } from "@/context/socket.context";
 
 const handleClick = () => {
-  console.log("hello world from handle click");
+ 
 };
 
 export const dropDownContent = [
-  { content: "Let't Play", click: handleClick, icon: game },
+  { content: "Let's Play", click: handleClick, icon: game },
 ];
 
 const kickUser = () => {};

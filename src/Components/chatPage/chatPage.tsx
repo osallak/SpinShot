@@ -34,6 +34,7 @@ import InviteFriends from "./inviteFriends";
 import MobileSubSideBar from "./mobileSubSideBar";
 import SubSideBar from "./subSideBar";
 import { SocketContext } from "@/context/socket.context";
+import toast from "react-hot-toast";
 // import { chatSocketContext } from "@/context/chatSocket.context";
 
 // let chatSocket: any;
@@ -77,6 +78,7 @@ const Chat = () => {
       router.push("/signin");
       return;
     }
+    console.log("chatSocket", chatSocket.id);
     chatSocket.on("connect", () => console.log("connected"));
     chatSocket.on("pm", (data: any) => {
       const parsedData = JSON.parse(String(data));
@@ -140,6 +142,10 @@ const Chat = () => {
         return [...prev, newIndividualConversation];
       });
     });
+
+    // chatSocket.on("invite", (data: any) => {
+    //   toast.success(data);
+    // })
 
     chatSocket.on("gm", (data: any) => {
       const parsedData = JSON.parse(data);

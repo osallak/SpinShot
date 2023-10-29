@@ -5,7 +5,7 @@ import securityIcon2 from "./../../../../public/securityIcon2.svg";
 import profile from "./../../../../public/profileIcon.svg";
 import Security from "../upDatePasswd/security";
 import parseJwt from "@/utils/parsJwt";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 
 const SubSidebar = (props: any) => {
   const [background, setBackground] = useState(false);
@@ -21,10 +21,17 @@ const SubSidebar = (props: any) => {
   };
 
   useEffect(() => {
-    if (
-      router.query.id ===
-      parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
-    ) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
+    if (router.query.id === parseJwt(JSON.stringify(token)).sub) {
       setSubBackground(1);
       props.setContent("Personal_Information");
     } else {

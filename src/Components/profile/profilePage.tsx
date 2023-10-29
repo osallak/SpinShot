@@ -110,9 +110,18 @@ const ProfilePage = (props: { id: any }) => {
   };
 
   const handleResize = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
     {
-      router.query.id ===
-      parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+      router.query.id === parseJwt(JSON.stringify(token)).sub
         ? usersearched(buttonsUser, SignOut)
         : swetshProfile(buttons, letPlay);
     }

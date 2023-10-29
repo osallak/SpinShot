@@ -16,7 +16,7 @@ import Matchmaking from "./matchmaking";
 import { SocketContext } from "@/context/socket.context";
 import Counter from "./counter";
 import parseJwt from "@/utils/parsJwt";
-import { Main } from "next/document";
+// import { Main } from "next/document";
 
 let game: GameModel | null = null;
 
@@ -232,7 +232,7 @@ const GamePage = (props: any) => {
       }
     >
       {isClick2 && <Gamemenu isClick2={isClick2} setIsClick2={setIsClick2} />}
-      <div className={`  ${isopen ? "ml-[70px]  w-full " : null}  `}>
+      <div className={` ml-2 ${isopen ? "ml-[70px]  w-full " : null}  `}>
         <NavbarMobile
           setMenu={setMenu}
           handleMenu={handleMenu}

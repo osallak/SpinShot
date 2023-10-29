@@ -48,7 +48,11 @@ const SidebarMobile = (props: {
       props.setPages(route);
     } else {
       const id = parseJwt(JSON.stringify(localStorage.getItem("token"))).sub;
-      router.push(route + "/" + id);
+      {
+        route == "/friends"
+          ? router.push(route)
+          : router.push(route + "/" + id);
+      }
     }
   };
 

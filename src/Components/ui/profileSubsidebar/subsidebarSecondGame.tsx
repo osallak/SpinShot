@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import SimpleButton from "../Buttons/simpleButton";
 import play from "./../../../../public/playIcon.svg";
 import Maps from "./maps";
 import Image from "next/image";
+import { SocketContext } from "@/context/socket.context";
 
 const SubsidebarSecondGame = (props: any) => {
+  const { socket } = useContext(SocketContext);
   const HandleUpdate = () => {
-    props.socket.emit("joinQueue", { map: props.map });
+    if (!socket) return;
+    socket.emit("joinQueue", { map: props.map });
     props.setIsClick(!props.isClick);
     props.setOpned(false);
     // props.setDepend(true);

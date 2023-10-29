@@ -8,9 +8,9 @@ import ip from "@/utils/endPoint";
 import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { Socket, io } from "socket.io-client";
+// import { chatSocket, io } from "chatSocket.io-client";
 import {
   currentFriendsAtom,
   exploreChannelAtom,
@@ -33,11 +33,15 @@ import ExploreChannels from "./exploreChannels";
 import InviteFriends from "./inviteFriends";
 import MobileSubSideBar from "./mobileSubSideBar";
 import SubSideBar from "./subSideBar";
+import { SocketContext } from "@/context/socket.context";
+import { Socket } from "socket.io-client";
+// import { chatSocketContext } from "@/context/chatSocket.context";
 
-let socket: any;
+// let chatSocket: any;
 let token: any;
 const Chat = () => {
   const router = useRouter();
+  const { chatSocket } = useContext(SocketContext);
   const [openSideBar, setOpenSideBar] = useState(false);
   const [id, setId] = useState("");
   const [roomId, setRoomId] = useState("");
@@ -62,31 +66,98 @@ const Chat = () => {
   const [blockedUsers, setBlockedUsers] = useRecoilState(blockedUsersAtom);
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [userId, setUserId] = useState("");
-
-  const initializeSocket = () => {
-    token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/signin");
-      return;
-    }
-    const twoFA = parseJwt(JSON.stringify(token));
-    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
-      router.push("/signin");
-      return;
-    }
-    socket = io(`${ip}/chat`, {
-      extraHeaders: {
-        authorization: `Bearer ${token}`,
-      },
+  const updateChannelConversation = (data: any) => {
+    const parsedData = JSON.parse(data);
+    setChannel((prev: channelType[]) => {
+      const newChannel = prev.map((item: channelType) => {
+        if (item.id === parsedData.roomName) {
+          if (item.messages.length > 0) {
+            const updatedMessages = item.messages.map((message) => {
+              return {
+                ...message,
+                message: parsedData.content,
+                sentAt: parsedData.timestamp,
+                user: {
+                  avatar: "",
+                  id: parsedData.userId,
+                  username: parsedData.userName,
+                },
+              };
+            });
+            return { ...item, messages: updatedMessages };
+          } else {
+            return {
+              ...item,
+              messages: [
+                {
+                  message: parsedData.content,
+                  sentAt: parsedData.timestamp,
+                  user: {
+                    avatar: "",
+                    id: parsedData.userId,
+                    username: parsedData.userName,
+                  },
+                },
+              ],
+            };
+          }
+        } else return item;
+      });
+      return newChannel;
     });
-    socket.on("connect", () => console.log("connected"));
+    setConversationChannel((prev: messagesType[]) => {
+      const newConversationChannel: messagesType = {
+        message: parsedData.content,
+        sentAt: parsedData.timestamp,
+        user: {
+          avatar: parsedData.avatar,
+          id: parsedData.from,
+          username: parsedData.senderUsername,
+        },
+      };
+      return [...prev, newConversationChannel];
+    });
+    setReload(true);
+  };
+  const updateIndividualConversation = (data: any) => {
+    // console.log("data:", data);
+    const parsedData = JSON.parse(String(data));
+    setId(parsedData.from);
 
-    socket.on("pm", (data: Socket) => {
-      const parsedData = JSON.parse(String(data));
-      setId(parsedData.from);
-
-      setIndividual((prev: individualType[]) => {
-        if (prev.length === 0) {
+    setIndividual((prev: individualType[]) => {
+      if (prev.length === 0) {
+        const newIndividual = {
+          message: parsedData.content,
+          other: {
+            avatar: parsedData.senderAvatar,
+            id: parsedData.from,
+            username: parsedData.senderUsername,
+          },
+          sender: parsedData.from,
+          sentAt: parsedData.timestamp,
+        };
+        return [newIndividual];
+      } else {
+        const wanted = prev.find(
+          (item: individualType) => item.other.id === parsedData.from
+        );
+        if (wanted) {
+          const newIndividual = prev.map((item: individualType) => {
+            if (item.other.id === parsedData.from) {
+              return {
+                message: parsedData.content,
+                other: {
+                  avatar: parsedData.senderAvatar,
+                  id: parsedData.from,
+                  username: parsedData.senderUsername,
+                },
+                sender: parsedData.from,
+                sentAt: parsedData.timestamp,
+              };
+            } else return item;
+          });
+          return newIndividual;
+        } else {
           const newIndividual = {
             message: parsedData.content,
             other: {
@@ -97,108 +168,44 @@ const Chat = () => {
             sender: parsedData.from,
             sentAt: parsedData.timestamp,
           };
-          return [newIndividual];
-        } else {
-          const wanted = prev.find(
-            (item: individualType) => item.other.id === parsedData.from
-          );
-          if (wanted) {
-            const newIndividual = prev.map((item: individualType) => {
-              if (item.other.id === parsedData.from) {
-                return {
-                  message: parsedData.content,
-                  other: {
-                    avatar: parsedData.senderAvatar,
-                    id: parsedData.from,
-                    username: parsedData.senderUsername,
-                  },
-                  sender: parsedData.from,
-                  sentAt: parsedData.timestamp,
-                };
-              } else return item;
-            });
-            return newIndividual;
-          } else {
-            const newIndividual = {
-              message: parsedData.content,
-              other: {
-                avatar: parsedData.senderAvatar,
-                id: parsedData.from,
-                username: parsedData.senderUsername,
-              },
-              sender: parsedData.from,
-              sentAt: parsedData.timestamp,
-            };
-            return [newIndividual, ...prev];
-          }
+          return [newIndividual, ...prev];
         }
-      });
-
-      setIndividualConversation((prev: individualConversationType[]) => {
-        const newIndividualConversation: individualConversationType = {
-          sentAt: parsedData.timestamp,
-          sender: parsedData.from,
-          message: parsedData.content,
-        };
-        return [...prev, newIndividualConversation];
-      });
+      }
     });
 
-    socket.on("gm", (data: any) => {
-      const parsedData = JSON.parse(data);
-      setChannel((prev: channelType[]) => {
-        const newChannel = prev.map((item: channelType) => {
-          if (item.id === parsedData.roomName) {
-            if (item.messages.length > 0) {
-              const updatedMessages = item.messages.map((message) => {
-                return {
-                  ...message,
-                  message: parsedData.content,
-                  sentAt: parsedData.timestamp,
-                  user: {
-                    avatar: "",
-                    id: parsedData.userId,
-                    username: parsedData.userName,
-                  },
-                };
-              });
-              return { ...item, messages: updatedMessages };
-            } else {
-              return {
-                ...item,
-                messages: [
-                  {
-                    message: parsedData.content,
-                    sentAt: parsedData.timestamp,
-                    user: {
-                      avatar: "",
-                      id: parsedData.userId,
-                      username: parsedData.userName,
-                    },
-                  },
-                ],
-              };
-            }
-          } else return item;
-        });
-        return newChannel;
-      });
-      setConversationChannel((prev: messagesType[]) => {
-        const newConversationChannel: messagesType = {
-          message: parsedData.content,
-          sentAt: parsedData.timestamp,
-          user: {
-            avatar: parsedData.avatar,
-            id: parsedData.from,
-            username: parsedData.senderUsername,
-          },
-        };
-        return [...prev, newConversationChannel];
-      });
-      setReload(true);
+    setIndividualConversation((prev: individualConversationType[]) => {
+      const newIndividualConversation: individualConversationType = {
+        sentAt: parsedData.timestamp,
+        sender: parsedData.from,
+        message: parsedData.content,
+      };
+      return [...prev, newIndividualConversation];
     });
-    socket.on("exception", (data: any) => console.log("exception", data));
-    socket.on("disconnect", (data: any) => console.log("disconnect"));
+  };
+  const initializechatSocket = () => {
+    token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
+    // chatSocket.on("connect", () => {});
+    if (!chatSocket.hasListeners("pm")) {
+      chatSocket.on("pm", (data: any) => {
+        updateIndividualConversation(data);
+      });
+    }
+    if (!chatSocket.hasListeners("gm")) {
+      chatSocket.on("gm", (data: any) => {
+        updateChannelConversation(data);
+      });
+    }
+    // chatSocket.on("exception", () => {}) ;
+    // chatSocket.on("disconnect", (data: any) => console.log("disconnect"));
   };
 
   const fetchDataExploreChannel = async () => {
@@ -278,15 +285,18 @@ const Chat = () => {
         const returnedId = res.data?.individual.find(
           (items: any) => items.other.id === router.query.id
         );
-        if (returnedId) setId(returnedId.other.id);
-        else {
+        if (returnedId) {
+          setId(returnedId.other.id);
+        } else {
           if (router.query.id === parseJwt(token).sub) {
             setId(res?.data?.individual[0]?.other?.id);
           } else {
             const fromFriends: any = currentFriend.find(
               (items: any) => items.id === router.query.id
             );
-            if (fromFriends) setId(fromFriends.id);
+            if (fromFriends) {
+              setId(fromFriends.id);
+            }
             setIndividual((prev: individualType[]) => {
               const newConv: individualType = {
                 message: "",
@@ -385,10 +395,25 @@ const Chat = () => {
   useEffect(() => {
     fetchDataExploreChannel();
   }, [open]);
-
   useEffect(() => {
-    initializeSocket();
-  }, []);
+    initializechatSocket();
+    return () => {
+      chatSocket.removeAllListeners("gm");
+      chatSocket.removeAllListeners("pm");
+      chatSocket.off("gm");
+      chatSocket.off("pm");
+      // chatSocket.off("exception", () => {});
+      // chatSocket.off("connect", () => {});
+    };
+    // return () => {
+    //   console.log("disconnected !!");
+    //   chatSocket.off("connect");
+    //   chatSocket.off("pm");
+    //   chatSocket.off("gm");
+    //   chatSocket.off("exception");
+    //   chatSocket.disconnect();
+    // };
+  }, [chatSocket]);
 
   return (
     <div className="bg-very-dark-purple w-screen h-screen top-0 left-0 md:space-x-3 space-x-0 flex justify-start md:py-3 md:pr-3 md:pl-3 pl-0 py-0 pr-0 items-center flex-row relative">
@@ -463,9 +488,8 @@ const Chat = () => {
         {isIndividual === "Individual" ? (
           <ConversationIndividual
             userId={userId}
-            userName={"three"}
             id={id}
-            socket={socket}
+            socket={chatSocket}
             setReload={setReload}
             reload={reload}
             openSubSideBar={openSubSideBar}
@@ -473,9 +497,8 @@ const Chat = () => {
         ) : (
           <ConversationChannel
             userId={userId}
-            userName={"three"}
             id={roomId}
-            socket={socket}
+            socket={chatSocket}
             setReload={setReload}
             reload={reload}
             openSubSideBar={openSubSideBar}

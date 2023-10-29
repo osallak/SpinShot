@@ -7,12 +7,13 @@ import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import {
-	KeyboardEvent,
-	MouseEvent,
-	useCallback,
-	useEffect,
-	useRef,
-	useState,
+  KeyboardEvent,
+  MouseEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
 } from "react";
 import { useRecoilState } from "recoil";
 import admin from "../../../public/adminIcon.svg";
@@ -24,9 +25,9 @@ import settings from "../../../public/settingIcon.svg";
 import threePoint from "../../../public/threePoint.svg";
 import threePointforPeridot from "../../../public/threePointforPeridot.svg";
 import {
-	blockedUsersAtom,
-	channelAtom,
-	channelConversationAtom,
+  blockedUsersAtom,
+  channelAtom,
+  channelConversationAtom,
 } from "../context/recoilContextChannel";
 import DropDownChannel from "../ui/FolderDropDown/DropDownChannel";
 import SubUsersList from "./subUsersList";
@@ -35,7 +36,6 @@ import UsersList from "./usersList";
 let token: any;
 const ConversationChannel = (props: {
   userId: string;
-  userName: string;
   id: string;
   socket: any;
   setReload: Function;
@@ -43,9 +43,8 @@ const ConversationChannel = (props: {
   openSubSideBar: boolean;
 }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const [currentMsg, setCurrentMsg] = useState("");
   const router = useRouter();
-  const [message, setMessage] = useState("");
+  const [currentMessage, setCurrentMessage] = useState("");
   const [conversationChannel, setConversationChannel] = useRecoilState(
     channelConversationAtom
   );
@@ -56,6 +55,7 @@ const ConversationChannel = (props: {
   const [setting, setSettings] = useState(false);
   const [content, setContent] = useState<any[]>([]);
   const [openUsersList, setOpenUsersList] = useState(false);
+  const [userName, setUserName] = useState("");
   const [openSubUsersList, setOpenSubUsersList] = useState(false);
   const [openLeaveList, setOpenLeaveList] = useState(false);
   const [targetId, setTargetId] = useState("");
@@ -87,20 +87,22 @@ const ConversationChannel = (props: {
 
   const handleSendMessage = () => {
     const token = localStorage.getItem("token");
-		const jwtToken = parseJwt(JSON.stringify(token));
-		if (!token || jwtToken.isTwoFactorEnabled && !jwtToken.isTwoFaAuthenticated) {
-			router.push("/signin");
-			return;
-		}
-    if (currentMsg === "") return;
-    setMessage("");
+    const jwtToken = parseJwt(JSON.stringify(token));
+    if (
+      !token ||
+      (jwtToken.isTwoFactorEnabled && !jwtToken.isTwoFaAuthenticated)
+    ) {
+      router.push("/signin");
+      return;
+    }
+    if (currentMessage === "") return;
     props.setReload(true);
     const messageData: any = {
       from: `${parseJwt(JSON.stringify(token)).sub}`,
       roomName: `${props.id}`,
-      content: currentMsg,
+      content: currentMessage,
       timestamp: String(Date.now()),
-      senderUsername: props.userName,
+      senderUsername: userName,
       senderAvatar: "",
     };
     setChannel((prev: channelType[]) => {
@@ -110,12 +112,12 @@ const ConversationChannel = (props: {
             const updatedMessages = item.messages.map((message) => {
               return {
                 ...message,
-                message: currentMsg,
+                message: currentMessage,
                 sentAt: messageData.timestamp,
                 user: {
                   avatar: "",
                   id: props.userId,
-                  username: props.userName,
+                  username: userName,
                 },
               };
             });
@@ -125,12 +127,12 @@ const ConversationChannel = (props: {
               ...item,
               messages: [
                 {
-                  message: currentMsg,
+                  message: currentMessage,
                   sentAt: messageData.timestamp,
                   user: {
                     avatar: "",
                     id: props.userId,
-                    username: props.userName,
+                    username: userName,
                   },
                 },
               ],
@@ -147,12 +149,13 @@ const ConversationChannel = (props: {
         user: {
           avatar: "",
           id: props.userId,
-          username: props.userName,
+          username: userName,
         },
       };
       return [...prev, newConversationChannel];
     });
     props.socket.emit("gm", messageData);
+    setCurrentMessage("");
   };
 
   const keySendMessage = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -233,13 +236,27 @@ const ConversationChannel = (props: {
     }
   }, []);
 
+  const getUserName = async () => {
+    try {
+      const senderId = parseJwt(
+        JSON.stringify(localStorage.getItem("token"))
+      ).sub;
+      const userNameRes = await axios.get(`${ip}/users/profile/${senderId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setUserName((prev) => userNameRes.data.username);
+    } catch (error: any) {}
+  };
+
+  useEffect(() => {
+    getUserName();
+  }, []);
+
   useEffect(() => {
     getTypeOfChannel();
   }, [props.id]);
-
-  useEffect(() => {
-    setCurrentMsg(message);
-  }, [message]);
 
   useEffect(() => {
     const conversationDiv: any = chatContainerRef.current;
@@ -259,7 +276,11 @@ const ConversationChannel = (props: {
           userId={props.userId}
         />
       )}
-      <div className={`bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col ${props.openSubSideBar && "opacity-5"}`}>
+      <div
+        className={`bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col ${
+          props.openSubSideBar && "opacity-5"
+        }`}
+      >
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">
             <div className="flex justify-center items-center space-x-2 flex-row">
@@ -388,33 +409,33 @@ const ConversationChannel = (props: {
                             />
                           </button>
                         )}
-                        {openSubUsersList && items.user.id === targetId && (
-                          <SubUsersList
-                            open={openSubUsersList}
-                            setOpen={setOpenSubUsersList}
-                            setClose={setOpenSubUsersList}
-                            type={type}
-                            name={props.id}
-                            content={content}
-                            checkedID={items.user.id}
-                          />
-                        )}
-                        {openLeaveList && items.user.id === targetId && (
-                          <SubUsersList
-                            open={openLeaveList}
-                            setOpen={setOpenLeaveList}
-                            setClose={setOpenLeaveList}
-                            type={type}
-                            name={props.id}
-                            content={content}
-                            checkedID={items.user.id}
-                          />
-                        )}
                       </div>
                     </div>
                   )
               )}
             </div>
+            {openSubUsersList && (
+              <SubUsersList
+                open={openSubUsersList}
+                setOpen={setOpenSubUsersList}
+                setClose={setOpenSubUsersList}
+                type={type}
+                name={props.id}
+                content={content}
+                checkedID={targetId}
+              />
+            )}
+            {openLeaveList && (
+              <SubUsersList
+                open={openLeaveList}
+                setOpen={setOpenLeaveList}
+                setClose={setOpenLeaveList}
+                type={type}
+                name={props.id}
+                content={content}
+                checkedID={targetId}
+              />
+            )}
           </div>
         ) : (
           <div className="font-Poppins text-pearl text-opacity-40 w-[99.5%] py-8 flex flex-col items-center md:h-[80%] md:min-h-[100px] h-[82%] min-h-[70px] space-y-1 hover:overflow-auto overflow-hidden justify-center">
@@ -432,8 +453,8 @@ const ConversationChannel = (props: {
                   className="text-pearl caret-peridot w-full h-full outline-none placeholder:text-pearl font-light placeholder:opacity-50 font-Poppins md:text-lg sm:text-md text-sm bg-transparent"
                   type="text"
                   onKeyDown={(event) => keySendMessage(event)}
-                  value={message}
-                  onChange={(event) => setMessage(event.target.value)}
+                  value={currentMessage}
+                  onChange={(event) => setCurrentMessage(event.target.value)}
                 />
               </div>
               <button onClick={(event) => handleSendMessage()}>

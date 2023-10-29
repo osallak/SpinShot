@@ -1,15 +1,19 @@
 "use client";
 import IMsgDataTypes from "@/types/iMsgDataTypes";
+import game from "../../../public/game.svg";
 import individualConversationType from "@/types/individualConversationType";
 import individualType from "@/types/individualTypes";
-import { dropDownContent } from "@/utils/dropDownContent";
+// import { dropDownContent } from "@/utils/dropDownContent";
 import parseJwt from "@/utils/parsJwt";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import axios from "axios";
+import ip from "@/utils/endPoint";
 import {
   KeyboardEvent,
   MouseEvent,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -21,11 +25,12 @@ import {
   individualConversationAtom,
 } from "../context/recoilContextIndividual";
 import DropDown from "../ui/FolderDropDown/Dropdown";
+import { SocketContext } from "@/context/socket.context";
+import toast from "react-hot-toast";
 
 let token: any;
 const ConversationIndividual = (props: {
   userId: string;
-  userName: string;
   id: string;
   socket: any;
   setReload: Function;
@@ -33,15 +38,27 @@ const ConversationIndividual = (props: {
   openSubSideBar: boolean;
 }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const [currentMsg, setCurrentMsg] = useState("");
+  const {socket} = useContext(SocketContext);
   const router = useRouter();
+  const [userStatus, setUserStatus] = useState("");
   const [message, setMessage] = useState("");
+  const [userName, setUserName] = useState("");
   const [individualConversation, setIndividualConversation] = useRecoilState(
     individualConversationAtom
   );
   const [individual, setIndividual] = useRecoilState(individualAtom);
-  // const [userId, setUserId] = useState("");
-
+  const myHandleClick = () => {
+    if (!localStorage.getItem("token")) {
+      toast.error("You need to login first");
+      return;
+    }
+    // console.log("invite:", { id: props.id});
+    socket.emit("invite", {id: props.id});
+    // router.push(`/game/${router.query.id}`);
+  }
+  const dropDownContent = [
+    { content: "Let's Play", click: myHandleClick, icon: game},
+  ];
   const getTime = (time: string): string => {
     const date = new Date(Number(time));
     let hours = date.getHours();
@@ -54,7 +71,6 @@ const ConversationIndividual = (props: {
       Math.floor(hours / 10) === 0 ? "0" + hours.toString() : hours.toString();
     return parsedHours + ":" + parsedMinutes;
   };
-
   const handleSendMessage = () => {
     const token = localStorage.getItem("token");
     const jwtToken = parseJwt(JSON.stringify(token));
@@ -65,18 +81,17 @@ const ConversationIndividual = (props: {
       router.push("/signin");
       return;
     }
-    if (currentMsg === "") return;
-    setMessage("");
+    if (message === "") return;
     props.setReload(true);
 
     const messageData: IMsgDataTypes = {
       from: `${parseJwt(JSON.stringify(token)).sub}`,
       to: `${props.id}`,
-      content: currentMsg,
+      content: message,
       timestamp: String(Date.now()),
-      senderUsername: props.userName,
+      senderUsername: userName,
     };
-
+	
     setIndividual((prev: individualType[]) => {
       const newIndividual: individualType[] = prev.map((item: any) => {
         if (item.other.id === props.id) {
@@ -84,7 +99,7 @@ const ConversationIndividual = (props: {
             other: item.other,
             sender: item.sender,
             sentAt: item.sentAt,
-            message: currentMsg,
+            message: message,
           };
         } else return item;
       });
@@ -100,6 +115,7 @@ const ConversationIndividual = (props: {
       return [...prev, newIndividualConversation];
     });
     props.socket.emit("pm", messageData);
+    setMessage("");
   };
 
   const keySendMessage = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -119,9 +135,50 @@ const ConversationIndividual = (props: {
     }
   }, []);
 
+  const getUserName = async () => {
+    try {
+      const senderId = parseJwt(JSON.stringify(localStorage.getItem('token'))).sub;
+      const userNameRes = await axios.get(`${ip}/users/profile/${senderId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      setUserName((prev) => userNameRes.data.username);
+    } catch (error : any) {
+	}
+  };
+
+  const playerStatus = async () => {
+	const token = localStorage.getItem("token");
+	const jwtToken = parseJwt(JSON.stringify(token));
+	if (!token || (jwtToken.isTwoFactorEnabled && !jwtToken.isTwoFaAuthenticated)) {
+		router.push("/signin")
+		return;
+	}
+	try {
+		const res = await axios.get(`${ip}/users/status/${props.id}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+			params: {
+				id: props.id,
+			}
+		})
+		setUserStatus(res.data.status);
+		// console.log('res from player status: ' , res);
+	} catch (error: any) {
+		// console.log('error from player status : ', error)
+	}
+  }
+
   useEffect(() => {
-    setCurrentMsg(message);
-  }, [message]);
+    getUserName();
+  }, []);
+
+  useEffect(() => {
+	playerStatus();
+  }, [])
+
 
   useEffect(() => {
     const conversationDiv: any = chatContainerRef.current;
@@ -172,7 +229,7 @@ const ConversationIndividual = (props: {
                   ))}
                 </p>
                 <p className="font-Poppins md:text-lg sm:text-sm text-xs text-pearl text-opacity-40 font-thin">
-                  Online
+                  {userStatus}
                 </p>
               </div>
             </div>

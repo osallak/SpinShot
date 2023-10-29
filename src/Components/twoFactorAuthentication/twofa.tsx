@@ -7,6 +7,8 @@ import ip from "@/utils/endPoint";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 import { globalToken } from "../context/recoilContext";
+import { store } from "../../../redux_tool";
+import { updateAuthStatus } from "../../../redux_tool/redusProfile/profileSlice";
 
 const Twofa = () => {
   const Router = useRouter();
@@ -31,10 +33,11 @@ const Twofa = () => {
         Router.push("/signin");
         return;
       }
+      store.dispatch(updateAuthStatus(true));
       const jwtToken = parseJwt(token);
       Router.push(`/profile/${jwtToken.sub}`);
     } catch (error: any) {
-      console.log(error);
+      // console.log(error);
       setErrorMessage("wrong code");
       setError(false);
     }

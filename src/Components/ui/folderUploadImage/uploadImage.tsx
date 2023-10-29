@@ -61,7 +61,7 @@ const UploadImage = (props: {
         return;
       }
       if (image) {
-        console.log(" image", image);
+        // console.log("no image");
         const response = await axios.post(
           `${ip}/media`,
           {

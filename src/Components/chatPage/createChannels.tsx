@@ -58,7 +58,7 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
       toast.success("the channel created");
     } catch (error: any) {
       setError(true);
-      setErrorMessage(error?.response?.data?.message[0]);
+      setErrorMessage(error?.response?.data);
     }
   };
 

@@ -18,6 +18,7 @@ const InputBorder: React.FC<InputsProps> = ({
   Color,
   BorderSize,
   Reg,
+  handleKeyPress,
 }) => {
   const [ShowPassword, setShowPassword] = useState(false);
   const [ValidReg, setValidReg] = useState(true);
@@ -61,6 +62,7 @@ const InputBorder: React.FC<InputsProps> = ({
           <Image src={icon} alt="username or Email" className="h-5 w-5" />
         </div>
         <input
+			onKeyDown={ (event) => handleKeyPress(event)}
           autoComplete="off"
           type={type == "password" && ShowPassword ? "text" : type}
           value={value}

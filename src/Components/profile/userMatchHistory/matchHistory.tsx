@@ -13,6 +13,7 @@ const MatchHistory = () => {
   const [posts, setPosts] = useState<any>([]);
   const [page, setPage] = useState<number>(1);
   const [country, setCountry] = useState(1);
+  const [navoos, setNavoos] = useState<any>(null);
   const router = useRouter();
 
   const array = [
@@ -45,12 +46,11 @@ const MatchHistory = () => {
           },
         }
       );
-      console.log("page\n");
-      console.log("response.data.data", response.data);
+      setNavoos(response.data);
       setPosts(response.data.data);
       setTotalPages(response.data.pagination.pageCount);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -58,10 +58,9 @@ const MatchHistory = () => {
     fetchData();
   }, [page]);
 
-  const totalMatch =
-    (posts[0]?.logs?.victories ?? 0) + (posts[0]?.logs?.defeats ?? 0);
+    // const totalMatch = navoos.totalCount;
 
-  return (
+  return navoos && (
     <div className="  h-[1100px] c-gb:h-[900px] relative space-y-5 text-[10px] sm:text-sm md:text-lg c-3xl:text-2xl text-pearl">
       <div className="  text-[15px] sm:text-2xl md:h-40 h-32  flex items-center c-10xl:px-24 px-16 ">
         <h1>Match History</h1>
@@ -71,20 +70,22 @@ const MatchHistory = () => {
           <div className="  w-[70%] h-[80%] sm:w-[40%]  c-gb:h-[50%] c-gb:w-[90%] rounded-[20px] bg-very-dark-purple flex flex-col items-center ">
             <div className="flex justify-center items-center flex-col h-[50%]">
               <h1>Games</h1>
-              <h1 className="opacity-40">{totalMatch}</h1>
+              <h1 className="opacity-40">{navoos.pagination.totalCount}</h1>
             </div>
             <div className="w-[80%] border"></div>
             <div className="h-[50%] w-full flex items-center ">
               <div className="w-[50%] flex-col flex  justify-center items-center">
                 <h1>Wins</h1>
                 <h1 className="text-peridot">
-                  {posts[0]?.logs?.victories ?? 0}
+                  {navoos.wins ?? 0}
                 </h1>
               </div>
               <div className="h-[70%]"></div>
               <div className="w-[50%] flex flex-col items-center">
                 <h1>Loses</h1>
-                <h1 className="text-red-900">{posts[0]?.logs?.defeats ?? 0}</h1>
+                <h1 className="text-red-900">
+                  {navoos.loses ?? 0}
+                </h1>
               </div>
             </div>
           </div>

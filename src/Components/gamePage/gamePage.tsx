@@ -15,13 +15,16 @@ import GameModel from "./gameModel";
 import Matchmaking from "./matchmaking";
 import { SocketContext } from "@/context/socket.context";
 import Counter from "./counter";
+import { Socket, io } from "socket.io-client";
 import parseJwt from "@/utils/parsJwt";
-// import { Main } from "next/document";
+import { useAppSelector } from "../../../redux_tool";
 
 let game: GameModel | null = null;
+// let socket: Socket;
 
 const GamePage = (props: any) => {
-  const socket: any = useContext(SocketContext);
+  const auth_status = useAppSelector((state) => state.Profile.auth_status);
+  const { socket, setSocket } = useContext(SocketContext);
   const [isopen, setMenu] = useState(false);
   const [opened, setOpned] = useState(false);
   // const [mode, setMode] = useState<string>();
@@ -54,25 +57,25 @@ const GamePage = (props: any) => {
   };
 
   const errorEventCallback = (error: string) => {
-    console.log("error event");
+    // console.log("error event");
     toast.error(error);
   };
 
   const cancelJoinCallback = () => {
-    console.log("cancel join");
-    setStart(true);
+    // console.log("cancel join");
+    // setCount(true);
     gameOver && setGameOver(false);
     // setCancelJoin(true);
   };
 
   const gameStartedCallback = (data: any) => {
-    console.log("game started");
-    setStart(true);
+    // console.log("game started");
+    // setCount(true);
     setWinnerCardState(true);
     // setCancelJoin(false);
     setLoserCardState(true);
     // setGameJustFinished(false);
-    console.log("game start data: ", data);
+    // console.log("game start data: ", data);
     setIsClick(false);
     setGamerState(null);
     setGameOver(false);
@@ -82,7 +85,7 @@ const GamePage = (props: any) => {
   };
 
   const gameOverCallback = (data: any) => {
-    console.log("game over data: ", data);
+    // console.log("game over data: ", data);
     setScore(null);
     setClear(true);
     setDataOfOpponent(null);
@@ -127,53 +130,14 @@ const GamePage = (props: any) => {
     }
   };
 
-  // const getDataOfUser = async () => {
-  //   const token = localStorage.getItem("token");
-  //   if (!token) {
-  //     router.push("/Signin");
-  //     return;
-  //   }
-  //   try {
-  //     await dispatch(getProfile(parseJwt(JSON.stringify(token)).sub)).unwrap();
-  //   } catch (error) {
-  //     console.log(error);
-  //     return;
-  //   }
-  // };
-
   const handleResize = () => {
     setWidth(window.innerWidth);
     setheight(window.innerHeight);
   };
 
-  // const handleClick = (route: string) => {
-  //   console.log("route: ", route);
-  //   {
-  //     route.includes("/game") && !opened ? setOpned(true) : setOpned(false);
-  //   }
-  //   setPages("/game");
-  // setOpned(true);
-  // route ? setPages(route) : null;
-  // };
-
-  // useEffect(() => {
-  // console.log("1111111");
-  // handleData();
-  // getDataOfUser();
-  // setDepend(false);
-  // }, []);
-
-  useEffect(() => {
-    if (!socket) return;
-    handleResize();
-    // const token = localStorage.getItem("token");
-    // let socket: Socket = io(`ws://${socketIp}/games`, {
-    //   extraHeaders: { Authorization: `Bearer ${token}` },
-    // });
+  const initializeSocket = () => {
     socket.on("connect", () => {
-      console.log("socket: ", socket);
       console.log("connected......");
-      socket.emit("message", "Message received on the server...");
     });
     socket.on("cancel-join", cancelJoinCallback);
     socket.on("error", errorEventCallback);
@@ -185,24 +149,36 @@ const GamePage = (props: any) => {
       // setScore(data);
       game?.updateState(data);
     });
+
     socket.on("scoreUpdate", (data: any) => {
       // console.log("score update ", data);
       setScore(data);
       // game?.updateState(data);
     });
-    // setSocket(socket);
+    return null;
+  };
+  useEffect(() => {
+    initializeSocket();
+    return () => {
+      socket.off("connect");
+      socket.off("cancel-join");
+      socket.off("error");
+      socket.off("gameOver");
+      socket.off("match");
+      socket.off("gameState");
+      socket.off("scoreUpdate");
+    };
+  }, []);
 
+  useEffect(() => {
+    handleResize();
     if (typeof window !== "undefined") {
       window.addEventListener("resize", handleResize);
       return () => {
         window.removeEventListener("resize", handleResize);
       };
     }
-
-    // return () => {
-    //   socket.disconnect();
-    // };
-  }, [socket]);
+  }, []);
 
   useEffect(() => {
     // handleData();
@@ -210,7 +186,7 @@ const GamePage = (props: any) => {
     return () => {
       game?.destroy();
     };
-  }, [width, height, isopen, map, socket]);
+  }, [width, height, isopen, map]);
 
   const cleanUp = () => {
     setDataOfOpponent(null);
@@ -223,7 +199,22 @@ const GamePage = (props: any) => {
         cleanUp();
       }
     };
-  });
+  }, []);
+
+  // useEffect(() => {
+  //   if (start) {
+  //     const timer = setInterval(() => {
+  //       setCounter((prevCounter) => prevCounter - 1);
+  //     }, 1000);
+
+  //     // return () => {
+  //     //   clearInterval(timer);
+  //     // };
+  //   }
+  //   return () => {
+  //     setCounter(3);
+  //   };
+  // }, [start]);
 
   return (
     <div
@@ -249,7 +240,7 @@ const GamePage = (props: any) => {
           setMap={setMap}
           setIsClick={setIsClick}
           isClick={isClick}
-          socket={socket}
+          // socket={socket}
           map={map}
         />
 
@@ -291,7 +282,7 @@ const GamePage = (props: any) => {
             setMap={setMap}
             setIsClick={setIsClick}
             isClick={isClick}
-            socket={socket}
+            // socket={socket}
             map={map}
           />
         )}
@@ -299,7 +290,7 @@ const GamePage = (props: any) => {
           <Matchmaking
             isClick={isClick}
             setIsClick={setIsClick}
-            socket={socket}
+            // socket={socket}
             dataOpponent={dataOpponent}
             setDataOfOpponent={setDataOfOpponent}
             // setmatchData={setmatchData}

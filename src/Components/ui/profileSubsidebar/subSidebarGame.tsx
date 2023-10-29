@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import SimpleButton from "../Buttons/simpleButton";
 import Maps from "./maps";
 import toast from "react-hot-toast";
 import play from "./../../../../public/playIcon.svg";
 import Image from "next/image";
+import { SocketContext } from "@/context/socket.context";
 
 const SubSidebarGame = (props: any) => {
-  useEffect(() => {}, [props.matchData, props.socket]);
+  const { socket } = useContext(SocketContext);
+  useEffect(() => {}, [props.matchData, socket]);
 
   const HandleUpdate = () => {
-    console.log("socket game: ", props.socket);
-    console.log("socket status: ", props.socket.connected);
-    if (props.socket.connected) {
-      console.log("joined the Queue");
-      props.socket.emit("joinQueue", { map: props.map });
+    if (!socket) return;
+    if (socket.connected) {
+      socket.emit("joinQueue", { map: props.map });
     } else {
       toast.error("You are not connected to the server");
     }

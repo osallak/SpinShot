@@ -1,4 +1,5 @@
 "use client";
+import { globalToken } from "@/Components/context/recoilContext";
 import ContinueWithIntra from "@/Components/ui/Buttons/continueWithIntra";
 import EmptyButton from "@/Components/ui/Buttons/emptyButton";
 import SimpleButton from "@/Components/ui/Buttons/simpleButton";
@@ -8,12 +9,13 @@ import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { MouseEvent, useEffect, useRef, useState } from "react";
-import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
-import mail from "../../../../public/mail.svg";
-import lock from "../../../../public/lock.svg";
-import { globalToken } from "@/Components/context/recoilContext";
+import { MouseEvent, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
+import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
+import lock from "../../../../public/lock.svg";
+import mail from "../../../../public/mail.svg";
+import { store } from "../../../../redux_tool";
+import { updateAuthStatus } from "../../../../redux_tool/redusProfile/profileSlice";
 
 const Signin = () => {
   const [username, setUsername] = useState("");
@@ -51,6 +53,7 @@ const Signin = () => {
   ];
   const [tmpToken, setTmpToken] = useRecoilState(globalToken);
 
+
   const RedirectionFunction = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
@@ -64,21 +67,26 @@ const Signin = () => {
         Router.push("/twoFactorAuthentication");
       } else if (token.isTwoFactorEnabled === false) {
         localStorage.setItem("token", res?.data?.token);
+        // saveState(true);
+        store.dispatch(updateAuthStatus(true));
         Router.push(`/profile/${token.sub}`);
       }
     } catch (error: any) {
       setErrorMessage(error?.response?.data?.message);
-      if (error?.response?.status === 404)
-        setErrorMessage("User not Found");
+      if (error?.response?.status === 404) setErrorMessage("User not Found");
       setError(true);
     }
   };
 
+  const handleKeyPress = (event: any) => {
+	if (event.key === "Enter") {
+	  RedirectionFunction(event);
+	}
+  }
+
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    Router.push(
-      "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-caa9a0fa35adb7bb84153737c4e0a0ee5ebba22a8b2aa11d385d86648ec646aa&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fwaiting&response_type=code"
-    );
+    Router.push(`https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-6be28a100ed05da2dfee2938f8dd3c333c0cabba47a2898c4f06953393209b2d&redirect_uri=http%3A%2F%2Fe1r12p4.1337.ma%3A3000%2Fwaiting&response_type=code`);
   };
 
   const redirection = (e: MouseEvent<HTMLButtonElement>) => {
@@ -131,7 +139,7 @@ const Signin = () => {
                   {SigninArray.map((SignIn, index) => (
                     <div
                       key={index}
-                      className="flex justify-center items-center sm:w-[67%] w-[70%] c-md:h-[45px] h-[35px]"
+                      className="flex justify-center items-center sm:w-[67%] w-[70%] md:h-[45px] h-[35px]"
                     >
                       <InputBorder
                         inputValue={SignIn.inputValue}
@@ -143,6 +151,7 @@ const Signin = () => {
                         Border={SignIn.Border}
                         Color={SignIn.Color}
                         BorderSize={2}
+						handleKeyPress={(event) => handleKeyPress(event)}
                       />
                     </div>
                   ))}
@@ -198,7 +207,7 @@ const Signin = () => {
         </div>
       </div>
       {widthsc && widthsc > 1024 && (
-        <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur bg-white/10 flex flex-row justify-center items-center">
+        <div className="w-full c-md:bg-transparent c-md:backdrop:blur-none backdrop:blur flex flex-row justify-center items-center">
           <p className="font-Poppins font-normal text-pearl text-opacity-40 c-md:text-lg sm:text-md text-xs">
             Don&apos;t have an account?&nbsp;
           </p>

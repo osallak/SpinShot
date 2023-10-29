@@ -57,25 +57,25 @@ const GamePage = (props: any) => {
   };
 
   const errorEventCallback = (error: string) => {
-    console.log("error event");
+    // console.log("error event");
     toast.error(error);
   };
 
   const cancelJoinCallback = () => {
-    console.log("cancel join");
+    // console.log("cancel join");
     setCount(true);
     gameOver && setGameOver(false);
     // setCancelJoin(true);
   };
 
   const gameStartedCallback = (data: any) => {
-    console.log("game started");
+    // console.log("game started");
     setCount(true);
     setWinnerCardState(true);
     // setCancelJoin(false);
     setLoserCardState(true);
     // setGameJustFinished(false);
-    console.log("game start data: ", data);
+    // console.log("game start data: ", data);
     setIsClick(false);
     setGamerState(null);
     setGameOver(false);
@@ -85,7 +85,7 @@ const GamePage = (props: any) => {
   };
 
   const gameOverCallback = (data: any) => {
-    console.log("game over data: ", data);
+    // console.log("game over data: ", data);
     setScore(null);
     setClear(true);
     setDataOfOpponent(null);
@@ -161,8 +161,16 @@ const GamePage = (props: any) => {
     return null;
   };
   useEffect(() => {
-    console.log("auth_status:", auth_status);
     initializeSocket();
+    return () => {
+      socket.off("connect");
+      socket.off("cancel-join");
+      socket.off("error");
+      socket.off("gameOver");
+      socket.off("match");
+      socket.off("gameState");
+      socket.off("scoreUpdate");
+    }
   }, []);
 
   useEffect(() => {

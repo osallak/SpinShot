@@ -74,7 +74,7 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
         return newArray;
       });
     } catch (error: any) {
-      console.log("error from accept a friend request: ", error);
+      // console.log("error from accept a friend request: ", error);
     }
   };
   const handleUnfriend = async () => {
@@ -98,7 +98,7 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
         return newArray;
       });
     } catch (error: any) {
-      console.log("error from accept a friend request: ", error);
+      // console.log("error from accept a friend request: ", error);
     }
   };
 

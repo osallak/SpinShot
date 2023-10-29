@@ -51,7 +51,7 @@ const Matchmaking = (props: any) => {
     try {
       await dispatch(getProfile(parseJwt(JSON.stringify(token)).sub)).unwrap();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       return;
     }
   };

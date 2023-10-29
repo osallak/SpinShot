@@ -99,8 +99,10 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @UseGuards(WsJwtGuard)
   @SubscribeMessage('invite')
-  invite(@ConnectedSocket() client: Socket, data: { id: string }): void {
-    this.gamesService.handleInvite(client, data.id);
+  invite(@ConnectedSocket() client: Socket, @MessageBody() data: any): void {
+    console.log("invite:", data);
+    if (data && data.id)
+      this.gamesService.handleInvite(client, data.id);
   }
 
   @UseGuards(WsJwtGuard)

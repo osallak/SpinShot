@@ -69,6 +69,8 @@ export class ChatService {
     } else {
       user.addSocket(socket);
     }
+    console.log('client connected:', (payload as JwtAuthPayload).sub);
+
   }
 
   async deleteUserFromWorld(socket: Socket) {
@@ -76,6 +78,7 @@ export class ChatService {
     if (!payload) return;
     const user = this.World.get((payload as JwtAuthPayload).sub);
     if (user) {
+      console.log('client disconnected');
       this.World.delete(user.getUsername());
     } else {
       this.logger.error(
@@ -231,7 +234,8 @@ export class ChatService {
   }
 
   async extractJwtToken(client: Socket): Promise<JwtAuthPayload | undefined> {
-    const bearerToken = client.handshake.headers?.authorization?.split(' ')[1];
+    // const bearerToken = client.handshake.headers?.authorization?.split(' ')[1];
+    const bearerToken = client.handshake.auth['token'];
     if (!bearerToken) {
       client.disconnect();
       return undefined;

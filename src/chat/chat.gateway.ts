@@ -56,6 +56,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     body: SendMessageDto,
     @ConnectedSocket() socket: Socket,
   ) {
+    console.log('pm :', socket.id);
     return this.chatService.sendPrivateMessage(body);
   }
 
@@ -81,6 +82,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() socket: Socket,
   ) {
     try {
+      console.log("gm:", body);
       return await this.chatService.sendGroupMessage(body);
     } catch (e) {
       socket.emit(

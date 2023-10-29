@@ -119,6 +119,7 @@ export class GamesService {
       );
     }, 20000);
 
+    console.log("reciever:", reciever.id);
     reciever.emit('invite', { id });
   }
 

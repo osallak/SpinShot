@@ -99,13 +99,15 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @UseGuards(WsJwtGuard)
   @SubscribeMessage('invite')
-  invite(@ConnectedSocket() client: Socket, data: { id: string }): void {
-    this.gamesService.handleInvite(client, data.id);
+  invite(@ConnectedSocket() client: Socket, @MessageBody() data: any): void {
+    // console.log("invite:", data);
+    if (data && data.id)
+      this.gamesService.handleInvite(client, data.id);
   }
 
   @UseGuards(WsJwtGuard)
   @SubscribeMessage('accept-invite')
-  acceptInvite(@ConnectedSocket() client: Socket, data: { id: string }): void {
+  acceptInvite(@ConnectedSocket() client: Socket, @MessageBody() data: { id: string }): void {
     this.gamesService.acceptInvite(client, data.id);
   }
 
@@ -117,7 +119,9 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @UseGuards(WsJwtGuard)
   @SubscribeMessage('decline-invite')
-  declineInvite(@ConnectedSocket() client: Socket, data: { id: string }): void {
+  declineInvite(@ConnectedSocket() client: Socket, @MessageBody() data: { id: string }): void {
+    if (!data || !data.id) return;
+    // console.log("decline:", data);
     this.gamesService.handleDeclineInvite(client, data.id);
   }
 

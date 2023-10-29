@@ -110,7 +110,7 @@ export class GamesService {
     this.invites.push({
       from: senderId,
       to: id,
-      map: randomizeMap(),
+      map: "normal",
     });
 
     setTimeout(() => {
@@ -119,7 +119,10 @@ export class GamesService {
       );
     }, 20000);
 
-    reciever.emit('invite', { id });
+    // console.log("receiver:", id);
+    // console.log("sender:", senderId);
+
+    reciever.emit('invite', { id: id, senderId: senderId });
   }
 
   async acceptInvite(recieverClient: Socket, id: string) {
@@ -152,9 +155,12 @@ export class GamesService {
       secondClient: recieverClient,
       map: request.map,
     };
+    // console.log("first game", id);
+    // console.log("second game", recieverId);
     const game = new PongEngine(gameOptions);
+    game.gameId = gameId;
     game.cleanUpGameService = this.cleanupSingleGame.bind(this);
-
+    game.saveGameCallback = this.saveGame.bind(this);
     this.games.set(gameId, game);
     game.play();
   }
@@ -177,12 +183,15 @@ export class GamesService {
   handleDeclineInvite(recieverClient: Socket, id: string): void {
     if (!id) return;
     const senderId = this.getIdBySocket(recieverClient);
+    // console.log("senderId:", senderId);
     if (!senderId) return;
 
     this.invites = this.invites.filter(
       (i) => i.from !== senderId && i.to !== id,
     );
     const sendeClient = this.lobby.get(id);
+    // console.log("first:", sendeClient.id);
+    // console.log("second:", recieverClient.id);
     recieverClient && recieverClient.emit('invite-canceled', {});
     sendeClient && sendeClient.emit('invite-canceled', {});
   }

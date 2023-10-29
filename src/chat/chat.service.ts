@@ -69,6 +69,8 @@ export class ChatService {
     } else {
       user.addSocket(socket);
     }
+    // console.log('client connected:', (payload as JwtAuthPayload).sub);
+
   }
 
   async deleteUserFromWorld(socket: Socket) {
@@ -76,6 +78,7 @@ export class ChatService {
     if (!payload) return;
     const user = this.World.get((payload as JwtAuthPayload).sub);
     if (user) {
+      // console.log('client disconnected');
       this.World.delete(user.getUsername());
     } else {
       this.logger.error(
@@ -184,7 +187,7 @@ export class ChatService {
         }
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       let user: ChatUser = this.World.get(body.from);
       const sender: Array<Socket> = this.getSocketsAssociatedWithUser(
         body.from,
@@ -225,13 +228,14 @@ export class ChatService {
       response['individual'] = output;
       return response;
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       return output;
     }
   }
 
   async extractJwtToken(client: Socket): Promise<JwtAuthPayload | undefined> {
-    const bearerToken = client.handshake.headers?.authorization?.split(' ')[1];
+    // const bearerToken = client.handshake.headers?.authorization?.split(' ')[1];
+    const bearerToken = client.handshake.auth['token'];
     if (!bearerToken) {
       client.disconnect();
       return undefined;
@@ -314,7 +318,7 @@ export class ChatService {
         content: this.formatResponseBasedOnUser(message, userId),
       };
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       return {
         status: 500,
         content: 'Failed to get latest messages',
@@ -498,7 +502,7 @@ export class ChatService {
           });
         }
       } catch (e) {
-        console.log(e);
+        // console.log(e);
         return reject({
           event: EXCEPTION,
           status: INTERNAL_SERVER_ERROR_MESSAGE,

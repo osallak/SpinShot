@@ -52,26 +52,30 @@ const SideBar = (props: any) => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      Router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      Router.push("/signin");
+      return;
+    }
     setIcons([
       { icon: search, route: "/search" },
       {
         icon: profile,
-        route: `/profile/${
-          parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
-        }`,
+        route: `/profile/${parseJwt(JSON.stringify(token)).sub}`,
       },
       {
         icon: message,
-        route: `/messages/${
-          parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
-        }`,
+        route: `/messages/${parseJwt(JSON.stringify(token)).sub}`,
       },
       { icon: friend, route: "/friends" },
       {
         icon: game,
-        route: `/game/${
-          parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
-        }`,
+        route: `/game/${parseJwt(JSON.stringify(token)).sub}`,
       },
     ]);
   }, []);

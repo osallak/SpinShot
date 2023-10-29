@@ -7,10 +7,8 @@ import Image from "next/image";
 const Ambassador = () => {
   const data = useAppSelector((state) => state.Profile);
   const [achievements, setAchievement] = useState<any>();
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    setLoaded(true);
     setAchievement(data?.profile.achievements);
   }, [data]);
 
@@ -20,7 +18,7 @@ const Ambassador = () => {
         <div className=" bg-very-dark-purple h-[150px] sm:h-[200px] c-gb:h-[300px]  rounded-[20px] w-[85%] c-gb:w-full flex flex-row  justify-between">
           <div
             className={` ${
-              achievements[0]?.achieved
+              achievements[3]?.achieved
                 ? "text-pearl "
                 : "text-pearl opacity-40"
             } p-4 sm:p-10 space-y-[20%]`}
@@ -31,7 +29,7 @@ const Ambassador = () => {
             </h1>
           </div>
           <div className="flex justify-center items-center  md:w-[40%]  ">
-            {achievements[0]?.achieved ? (
+            {achievements[3]?.achieved ? (
               <Image
                 className="        w-[70%] sm:w-24 c-gb:w-[60%]"
                 src={ambassadorWin}

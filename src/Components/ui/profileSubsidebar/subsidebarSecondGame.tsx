@@ -1,10 +1,12 @@
 import React, { useContext, useState } from "react";
 import SimpleButton from "../Buttons/simpleButton";
+import play from "./../../../../public/playIcon.svg";
 import Maps from "./maps";
+import Image from "next/image";
 import { SocketContext } from "@/context/socket.context";
 
 const SubsidebarSecondGame = (props: any) => {
-  const {socket} = useContext(SocketContext);
+  const { socket } = useContext(SocketContext);
   const HandleUpdate = () => {
     if (!socket) return;
     socket.emit("joinQueue", { map: props.map });
@@ -42,7 +44,8 @@ const SubsidebarSecondGame = (props: any) => {
   return (
     <div className="fixed top-[75px] md:top-2 md:ml-[105px] ml-[65px] w-[70%] z-50  h-[93%] md:h-[98%] backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] text-pearl  ">
       <div className=" rounded-2xl h-full flex flex-col w-[100%] px-[10%] text-base sm:text-2xl ">
-        <div className=" flex items-center h-[10%] ">
+        <div className=" flex items-center h-[10%] space-x-2 ">
+          <Image src={play} alt="" className=" w-6 sm:w-8" />
           <h1>Game</h1>
         </div>
         <div className="flex items-center justify-center ">

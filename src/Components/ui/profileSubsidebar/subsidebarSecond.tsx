@@ -3,6 +3,7 @@ import React, { use, useEffect, useState } from "react";
 import securityIcon from "./../../../../public/securityIcon.svg";
 import securityIcon2 from "./../../../../public/securityIcon2.svg";
 import { buttons } from "@/Components/ui/FolderDropDown/ArrayIcon";
+import profile from "./../../../../public/profileIcon.svg";
 import Security from "../upDatePasswd/security";
 import { Router, useRouter } from "next/router";
 import parseJwt from "@/utils/parsJwt";
@@ -35,8 +36,13 @@ const SubsidebarSecond = (props: any) => {
     <div
       className={` fixed top-[75px] md:top-2 md:ml-[105px] ml-[65px] w-[70%] z-50 h-[93%] md:h-[98%]  backdrop:blur  bg-white/10 c-gb:hidden block rounded-[20px] `}
     >
-      <div className=" text-[10px] sm:text-[20px] md:text-[35px] font-Poppins font-extrabold text-pearl p-6 space-y-3">
-        <button onClick={() => handleClick()}> Profile</button>
+      <div className=" text-[10px] sm:text-[20px] md:text-[35px] font-Poppins font-extrabold text-pearl p-4 space-y-3 md:space-y-7 h-[80px] md:h-[140px]  flex justify-end flex-col ">
+        <button onClick={() => handleClick()}>
+          <div className="flex flex-row items-center space-x-2">
+            <Image src={profile} alt="" className=" w-2 sm:w-4 md:w-7" />
+            <h1>Profile</h1>
+          </div>
+        </button>
         <div className=" w-[70%] opacity-40">
           {" "}
           <div className="border"></div>{" "}

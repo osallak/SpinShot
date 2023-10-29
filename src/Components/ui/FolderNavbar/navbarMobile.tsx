@@ -10,11 +10,11 @@ const NavbarMobile = (props: {
   isopen: boolean;
 }) => {
   const data = useAppSelector((state) => state.Profile);
-  
+
   return (
     <div className=" bg-very-dark-purple block md:hidden w-full h-20 fixed z-50 top-0  justify-center items-center">
       <div
-        className={`w-[98%]  fixed backdrop:blur  bg-white/10 top-2 rounded-xl h-16 `}
+        className={`w-[97%]  fixed backdrop:blur  bg-white/10 top-2 rounded-xl h-16 `}
       >
         <div className="flex flex-row justify-between">
           <button
@@ -38,12 +38,12 @@ const NavbarMobile = (props: {
             </div>
             {data?.profile?.profile?.avatar ? (
               <picture>
-              <img
-                className="rounded-lg md:rounded-2xl w-[35px] md:w-[50px]"
-                src={data?.profile?.profile?.avatar}
-                alt=""
+                <img
+                  className="rounded-lg md:rounded-2xl w-[35px] md:w-[50px]"
+                  src={data?.profile?.profile?.avatar}
+                  alt=""
                 />
-                </picture>
+              </picture>
             ) : (
               <Image
                 className=" rounded-lg md:rounded-2xl w-[35px] md:w-[50px]"

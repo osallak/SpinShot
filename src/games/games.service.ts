@@ -145,8 +145,8 @@ export class GamesService {
     }
 
     this.invites.splice(this.invites.indexOf(request), 1);
-    senderClient.emit('invite-accepted', {});
-    recieverClient.emit('invite-accepted', {});
+    senderClient.emit('invite-accepted', {id: recieverId});
+    recieverClient.emit('invite-accepted', {id: id});
     const gameId = generateGameId();
     const gameOptions = {
       firstPlayerId: id,
@@ -198,7 +198,7 @@ export class GamesService {
 
   connect(client: Socket, id: string): void {
     this.lobby.set(id, client);
-    // this.eventEmitter.emit('userUpdate', {status: UserStatus.ONLINE, id});
+    this.eventEmitter.emit('userUpdate', {status: UserStatus.ONLINE, id});
 
     this.handleAlreadyInGame(id, client);
   }

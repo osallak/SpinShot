@@ -71,26 +71,38 @@ export class UserService {
   }
 
   async initAcheivements(user: any): Promise<any> {
-    await this.prisma.achievement.createMany({
-      data: [
-        {
-          name: achievements[0].name,
-          description: achievements[0].description,
-        },
-        {
-          name: achievements[1].name,
-          description: achievements[1].description,
-        },
-        {
-          name: achievements[2].name,
-          description: achievements[2].description,
-        },
-        {
-          name: achievements[3].name,
-          description: achievements[3].description,
-        },
-      ],
+    const alreadyCreated = await this.prisma.achievement.findMany({
+      where: {
+        OR: [
+          { name: achievements[0].name },
+          { name: achievements[1].name },
+          { name: achievements[2].name },
+          { name: achievements[3].name },
+        ],
+      },
     });
+    if (!alreadyCreated || alreadyCreated.length === 0) {
+      await this.prisma.achievement.createMany({
+        data: [
+          {
+            name: achievements[0].name,
+            description: achievements[0].description,
+          },
+          {
+            name: achievements[1].name,
+            description: achievements[1].description,
+          },
+          {
+            name: achievements[2].name,
+            description: achievements[2].description,
+          },
+          {
+            name: achievements[3].name,
+            description: achievements[3].description,
+          },
+        ],
+      });
+    }
     const achievs = await this.prisma.achievement.findMany();
     if (!achievs) throw new InternalServerErrorException();
 
@@ -232,6 +244,11 @@ export class UserService {
       },
       include: {
         HaveAchievement: {
+          orderBy: {
+            Achivement: {
+              name: 'asc',
+            },
+          },
           select: {
             level: true,
             achieved: true,

@@ -216,7 +216,6 @@ export class UserService {
         },
       },
     });
-    // console.log("createUser:", createUser);
     if (!createUser) throw new InternalServerErrorException();
     const haveAchievement = await this.initAcheivements(createUser);
     if (!haveAchievement) throw new InternalServerErrorException();

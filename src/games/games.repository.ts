@@ -193,7 +193,6 @@ export class GamesRepository {
       },
     });
     } catch(error) {
-      // console.log(error);
     }
   }
 

@@ -22,7 +22,7 @@ export class WsGuard implements CanActivate {
       ) as any;
       return new Promise((resolve, reject) => {
         return this.userService
-          .findOneByUsername(decoded.username)
+          .findOneById(decoded.sub)
           .then((user) => {
             if (user) {
               resolve(user);

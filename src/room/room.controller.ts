@@ -136,7 +136,6 @@ export class RoomController {
       );
       return response.status(res.status).json(toObject.call(res?.data));
     } catch (e) {
-      // console.log('e: ', e?.status);
       return response
         .status(e?.status ?? 500)
         .json(e?.message ?? 'Internal Server Error');
@@ -159,7 +158,6 @@ export class RoomController {
       );
       return response.status(res.status).json(toObject.call(res?.data));
     } catch (e) {
-      // console.log('e: ', e?.status);
       return response
         .status(e?.status ?? 500)
         .json(e?.message ?? 'Internal Server Error');

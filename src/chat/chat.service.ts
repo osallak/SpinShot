@@ -69,6 +69,7 @@ export class ChatService {
     } else {
       user.addSocket(socket);
     }
+    this.logger.warn(`user connected: ${(payload as JwtAuthPayload).sub}`);
     // console.log('client connected:', (payload as JwtAuthPayload).sub);
 
   }
@@ -80,6 +81,7 @@ export class ChatService {
     if (user) {
       // console.log('client disconnected');
       this.World.delete(user.getUsername());
+      this.logger.warn(`user disconnected: ${(payload as JwtAuthPayload).sub}`);
     } else {
       this.logger.error(
         'Could not disconnect client because client does not exist',

@@ -450,29 +450,27 @@ export class UserService {
 
     const generatedUsername = 'user' + '_' + uuidv4().slice(0, 8);
 
-    user = await this.prisma.user.upsert({
+    const uu = await this.prisma.user.findUnique({
       where: { email: user.email },
-      update: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        is42User: true,
-        username: generatedUsername,
-        avatar: user.avatar,
-        country: user.country,
-      },
-      create: {
+    })
+    if (uu) {
+      return uu;
+    }
+
+    user = await this.prisma.user.create({
+      data: {
         username: generatedUsername,
         email: user.email,
         avatar: user.avatar,
         firstName: user.firstName,
         lastName: user.lastName,
         is42User: true,
-        status: UserStatus.OFFLINE,
+        status: UserStatus.ONLINE,
         country: user.country,
         mailVerified: true,
         logs: {
           create: initUserLogs(),
-        },
+      }
       },
     });
     const haveAchievement = await this.initAcheivements(user);

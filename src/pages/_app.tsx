@@ -31,9 +31,11 @@ const Func = ({ children }: FuncProps) => {
     if (auth_status === true) {
       console.log("you shall not pass");
       if (!chatSocket?.connected) {
-        chatSocket.auth = {
-          token: localStorage.getItem("token"),
-        }
+        setChatSocketAuth(localStorage.getItem("token") as string);
+        // chatSocket.auth = {
+        //   token: localStorage.getItem("token"),
+        // }
+        connectChatSocket();
         chatSocket.connect();
         // sc.auth = {
         //   token: localStorage.getItem("token"),
@@ -43,11 +45,12 @@ const Func = ({ children }: FuncProps) => {
         // setChatSocketAuth(localStorage.getItem("token") as string);
         // connectChatSocket();
         // console.log("chat socket", getChatSocket());
+        store.dispatch(updateAuthStatus(false));
       }
-      if (!s.connected) {
-        s.auth = {
-          token: localStorage.getItem("token"),
-        };
+      if (!socket.connected) {
+        // s.auth = {
+        //   token: localStorage.getItem("token"),
+        // };
         // s.on("connect_error", (err: any) => {
         //   // console.log(`connect_error due to ${err.message}`);
         // });

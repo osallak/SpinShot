@@ -37,7 +37,6 @@ const Twofa = () => {
       const jwtToken = parseJwt(token);
       Router.push(`/profile/${jwtToken.sub}`);
     } catch (error: any) {
-      // console.log(error);
       setErrorMessage("wrong code");
       setError(false);
     }
@@ -53,7 +52,6 @@ const Twofa = () => {
         initialValue=""
         secret
         secretDelay={100}
-        onChange={(value, index) => {}}
         type="numeric"
         inputMode="number"
         style={{ padding: "10px" }}

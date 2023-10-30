@@ -54,6 +54,7 @@ const ConversationIndividual = (props: {
     }
     // console.log("invite:", { id: props.id});
     socket.emit("invite", {id: props.id});
+    toast.success("Invitation sent");
     // router.push(`/game/${router.query.id}`);
   }
   const dropDownContent = [

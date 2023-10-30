@@ -18,6 +18,7 @@ import Counter from "./counter";
 import { Socket, io } from "socket.io-client";
 import parseJwt from "@/utils/parsJwt";
 import { useAppSelector } from "../../../redux_tool";
+import { match } from "assert";
 
 let game: GameModel | null = null;
 // let socket: Socket;
@@ -69,6 +70,7 @@ const GamePage = (props: any) => {
   };
 
   const gameStartedCallback = (data: any) => {
+    console.log("game started:", data.id);
     // console.log("game started");
     // setCount(true);
     setWinnerCardState(true);
@@ -81,9 +83,10 @@ const GamePage = (props: any) => {
     setGameOver(false);
     setmatchData(data);
     handleData(data);
-    // setDataOfOpponent(data);
+    if (!dataOpponent) {
+      setDataOfOpponent(data);
+    }
   };
-
   const gameOverCallback = (data: any) => {
     // console.log("game over data: ", data);
     setScore(null);
@@ -120,6 +123,7 @@ const GamePage = (props: any) => {
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log("respo?.", respo?.data);
         setDataOfOpponent(respo?.data);
         // console.log("after setting:", dataOpponent);
       }
@@ -232,7 +236,9 @@ const GamePage = (props: any) => {
       </div>
 
       <div className={` flex flex-row c-gb:space-x-3 p-2 w-full  h-full `}>
-        <SideBar />
+        <SideBar        setOpenSubSideBar={setOpned}
+        openSubSideBar={opened}
+        flag="game" />
         <SubSidebarGame
           // depend={depend}
           matchData={matchData}
@@ -272,7 +278,7 @@ const GamePage = (props: any) => {
             ref={divRef}
           ></div>
         </div>
-        {opened && pages == "/game" && (
+        {opened && (
           <SubsidebarSecondGame
             // opened={opened}
             setOpned={setOpned}
@@ -314,9 +320,6 @@ const GamePage = (props: any) => {
         />
       )}
 
-      {start && <Counter setStart={setStart} start={start} />}
-      <Toaster />
-      {/* <Main /> */}
     </div>
   );
 };

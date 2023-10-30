@@ -23,7 +23,6 @@ const WaitingPage = () => {
       if (token.isTwoFactorEnabled === true) {
         router.push("/twoFactorAuthentication");
       } else {
-
         store.dispatch(updateAuthStatus(true));
         localStorage.setItem("token", res?.data?.token);
         router.push(`/profile/${token.sub}`);

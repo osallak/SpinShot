@@ -139,11 +139,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
                   height={200}
                 />
               </div>
-            ) : !qrCode ? (
-              <span className="font-Poppins text-3xl sm:text-3xl text-very-dark-purple">
-                Loading Qr ...
-              </span>
-            ) : (
+            )  : (
               <span className="font-Poppins text-3xl sm:text-3xl text-very-dark-purple">
                 Qr already generated
               </span>

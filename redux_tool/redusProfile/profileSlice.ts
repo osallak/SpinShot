@@ -35,6 +35,15 @@ export const ProfileSlice = createSlice({
     updateAuthStatus(state, action: PayloadAction<boolean>) {
       state.auth_status = action.payload;
     },
+    updateAchivements: (state, action: PayloadAction<any>) => {
+      state.profile.profile.achivements = action.payload;
+    },
+    updateMatchHistory: (state, action: PayloadAction<any>) => {
+      state.profile.profile.matchHistory = action.payload;
+    },
+    updateRank: (state, action: PayloadAction<any>) => {
+      state.profile.profile.rank = action.payload;
+    },
   },
 
   extraReducers: (builder) => {

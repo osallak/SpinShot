@@ -25,7 +25,7 @@ const Matchs = (props: { option: any }) => {
           <h1 className="">({props?.option?.content?.opponent?.logs?.rank})</h1>
         </div>
         <div className="flex flex-row ">
-          <h1 className="">{data_user?.profile?.username}</h1>
+          <h1 className="">{textLimit(data_user?.profile?.username, 8)}</h1>
           <h1 className="">({data_user?.profile?.profile?.rank})</h1>
         </div>
       </div>

@@ -35,6 +35,7 @@ import MobileSubSideBar from "./mobileSubSideBar";
 import SubSideBar from "./subSideBar";
 import { SocketContext } from "@/context/socket.context";
 import { Socket } from "socket.io-client";
+import toast from "react-hot-toast";
 // import { chatSocketContext } from "@/context/chatSocket.context";
 
 // let chatSocket: any;
@@ -204,7 +205,7 @@ const Chat = () => {
         updateChannelConversation(data);
       });
     }
-    // chatSocket.on("exception", () => {}) ;
+    chatSocket.on("exception", (data:any) => {toast.error(data?.message ?? "Invalid Operation")}) ;
     // chatSocket.on("disconnect", (data: any) => console.log("disconnect"));
   };
 
@@ -402,6 +403,7 @@ const Chat = () => {
       chatSocket.removeAllListeners("pm");
       chatSocket.off("gm");
       chatSocket.off("pm");
+      chatSocket.off("exception");
       // chatSocket.off("exception", () => {});
       // chatSocket.off("connect", () => {});
     };

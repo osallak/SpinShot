@@ -25,10 +25,14 @@ const NavGame = (props: any) => {
       return;
     }
   };
+  console.log("data", props?.dataOpponent);
 
   useEffect(() => {
     getData();
   }, [props?.score]);
+  useEffect(() => {
+
+  }, [props?.dataOpponent]);
 
 
   return (
@@ -83,17 +87,17 @@ const NavGame = (props: any) => {
         <div className="flex justify-end  c-gb:space-x-8 ">
           <div className="flex  flex-col items-end justify-start p-1">
             <h1 className=" text-xs sm:text-lg c-3xl:text-3xl text-pearl">
-              {props.dataGame?.username}
+              {props.dataOpponent?.username}
             </h1>
             <h1 className=" text-xs sm:text-lg c-3xl:text-3xl text-pearl opacity-40">
-              {props.dataGame?.profile?.rank}
+              {props.dataOpponent?.profile?.rank}
             </h1>
           </div>
-          {props.dataGame?.profile?.avatar ? (
+          {props.dataOpponent?.profile?.avatar ? (
             <picture>
               <img
                 className="  w-8 h-8 sm:w-14 sm:h-14 rounded-xl"
-                src={props.dataGame?.profile?.avatar}
+                src={props.dataOpponent?.profile?.avatar}
                 alt=""
               />
             </picture>

@@ -121,7 +121,7 @@ const SideBar = (props: any) => {
           </div>
         ))}
       </div>
-      <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center">
+      {/* <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center">
         <div className="w-[70px] h-[65px] rounded-2xl relative flex justify-center items-center">
           <Image
             onClick={handleLogOut}
@@ -146,7 +146,7 @@ const SideBar = (props: any) => {
             />
           )}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

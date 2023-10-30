@@ -182,6 +182,12 @@ const GamePage = (props: any) => {
   }, []);
 
   useEffect(() => {
+    return () => {
+      setmatchData(null);
+    }
+  }, [gameOver]);
+
+  useEffect(() => {
     // handleData();
     game = new GameModel(divRef.current!, map!, socket!);
     return () => {

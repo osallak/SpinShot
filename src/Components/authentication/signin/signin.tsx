@@ -14,11 +14,12 @@ import { useRecoilState } from "recoil";
 import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
 import lock from "../../../../public/lock.svg";
 import mail from "../../../../public/mail.svg";
-import { store } from "../../../../redux_tool";
+import { store, useAppSelector } from "../../../../redux_tool";
 import { updateAuthStatus } from "../../../../redux_tool/redusProfile/profileSlice";
 
 const Signin = () => {
   const [username, setUsername] = useState("");
+  const auth_status = useAppSelector((state) => state.Profile.auth_status);
   const [password, setPassword] = useState("");
   const [isValid, setisValid] = useState(true);
   const [widthsc, setwidthsc] = useState<number | undefined>(undefined);
@@ -109,10 +110,11 @@ const Signin = () => {
   }, []);
 
   useEffect(() => {
-	if (localStorage.getItem("token")) {
-	  Router.push(`/profile/${parseJwt(localStorage.getItem("token")!).sub}`);
-	}
-  })
+    const parsed = parseJwt(JSON.stringify(tmpToken));
+    if (auth_status && localStorage.getItem("token") && parsed && (parsed.isTwoFactorEnabled === false || parsed.isTwoFaAuthenticated)) {
+      Router.push(`/profile/${parseJwt(JSON.stringify(tmpToken)).sub}`);
+    }
+  }, [auth_status])
 
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex flex-col justify-center items-center ">

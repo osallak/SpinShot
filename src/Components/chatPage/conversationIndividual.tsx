@@ -38,7 +38,7 @@ const ConversationIndividual = (props: {
   openSubSideBar: boolean;
 }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const {socket} = useContext(SocketContext);
+  const {socket, chatSocket} = useContext(SocketContext);
   const router = useRouter();
   const [userStatus, setUserStatus] = useState("");
   const [message, setMessage] = useState("");
@@ -115,6 +115,7 @@ const ConversationIndividual = (props: {
       };
       return [...prev, newIndividualConversation];
     });
+    console.log("messageData:", messageData);
     props.socket.emit("pm", messageData);
     setMessage("");
   };

@@ -112,54 +112,68 @@ const SocketProvider = ({ children }: any) => {
     } catch (e) {}
   };
   useEffect(() => {
+    try {
     console.log("i was called");
     console.log("socket id:", socket);
-    socket.on("error", (data: any) => {
-      toast.error(data);
-    });
-    socket.on("invite", (data: any) => {
-      // console.log("other user: ", data.senderId);
-      setOtherUserId(data.senderId);
-      // console.log("invited");
-      setGameInvite((prev) => !prev);
-      setOpenDialog((prev) => {
-        if (prev) return prev;
-        return !prev;
+    if (!socket.hasListeners("error")) {
+      socket.on("error", (data: any) => {
+        toast.error(data);
       });
-    });
-    socket.on("invite-canceled", (data: any) => {
-      // console.log("invite cancelled");
-      toast.error("invite was declined");
-    });
-    socket.on("reconnect", (data: any) => {
-      console.log("reconnect:", data);
-      if (!localStorage || !localStorage.getItem("token")) {
-        toast.error("you are not authenticated");
-        return;
-      }
-      socket.emit("match", { opponent: data.opponent });
-      router.push(`/game/${parseJwt(localStorage.getItem("token")!).sub}`);
-    });
-    socket.on("invite-accepted", (data: any) => {
-      console.log("invite-accepted:", data);
-      if (!localStorage || !localStorage.getItem("token")) {
-        toast.error("you are not authenticated");
-        return;
-      }
-      // console.log("accepted:", parseJwt(localStorage.getItem("token")!).sub);
-      // setOtherUserId(data.id);
-      // console.log("otherUserId", otherUserId);
-      socket.emit("match", { id: data.id });
-      router.push(`/game/${parseJwt(localStorage.getItem("token")!).sub}`);
-    });
+    }
+    if (!socket.hasListeners("invite")) {
+      socket.on("invite", (data: any) => {
+        // console.log("other user: ", data.senderId);
+        setOtherUserId(data.senderId);
+        // console.log("invited");
+        setGameInvite((prev) => !prev);
+        setOpenDialog((prev) => {
+          if (prev) return prev;
+          return !prev;
+        });
+      });
+    }
+    if (!socket.hasListeners("invite-canceled")) {
+      socket.on("invite-canceled", (data: any) => {
+        // console.log("invite cancelled");
+        toast.error("invite was declined");
+      });
+    }
+    if (!socket.hasListeners("reconnect")) {
+      socket.on("reconnect", (data: any) => {
+        console.log("re");
+        console.log("reconnect:", data);
+        if (!localStorage || !localStorage.getItem("token")) {
+          toast.error("you are not authenticated");
+          return;
+        }
+        socket.emit("match", { id: data.opponent });
+        router.push(`/game/${parseJwt(localStorage.getItem("token")!).sub}`);
+      });
+    }
+    if (!socket.hasListeners("on")) {
+      socket.on("invite-accepted", (data: any) => {
+        console.log("invite-accepted:", data);
+        if (!localStorage || !localStorage.getItem("token")) {
+          toast.error("you are not authenticated");
+          return;
+        }
+        // console.log("accepted:", parseJwt(localStorage.getItem("token")!).sub);
+        // setOtherUserId(data.id);
+        // console.log("otherUserId", otherUserId);
+        socket.emit("match", { id: data.id });
+        router.push(`/game/${parseJwt(localStorage.getItem("token")!).sub}`);
+      });
+    }
     return () => {
       // setOtherUserId("");
       // console.log("clean up");
-      socket.off("invite");
-      socket.off("invite-accepted");
-      socket.off("invite-canceled");
-      socket.off("reconnect");
+      // socket.off("invite");
+      // socket.off("invite-accepted");
+      // socket.off("invite-canceled");
+      // socket.off("reconnect");
     };
+    } catch {
+    }
   }, [gameInvite, chatSocket, socket]);
 
   useEffect(() => {

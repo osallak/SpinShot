@@ -113,7 +113,7 @@ const MobileSideBar = (props: {
             </div>
           ))}
         </div>
-        <div className="w-full h-[6%] min-h-[60px] py-2 flex justify-center items-center">
+        {/* <div className="w-full h-[6%] min-h-[60px] py-2 flex justify-center items-center">
           <div className="h-[55px] w-[45px] py-2 flex justify-center items-center">
             <Image
               onClick={handleLogOut}
@@ -138,7 +138,7 @@ const MobileSideBar = (props: {
               />
             )}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

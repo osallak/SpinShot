@@ -32,12 +32,8 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
 
   const addChannel = async () => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/signin");
-      return;
-    }
     const twoFA = parseJwt(JSON.stringify(token));
-    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+    if (!token || (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated)) {
       router.push("/signin");
       return;
     }
@@ -45,9 +41,17 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
       name: name,
       type: type,
     };
-    if (type === "PROTECTED") params["password"] = password;
+    if (type === "PROTECTED") {
+      const regPass = /^.{6,}$/.test(password);
+      if (!regPass) {
+        setError(true);
+        setErrorMessage("Password must be at least 6 characters");
+        return;
+      }
+      params["password"] = password;
+    }
     try {
-      const res = await axios.post(`${ip}/room/add`, params, {
+      await axios.post(`${ip}/room/add`, params, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

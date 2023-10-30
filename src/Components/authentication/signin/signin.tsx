@@ -108,6 +108,12 @@ const Signin = () => {
     }
   }, []);
 
+  useEffect(() => {
+	if (localStorage.getItem("token")) {
+	  Router.push(`/profile/${parseJwt(localStorage.getItem("token")!).sub}`);
+	}
+  })
+
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex flex-col justify-center items-center ">
       <div className="fl:w-[600px] fl:h-[700px] w-full h-full backdrop:blur bg-white/10 fl:rounded-2xl rounded-none flex justify-center items-center flex-col space-y-[2px]">

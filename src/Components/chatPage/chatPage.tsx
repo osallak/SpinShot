@@ -66,6 +66,7 @@ const Chat = () => {
   const [blockedUsers, setBlockedUsers] = useRecoilState(blockedUsersAtom);
   const [channel, setChannel] = useRecoilState(channelAtom);
   const [userId, setUserId] = useState("");
+
   const updateChannelConversation = (data: any) => {
     const parsedData = JSON.parse(data);
     setChannel((prev: channelType[]) => {
@@ -182,6 +183,7 @@ const Chat = () => {
       return [...prev, newIndividualConversation];
     });
   };
+
   const initializechatSocket = () => {
     token = localStorage.getItem("token");
     if (!token) {

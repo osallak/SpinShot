@@ -52,28 +52,34 @@ const SideBar = (props: any) => {
   };
 
   useEffect(() => {
-    setIcons([
-      { icon: search, route: "/search" },
-      {
-        icon: profile,
-        route: `/profile/${
-          parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
-        }`,
-      },
-      {
-        icon: message,
-        route: `/messages/${
-          parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
-        }`,
-      },
-      { icon: friend, route: "/friends" },
-      {
-        icon: game,
-        route: `/game/${
-          parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
-        }`,
-      },
-    ]);
+    const token = localStorage.getItem("token");
+    if (!token) {
+      Router.push("/signin");
+      return;
+    } else {
+      setIcons([
+        { icon: search, route: "/search" },
+        {
+          icon: profile,
+          route: `/profile/${
+            parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+          }`,
+        },
+        {
+          icon: message,
+          route: `/messages/${
+            parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+          }`,
+        },
+        { icon: friend, route: "/friends" },
+        {
+          icon: game,
+          route: `/game/${
+            parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+          }`,
+        },
+      ]);
+    }
   }, []);
 
   return (
@@ -123,21 +129,19 @@ const SideBar = (props: any) => {
         ))}
       </div>
       <div className="w-full h-[8%] min-h-[100px] py-2 flex justify-center items-center">
-        <div className="w-[70px] h-[70px] rounded-2xl relative flex justify-center items-center">
-          <picture>
-            <img
-              onClick={handleLogOut}
-              onMouseEnter={handleHover}
-              onMouseLeave={handleHoverOut}
-              className={`${
-                hovered ? "opacity-10" : "opacity-100"
-              } cursor-pointer rounded-2xl`}
-              src={data?.profile?.profile?.avatar}
-              alt="profile pic"
-              width={500}
-              height={500}
-            />
-          </picture>
+        <div className="w-[70px] h-[65px] rounded-2xl relative flex justify-center items-center">
+          <Image
+            onClick={handleLogOut}
+            onMouseEnter={handleHover}
+            onMouseLeave={handleHoverOut}
+            className={`${
+              hovered ? "opacity-10" : "opacity-100"
+            } cursor-pointer rounded-2xl w-full h-full`}
+            src={data?.profile?.profile?.avatar}
+            alt="profile pic"
+            width={500}
+            height={500}
+          />
           {hovered && (
             <Image
               onClick={handleLogOut}

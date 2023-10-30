@@ -53,7 +53,6 @@ const Signin = () => {
   ];
   const [tmpToken, setTmpToken] = useRecoilState(globalToken);
 
-
   const RedirectionFunction = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
@@ -108,6 +107,12 @@ const Signin = () => {
       };
     }
   }, []);
+
+  useEffect(() => {
+	if (localStorage.getItem("token")) {
+	  Router.push(`/profile/${parseJwt(localStorage.getItem("token")!).sub}`);
+	}
+  })
 
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex flex-col justify-center items-center ">

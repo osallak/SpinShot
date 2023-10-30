@@ -75,7 +75,7 @@ const ConversationIndividual = (props: {
       timestamp: String(Date.now()),
       senderUsername: userName,
     };
-	
+
     setIndividual((prev: individualType[]) => {
       const newIndividual: individualType[] = prev.map((item: any) => {
         if (item.other.id === props.id) {
@@ -121,47 +121,50 @@ const ConversationIndividual = (props: {
 
   const getUserName = async () => {
     try {
-      const senderId = parseJwt(JSON.stringify(localStorage.getItem('token'))).sub;
+      const senderId = parseJwt(
+        JSON.stringify(localStorage.getItem("token"))
+      ).sub;
       const userNameRes = await axios.get(`${ip}/users/profile/${senderId}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       setUserName((prev) => userNameRes.data.username);
-    } catch (error : any) {
-	}
+    } catch (error: any) {}
   };
 
   const playerStatus = async () => {
-	const token = localStorage.getItem("token");
-	const jwtToken = parseJwt(JSON.stringify(token));
-	if (!token || (jwtToken.isTwoFactorEnabled && !jwtToken.isTwoFaAuthenticated)) {
-		router.push("/signin")
-		return;
-	}
-	try {
-		const res = await axios.get(`${ip}/users/status/${props.id}`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-			params: {
-				id: props.id,
-			}
-		})
-		setUserStatus(res.data.status);
-		console.log('res from player status: ' , res);
-	} catch (error: any) {
-		console.log('error from player status : ', error)
-	}
-  }
+    if (props.id && props.id !== "") {
+      const token = localStorage.getItem("token");
+      const jwtToken = parseJwt(JSON.stringify(token));
+      if (
+        !token ||
+        (jwtToken.isTwoFactorEnabled && !jwtToken.isTwoFaAuthenticated)
+      ) {
+        router.push("/signin");
+        return;
+      }
+      try {
+        const res = await axios.get(`${ip}/users/status/${props.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            id: props.id,
+          },
+        });
+        setUserStatus(res?.data?.status);
+      } catch (error: any) {}
+    }
+  };
 
   useEffect(() => {
     getUserName();
   }, []);
 
   useEffect(() => {
-	playerStatus();
-  }, [])
+    playerStatus();
+  });
 
   useEffect(() => {
     const conversationDiv: any = chatContainerRef.current;
@@ -171,7 +174,11 @@ const ConversationIndividual = (props: {
   }, [individualConversation.length]);
 
   return (
-    <div className={`w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2 relative ${props.openSubSideBar && "opacity-5"}`}>
+    <div
+      className={`w-full md:h-full h-[91%] md:pt-0 pt-1 md:px-0 px-2 md:pb-0 pb-2 relative ${
+        props.openSubSideBar && "opacity-5"
+      }`}
+    >
       <div className="bg-white/10 h-full sm:rounded-2xl rounded-xl w-full flex justify-center items-center flex-col">
         <div className="w-full h-[10%] md:min-h-[100px] min-h-[70px] flex md:justify-center justify-between flex-col items-center pt-3">
           <div className="md:h-full flex items-center justify-between w-[90%]">

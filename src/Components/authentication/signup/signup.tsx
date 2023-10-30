@@ -11,6 +11,7 @@ import SpinShotlogo from "../../../../public/SpinShotlogo.svg";
 import lock from "../../../../public/lock.svg";
 import mail from "../../../../public/mail.svg";
 import user from "../../../../public/user.svg";
+import parseJwt from "@/utils/parsJwt";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -66,6 +67,12 @@ const Signup = () => {
       Reg: /^.{6,}$/,
     },
   ];
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      Router.push(`/profile/${parseJwt(localStorage.getItem("token")!).sub}`);
+    }
+  });
 
   const redirection = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -185,7 +192,7 @@ const Signup = () => {
                     Color="transparent"
                     BorderSize={2}
                     Reg={/^.{6,}$/}
-					handleKeyPress={(event) => handleKeyPress(event)}
+                    handleKeyPress={(event) => handleKeyPress(event)}
                   />
                 </div>
                 {ConfirmPassword && !isMatch && (

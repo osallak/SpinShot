@@ -1,22 +1,22 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { KeyboardEvent, MouseEvent } from "react";
+import { KeyboardEvent, MouseEvent, useEffect } from "react";
 import Racket from "../../../public/racket.svg";
 import SimpleButton from "../ui/Buttons/simpleButton";
+import parseJwt from "@/utils/parsJwt";
 
 const LandingPage = () => {
   const Router = useRouter();
 
-  const redirect = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    Router.push("/signin");
+  const redirect = () => {
+	if(localStorage.getItem("token")) {
+		Router.push(`/profile/${parseJwt(localStorage.getItem("token")!).sub}`);
+	}
+	else
+    	Router.push("/signin");
   };
-  const handleKeyPress = (e: KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === "Enter") {
-      Router.push("/signin");
-    }
-  };
+
   return (
     <div className="bg-very-dark-purple fixed left-0 top-0 w-full h-full flex items-center">
       <div className="fl:w-1/2 w-full h-full flex justify-center items-center x-pp:p-36 2xl:p-28 xl:p-20 fl:p-14 p-0 ">
@@ -58,9 +58,8 @@ const LandingPage = () => {
               <div className="b-sm:w-40 w-3/4 c-md:h-10 sm:h-10 h-9 flex justify-center items-center rounded-full">
                 <SimpleButton
                   Type="button"
-                  onclick={(e) => redirect(e)}
+                  onclick={(e) => redirect()}
                   content="Get Started"
-                  onkeydown={(e) => handleKeyPress(e)}
                 />
               </div>
             </div>

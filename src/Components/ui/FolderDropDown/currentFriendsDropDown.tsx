@@ -5,23 +5,20 @@ import ip from "@/utils/endPoint";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import {
-  MouseEvent,
-  useEffect,
-  useRef,
-  useState
-} from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import block from "../../../../public/block.svg";
 import game from "../../../../public/game.svg";
 import newMessage from "../../../../public/newMessage.svg";
 import threePoint from "../../../../public/threePoint.svg";
 import unfriend from "../../../../public/unfriend.svg";
+import toast from "react-hot-toast";
 
 const CurrentFriendsDropDown = (props: { id: string }) => {
   const [isOpen, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const [currentFriends, setCurrentFriends] = useRecoilState(currentFriendsAtom);
+  const [currentFriends, setCurrentFriends] =
+    useRecoilState(currentFriendsAtom);
 
   const Router = useRouter();
 
@@ -57,10 +54,10 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
     const token = localStorage.getItem("token");
     if (!token) {
       Router.push("/signin");
-      return ;
+      return;
     }
     try {
-      await axios.put(
+      const res = await axios.put(
         `${ip}/friends/${props.id}/block`,
         { id: props.id },
         {
@@ -73,38 +70,40 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
         const newArray = prev.map((item: dataFriends) => item.id !== props.id);
         return newArray;
       });
+			toast.success(res?.data?.message);
     } catch (error: any) {
-      console.log("error from accept a friend request: ", error);
-    }
+			toast.error(error?.data?.message);
+		}
   };
   const handleUnfriend = async () => {
-    const token = localStorage.getItem("token");
+		const token = localStorage.getItem("token");
     if (!token) {
-      Router.push("/signin");
-      return ;
+			Router.push("/signin");
+      return;
     }
     try {
-      await axios.put(
-        `${ip}/friends/${props.id}/unfriend`,
+			const res = await axios.put(
+				`${ip}/friends/${props.id}/unfriend`,
         { id: props.id },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
+					headers: {
+						Authorization: `Bearer ${token}`,
           },
         }
-      );
-      setCurrentFriends((prev: any) => {
-        const newArray = prev.map((item: dataFriends) => item.id !== props.id);
-        return newArray;
-      });
-    } catch (error: any) {
-      console.log("error from accept a friend request: ", error);
+				);
+				setCurrentFriends((prev: any) => {
+					const newArray = prev.map((item: dataFriends) => item.id !== props.id);
+					return newArray;
+				});
+				toast.success(res?.data?.message);
+			} catch (error: any) {
+			toast.success(error?.data?.message);
     }
   };
 
   const handleSendNewMessage = () => {
-    Router.push(`/messages/${props.id}`)
-  }
+    Router.push(`/messages/${props.id}`);
+  };
 
   return (
     <div ref={ref} className="relative">
@@ -144,13 +143,6 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
           >
             <Image src={unfriend} alt="add" className="md:w-[26px] w-[20px]" />
             <span>Unfriend</span>
-          </button>
-          <button
-            // onClick={() => handleRefuse()}
-            className="flex justify-start opacity-40 hover:opacity-100 space-x-2 items-center px-4 py-2 cursor-pointer text-pearl md:text-lg text-xs font-Passion-One"
-          >
-            <Image src={game} alt="add" className="md:w-[26px] w-[20px]" />
-            <span>Let&apos;s play</span>
           </button>
         </div>
       )}

@@ -17,7 +17,9 @@ const NavBar = (props: {
 
   const openSideBar = () => {
     props.setOpen(!props.open);
-    {props.setOpenSubSideBar && props.setOpenSubSideBar(false)};
+    {
+      props.setOpenSubSideBar && props.setOpenSubSideBar(false);
+    }
   };
 
   const dis = async () => {

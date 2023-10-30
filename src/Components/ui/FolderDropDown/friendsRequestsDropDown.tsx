@@ -75,7 +75,7 @@ const FriendRequestsDropDown = (props: { id: string }) => {
       })
       // console.log("response from handle accept : ", res);
     } catch (error: any) {
-      console.log("error from accept a friend request: ", error);
+      // console.log("error from accept a friend request: ", error);
     }
   };
 

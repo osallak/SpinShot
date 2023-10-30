@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
 import toast from "react-hot-toast";
 
-const InviteFriends = (props: {
+const InviteToChannel = (props: {
   invite: boolean;
   setInvite: Function;
   //   id: string; //user serched id
@@ -41,9 +41,13 @@ const InviteFriends = (props: {
       return;
     }
     try {
+      console.log(router.query.id, roomname);
       await axios.post(
-        `${ip}/room/setInvite`,
-        // { userId: props.id, roomName: props.roomId },
+        `${ip}/room/invite`,
+        {
+          userId: router.query.id,
+          roomName: roomname,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -54,6 +58,7 @@ const InviteFriends = (props: {
       toast.success("user invited successfully");
     } catch (error: any) {
       setError(true);
+      console.log(error);
       setErrorMessage(error?.response?.data);
     }
   };
@@ -85,7 +90,7 @@ const InviteFriends = (props: {
       </DialogBody>
       <DialogFooter>
         <Button
-          onClick={() => handleClick}
+          onClick={handleClick}
           className="rounded-full bg-peridot w-20 flex justify-center items-center text-very-dark-purple font-Passion-One font-semibold"
         >
           Invite
@@ -95,4 +100,4 @@ const InviteFriends = (props: {
   );
 };
 
-export default InviteFriends;
+export default InviteToChannel;

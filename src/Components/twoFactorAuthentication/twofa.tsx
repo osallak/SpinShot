@@ -37,6 +37,7 @@ const Twofa = () => {
       const jwtToken = parseJwt(token);
       Router.push(`/profile/${jwtToken.sub}`);
     } catch (error: any) {
+      // console.log(error);
       setErrorMessage("wrong code");
       setError(false);
     }

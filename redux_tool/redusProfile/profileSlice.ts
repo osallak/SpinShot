@@ -5,7 +5,7 @@ import { Socket } from "socket.io-client";
 
 export interface ProfileState {
   profile: any;
-  auth_status : boolean;
+  auth_status: boolean;
 }
 
 const initialState: ProfileState = {
@@ -30,13 +30,11 @@ export const ProfileSlice = createSlice({
       state.profile.profile.name.lastName = action.payload;
     },
     updateImage: (state, action: PayloadAction<any>) => {
-      state.profile.profile.name.lastName = action.payload;
+      state.profile.profile.avatar = action.payload;
     },
     updateAuthStatus(state, action: PayloadAction<boolean>) {
       state.auth_status = action.payload;
-    }
-    
-  
+    },
   },
 
   extraReducers: (builder) => {
@@ -47,5 +45,12 @@ export const ProfileSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setProfile, updateUsename, updateFirstName, updateLastName, updateImage, updateAuthStatus} = ProfileSlice.actions;
+export const {
+  setProfile,
+  updateUsename,
+  updateFirstName,
+  updateLastName,
+  updateImage,
+  updateAuthStatus,
+} = ProfileSlice.actions;
 export default ProfileSlice.reducer;

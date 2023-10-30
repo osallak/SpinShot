@@ -100,3 +100,7 @@ input[type="search"]::-webkit-search-results-decoration {
     align-items: center;
     color: black;
   }
+
+  canvas {
+    border-radius: 30px;
+  }

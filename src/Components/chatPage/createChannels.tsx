@@ -7,8 +7,8 @@ import { Fragment, KeyboardEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { useRecoilState } from "recoil";
 import { createChannelAtom } from "../context/recoilContext";
-import parseJwt from "@/utils/parsJwt";
 import SwitchButton from "../ui/Buttons/SwitchButton";
+import parseJwt from "@/utils/parsJwt";
 
 const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
   const [type, setType] = useState("");

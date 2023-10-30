@@ -25,6 +25,7 @@ import Achievements from "./userAchievements.tsx/achievements";
 import MatchHistory from "./userMatchHistory/matchHistory";
 import InviteUsers from "./inviteUsers";
 import InviteFriends from "./inviteUsers";
+import InviteToChannel from "./inviteUsers";
 
 const ProfilePage = (props: { id: any }) => {
   const data = useAppSelector((state) => state.Profile);
@@ -65,7 +66,12 @@ const ProfilePage = (props: { id: any }) => {
     const token = localStorage.getItem("token");
     const { id } = router.query;
     if (!token) {
-      router.push("/Signin");
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
       return;
     }
     try {
@@ -73,7 +79,7 @@ const ProfilePage = (props: { id: any }) => {
       router.push(`/profile/${id}`);
       // setValid(true);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       // router.push("/error");
       return;
     }
@@ -104,9 +110,18 @@ const ProfilePage = (props: { id: any }) => {
   };
 
   const handleResize = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated) {
+      router.push("/signin");
+      return;
+    }
     {
-      router.query.id ===
-      parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
+      router.query.id === parseJwt(JSON.stringify(token)).sub
         ? usersearched(buttonsUser, SignOut)
         : swetshProfile(buttons, letPlay);
     }
@@ -242,7 +257,7 @@ const ProfilePage = (props: { id: any }) => {
               <TwoFactor isActive={isActive} Switch={setisActive} />
             </div>
           )}
-          {/* {<InviteFriends invite={invite} setInvite={setInvite} />} */}
+          {<InviteToChannel invite={invite} setInvite={setInvite} />}
         </div>
       </div>
     </>

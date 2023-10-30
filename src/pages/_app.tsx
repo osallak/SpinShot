@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { RecoilRoot } from "recoil";
 import { store } from "../../redux_tool/store";
 import { SocketContext, SocketProvider, getChatSocket} from "@/context/socket.context";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useContext, useEffect } from "react";
 import { useAppSelector } from "../../redux_tool";
 import { io } from "socket.io-client";
@@ -35,19 +35,19 @@ const Func = ({ children }: FuncProps) => {
         setChatSocket(sc);
         setChatSocketAuth(localStorage.getItem("token") as string);
         connectChatSocket();
-        console.log("chat socket", getChatSocket());
+        // console.log("chat socket", getChatSocket());
       }
       if (!s.connected) {
         s.auth = {
           token: localStorage.getItem("token"),
         };
         s.on("connect_error", (err: any) => {
-          console.log(`connect_error due to ${err.message}`);
+          // console.log(`connect_error due to ${err.message}`);
         });
         setSocket(s);
         setGlobalSocketAuth(localStorage.getItem("token") as string);
         connectGlobalSocket();
-        console.log("game socket", getGlobalSocket());
+        // console.log("game socket", getGlobalSocket());
       }
     }
   }, [auth_status]);

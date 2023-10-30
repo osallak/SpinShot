@@ -24,7 +24,7 @@ let game: GameModel | null = null;
 
 const GamePage = (props: any) => {
   const auth_status = useAppSelector((state) => state.Profile.auth_status);
-  const {socket, setSocket} = useContext(SocketContext);
+  const { socket, setSocket } = useContext(SocketContext);
   const [isopen, setMenu] = useState(false);
   const [opened, setOpned] = useState(false);
   // const [mode, setMode] = useState<string>();
@@ -48,8 +48,8 @@ const GamePage = (props: any) => {
   // const [gameJustFinished, setGameJustFinished] = useState(false);
   const [score, setScore] = useState<any>(null);
   const [clear, setClear] = useState(false);
-  const [counter, setCounter] = useState(3);
-  const [start, setCount] = useState(false);
+
+  const [start, setStart] = useState(false);
 
   const handleMenu = () => {
     setOpned(false);
@@ -57,25 +57,25 @@ const GamePage = (props: any) => {
   };
 
   const errorEventCallback = (error: string) => {
-    console.log("error event");
+    // console.log("error event");
     toast.error(error);
   };
 
   const cancelJoinCallback = () => {
-    console.log("cancel join");
-    setCount(true);
+    // console.log("cancel join");
+    // setCount(true);
     gameOver && setGameOver(false);
     // setCancelJoin(true);
   };
 
   const gameStartedCallback = (data: any) => {
-    console.log("game started");
-    setCount(true);
+    // console.log("game started");
+    // setCount(true);
     setWinnerCardState(true);
     // setCancelJoin(false);
     setLoserCardState(true);
     // setGameJustFinished(false);
-    console.log("game start data: ", data);
+    // console.log("game start data: ", data);
     setIsClick(false);
     setGamerState(null);
     setGameOver(false);
@@ -85,7 +85,7 @@ const GamePage = (props: any) => {
   };
 
   const gameOverCallback = (data: any) => {
-    console.log("game over data: ", data);
+    // console.log("game over data: ", data);
     setScore(null);
     setClear(true);
     setDataOfOpponent(null);
@@ -130,15 +130,12 @@ const GamePage = (props: any) => {
     }
   };
 
-
   const handleResize = () => {
     setWidth(window.innerWidth);
     setheight(window.innerHeight);
   };
 
-
   const initializeSocket = () => {
-    
     socket.on("connect", () => {
       console.log("connected......");
     });
@@ -147,7 +144,7 @@ const GamePage = (props: any) => {
     socket.on("gameOver", gameOverCallback);
     socket.on("match", gameStartedCallback);
     socket.on("gameState", (data: any) => {
-      setCount(false);
+      setStart(false);
       // console.log("game state ", data);
       // setScore(data);
       game?.updateState(data);
@@ -161,8 +158,16 @@ const GamePage = (props: any) => {
     return null;
   };
   useEffect(() => {
-    console.log("auth_status:", auth_status);
     initializeSocket();
+    return () => {
+      socket.off("connect");
+      socket.off("cancel-join");
+      socket.off("error");
+      socket.off("gameOver");
+      socket.off("match");
+      socket.off("gameState");
+      socket.off("scoreUpdate");
+    };
   }, []);
 
   useEffect(() => {
@@ -173,7 +178,6 @@ const GamePage = (props: any) => {
         window.removeEventListener("resize", handleResize);
       };
     }
-
   }, []);
 
   useEffect(() => {
@@ -197,20 +201,20 @@ const GamePage = (props: any) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (start) {
-      const timer = setInterval(() => {
-        setCounter((prevCounter) => prevCounter - 1);
-      }, 1000);
+  // useEffect(() => {
+  //   if (start) {
+  //     const timer = setInterval(() => {
+  //       setCounter((prevCounter) => prevCounter - 1);
+  //     }, 1000);
 
-      // return () => {
-      //   clearInterval(timer);
-      // };
-    }
-    return () => {
-      setCounter(3);
-    }
-  }, [start]);
+  //     // return () => {
+  //     //   clearInterval(timer);
+  //     // };
+  //   }
+  //   return () => {
+  //     setCounter(3);
+  //   };
+  // }, [start]);
 
   return (
     <div
@@ -219,7 +223,7 @@ const GamePage = (props: any) => {
       }
     >
       {isClick2 && <Gamemenu isClick2={isClick2} setIsClick2={setIsClick2} />}
-      <div className={`  ${isopen ? "ml-[70px]  w-full " : null}  `}>
+      <div className={` ml-2 ${isopen ? "ml-[70px]  w-full " : null}  `}>
         <NavbarMobile
           setMenu={setMenu}
           handleMenu={handleMenu}
@@ -242,7 +246,7 @@ const GamePage = (props: any) => {
 
         {isopen && (
           <SidebarMobile
-            currentPage={"/gamek"}
+            currentPage={"/game"}
             // handleClick={handleClick}
             setOpned={setOpned}
             opened={opened}
@@ -263,6 +267,7 @@ const GamePage = (props: any) => {
             <NavGame dataOpponent={dataOpponent} score={score} />
           </div>
           <div
+            id="game"
             className={`h-[80%] w-[80%] flex justify-center items-center relative `}
             ref={divRef}
           ></div>
@@ -309,8 +314,9 @@ const GamePage = (props: any) => {
         />
       )}
 
-      {start && <Counter counter={counter} start={start} />}
+      {start && <Counter setStart={setStart} start={start} />}
       <Toaster />
+      {/* <Main /> */}
     </div>
   );
 };

@@ -16,12 +16,15 @@ import logo from "./../../../../public/logo.svg";
 import line from "./../../../../public/line.svg";
 import search from "./../../../../public/searchIcon.svg";
 import signout from "./../../../../public/signOut.svg";
-import test1 from "../../../../public/test1.svg";
 import proLogo from "../../../../public/proLogo.svg";
 import masterLogo from "../../../../public/masterLogo.svg";
 import grandMasterLogo from "../../../../public/grandMasterLogo.svg";
 import eliteLogo from "../../../../public/eliteLogo.svg";
 import veteraneLogo from "../../../../public/veteranLogo.svg";
+import block from "../../../../public/block.svg";
+import invite from "../../../../public/invite.svg";
+import unblock from "../../../../public/unblock.svg";
+// import addToChannel from "../../../../public/addToChannel.svg";
 
 export const Array = [
   { icon: AddIcon, name: "Add" },
@@ -74,7 +77,7 @@ export const SidbarIcon = [
   { icon: search, route: "/search" },
   { id: 0, icon: profile, route: "/profile" },
   { id: 1, icon: message, route: "/messages" },
-  { id: 2, icon: friend, route: "/friend" },
+  { id: 2, icon: friend, route: "/friends" },
   { id: 3, icon: play, route: "/game" },
 ];
 
@@ -153,4 +156,9 @@ export const IdDeviceBreakpointsByWidth = {
 // ];
 
 export const SignOut = [{ icon: signout, name: "Sign out" }];
-export const letPlay = [{ icon: play, name: "Invite" }];
+export const letPlay = [
+  { icon: play, name: "Invite" },
+  { icon: block, name: "Block" },
+  { icon: play, name: "Unblock" },
+  { icon: play, name: "Invite to channel" },
+];

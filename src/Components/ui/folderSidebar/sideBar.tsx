@@ -1,18 +1,17 @@
 "use client";
-import logoWhite from "../../../../public/logoWhite.svg";
-import Image from "next/image";
-import test1 from "../../../../public/test1.svg";
-import logout from "../../../../public/logout.svg";
-import { MouseEvent, useEffect, useState } from "react";
+import Search from "@/Components/search/userSearch";
 import parseJwt from "@/utils/parsJwt";
+import Image from "next/image";
 import { useRouter } from "next/router";
-import { useAppSelector } from "../../../../redux_tool";
+import { MouseEvent, useEffect, useState } from "react";
 import friend from "../../../../public/friend.svg";
-import search from "../../../../public/search.svg";
+import game from "../../../../public/game.svg";
+import logoWhite from "../../../../public/logoWhite.svg";
+import logout from "../../../../public/logout.svg";
 import message from "../../../../public/message.svg";
 import profile from "../../../../public/profile.svg";
-import game from "../../../../public/game.svg";
-import Search from "@/Components/search/userSearch";
+import search from "../../../../public/search.svg";
+import { useAppSelector } from "../../../../redux_tool";
 
 const SideBar = (props: any) => {
   const Router = useRouter();
@@ -53,33 +52,27 @@ const SideBar = (props: any) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
+    const twoFA = parseJwt(JSON.stringify(token));
+    if (!token || (twoFA.isTwoFactorEnabled && !twoFA.isTwoFaAuthenticated)) {
       Router.push("/signin");
       return;
-    } else {
-      setIcons([
-        { icon: search, route: "/search" },
-        {
-          icon: profile,
-          route: `/profile/${
-            parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
-          }`,
-        },
-        {
-          icon: message,
-          route: `/messages/${
-            parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
-          }`,
-        },
-        { icon: friend, route: "/friends" },
-        {
-          icon: game,
-          route: `/game/${
-            parseJwt(JSON.stringify(localStorage.getItem("token"))).sub
-          }`,
-        },
-      ]);
     }
+    setIcons([
+      { icon: search, route: "/search" },
+      {
+        icon: profile,
+        route: `/profile/${parseJwt(JSON.stringify(token)).sub}`,
+      },
+      {
+        icon: message,
+        route: `/messages/${parseJwt(JSON.stringify(token)).sub}`,
+      },
+      { icon: friend, route: "/friends" },
+      {
+        icon: game,
+        route: `/game/${parseJwt(JSON.stringify(token)).sub}`,
+      },
+    ]);
   }, []);
 
   return (

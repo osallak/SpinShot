@@ -50,13 +50,13 @@ const ContentMyFriends = () => {
   useEffect(() => {
     fetchData();
     setIsLoaded(true);
-  }, []);
+  }, [currentFriends]);
 
   return (
     <>
       <div className="w-[85%] h-[10%] min-h-[60px] flex flex-col">
         <h1 className="flex justify-start items-center font-Poppins text-pearl lg:text-3xl md:text-2xl text-base font-bold h-full">
-          7 Friends
+          {currentFriends.length} Friends
         </h1>
       </div>
       <div className="h-[70%] flex flex-col items-center min-h-[100px] w-[95%] overflow-auto rounded-sm">

@@ -160,7 +160,7 @@ const SocketProvider = ({ children }: any) => {
       socket.off("invite-canceled");
       socket.off("reconnect");
     };
-  }, [gameInvite]);
+  }, [gameInvite, chatSocket, socket]);
 
   useEffect(() => {
     try {

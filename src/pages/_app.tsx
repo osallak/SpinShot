@@ -17,6 +17,7 @@ type FuncProps = {
 
 const Func = ({ children }: FuncProps) => {
   const auth_status = useAppSelector((state) => state.Profile.auth_status);
+  console.log("auth status", auth_status);
   let { socket, setSocket, setChatSocket, chatSocket, setGlobalSocketAuth, getGlobalSocket, connectGlobalSocket, setChatSocketAuth, connectChatSocket } = useContext(SocketContext);
   useEffect(() => {
     const s = io(`${ip}/games`, {
@@ -29,13 +30,18 @@ const Func = ({ children }: FuncProps) => {
     });
     if (auth_status === true) {
       console.log("you shall not pass");
-      if (!sc.connected) {
-        sc.auth = {
+      if (!chatSocket?.connected) {
+        chatSocket.auth = {
           token: localStorage.getItem("token"),
-        };
+        }
+        chatSocket.connect();
+        // sc.auth = {
+        //   token: localStorage.getItem("token"),
+        // };
+
         // setChatSocket(sc);
-        setChatSocketAuth(localStorage.getItem("token") as string);
-        connectChatSocket();
+        // setChatSocketAuth(localStorage.getItem("token") as string);
+        // connectChatSocket();
         // console.log("chat socket", getChatSocket());
       }
       if (!s.connected) {

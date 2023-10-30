@@ -308,7 +308,7 @@ const ConversationIndividual = (props: {
                               items.sender === props.userId
                                 ? "text-pearl"
                                 : "text-very-dark-purple"
-                            } md:text-lg sm:text-base text-sm`}
+                            } md:text-lg sm:text-base text-sm w-full break-all`}
                           >
                             {items.message}
                           </span>

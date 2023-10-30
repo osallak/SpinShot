@@ -30,6 +30,7 @@ export class FriendsService {
           },
         },
         data: {
+          sender: userId,
           status: FriendshipStatus.PENDING,
         },
       });

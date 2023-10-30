@@ -21,7 +21,9 @@ export const getProfile = createAsyncThunk("profile", async (user: any) => {
       return respo.data;
     }
   } catch (error: any) {
-    toast.error("You are now allowed to view this profile");
+    toast.error("You are now allowed to view this profile", {
+      id: 'profile-error',
+    });
     store.dispatch(setProfile({}));
     // store.dispatch(updateImage(test));
     // store.dispatch((test));

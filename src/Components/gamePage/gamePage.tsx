@@ -4,21 +4,18 @@ import SideBar from "@/Components/ui/folderSidebar/sideBar";
 import SidebarMobile from "@/Components/ui/folderSidebar/sidebarMobile";
 import SubSidebarGame from "@/Components/ui/profileSubsidebar/subSidebarGame";
 import SubsidebarSecondGame from "@/Components/ui/profileSubsidebar/subsidebarSecondGame";
+import { SocketContext } from "@/context/socket.context";
 import ip from "@/utils/endPoint";
+import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { useAppSelector } from "../../../redux_tool";
 import GameCard from "./gameCard";
 import Gamemenu from "./gameMenu";
 import GameModel from "./gameModel";
 import Matchmaking from "./matchmaking";
-import { SocketContext } from "@/context/socket.context";
-import Counter from "./counter";
-import { Socket, io } from "socket.io-client";
-import parseJwt from "@/utils/parsJwt";
-import { useAppSelector } from "../../../redux_tool";
-import { match } from "assert";
 
 let game: GameModel | null = null;
 // let socket: Socket;
@@ -95,7 +92,7 @@ const GamePage = (props: any) => {
     setGamerState(data);
     // setGameJustFinished(true);
     // setLoser(data);
-    setmatchData(null);
+    // setmatchData(null);
     setGameOver(true);
     // setIsClick(true);
   };
@@ -197,13 +194,13 @@ const GamePage = (props: any) => {
     setmatchData(null);
   };
 
-  useEffect(() => {
-    return () => {
-      if (clear) {
-        cleanUp();
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     if (clear) {
+  //       cleanUp();
+  //     }
+  //   };
+  // }, []);
 
   // useEffect(() => {
   //   if (start) {

@@ -133,9 +133,6 @@ const ResetPassword = () => {
         <div className={`  w-24 sm:w-32  h-full`}>
           <SimpleButton content="Save" onclick={HandleChange} />
         </div>
-        <div>
-          <Toaster position="top-center" reverseOrder={false} />
-        </div>
       </div>
       {/* <Toaster
           position="top-right"

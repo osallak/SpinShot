@@ -11,16 +11,17 @@ const Untouchable = () => {
   useEffect(() => {
     setAchievement(data?.profile.achievements);
   }, [data]);
+  // console.log("achievement", achievements);
 
   return (
     <>
-      {achievements && achievements.length > 2 && (
+      {achievements && achievements.length > 3 && (
         <div
           className={`  bg-very-dark-purple h-[150px] sm:h-[200px] c-gb:h-[300px] rounded-[20px] w-[85%] c-gb:w-full  flex flex-row  justify-between`}
         >
           <div
             className={` ${
-              achievements[2]?.achieved
+              achievements[3]?.achieved
                 ? "text-pearl "
                 : "text-pearl opacity-40"
             } p-4 sm:p-10 space-y-[20%]`}
@@ -31,7 +32,7 @@ const Untouchable = () => {
             </h1>
           </div>
           <div className="flex justify-center items-center   ">
-            {achievements[2]?.achieved ? (
+            {achievements[3]?.achieved ? (
               <Image className="      " src={untouchableWin} alt="" />
             ) : (
               <Image className="      " src={untouchableLose} alt="" />

@@ -29,6 +29,7 @@ import InviteToChannel from "./inviteUsers";
 
 const ProfilePage = (props: { id: any }) => {
   const data = useAppSelector((state) => state.Profile);
+  const [forbidden, setForbidden] = useState(false);
   const [isopen, setMenu] = useState(false);
   // const [valid, setValid] = useState(false);
   const [opened, setOpned] = useState(false);
@@ -51,6 +52,9 @@ const ProfilePage = (props: { id: any }) => {
   const [isClick, setClick] = useState(false);
   const [invite, setInvite] = useState(false);
 
+  {
+    console.log("profile data", data);
+  }
   interface Type {
     id: number;
     text: string;
@@ -77,8 +81,10 @@ const ProfilePage = (props: { id: any }) => {
     try {
       await dispatch(getProfile(id)).unwrap();
       router.push(`/profile/${id}`);
+      setForbidden(false);
       // setValid(true);
     } catch (error) {
+      setForbidden(true);
       // console.log(error);
       // router.push("/error");
       return;
@@ -100,11 +106,11 @@ const ProfilePage = (props: { id: any }) => {
   const swetshProfile = (tab: Type[], play: TypePlay[]) => {
     setTable(tab);
     setTable2(play);
-    setId(!id);
+    setId(false);
   };
 
   const usersearched = (tab: Type[], play: TypePlay[]) => {
-    setId(!id);
+    setId(true);
     setTable2(play);
     setTable(tab);
   };
@@ -151,7 +157,9 @@ const ProfilePage = (props: { id: any }) => {
       >
         <div className={` flex flex-row p-1 w-full h-full `}>
           <div className="fixed h-full pb-4 ">
-            <SideBar />
+            <SideBar         setOpenSubSideBar={setOpned}
+        openSubSideBar={opened}
+        flag="profile" />
           </div>
           <SubSidebar
             setContent={setContent}
@@ -197,7 +205,7 @@ const ProfilePage = (props: { id: any }) => {
                   myImage={myImage}
                   id={id}
                 />
-                {open ? (
+                {open && !forbidden ? (
                   <UploadImage
                     setMyImage={setMyImage}
                     upload={upload}
@@ -227,9 +235,9 @@ const ProfilePage = (props: { id: any }) => {
                     myImage={myImage}
                     setUsername={setUsername}
                   />
-                ) : content == "Achievements" ? (
+                ) : content == "Achievements" && !forbidden ? (
                   <Achievements />
-                ) : content == "Match_History" ? (
+                ) : content == "Match_History" && !forbidden ? (
                   <MatchHistory />
                 ) : content == "Security" && table.length > 2 ? (
                   password == true ? (
@@ -240,7 +248,7 @@ const ProfilePage = (props: { id: any }) => {
             </div>
           </div>
           <div className="bg-white flex items-center"></div>
-          {opened && pages == "/profile" && (
+          {opened && (
             <SubsidebarSecond
               opened={opened}
               // isopen={}

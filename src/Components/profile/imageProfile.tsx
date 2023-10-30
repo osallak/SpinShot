@@ -31,7 +31,10 @@ const ImageProfile = (props: any) => {
     }
   }, [data]);
 
-  console.log("get image", image);
+  // console.log("get image", image);
+  {
+    console.log("props.id", props.id);
+  }
 
   return (
     <div

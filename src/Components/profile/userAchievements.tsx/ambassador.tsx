@@ -14,11 +14,11 @@ const Ambassador = () => {
 
   return (
     <>
-      {achievements && achievements.length > 3 && (
+      {achievements && achievements.length > 0 && (
         <div className=" bg-very-dark-purple h-[150px] sm:h-[200px] c-gb:h-[300px]  rounded-[20px] w-[85%] c-gb:w-full flex flex-row  justify-between">
           <div
             className={` ${
-              achievements[3]?.achieved
+              achievements[0]?.achieved
                 ? "text-pearl "
                 : "text-pearl opacity-40"
             } p-4 sm:p-10 space-y-[20%]`}
@@ -29,7 +29,7 @@ const Ambassador = () => {
             </h1>
           </div>
           <div className="flex justify-center items-center  md:w-[40%]  ">
-            {achievements[3]?.achieved ? (
+            {achievements[0]?.achieved ? (
               <Image
                 className="        w-[70%] sm:w-24 c-gb:w-[60%]"
                 src={ambassadorWin}

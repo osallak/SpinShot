@@ -1,3 +1,4 @@
+import { Logger, UseFilters, UseGuards, ValidationPipe } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -5,30 +6,25 @@ import {
   OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer,
-  WsException,
+  WebSocketServer
 } from '@nestjs/websockets';
-import { Socket, Server } from 'socket.io';
+import { ValidationError } from 'class-validator';
+import { Server, Socket } from 'socket.io';
+import { PrismaService } from 'src/prisma/prisma.service';
+import {
+  GROUP_MESSAGE,
+  INVALID_DATA_MESSAGE,
+  OPTIONS,
+  PRIVATE_MESSAGE
+} from './chat.configuration';
 import { ChatService } from './chat.service';
-import { Logger, ValidationPipe, UseGuards, UseFilters } from '@nestjs/common';
+import { SendMessageDto, sendRoomMessageDto } from './dtos/send-message.dto';
 import {
   WsBadRequestException,
   WsExceptionsFilter,
 } from './exceptions/ws-exceptions';
-import { ValidationError } from 'class-validator';
-import { SendMessageDto, sendRoomMessageDto } from './dtos/send-message.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import {
-  CHAT_PORT,
-  OPTIONS,
-  INVALID_DATA_MESSAGE,
-  PRIVATE_MESSAGE,
-  GROUP_MESSAGE,
-  INTERNAL_SERVER_ERROR_MESSAGE,
-} from './chat.configuration';
 
 import { WsGuard } from './chat.guard';
-import { WebsocketExceptionsFilter } from 'src/games/filter/ws.filter';
 
 @UseFilters(WsExceptionsFilter)
 @WebSocketGateway(OPTIONS)
@@ -36,7 +32,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   private readonly server: Server;
 
-  private readonly logger: Logger = new Logger('Chat');
+  private readonly logger: Logger = new Logger('ChatGateway');
 
   constructor(
     private readonly chatService: ChatService,
@@ -56,7 +52,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     body: SendMessageDto,
     @ConnectedSocket() socket: Socket,
   ) {
-    // console.log('pm :', socket.id);
+    console.log('pm :', socket.id);
     return this.chatService.sendPrivateMessage(body);
   }
 
@@ -82,7 +78,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() socket: Socket,
   ) {
     try {
-      // console.log("gm:", body);
+      console.log("gm:", body);
       return await this.chatService.sendGroupMessage(body);
     } catch (e) {
       socket.emit(

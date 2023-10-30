@@ -17,5 +17,5 @@ export const USER_BLOCKED_MESSAGE = 'User Is Blocked';
 export const USER_SOCKETS_MESSAGE = 'User Does Not Have Sockets';
 export const INVALID_DATA_MESSAGE = 'Invalid Data';
 export const USER_DOESNT_EXIST_MESSAGE = 'User Does Not Exist';
-export const ANONYMOUS_USER_MESSAGE = 'User Is Not a Friend';
+export const ANONYMOUS_USER_MESSAGE = 'User Is Not a Friend of Yours';
 export const INVALID_TOKEN_MESSAGE = 'Token Is Invalid';

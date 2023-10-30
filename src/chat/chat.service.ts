@@ -153,13 +153,16 @@ export class ChatService {
   }
 
   async sendPrivateMessage(body: SendMessageDto) {
+    console.log("first: ", body);
     let event: eventType = {
       event: PRIVATE_MESSAGE,
       content: body,
     };
     let isFriend: any = undefined;
     try {
+      console.log("body:", body);
       isFriend = await this.isFriend(body.to, body.from);
+      console.log("isFriend", isFriend);
       if (isFriend && isFriend[0]) {
         if (isFriend[0].leftUser.id == body.from) {
           event.content.senderUsername = isFriend[0].leftUser.username;
@@ -174,6 +177,7 @@ export class ChatService {
         }
         await this.saveMessageInDatabase(body);
       } else {
+        this.logger.warn("second: ", body);
         const sender: Array<Socket> = this.getSocketsAssociatedWithUser(
           body.from,
         );

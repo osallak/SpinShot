@@ -4,20 +4,18 @@ import SideBar from "@/Components/ui/folderSidebar/sideBar";
 import SidebarMobile from "@/Components/ui/folderSidebar/sidebarMobile";
 import SubSidebarGame from "@/Components/ui/profileSubsidebar/subSidebarGame";
 import SubsidebarSecondGame from "@/Components/ui/profileSubsidebar/subsidebarSecondGame";
+import { SocketContext } from "@/context/socket.context";
 import ip from "@/utils/endPoint";
+import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { useAppSelector } from "../../../redux_tool";
 import GameCard from "./gameCard";
 import Gamemenu from "./gameMenu";
 import GameModel from "./gameModel";
 import Matchmaking from "./matchmaking";
-import { SocketContext } from "@/context/socket.context";
-import Counter from "./counter";
-import { Socket, io } from "socket.io-client";
-import parseJwt from "@/utils/parsJwt";
-import { useAppSelector } from "../../../redux_tool";
 
 let game: GameModel | null = null;
 // let socket: Socket;
@@ -69,6 +67,7 @@ const GamePage = (props: any) => {
   };
 
   const gameStartedCallback = (data: any) => {
+    console.log("game started:", data.id);
     // console.log("game started");
     // setCount(true);
     setWinnerCardState(true);
@@ -81,9 +80,10 @@ const GamePage = (props: any) => {
     setGameOver(false);
     setmatchData(data);
     handleData(data);
-    // setDataOfOpponent(data);
+    if (!dataOpponent) {
+      setDataOfOpponent(data);
+    }
   };
-
   const gameOverCallback = (data: any) => {
     // console.log("game over data: ", data);
     setScore(null);
@@ -92,7 +92,7 @@ const GamePage = (props: any) => {
     setGamerState(data);
     // setGameJustFinished(true);
     // setLoser(data);
-    setmatchData(null);
+    // setmatchData(null);
     setGameOver(true);
     // setIsClick(true);
   };
@@ -120,6 +120,7 @@ const GamePage = (props: any) => {
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log("respo?.", respo?.data);
         setDataOfOpponent(respo?.data);
         // console.log("after setting:", dataOpponent);
       }
@@ -181,6 +182,12 @@ const GamePage = (props: any) => {
   }, []);
 
   useEffect(() => {
+    return () => {
+      setmatchData(null);
+    }
+  }, [gameOver]);
+
+  useEffect(() => {
     // handleData();
     game = new GameModel(divRef.current!, map!, socket!);
     return () => {
@@ -193,13 +200,13 @@ const GamePage = (props: any) => {
     setmatchData(null);
   };
 
-  useEffect(() => {
-    return () => {
-      if (clear) {
-        cleanUp();
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     if (clear) {
+  //       cleanUp();
+  //     }
+  //   };
+  // }, []);
 
   // useEffect(() => {
   //   if (start) {
@@ -232,7 +239,9 @@ const GamePage = (props: any) => {
       </div>
 
       <div className={` flex flex-row c-gb:space-x-3 p-2 w-full  h-full `}>
-        <SideBar />
+        <SideBar        setOpenSubSideBar={setOpned}
+        openSubSideBar={opened}
+        flag="game" />
         <SubSidebarGame
           // depend={depend}
           matchData={matchData}
@@ -272,7 +281,7 @@ const GamePage = (props: any) => {
             ref={divRef}
           ></div>
         </div>
-        {opened && pages == "/game" && (
+        {opened && (
           <SubsidebarSecondGame
             // opened={opened}
             setOpned={setOpned}
@@ -314,9 +323,6 @@ const GamePage = (props: any) => {
         />
       )}
 
-      {start && <Counter setStart={setStart} start={start} />}
-      <Toaster />
-      {/* <Main /> */}
     </div>
   );
 };

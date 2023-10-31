@@ -1,15 +1,15 @@
+import { SocketContext, SocketProvider } from "@/context/socket.context";
 import "@/styles/globals.css";
+import ip from "@/utils/endPoint";
 import type { AppProps } from "next/app";
+import { useContext, useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import { RecoilRoot } from "recoil";
-import { store } from "../../redux_tool/store";
-import { SocketContext, SocketProvider, getChatSocket} from "@/context/socket.context";
-import toast, { Toaster } from "react-hot-toast";
-import { useContext, useEffect } from "react";
-import { useAppSelector } from "../../redux_tool";
 import { io } from "socket.io-client";
-import ip from "@/utils/endPoint";
-import { get } from "http";
+import { useAppSelector } from "../../redux_tool";
+import { store } from "../../redux_tool/store";
+import { updateAuthStatus } from "../../redux_tool/redusProfile/profileSlice";
 
 type FuncProps = {
   children: React.ReactNode;
@@ -17,6 +17,7 @@ type FuncProps = {
 
 const Func = ({ children }: FuncProps) => {
   const auth_status = useAppSelector((state) => state.Profile.auth_status);
+  console.log("auth status", auth_status);
   let { socket, setSocket, setChatSocket, chatSocket, setGlobalSocketAuth, getGlobalSocket, connectGlobalSocket, setChatSocketAuth, connectChatSocket } = useContext(SocketContext);
   useEffect(() => {
     const s = io(`${ip}/games`, {
@@ -28,25 +29,35 @@ const Func = ({ children }: FuncProps) => {
       autoConnect: false,
     });
     if (auth_status === true) {
-      if (!sc.connected) {
-        sc.auth = {
-          token: localStorage.getItem("token"),
-        };
-        setChatSocket(sc);
+      console.log("you shall not pass");
+      if (!chatSocket?.connected) {
         setChatSocketAuth(localStorage.getItem("token") as string);
+        // chatSocket.auth = {
+        //   token: localStorage.getItem("token"),
+        // }
         connectChatSocket();
+        chatSocket.connect();
+        // sc.auth = {
+        //   token: localStorage.getItem("token"),
+        // };
+
+        // setChatSocket(sc);
+        // setChatSocketAuth(localStorage.getItem("token") as string);
+        // connectChatSocket();
         // console.log("chat socket", getChatSocket());
+        store.dispatch(updateAuthStatus(false));
       }
-      if (!s.connected) {
-        s.auth = {
-          token: localStorage.getItem("token"),
-        };
-        s.on("connect_error", (err: any) => {
-          // console.log(`connect_error due to ${err.message}`);
-        });
-        setSocket(s);
+      if (!socket.connected) {
+        // s.auth = {
+        //   token: localStorage.getItem("token"),
+        // };
+        // s.on("connect_error", (err: any) => {
+        //   // console.log(`connect_error due to ${err.message}`);
+        // });
+        // setSocket(s);
         setGlobalSocketAuth(localStorage.getItem("token") as string);
         connectGlobalSocket();
+        store.dispatch(updateAuthStatus(false));
         // console.log("game socket", getGlobalSocket());
       }
     }

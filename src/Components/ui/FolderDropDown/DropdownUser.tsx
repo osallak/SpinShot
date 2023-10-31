@@ -1,5 +1,5 @@
 import chatMenu from "../../../../public/chatmenu.svg";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -7,6 +7,7 @@ import parseJwt from "@/utils/parsJwt";
 import axios from "axios";
 import ip from "@/utils/endPoint";
 import toast from "react-hot-toast";
+import { SocketContext } from "@/context/socket.context";
 
 const DropdownUser = (props: any) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -111,8 +112,12 @@ const DropdownUser = (props: any) => {
     }
   };
 
+  const {chatSocket, socket} = useContext(SocketContext);
+
   const HandleState = (name: any) => {
     if (name == "Sign out") {
+      chatSocket?.disconnect();
+      socket?.disconnect();
       localStorage.removeItem("token");
       router.push("/signin");
     } else {

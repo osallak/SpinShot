@@ -1,19 +1,12 @@
 "use client";
-import React, { useEffect, useState, MouseEvent } from "react";
-import { SidbarIcon } from "../FolderDropDown/ArrayIcon";
-import Image from "next/image";
-import test1 from "./../../../../public/test1.svg";
-import { useAppSelector } from "../../../../redux_tool";
-import search from "../../../../public/search.svg";
-import message from "../../../../public/message.svg";
-import profile from "../../../../public/profile.svg";
-import game from "../../../../public/game.svg";
 import Search from "@/Components/search/userSearch";
-import friend from "../../../../public/friend.svg";
 import parseJwt from "@/utils/parsJwt";
-import logoWhite from "../../../../public/logoWhite.svg";
+import Image from "next/image";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import logout from "../../../../public/logout.svg";
+import { useAppSelector } from "../../../../redux_tool";
+import { SidbarIcon } from "../FolderDropDown/ArrayIcon";
 
 const SidebarMobile = (props: {
   currentPage: string;
@@ -88,7 +81,7 @@ const SidebarMobile = (props: {
             ))}
           </div>
         </div>
-        <div className="w-[70px] h-[70px] rounded-2xl relative flex justify-center items-center">
+        {/* <div className="w-[70px] h-[70px] rounded-2xl relative flex justify-center items-center">
           <picture>
             <img
               onClick={handleLogOut}
@@ -113,7 +106,7 @@ const SidebarMobile = (props: {
               className="absolute cursor-pointer rounded-2xl"
             />
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );

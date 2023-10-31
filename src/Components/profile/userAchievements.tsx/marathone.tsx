@@ -48,10 +48,10 @@ const Marathone = () => {
                 {achievements[1].level}/10
               </h1>
               <div className="border h-3 md:h-5 rounded-full p-[0.5px] flex justfy-center items-center ">
-                <div
-                  style={{ width: `${achievements[1].level}%` }}
+                {achievements[1].level <= 10 && <div
+                  style={{ width: `${achievements[1].level * 10}%` }}
                   className=" rounded-full  h-full  bg-peridot"
-                ></div>
+                ></div>}
               </div>
             </div>
           </div>

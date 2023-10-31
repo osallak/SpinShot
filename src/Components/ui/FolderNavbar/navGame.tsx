@@ -25,83 +25,28 @@ const NavGame = (props: any) => {
       return;
     }
   };
+  console.log("data", props?.dataOpponent);
 
   useEffect(() => {
     getData();
   }, [props?.score]);
+  useEffect(() => {
+
+  }, [props?.dataOpponent]);
 
 
   return (
-    <div className="  w-[96%] c-gb:w-[80%]  bg-very-dark-purple rounded-xl sm:rounded-3xl flex justify-between flex-row items-center px-[2%] absolute top-24 md:top-6 p-3 ">
-      <div className="flex  flex-row items-center justify-between w-[50%] ">
-        <div className="flex  c-gb:space-x-8  ">
-          {data?.profile?.profile?.avatar ? (
-            <picture>
-              <img
-                className=" w-8 h-8 sm:w-14 sm:h-14 rounded-xl"
-                src={data?.profile?.profile?.avatar}
-                alt=""
-              />
-            </picture>
-          ) : (
-              <Image className="  w-8 h-8 sm:w-14 sm:h-14 rounded-xl" src={test1} alt="" />
-          )}
-          <div className="p-1">
-            <h1 className=" text-xs sm:text-lg c-3xl:text-3xl text-pearl">
-              {data?.profile?.username}
-            </h1>
-            <h1 className=" text-xs sm:text-lg c-3xl:text-3xl text-pearl opacity-40">
-              {data?.profile?.profile?.rank}
-            </h1>
-          </div>
-        </div>
-        <div className="flex flex-row space-x-1 c-gb:space-x-5 items-center justify-end   ">
-          {/* <h1 className=" hidden md:flex text-xs sm:text-lg c-3xl:text-3xl text-pearl opacity-40">
-            Level{" "}
-          </h1> */}
-          <div className="  flex items-center justify-center rounded-2xl bg-white/10 p-2">
-            <h1 className=" text-xs sm:text-lg c-3xl:text-3xl text-peridot">
-              {props?.score?.userScore ? props?.score?.userScore : 0}
-            </h1>
-          </div>
-        </div>
+    <div className=" text-pearl  w-[70%]  bg-very-dark-purple rounded-xl sm:rounded-3xl flex justify-between flex-row items-center px-[2%] absolute top-24 md:top-6 p-3 ">
+      <div className="flex flex-row justify-between items-center w-[100%] sm:w-[30%]">
+        <h1 className="text-md sm:text-3xl">me</h1>
+        <h1 className=" text-sm sm:text-2xl">{props?.score?.userScore ?? 0}</h1>
       </div>
-      <div className=" sm:p-1 x-3xl:p-3  text-xs sm:text-lg c-3xl:text-3xl text-pearl opacity-40 p-1">
-        vs
+      <div className="text-xl px-3">:</div>
+      <div className="flex flex-row justify-between items-center w-[100%] sm:w-[30%]">
+        <h2 className="text-sm sm:text-2xl">{props?.score?.opponentScore ?? 0}</h2>
+        <h1 className="text-md sm:text-3xl">op</h1>
       </div>
-      <div className="flex flex-row items-center  justify-between w-[50%] ">
-        <div className="flex flex-row space-x-1 c-gb:space-x-5 items-center justify-start   ">
-          <div className="  flex items-center justify-center rounded-2xl bg-white/10 p-2">
-            <h1 className=" text-xs sm:text-lg c-3xl:text-3xl text-peridot">
-              {props?.score?.opponentScore ? props?.score?.opponentScore : 0}
-            </h1>
-          </div>
-          {/* <h1 className=" hidden md:flex text-xs sm:text-lg c-3xl:text-3xl text-pearl opacity-40">
-            Level{" "}
-          </h1> */}
-        </div>
-        <div className="flex justify-end  c-gb:space-x-8 ">
-          <div className="flex  flex-col items-end justify-start p-1">
-            <h1 className=" text-xs sm:text-lg c-3xl:text-3xl text-pearl">
-              {props.dataGame?.username}
-            </h1>
-            <h1 className=" text-xs sm:text-lg c-3xl:text-3xl text-pearl opacity-40">
-              {props.dataGame?.profile?.rank}
-            </h1>
-          </div>
-          {props.dataGame?.profile?.avatar ? (
-            <picture>
-              <img
-                className="  w-8 h-8 sm:w-14 sm:h-14 rounded-xl"
-                src={props.dataGame?.profile?.avatar}
-                alt=""
-              />
-            </picture>
-          ) : (
-            <Image className=" w-8 h-8 sm:w-14 sm:h-14 rounded-xl" src={test1} alt="" />
-          )}
-        </div>
-      </div>
+
     </div>
   );
 };

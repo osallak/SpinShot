@@ -38,7 +38,7 @@ const ConversationIndividual = (props: {
   openSubSideBar: boolean;
 }) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const {socket} = useContext(SocketContext);
+  const {socket, chatSocket} = useContext(SocketContext);
   const router = useRouter();
   const [userStatus, setUserStatus] = useState("");
   const [message, setMessage] = useState("");
@@ -54,6 +54,7 @@ const ConversationIndividual = (props: {
     }
     // console.log("invite:", { id: props.id});
     socket.emit("invite", {id: props.id});
+    toast.success("Invitation sent");
     // router.push(`/game/${router.query.id}`);
   }
   const dropDownContent = [
@@ -114,6 +115,7 @@ const ConversationIndividual = (props: {
       };
       return [...prev, newIndividualConversation];
     });
+    console.log("messageData:", messageData);
     props.socket.emit("pm", messageData);
     setMessage("");
   };
@@ -313,7 +315,7 @@ const ConversationIndividual = (props: {
                               items.sender === props.userId
                                 ? "text-pearl"
                                 : "text-very-dark-purple"
-                            } md:text-lg sm:text-base text-sm`}
+                            } md:text-lg sm:text-base text-sm w-full break-all`}
                           >
                             {items.message}
                           </span>

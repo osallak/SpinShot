@@ -54,7 +54,6 @@ export class FriendsService {
     user: User,
     query: FriendsQueryDto,
   ): Promise<PaginationResponse<any>> {
-    //! don't return blocked users
     const where = {
       OR: [
         {

@@ -41,7 +41,6 @@ export class ChatController {
       const { status, content } = response;
       return expressResponse.status(status).json(toObject.call(await content));
     } catch (e) {
-      // console.log(e);
       return expressResponse.status(500).json('Internal Server Error');
     }
   }

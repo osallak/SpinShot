@@ -1,7 +1,7 @@
 import { Socket } from 'socket.io';
 
 export class ChatUser {
-  private username: string;
+  private id: string;
   private sockets: Socket[];
   private lastMessageSent: string;
 
@@ -22,12 +22,12 @@ export class ChatUser {
     this.sockets.push(socket);
   }
 
-  setUsername(username: string) {
-    this.username = username;
+  setId(id: string) {
+    this.id = id;
   }
 
-  getUsername() {
-    return this.username;
+  getId() {
+    return this.id;
   }
 
   getSockets() {

@@ -11,6 +11,7 @@ import {
   ballSettings,
   obstaclesSettings,
 } from './pong.settings';
+import { generateGameId } from '../helpers';
 
 type position = {
   x: number;
@@ -353,7 +354,7 @@ export class PongEngine {
         opponentScore: this.secondScore,
       });
     this.id && this.cleanUpGameService && this.cleanUpGameService(this.id);
-    this.gameId = "0";
+    this.gameId = generateGameId();
   }
 
   private sendScore() {

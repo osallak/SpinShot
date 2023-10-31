@@ -1,8 +1,7 @@
-import { Injectable, UseFilters } from '@nestjs/common';
-import { Logger } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Injectable, Logger } from '@nestjs/common';
 import { FriendshipStatus, UserStatusGroup } from '@prisma/client';
 import { Socket } from 'socket.io';
+import { PrismaService } from 'src/prisma/prisma.service';
 import {
   ANONYMOUS_USER_MESSAGE,
   BAD_REQUEST,
@@ -12,17 +11,15 @@ import {
   PRIVATE_MESSAGE,
 } from './chat.configuration';
 
-import { eventType } from './types/event.type';
-import { SendMessageDto, sendRoomMessageDto } from './dtos/send-message.dto';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
 import { JwtAuthPayload } from 'src/auth/interfaces';
-import { ChatUser } from './entities/user.entity';
 import { NotificationService } from 'src/notification/notification.service';
-import { UserService } from 'src/user/user.service';
-import { serializePaginationResponse } from 'src/user/helpers';
-import { PaginationQueryDto } from 'src/global/dto/pagination-query.dto';
 import { RoomService } from 'src/room/room.service';
+import { UserService } from 'src/user/user.service';
+import { SendMessageDto, sendRoomMessageDto } from './dtos/send-message.dto';
+import { ChatUser } from './entities/user.entity';
+import { eventType } from './types/event.type';
 @Injectable()
 export class ChatService {
   private World: Map<string, ChatUser> = new Map<string, ChatUser>();
@@ -63,13 +60,13 @@ export class ChatService {
     let user = this.World.get((payload as JwtAuthPayload).sub);
     if (!user) {
       let citizen: ChatUser = new ChatUser();
-      citizen.setUsername((payload as JwtAuthPayload).sub);
+      citizen.setId((payload as JwtAuthPayload).sub);
       citizen.addSocket(socket);
-      this.World.set(citizen.getUsername(), citizen);
+      this.World.set(citizen.getId(), citizen);
     } else {
       user.addSocket(socket);
     }
-    // console.log('client connected:', (payload as JwtAuthPayload).sub);
+    this.logger.warn(`user connected: ${(payload as JwtAuthPayload).sub}`);
 
   }
 
@@ -78,8 +75,8 @@ export class ChatService {
     if (!payload) return;
     const user = this.World.get((payload as JwtAuthPayload).sub);
     if (user) {
-      // console.log('client disconnected');
-      this.World.delete(user.getUsername());
+      this.World.delete(user.getId());
+      this.logger.warn(`user disconnected: ${(payload as JwtAuthPayload).sub}`);
     } else {
       this.logger.error(
         'Could not disconnect client because client does not exist',
@@ -172,6 +169,7 @@ export class ChatService {
         }
         await this.saveMessageInDatabase(body);
       } else {
+        this.logger.warn("second: ", body);
         const sender: Array<Socket> = this.getSocketsAssociatedWithUser(
           body.from,
         );
@@ -187,7 +185,6 @@ export class ChatService {
         }
       }
     } catch (e) {
-      // console.log(e);
       let user: ChatUser = this.World.get(body.from);
       const sender: Array<Socket> = this.getSocketsAssociatedWithUser(
         body.from,
@@ -228,7 +225,6 @@ export class ChatService {
       response['individual'] = output;
       return response;
     } catch (e) {
-      // console.log(e);
       return output;
     }
   }
@@ -318,7 +314,6 @@ export class ChatService {
         content: this.formatResponseBasedOnUser(message, userId),
       };
     } catch (e) {
-      // console.log(e);
       return {
         status: 500,
         content: 'Failed to get latest messages',
@@ -502,7 +497,6 @@ export class ChatService {
           });
         }
       } catch (e) {
-        // console.log(e);
         return reject({
           event: EXCEPTION,
           status: INTERNAL_SERVER_ERROR_MESSAGE,

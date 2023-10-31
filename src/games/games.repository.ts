@@ -89,7 +89,7 @@ export class GamesRepository {
           level: user.logs.level + 0.3
         },
       });
-      this.checkAchievements(user, true, score.opponent);
+      // this.checkAchievements(user, true, score.opponent);
     } catch (error) {
       this.logger.error(error);
     }
@@ -193,7 +193,6 @@ export class GamesRepository {
       },
     });
     } catch(error) {
-      // console.log(error);
     }
   }
 
@@ -219,6 +218,9 @@ export class GamesRepository {
       user: user.id,
       opponent: opponent.id,
     });
-    this.checkAchievements(opponent, score.opponent > score.user, score.user);
+    this.checkAchievements(opponent, score.opponent > score.user, score.user, {
+      user: opponent.id,
+      opponent: user.id,
+    });
   }
 }

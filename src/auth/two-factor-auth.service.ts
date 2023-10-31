@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { UserService } from 'src/user/user.service';
+import { ConfigService } from '@nestjs/config';
 import { Response as EResponse } from 'express';
 import { authenticator } from 'otplib';
-import { ConfigService } from '@nestjs/config';
 import { toFileStream } from 'qrcode';
 import { Response } from 'src/global/interfaces';
+import { UserService } from 'src/user/user.service';
+import { AuthService } from './auth.service';
 import { TwoFaAuthDto } from './dtos/two-fa-auth.dto';
 @Injectable()
 export class TwoFactorAuthService {
@@ -188,7 +188,6 @@ export class TwoFactorAuthService {
           data: user.twoFactorAuth,
         });
       } catch (e) {
-        // console.log(e);
         return reject({
           status: 500,
           message: 'Internal Server Error',

@@ -206,7 +206,7 @@ const Chat = () => {
         updateChannelConversation(data);
       });
     }
-    chatSocket.on("exception", (data:any) => {toast.error(data?.message ?? "Invalid Operation");
+    chatSocket.on("exception", (data:any) => {toast.error(data?.message ?? "Invalid Operation")});
     // console.log("exception", data)});
     // chatSocket.on("disconnect", (data: any) => // console.log("disconnect"));
   };

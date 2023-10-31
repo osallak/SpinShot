@@ -29,8 +29,8 @@ const Matchmaking = (props: any) => {
     // setClear(true);
     // // console.log("socket: ", socket);
     // // console.log("leave queue");
-    socket.emit("leaveQueue", () => // console.log("leave queue"));
-    socket.on("exception", () => // console.log("exception: "));
+    socket.emit("leaveQueue", () =>{}); // console.log("leave queue"));
+    socket.on("exception", () =>{}); // console.log("exception: "));
     // if (props.matchData) {
     //   socket.emit("leave");
     // }
@@ -38,7 +38,7 @@ const Matchmaking = (props: any) => {
     //   // console.log('leave');
     // });
     // props.setGameOver(true);
-    socket.on("disconnect", () => // console.log("disconnect: "));
+    socket.on("disconnect", () => {});// console.log("disconnect: "));
     props.setIsClick(!props.isClick);
     // props.setmatchData(null);
     props.setDataOfOpponent(null);

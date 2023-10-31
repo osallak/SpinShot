@@ -41,7 +41,7 @@ const InviteToChannel = (props: {
       return;
     }
     try {
-      // console.log(router.query.id, roomname);
+      // // console.log(router.query.id, roomname);
       await axios.post(
         `${process.env.NEXT_PUBLIC_API}/room/invite`,
         {
@@ -58,7 +58,7 @@ const InviteToChannel = (props: {
       toast.success("user invited successfully");
     } catch (error: any) {
       setError(true);
-      // console.log(error);
+      // // console.log(error);
       setErrorMessage(error?.response?.data);
     }
   };

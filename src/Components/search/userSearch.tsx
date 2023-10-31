@@ -44,7 +44,7 @@ const Search = (props: any) => {
             },
           }
         );
-        // console.log(response.data);
+        // // console.log(response.data);
 
         setSearchResults(response.data);
       }

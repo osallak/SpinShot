@@ -11,7 +11,7 @@ const Rookie = () => {
   useEffect(() => {
     setAchievement(data?.profile?.achievements);
   }, [data]);
-  // console.log(props?.data);
+  // // console.log(props?.data);
 
   return (
     <>

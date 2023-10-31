@@ -28,7 +28,7 @@ const SubsidebarSecond = (props: any) => {
   };
 
   const handleClick = () => {
-    console.log('heleleleeoleoo')
+    // console.log('heleleleeoleoo')
     router.push(
       `/profile/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}`
     );

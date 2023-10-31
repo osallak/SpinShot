@@ -11,7 +11,7 @@ const Untouchable = () => {
   useEffect(() => {
     setAchievement(data?.profile.achievements);
   }, [data]);
-  // console.log("achievement", achievements);
+  // // console.log("achievement", achievements);
 
   return (
     <>

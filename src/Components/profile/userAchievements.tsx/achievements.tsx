@@ -20,7 +20,7 @@ const Achievements = () => {
   // };
 
   // useEffect(() => {
-  //   console.log("profileData: ", profileData);
+  //   // console.log("profileData: ", profileData);
   //   getMyRank(profileData?.profile?.achievements[3]?.level);
   // }, [profileData]);
   // const achievements: Array<any> = profileData?.profile?.achievements ?? [];

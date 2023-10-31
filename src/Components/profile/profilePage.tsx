@@ -54,7 +54,7 @@ const ProfilePage = (props: { id: any }) => {
   const [historySearch, sethistorySearch] = useState<any>();
 
   {
-    console.log("profile data", data);
+    // console.log("profile data", data);
   }
   interface Type {
     id: number;
@@ -86,7 +86,7 @@ const ProfilePage = (props: { id: any }) => {
       // setValid(true);
     } catch (error) {
       setForbidden(true);
-      // console.log(error);
+      // // console.log(error);
       // router.push("/error");
       return;
     }

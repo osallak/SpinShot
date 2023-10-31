@@ -10,7 +10,7 @@ const GameCard = (props: any) => {
     const handleClick = () => {
       props.setCardState(false);
       // props.setLost(false);
-      // console.log("here ... ", props.setCardState(false));
+      // // console.log("here ... ", props.setCardState(false));
     // props.setGameOver(false);
   };
 

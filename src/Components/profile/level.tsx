@@ -56,21 +56,21 @@ const Levle = (props: any) => {
   //     });
   //     toast.success("user invited successfully");
   //   } catch (error: any) {
-  //     console.log(error);
+  //     // console.log(error);
   //   }
   // };
 
   // const HandleState = (name: any) => {
-  //   console.log("--->", name);
+  //   // console.log("--->", name);
   // if (props.letPlay[0].name == "Sign out") {
   //   localStorage.removeItem("token");
   //   router.push("/signin");
   // } else {
   //   if (props.letPlay[0].name == "Invite to channel") {
-  //     console.log("1");
+  //     // console.log("1");
   //     props.setInvite(true);
   //   } else if (props.letPlay[1].name == "Invite") {
-  //     console.log("2");
+  //     // console.log("2");
   //     sendInvitation();
   //   }
   // }

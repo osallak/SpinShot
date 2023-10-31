@@ -1,4 +1,4 @@
-import { Injectable, Logger, ParseUUIDPipe } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { FriendshipStatus } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
@@ -7,8 +7,6 @@ import { achievements } from 'src/user/constants';
 
 @Injectable()
 export class GamesRepository {
-  private readonly logger = new Logger('GamesRepository');
-
   constructor(private readonly prismaService: PrismaService) {}
   @OnEvent('saveGame')
   public async saveGame(payload: any) {
@@ -56,10 +54,7 @@ export class GamesRepository {
         user: payload.userScore,
         opponent: payload.opponentScore,
       });
-    } catch (error) {
-      this.logger.error(error?.message);
-      this.logger.error(error?.code);
-    }
+    } catch (error) {}
   }
 
   @OnEvent('userUpdate')
@@ -70,10 +65,7 @@ export class GamesRepository {
         where: { id: payload.id },
         data: { status: payload.status },
       });
-    } catch (error) {
-      this.logger.error(error.message);
-      this.logger.error(error.code);
-    }
+    } catch (error) {}
   }
 
   async achieveWinner(
@@ -82,17 +74,14 @@ export class GamesRepository {
   ): Promise<void> {
     try {
       await this.prismaService.logs.update({
-        where: {userId: user.id},
+        where: { userId: user.id },
         data: {
           defeats: user.logs.defeats,
           victories: user.logs.victories + 1,
-          level: user.logs.level + 0.3
+          level: user.logs.level + 0.3,
         },
       });
-      // this.checkAchievements(user, true, score.opponent);
-    } catch (error) {
-      this.logger.error(error);
-    }
+    } catch (error) {}
   }
 
   async checkAchievements(
@@ -126,10 +115,10 @@ export class GamesRepository {
             });
           } else {
             await this.prismaService.haveAchievement.update({
-              where: {id: achievement.id},
+              where: { id: achievement.id },
               data: {
-                level: {increment: 1},
-              }
+                level: { increment: 1 },
+              },
             });
           }
           return;
@@ -176,24 +165,20 @@ export class GamesRepository {
           });
         }
       });
-    } catch (error) {
-      this.logger.error(error?.message);
-      this.logger.error(error?.code);
-    }
+    } catch (error) {}
   }
 
   async achieveLoser(user: User): Promise<void> {
     try {
-    await this.prismaService.logs.update({
-      where: {userId: user.id},
-      data: {
-        defeats: user.logs.defeats + 1,
-        victories: user.logs.victories,
-        level: user.logs.level,
-      },
-    });
-    } catch(error) {
-    }
+      await this.prismaService.logs.update({
+        where: { userId: user.id },
+        data: {
+          defeats: user.logs.defeats + 1,
+          victories: user.logs.victories,
+          level: user.logs.level,
+        },
+      });
+    } catch (error) {}
   }
 
   async achieveUser(

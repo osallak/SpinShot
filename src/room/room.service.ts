@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   FriendshipStatus,
   RoomType,
@@ -10,15 +10,14 @@ import { Response, toObject } from 'src/global/interfaces';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { banUserDto } from './dtos/ban-user.dto';
-import { ProtectRoomDto, RemovePasswordDto, ChangePasswordDto } from './dtos/protect-room.dto';
+import { CreateRoomDto } from './dtos/create-room.dto';
 import { ElevateUserDto } from './dtos/elevate-user.dto';
 import { JoinRoomDto } from './dtos/join-room.dto';
 import { MuteUserInRoomDto } from './dtos/mute-user-in-room.dto';
-import { CreateRoomDto } from './dtos/create-room.dto';
+import { ChangePasswordDto, ProtectRoomDto, RemovePasswordDto } from './dtos/protect-room.dto';
 
 @Injectable()
 export class RoomService {
-  private readonly logger: Logger = new Logger('room');
   constructor(
     private readonly prismaService: PrismaService,
     private readonly userService: UserService,

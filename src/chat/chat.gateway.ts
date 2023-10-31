@@ -1,4 +1,4 @@
-import { Logger, UseFilters, UseGuards, ValidationPipe } from '@nestjs/common';
+import { UseFilters, UseGuards, ValidationPipe } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -6,7 +6,7 @@ import {
   OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { ValidationError } from 'class-validator';
 import { Server, Socket } from 'socket.io';
@@ -15,7 +15,7 @@ import {
   GROUP_MESSAGE,
   INVALID_DATA_MESSAGE,
   OPTIONS,
-  PRIVATE_MESSAGE
+  PRIVATE_MESSAGE,
 } from './chat.configuration';
 import { ChatService } from './chat.service';
 import { SendMessageDto, sendRoomMessageDto } from './dtos/send-message.dto';
@@ -31,8 +31,6 @@ import { WsGuard } from './chat.guard';
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   private readonly server: Server;
-
-  private readonly logger: Logger = new Logger('ChatGateway');
 
   constructor(
     private readonly chatService: ChatService,

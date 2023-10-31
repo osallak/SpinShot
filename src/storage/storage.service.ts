@@ -1,10 +1,5 @@
 import { Storage } from '@google-cloud/storage';
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-  LoggerService,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Writable } from 'stream';
 import { Response } from '../global/interfaces';
@@ -12,10 +7,7 @@ import { Response } from '../global/interfaces';
 export class StorageService {
   private storage: Storage;
   private bucket: string;
-  private logger: LoggerService;
-
   constructor(private readonly configService: ConfigService) {
-    this.logger = new Logger('StorageService');
     this.storage = new Storage({
       projectId: this.configService.get('GCS_PROJECT_ID'),
       keyFilename: this.configService.get('GCS_KEYFILE_PATH'),
@@ -39,7 +31,6 @@ export class StorageService {
         message: 'File uploaded successfully',
       };
     } catch (e) {
-      this.logger.error(e);
       throw new InternalServerErrorException('Failed to upload file');
     }
   }
@@ -51,7 +42,6 @@ export class StorageService {
         .file(path)
         .delete({ ignoreNotFound: true });
     } catch (e) {
-      this.logger.error(e.message);
       throw new InternalServerErrorException('Failed to delete file');
     }
   }
@@ -66,7 +56,6 @@ export class StorageService {
       const file = this.storage.bucket(this.bucket).file(path);
       await file.makePublic();
     } catch (error) {
-      this.logger.error(error.message);
       throw new InternalServerErrorException('failed to make file public');
     }
   }

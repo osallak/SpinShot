@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { FriendshipStatus, UserStatusGroup } from '@prisma/client';
 import { Socket } from 'socket.io';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -24,8 +24,6 @@ import { eventType } from './types/event.type';
 export class ChatService {
   private World: Map<string, ChatUser> = new Map<string, ChatUser>();
 
-  private logger: Logger = new Logger('Chat');
-
   constructor(
     private readonly prismaService: PrismaService,
     private readonly configService: ConfigService,
@@ -36,18 +34,15 @@ export class ChatService {
 
   private getUserFromUrl(url: string) {
     if (!url) {
-      this.logger.error('could not get the connection url');
     } else {
       const regex = /.+sender=.+&.*/g;
       if (url.match(regex)) {
         const user = url.substring(url.search('=') + 1, url.search('&'));
         if (!user || user === '') {
-          this.logger.error('sender is undefined');
           return undefined;
         }
         return user;
       } else {
-        this.logger.error('sender parameter does not exist');
       }
     }
   }
@@ -66,8 +61,6 @@ export class ChatService {
     } else {
       user.addSocket(socket);
     }
-    this.logger.log(`user connected: ${(payload as JwtAuthPayload).sub}`);
-
   }
 
   async deleteUserFromWorld(socket: Socket) {
@@ -76,11 +69,6 @@ export class ChatService {
     const user = this.World.get((payload as JwtAuthPayload).sub);
     if (user) {
       this.World.delete(user.getId());
-      this.logger.log(`user disconnected: ${(payload as JwtAuthPayload).sub}`);
-    } else {
-      this.logger.error(
-        'Could not disconnect client because client does not exist',
-      );
     }
   }
 
@@ -169,7 +157,6 @@ export class ChatService {
         }
         await this.saveMessageInDatabase(body);
       } else {
-        this.logger.log("second: ", body);
         const sender: Array<Socket> = this.getSocketsAssociatedWithUser(
           body.from,
         );

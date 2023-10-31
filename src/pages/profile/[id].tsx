@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
-import ProfilePage from "../../Components/profile/profilePage";
+import ProfilePage from "@/Components/profile/profilePage";
 
 const Profile = () => {
   const router = useRouter();

@@ -76,11 +76,22 @@ const ChannelSettings = (props: {
 
   const handleSave = async () => {
     const token = localStorage.getItem("token");
-    if (!token) {
+    const jwtToken = parseJwt(JSON.stringify(token));
+    if (
+      !token ||
+      (jwtToken.isTwoFactorEnabled && !jwtToken.isTwoFaAuthenticated)
+    ) {
       router.push("/signin");
       return;
     }
     if (type === "PROTECTED") {
+      const regPass = /^.{6,}$/.test(password);
+      const regConPass = /^.{6,}$/.test(confirmePassword);
+      if (!regPass || !regConPass) {
+        setError(true);
+        setErrorMessage("Password must be at least 6 characters");
+        return;
+      }
       try {
         const res = await axios.patch(
           `${ip}/room/change-password`,
@@ -98,6 +109,13 @@ const ChannelSettings = (props: {
         setErrorMessage(error?.response?.data);
       }
     } else if (type === "PUBLIC") {
+      const regPass = /^.{6,}$/.test(password);
+      const regConPass = /^.{6,}$/.test(confirmePassword);
+      if (!regPass || !regConPass) {
+        setError(true);
+        setErrorMessage("Password must be at least 6 characters");
+        return;
+      }
       if (password !== confirmePassword) {
         setError(true);
         setErrorMessage("password doesn't match");

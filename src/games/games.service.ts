@@ -67,15 +67,6 @@ export class GamesService {
     this.matchingQueue = this.matchingQueue.filter((p) => p.id !== id);
   }
 
-  private getGameBySocket(client: Socket): PongEngine | null {
-    this.games.forEach((game) => {
-      if (game.client1?.id === client.id || game.client2?.id === client.id) {
-        return game;
-      }
-    });
-    return null;
-  }
-
   handleMove(client: Socket, moveDto: MoveDto): void {
     let resGame: PongEngine | null = null;
     this.games.forEach((game) => {
@@ -156,6 +147,8 @@ export class GamesService {
     game.cleanUpGameService = this.cleanupSingleGame.bind(this);
     game.saveGameCallback = this.saveGame.bind(this);
     this.games.set(gameId, game);
+    this.eventEmitter.emit('userUpdate', {status: UserStatus.INGAME, id: gameOptions.firstPlayerId});
+    this.eventEmitter.emit('userUpdate', {status: UserStatus.INGAME, id: gameOptions.secondPlayerId});
     game.play();
   }
 

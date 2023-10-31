@@ -66,7 +66,7 @@ export class ChatService {
     } else {
       user.addSocket(socket);
     }
-    this.logger.warn(`user connected: ${(payload as JwtAuthPayload).sub}`);
+    this.logger.log(`user connected: ${(payload as JwtAuthPayload).sub}`);
 
   }
 
@@ -76,7 +76,7 @@ export class ChatService {
     const user = this.World.get((payload as JwtAuthPayload).sub);
     if (user) {
       this.World.delete(user.getId());
-      this.logger.warn(`user disconnected: ${(payload as JwtAuthPayload).sub}`);
+      this.logger.log(`user disconnected: ${(payload as JwtAuthPayload).sub}`);
     } else {
       this.logger.error(
         'Could not disconnect client because client does not exist',
@@ -169,7 +169,7 @@ export class ChatService {
         }
         await this.saveMessageInDatabase(body);
       } else {
-        this.logger.warn("second: ", body);
+        this.logger.log("second: ", body);
         const sender: Array<Socket> = this.getSocketsAssociatedWithUser(
           body.from,
         );

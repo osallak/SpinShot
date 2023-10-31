@@ -53,7 +53,7 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
 
-    this.logger.warn(`user ${id} connected`);
+    this.logger.log(`user ${id} connected`);
     this.gamesService.connect(client, id);
   }
 
@@ -62,7 +62,7 @@ export class GamesGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const id  = this.extractClient(client);
     if (!id) return;
 
-    this.logger.warn(`user ${id} disconnected`);
+    this.logger.log(`user ${id} disconnected`);
     try {
       await this.prismaService.user.update({where: {id}, data: {status: UserStatus.OFFLINE}});
     } catch(error) {}

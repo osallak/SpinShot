@@ -57,7 +57,7 @@ const Signin = () => {
   const RedirectionFunction = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${ip}/auth/local/signin`, {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API}/auth/local/signin`, {
         username,
         password,
       });
@@ -85,9 +85,10 @@ const Signin = () => {
   };
 
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
+    console.log("intra:", process.env.NEXT_PUBLIC_INTRA);
     e.preventDefault();
     Router.push(
-      `https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-6be28a100ed05da2dfee2938f8dd3c333c0cabba47a2898c4f06953393209b2d&redirect_uri=http%3A%2F%2Fe1r12p4.1337.ma%3A3000%2Fwaiting&response_type=code`
+      `${process.env.NEXT_PUBLIC_INTRA}`
     );
   };
 

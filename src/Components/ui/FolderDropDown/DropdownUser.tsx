@@ -28,7 +28,7 @@ const DropdownUser = (props: any) => {
     try {
       console.log(router.query.id);
       const resp = await axios.post(
-        `${ip}/friends/add/${router.query.id}`,
+        `${process.env.NEXT_PUBLIC_API}/friends/add/${router.query.id}`,
         null,
         {
           params: {
@@ -63,7 +63,7 @@ const DropdownUser = (props: any) => {
     }
     try {
       const resp = await axios.put(
-        `${ip}/friends/${router.query.id}/block`,
+        `${process.env.NEXT_PUBLIC_API}/friends/${router.query.id}/block`,
         {
           userId: router.query.id,
         },
@@ -94,7 +94,7 @@ const DropdownUser = (props: any) => {
     }
     try {
       const resp = await axios.put(
-        `${ip}/friends/${router.query.id}/unblock`,
+        `${process.env.NEXT_PUBLIC_API}/friends/${router.query.id}/unblock`,
         {
           userId: router.query.id,
         },
@@ -117,7 +117,7 @@ const DropdownUser = (props: any) => {
   const handleSignout = async () => {
     const token = localStorage.getItem('token');
     try {
-      await axios.post(`${ip}/2fa/signOut`, null, {
+      await axios.post(`${process.env.NEXT_PUBLIC_API}/2fa/signOut`, null, {
         headers: {
           Authorization: `Bearer ${token}`,
         }

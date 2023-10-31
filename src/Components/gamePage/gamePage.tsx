@@ -27,6 +27,7 @@ const GamePage = (props: any) => {
   const [opened, setOpned] = useState(false);
   // const [mode, setMode] = useState<string>();
   const [map, setMap] = useState<string>("normal");
+  const [na, setNa] = useState<boolean>(false);
   const [width, setWidth] = useState<number>();
   const [height, setheight] = useState<number>();
   const divRef = React.useRef<HTMLDivElement>(null);
@@ -70,6 +71,7 @@ const GamePage = (props: any) => {
     console.log("game started:", data.id);
     // console.log("game started");
     // setCount(true);
+    setNa(!na);
     setWinnerCardState(true);
     // setCancelJoin(false);
     setLoserCardState(true);
@@ -80,9 +82,7 @@ const GamePage = (props: any) => {
     setGameOver(false);
     setmatchData(data);
     handleData(data);
-    if (!dataOpponent) {
-      setDataOfOpponent(data);
-    }
+    setDataOfOpponent(data);
   };
   const gameOverCallback = (data: any) => {
     // console.log("game over data: ", data);
@@ -92,7 +92,8 @@ const GamePage = (props: any) => {
     setGamerState(data);
     // setGameJustFinished(true);
     // setLoser(data);
-    // setmatchData(null);
+    setmatchData(null);
+    setDataOfOpponent(null);
     setGameOver(true);
     // setIsClick(true);
   };
@@ -113,8 +114,8 @@ const GamePage = (props: any) => {
       // console.log("matchData men handleData", data);
       if (data?.opponent || data?.opponnet) {
         let url = undefined;
-        if (data?.opponnet) url = `${ip}/users/profile/${data?.opponnet}`;
-        else url = `${ip}/users/profile/${data?.opponent}`;
+        if (data?.opponnet) url = `${process.env.NEXT_PUBLIC_API}/users/profile/${data?.opponnet}`;
+        else url = `${process.env.NEXT_PUBLIC_API}/users/profile/${data?.opponent}`;
         const respo = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -169,7 +170,7 @@ const GamePage = (props: any) => {
       socket.off("gameState");
       socket.off("scoreUpdate");
     };
-  }, []);
+  }, [na]);
 
   useEffect(() => {
     handleResize();
@@ -181,11 +182,11 @@ const GamePage = (props: any) => {
     }
   }, []);
 
-  useEffect(() => {
-    return () => {
-      setmatchData(null);
-    }
-  }, [gameOver]);
+  // useEffect(() => {
+  //   return () => {
+  //     setmatchData(null);
+  //   }
+  // }, [gameOver]);
 
   useEffect(() => {
     // handleData();
@@ -195,10 +196,10 @@ const GamePage = (props: any) => {
     };
   }, [width, height, isopen, map]);
 
-  const cleanUp = () => {
-    setDataOfOpponent(null);
-    setmatchData(null);
-  };
+  // const cleanUp = () => {
+  //   setDataOfOpponent(null);
+  //   setmatchData(null);
+  // };
 
   // useEffect(() => {
   //   return () => {
@@ -229,7 +230,7 @@ const GamePage = (props: any) => {
         "bg-very-dark-purple w-screen h-screen font-semibold font-Poppins "
       }
     >
-      {isClick2 && <Gamemenu isClick2={isClick2} setIsClick2={setIsClick2} />}
+      {/* {isClick2 && <Gamemenu isClick2={isClick2} setIsClick2={setIsClick2} />} */}
       <div className={` ml-2 ${isopen ? "ml-[70px]  w-full " : null}  `}>
         <NavbarMobile
           setMenu={setMenu}

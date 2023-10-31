@@ -8,7 +8,10 @@ import { SocketContext } from "@/context/socket.context";
 
 const SubSidebarGame = (props: any) => {
   const { socket } = useContext(SocketContext);
-  useEffect(() => {}, [props.matchData, socket]);
+  
+  useEffect((
+    
+  ) => {}, [props.matchData, socket]);
 
   const HandleUpdate = () => {
     if (!socket) return;

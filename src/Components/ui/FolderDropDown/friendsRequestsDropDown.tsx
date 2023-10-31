@@ -60,7 +60,7 @@ const FriendRequestsDropDown = (props: { id: string }) => {
     }
     try {
       const res = await axios.put(
-        `${ip}/friends/${props.id}/accept`,
+        `${process.env.NEXT_PUBLIC_API}/friends/${props.id}/accept`,
         { id: props.id },
         {
           headers: {
@@ -88,7 +88,7 @@ const FriendRequestsDropDown = (props: { id: string }) => {
     }
     try {
       const res = await axios.put(
-        `${ip}/friends/${props.id}/reject`,
+        `${process.env.NEXT_PUBLIC_API}/friends/${props.id}/reject`,
         { id: props.id },
         {
           headers: {

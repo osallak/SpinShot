@@ -48,7 +48,7 @@ const SubModal = (props: {
         name: props.name,
       };
       if (type === "PROTECTED") params["password"] = password;
-      const res = await axios.post(`${ip}/room/join`, params, {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API}/room/join`, params, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

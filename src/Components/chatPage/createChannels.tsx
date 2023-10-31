@@ -51,7 +51,7 @@ const CreateChannels = (props: { open: boolean; setOpen: Function }) => {
       params["password"] = password;
     }
     try {
-      await axios.post(`${ip}/room/add`, params, {
+      await axios.post(`${process.env.NEXT_PUBLIC_API}/room/add`, params, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -62,7 +62,7 @@ const SubUsersList = (props: {
           return;
         }
         const res = await axios.delete(
-          `${ip}/room/kick/${props.name}/${props.checkedID}`,
+          `${process.env.NEXT_PUBLIC_API}/room/kick/${props.name}/${props.checkedID}`,
           {
             params: {
               room: props.name,
@@ -92,7 +92,7 @@ const SubUsersList = (props: {
       }
       try {
         const res = await axios.patch(
-          `${ip}/room/ban`,
+          `${process.env.NEXT_PUBLIC_API}/room/ban`,
           {
             name: props.name,
             userToBeBanned: props.checkedID,
@@ -131,7 +131,7 @@ const SubUsersList = (props: {
           router.push("/signin");
           return;
         }
-        const res = await axios.post(`${ip}/room/mute`, params, {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_API}/room/mute`, params, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -155,7 +155,7 @@ const SubUsersList = (props: {
           return;
         }
         const res = await axios.patch(
-          `${ip}/room/elevate`,
+          `${process.env.NEXT_PUBLIC_API}/room/elevate`,
           { room: props.name, user: props.checkedID },
           {
             headers: {
@@ -182,7 +182,7 @@ const SubUsersList = (props: {
           return;
         }
         const res = await axios.patch(
-          `${ip}/room/leave`,
+          `${process.env.NEXT_PUBLIC_API}/room/leave`,
           { room: props.name },
           {
             headers: {

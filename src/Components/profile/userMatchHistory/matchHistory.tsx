@@ -8,7 +8,7 @@ import Matchs from "./matchs";
 import { clear } from "console";
 import { useRouter } from "next/router";
 
-const MatchHistory = () => {
+const MatchHistory = (props: any) => {
   const [totalPages, setTotalPages] = useState(0);
   const [posts, setPosts] = useState<any>([]);
   const [page, setPage] = useState<number>(1);
@@ -36,10 +36,10 @@ const MatchHistory = () => {
         router.push("/signin");
         return;
       }
-      const my_token = parseJwt(token);
-      const id = my_token.sub;
+      // const my_token = parseJwt(token);
+      // const id = my_token.sub;
       const response = await axios.get(
-        `${ip}/users/games/${id}?page=${page}&limit=${5}`,
+        `${process.env.NEXT_PUBLIC_API}/users/games/${props.historySearch}?page=${page}&limit=${5}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

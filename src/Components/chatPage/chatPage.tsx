@@ -224,7 +224,7 @@ const Chat = () => {
     }
     if (open === true) {
       try {
-        const res = await axios.get(`${ip}/room/explore`, {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/room/explore`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -249,7 +249,7 @@ const Chat = () => {
     setUserId(jwtToken.sub);
     try {
       if (id && id !== "") {
-        const result = await axios.get(`${ip}/chat/individual/${id}`, {
+        const result = await axios.get(`${process.env.NEXT_PUBLIC_API}/chat/individual/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -275,7 +275,7 @@ const Chat = () => {
         return;
       }
       try {
-        const res = await axios.get(`${ip}/chat/all`, {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/chat/all`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -334,7 +334,7 @@ const Chat = () => {
     setUserId(jwtToken.sub);
     try {
       if (roomId && roomId !== "") {
-        const result = await axios.get(`${ip}/room/individual/${roomId}`, {
+        const result = await axios.get(`${process.env.NEXT_PUBLIC_API}/room/individual/${roomId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -362,7 +362,7 @@ const Chat = () => {
         return;
       }
       try {
-        const res = await axios.get(`${ip}/chat/all`, {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/chat/all`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

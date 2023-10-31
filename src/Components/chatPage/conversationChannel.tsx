@@ -178,7 +178,7 @@ const ConversationChannel = (props: {
     setOpenUsersList(true);
     try {
       if (props.id && props.id !== "") {
-        const res = await axios.get(`${ip}/room/users/${props.id}`, {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/room/users/${props.id}`, {
           params: {
             room: props.id,
           },
@@ -241,7 +241,7 @@ const ConversationChannel = (props: {
       const senderId = parseJwt(
         JSON.stringify(localStorage.getItem("token"))
       ).sub;
-      const userNameRes = await axios.get(`${ip}/users/profile/${senderId}`, {
+      const userNameRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/profile/${senderId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

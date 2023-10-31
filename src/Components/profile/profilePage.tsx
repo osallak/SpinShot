@@ -51,6 +51,7 @@ const ProfilePage = (props: { id: any }) => {
   const [table2, setTable2] = useState<TypePlay[]>([]);
   const [isClick, setClick] = useState(false);
   const [invite, setInvite] = useState(false);
+  const [historySearch, sethistorySearch] = useState<any>();
 
   {
     console.log("profile data", data);
@@ -103,16 +104,18 @@ const ProfilePage = (props: { id: any }) => {
     setMenu(!isopen);
   };
 
-  const swetshProfile = (tab: Type[], play: TypePlay[]) => {
+  const swetshProfile = (tab: Type[], play: TypePlay[], id:any) => {
     setTable(tab);
     setTable2(play);
     setId(false);
+    sethistorySearch(id);
   };
 
-  const usersearched = (tab: Type[], play: TypePlay[]) => {
+  const usersearched = (tab: Type[], play: TypePlay[], id: any) => {
     setId(true);
     setTable2(play);
     setTable(tab);
+    sethistorySearch(id);
   };
 
   const handleResize = () => {
@@ -128,8 +131,8 @@ const ProfilePage = (props: { id: any }) => {
     }
     {
       router.query.id === parseJwt(JSON.stringify(token)).sub
-        ? usersearched(buttonsUser, SignOut)
-        : swetshProfile(buttons, letPlay);
+        ? usersearched(buttonsUser, SignOut, parseJwt(JSON.stringify(token)).sub)
+        : swetshProfile(buttons, letPlay, router.query.id);
     }
     setWidth(window.innerWidth);
   };
@@ -238,7 +241,7 @@ const ProfilePage = (props: { id: any }) => {
                 ) : content == "Achievements" && !forbidden ? (
                   <Achievements />
                 ) : content == "Match_History" && !forbidden ? (
-                  <MatchHistory />
+                  <MatchHistory historySearch={historySearch} />
                 ) : content == "Security" && table.length > 2 ? (
                   password == true ? (
                     <ResetPassword />

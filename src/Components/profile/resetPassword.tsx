@@ -64,7 +64,7 @@ const ResetPassword = () => {
       }
 
       const response = await axios.patch(
-        `${ip}/users`,
+        `${process.env.NEXT_PUBLIC_API}/users`,
         {
           oldPassword: password,
           password: ConfirmPassword,

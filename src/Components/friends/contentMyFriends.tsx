@@ -33,7 +33,7 @@ const ContentMyFriends = () => {
       return;
     }
     try {
-      await axios.get(`${ip}/friends`, {
+      await axios.get(`${process.env.NEXT_PUBLIC_API}/friends`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

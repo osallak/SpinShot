@@ -45,7 +45,7 @@ const UploadImage = (props: {
     if (event.target.files && event.target.files[0]) {
       setMyImage((prev: any) => event.target.files[0]);
       console.log("image", event.target.files[0]);
-      // store.dispatch(updateImage(event.target.files[0]));
+      store.dispatch(updateImage(URL.createObjectURL(event.target.files[0])));
       props.setMyImage(event.target.files[0]);
     }
   };
@@ -63,7 +63,7 @@ const UploadImage = (props: {
       if (image) {
         // console.log("no image");
         const response = await axios.post(
-          `${ip}/media`,
+          `${process.env.NEXT_PUBLIC_API}/media`,
           {
             file: image,
           },

@@ -58,7 +58,7 @@ const ChannelSettings = (props: {
     }
     try {
       const res = await axios.patch(
-        `${ip}/room/remove-password`,
+        `${process.env.NEXT_PUBLIC_API}/room/remove-password`,
         { room: props.id },
         {
           headers: {
@@ -94,7 +94,7 @@ const ChannelSettings = (props: {
       }
       try {
         const res = await axios.patch(
-          `${ip}/room/change-password`,
+          `${process.env.NEXT_PUBLIC_API}/room/change-password`,
           { room: props.id, password, newPassword: confirmePassword },
           {
             headers: {
@@ -123,7 +123,7 @@ const ChannelSettings = (props: {
       }
       try {
         const res = await axios.patch(
-          `${ip}/room/protect`,
+          `${process.env.NEXT_PUBLIC_API}/room/protect`,
           { room: props.id, password },
           {
             headers: {

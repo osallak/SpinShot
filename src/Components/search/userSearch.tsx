@@ -37,7 +37,7 @@ const Search = (props: any) => {
       if (isStringEmptyOrWhitespace(targetValue__)) return;
       if (targetValue__) {
         const response = await axios.get(
-          `${ip}/users?keyword=${targetValue__}&limit=${10}`,
+          `${process.env.NEXT_PUBLIC_API}/users?keyword=${targetValue__}&limit=${10}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -42,7 +42,7 @@ const InviteFriends = (props: {
     }
     try {
       await axios.post(
-        `${ip}/room/invite`,
+        `${process.env.NEXT_PUBLIC_API}/room/invite`,
         { userId: props.id, roomName: props.roomId },
         {
           headers: {

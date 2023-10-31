@@ -1,14 +1,10 @@
-import level from "./../../../public/levleIcon.svg";
-import { SignOut, logos } from "@/Components/ui/FolderDropDown/ArrayIcon";
+import { logos } from "@/Components/ui/FolderDropDown/ArrayIcon";
 import DropdownUser from "@/Components/ui/FolderDropDown/DropdownUser";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { useAppSelector } from "../../../redux_tool";
 import { useRouter } from "next/router";
-import parseJwt from "@/utils/parsJwt";
-import toast from "react-hot-toast";
-import axios from "axios";
-import ip from "@/utils/endPoint";
+import { useEffect, useState } from "react";
+import { useAppSelector } from "../../../redux_tool";
+import level from "./../../../public/levleIcon.svg";
 
 const Levle = (props: any) => {
   const opned = props.opne;

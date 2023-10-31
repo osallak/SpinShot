@@ -114,8 +114,21 @@ const DropdownUser = (props: any) => {
 
   const {chatSocket, socket} = useContext(SocketContext);
 
+  const handleSignout = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      await axios.post(`${ip}/2fa/signOut`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      })
+    } catch (error: any) {
+    }
+  }
+
   const HandleState = (name: any) => {
     if (name == "Sign out") {
+      handleSignout()
       chatSocket?.disconnect();
       socket?.disconnect();
       localStorage.removeItem("token");

@@ -11,6 +11,8 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 // import { chatSocket, io } from "chatSocket.io-client";
+import { SocketContext } from "@/context/socket.context";
+import toast from "react-hot-toast";
 import {
   currentFriendsAtom,
   exploreChannelAtom,
@@ -33,9 +35,6 @@ import ExploreChannels from "./exploreChannels";
 import InviteFriends from "./inviteFriends";
 import MobileSubSideBar from "./mobileSubSideBar";
 import SubSideBar from "./subSideBar";
-import { SocketContext } from "@/context/socket.context";
-import { Socket } from "socket.io-client";
-import toast from "react-hot-toast";
 // import { chatSocketContext } from "@/context/chatSocket.context";
 
 // let chatSocket: any;

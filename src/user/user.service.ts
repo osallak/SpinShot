@@ -363,13 +363,13 @@ export class UserService {
   }
 
   async update(id: string, data: UpdateUserDto): Promise<User> {
-    if (data.password) {
+    if (data?.password) {
       if (!data.oldPassword) throw new BadRequestException('Invalid password');
       if (!(await this.verifyPassword(id, data.oldPassword)))
         throw new BadRequestException('Invalid password');
       delete data.oldPassword;
       const salt: string = (await bcrypt.genSalt(10)) as string;
-      data.password = (await bcrypt.hash(data.password, salt)) as string;
+      data.password = (await bcrypt.hash(data?.password, salt)) as string;
     }
     const user: User = await this.prisma.user.update({
       where: { id },

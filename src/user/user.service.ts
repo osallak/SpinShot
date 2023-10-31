@@ -3,8 +3,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
-  Logger,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
 import { UserStatus, haveAchievement } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -30,7 +29,6 @@ import {
 
 @Injectable()
 export class UserService {
-  private readonly logger = new Logger('UserService');
   constructor(private prisma: PrismaService, mailer: MailerService) {}
 
   async findOneByEmail(email: string): Promise<User> {
@@ -122,7 +120,6 @@ export class UserService {
       const salt: string = await bcrypt.genSalt(10); //? does it return a string ?
       hashedPassword = await bcrypt.hash(data.password, salt);
     } catch (error) {
-      this.logger.error(error.message);
       throw new InternalServerErrorException();
     }
     const user: User = await this.prisma.user.create({
@@ -484,7 +481,6 @@ export class UserService {
       const isMatch = await bcrypt.compare(password, user.password);
       return isMatch;
     } catch (error) {
-      this.logger.error(error.message);
       throw new BadRequestException('Invalid credentials');
     }
   }

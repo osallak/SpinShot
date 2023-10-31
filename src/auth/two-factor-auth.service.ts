@@ -151,7 +151,14 @@ export class TwoFactorAuthService {
         await this.userService.updateData(user?.id, {
           isTwoFactorAuthenticated: true,
         });
-        const accessToken = await this.authService.generateToken(u);
+        const uu = await this.userService.findOneById(user?.id);
+        if (!uu) {
+          return reject({
+            status: 404,
+            message: 'User not found',
+          });
+        }
+        const accessToken = await this.authService.generateToken(uu);
         resolve({
           status: 200,
           message: '2FA code is valid',

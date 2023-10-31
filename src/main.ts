@@ -6,9 +6,7 @@ import { PrismaExceptionFilter } from 'src/prisma-client-exception/prisma-client
 import { AppModule } from './app.module';
 
 async function bootstrap(): Promise<void> {
-  const app: INestApplication<any> = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn', 'debug', 'log', 'verbose'],
-  });
+  const app: INestApplication<any> = await NestFactory.create(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

@@ -38,7 +38,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
 
   const fetchTwoFAStatus = async () => {
     try {
-      const res = await axios.get(`${ip}/2fa/status`, {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/2fa/status`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -49,7 +49,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
   const fetchQrCode = async () => {
     try {
       const res = await axios.post(
-        `${ip}/2fa/generate-qr`,
+        `${process.env.NEXT_PUBLIC_API}/2fa/generate-qr`,
         {},
         {
           headers: {
@@ -78,7 +78,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
     try {
       if (!twoFaToggleSwitchStatus) {
         const res = await axios.post(
-          `${ip}/2fa/turn-on-qr`,
+          `${process.env.NEXT_PUBLIC_API}/2fa/turn-on-qr`,
           {
             code: submittedCode,
           },
@@ -93,7 +93,7 @@ const TwoFactor = (props: { isActive: boolean; Switch: Function }) => {
         });
       } else {
         const res = await axios.post(
-          `${ip}/2fa/turn-off-qr`,
+          `${process.env.NEXT_PUBLIC_API}/2fa/turn-off-qr`,
           {
             code: submittedCode,
           },

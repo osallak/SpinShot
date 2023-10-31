@@ -12,7 +12,7 @@ export const getProfile = createAsyncThunk("profile", async (user: any) => {
   try {
     const token = localStorage.getItem("token");
     if (token) {
-      const url = `${ip}/users/profile/${user}`;
+      const url = `${process.env.NEXT_PUBLIC_API}/users/profile/${user}`;
       const respo = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,

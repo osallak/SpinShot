@@ -58,7 +58,7 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
     }
     try {
       const res = await axios.put(
-        `${ip}/friends/${props.id}/block`,
+        `${process.env.NEXT_PUBLIC_API}/friends/${props.id}/block`,
         { id: props.id },
         {
           headers: {
@@ -83,7 +83,7 @@ const CurrentFriendsDropDown = (props: { id: string }) => {
     }
     try {
 			const res = await axios.put(
-				`${ip}/friends/${props.id}/unfriend`,
+				`${process.env.NEXT_PUBLIC_API}/friends/${props.id}/unfriend`,
         { id: props.id },
         {
 					headers: {

@@ -55,7 +55,7 @@ const DropDownChannel: React.FC<any> = (props: {
     if (content === "Kick") {
       try {
         const res = await axios.delete(
-          `${ip}/room/kick/${props.id}/${props.userId}`,
+          `${process.env.NEXT_PUBLIC_API}/room/kick/${props.id}/${props.userId}`,
           {
             params: {
               room: props.id,
@@ -73,7 +73,7 @@ const DropDownChannel: React.FC<any> = (props: {
     } else if (content === "Ban") {
       try {
         const res = await axios.patch(
-          `${ip}/room/ban`,
+          `${process.env.NEXT_PUBLIC_API}/room/ban`,
           { name: props.id, userToBeBanned: props.userId, type: type?.type },
           {
             headers: {
@@ -96,7 +96,7 @@ const DropDownChannel: React.FC<any> = (props: {
         type: type?.type,
       };
       try {
-        const res = await axios.post(`${ip}/room/mute`, params, {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_API}/room/mute`, params, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -109,7 +109,7 @@ const DropDownChannel: React.FC<any> = (props: {
       try {
         // console.log("here");
         const res = await axios.patch(
-          `${ip}/room/elevate`,
+          `${process.env.NEXT_PUBLIC_API}/room/elevate`,
           { room: props.id, user: props.userId },
           {
             headers: {
@@ -124,7 +124,7 @@ const DropDownChannel: React.FC<any> = (props: {
     } else if (content === "Leave") {
       try {
         const res = await axios.patch(
-          `${ip}/room/leave`,
+          `${process.env.NEXT_PUBLIC_API}/room/leave`,
           { room: props.id },
           {
             headers: {

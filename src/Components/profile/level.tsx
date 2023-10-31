@@ -49,7 +49,7 @@ const Levle = (props: any) => {
   //     return;
   //   }
   //   try {
-  //     await axios.post(`${ip}/friends/${router.query.id}`, {
+  //     await axios.post(`${process.env.NEXT_PUBLIC_API}/friends/${router.query.id}`, {
   //       headers: {
   //         Authorization: `Bearer ${token}`,
   //       },

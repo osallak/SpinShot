@@ -16,7 +16,7 @@ const ToggleButton = (props: { isActive: boolean; setisActive: Function }) => {
 
   const fetchTwoFAStatus = async () => {
     try {
-      const res = await axios.get(`${ip}/2fa/status`, {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/2fa/status`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

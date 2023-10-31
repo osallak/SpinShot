@@ -14,12 +14,12 @@ import { useRouter } from "next/router";
 import { PassThrough } from "stream";
 
 const SocketContext = createContext<any>(null);
-let socket = io(`${ip}/games`, {
+let socket = io(`${process.env.NEXT_PUBLIC_API}/games`, {
   // extraHeaders: {},
   autoConnect: false,
 });
 
-let chatSocket = io(`${ip}/chat`, {
+let chatSocket = io(`${process.env.NEXT_PUBLIC_API}/chat`, {
   // extraHeaders: {},
   autoConnect: false,
 });
@@ -72,7 +72,10 @@ export const GameInvite = (props: any) => {
         <DialogHeader className=" flex justify-center items-center text-very-dark-purple font-Passion-One text-3xl">
           Game Invite
         </DialogHeader>
-        <DialogFooter className="">
+        <DialogBody className="font-poppins text-very-dark-purple font-semibold">
+          Remainder: All games played via invitation will be played in a normal map
+        </DialogBody>
+        <DialogFooter className="space-x-3">
           <button
             className=" bg-peridot rounded-full w-28 h-9"
             onClick={props.handleDeclineInvitation}

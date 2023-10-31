@@ -17,7 +17,7 @@ const WaitingPage = () => {
   const fetchData = async () => {
     if (!code) return;
     try {
-      const res = await axios.get(`${ip}/auth/42?code=${code}`);
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/auth/42?code=${code}`);
       setTmpToken(res?.data?.token);
       const token = parseJwt(res?.data?.token);
       if (token.isTwoFactorEnabled === true) {

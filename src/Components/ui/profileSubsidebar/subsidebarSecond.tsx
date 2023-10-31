@@ -18,6 +18,7 @@ const SubsidebarSecond = (props: any) => {
     route != "Security" ? setClick(false) : null;
     setSubBackground(id);
     props.setContent(route);
+    props.setOpned(false);
     // props.setPassword(true);
   };
 
@@ -27,6 +28,7 @@ const SubsidebarSecond = (props: any) => {
   };
 
   const handleClick = () => {
+    console.log('heleleleeoleoo')
     router.push(
       `/profile/${parseJwt(JSON.stringify(localStorage.getItem("token"))).sub}`
     );

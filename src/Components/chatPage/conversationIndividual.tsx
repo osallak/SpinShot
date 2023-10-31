@@ -142,7 +142,7 @@ const ConversationIndividual = (props: {
       const senderId = parseJwt(
         JSON.stringify(localStorage.getItem("token"))
       ).sub;
-      const userNameRes = await axios.get(`${ip}/users/profile/${senderId}`, {
+      const userNameRes = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/profile/${senderId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -163,7 +163,7 @@ const ConversationIndividual = (props: {
         return;
       }
       try {
-        const res = await axios.get(`${ip}/users/status/${props.id}`, {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API}/users/status/${props.id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

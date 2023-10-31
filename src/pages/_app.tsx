@@ -20,11 +20,11 @@ const Func = ({ children }: FuncProps) => {
   console.log("auth status", auth_status);
   let { socket, setSocket, setChatSocket, chatSocket, setGlobalSocketAuth, getGlobalSocket, connectGlobalSocket, setChatSocketAuth, connectChatSocket } = useContext(SocketContext);
   useEffect(() => {
-    const s = io(`${ip}/games`, {
+    const s = io(`${process.env.NEXT_PUBLIC_API}/games`, {
       // extraHeaders: {},
       autoConnect: false,
     });
-    const sc = io(`${ip}/chat`, {
+    const sc = io(`${process.env.NEXT_PUBLIC_API}/chat`, {
       // extraHeaders: {},
       autoConnect: false,
     });

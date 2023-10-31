@@ -47,7 +47,7 @@ const PersonalInformation = (props: any) => {
       Object.keys(form).forEach((key) => {
         if (!form[key]) delete form[key];
       });
-      const response = await axios.patch(`${ip}/users`, form, {
+      const response = await axios.patch(`${process.env.NEXT_PUBLIC_API}/users`, form, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

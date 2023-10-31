@@ -19,7 +19,7 @@ const Twofa = () => {
   const sendCode = async (entredValue: string) => {
     try {
       const res = await axios.post(
-        `${ip}/2fa/authenticate`,
+        `${process.env.NEXT_PUBLIC_API}/2fa/authenticate`,
         { code: entredValue },
         {
           headers: {

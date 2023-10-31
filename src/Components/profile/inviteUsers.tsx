@@ -43,7 +43,7 @@ const InviteToChannel = (props: {
     try {
       // console.log(router.query.id, roomname);
       await axios.post(
-        `${ip}/room/invite`,
+        `${process.env.NEXT_PUBLIC_API}/room/invite`,
         {
           userId: router.query.id,
           roomName: roomname,

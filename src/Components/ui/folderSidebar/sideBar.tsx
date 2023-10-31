@@ -24,7 +24,7 @@ const SideBar = (props: any) => {
     event.preventDefault();
     const page = path.split("/");
     if (props.openSubSideBar && props.flag === page[1]) {
-      console.log('hello world from change page');
+      // console.log('hello world from change page');
       if (props.setOpenSubSideBar) props.setOpenSubSideBar(false);
     }
     if (

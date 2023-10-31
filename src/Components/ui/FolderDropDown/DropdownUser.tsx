@@ -26,7 +26,7 @@ const DropdownUser = (props: any) => {
       return;
     }
     try {
-      console.log(router.query.id);
+      // console.log(router.query.id);
       const resp = await axios.post(
         `${process.env.NEXT_PUBLIC_API}/friends/add/${router.query.id}`,
         null,
@@ -41,7 +41,7 @@ const DropdownUser = (props: any) => {
       );
       toast.success("user invited successfully");
     } catch (error: any) {
-      console.log(error.response);
+      // console.log(error.response);
       if (error.response.status == 409) {
         toast.error("user already invited");
       } else if (error.response.status == 403) {
@@ -136,17 +136,17 @@ const DropdownUser = (props: any) => {
     } else {
       if (name == "Invite to channel") {
         props.setInvite(true);
-        console.log("Invite to channel");
+        // console.log("Invite to channel");
       } else if (name == "Invite") {
-        console.log(name);
+        // console.log(name);
         sendInvitation();
-        console.log("Invite");
+        // console.log("Invite");
       } else if (name == "Block") {
         blockUser();
-        console.log("Block");
+        // console.log("Block");
       } else if (name == "Unblock") {
         unBlockUser();
-        console.log("Unblock");
+        // console.log("Unblock");
       }
     }
   };

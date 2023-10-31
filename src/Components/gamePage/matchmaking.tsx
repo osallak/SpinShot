@@ -27,18 +27,18 @@ const Matchmaking = (props: any) => {
   const handleClick = () => {
     if (!socket) return;
     // setClear(true);
-    // console.log("socket: ", socket);
-    // console.log("leave queue");
-    socket.emit("leaveQueue", () => console.log("leave queue"));
-    socket.on("exception", () => console.log("exception: "));
+    // // console.log("socket: ", socket);
+    // // console.log("leave queue");
+    socket.emit("leaveQueue", () =>{}); // console.log("leave queue"));
+    socket.on("exception", () =>{}); // console.log("exception: "));
     // if (props.matchData) {
     //   socket.emit("leave");
     // }
     // socket.emit("leave", () => {
-    //   console.log('leave');
+    //   // console.log('leave');
     // });
     // props.setGameOver(true);
-    socket.on("disconnect", () => console.log("disconnect: "));
+    socket.on("disconnect", () => {});// console.log("disconnect: "));
     props.setIsClick(!props.isClick);
     // props.setmatchData(null);
     props.setDataOfOpponent(null);
@@ -53,7 +53,7 @@ const Matchmaking = (props: any) => {
     try {
       await dispatch(getProfile(parseJwt(JSON.stringify(token)).sub)).unwrap();
     } catch (error) {
-      // console.log(error);
+      // // console.log(error);
       return;
     }
   };

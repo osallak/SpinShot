@@ -56,27 +56,27 @@ const GamePage = (props: any) => {
   };
 
   const errorEventCallback = (error: string) => {
-    // console.log("error event");
+    // // console.log("error event");
     toast.error(error);
   };
 
   const cancelJoinCallback = () => {
-    // console.log("cancel join");
+    // // console.log("cancel join");
     // setCount(true);
     gameOver && setGameOver(false);
     // setCancelJoin(true);
   };
 
   const gameStartedCallback = (data: any) => {
-    console.log("game started:", data.id);
-    // console.log("game started");
+    // console.log("game started:", data.id);
+    // // console.log("game started");
     // setCount(true);
     setNa(!na);
     setWinnerCardState(true);
     // setCancelJoin(false);
     setLoserCardState(true);
     // setGameJustFinished(false);
-    // console.log("game start data: ", data);
+    // // console.log("game start data: ", data);
     setIsClick(false);
     setGamerState(null);
     setGameOver(false);
@@ -85,7 +85,7 @@ const GamePage = (props: any) => {
     setDataOfOpponent(data);
   };
   const gameOverCallback = (data: any) => {
-    // console.log("game over data: ", data);
+    // // console.log("game over data: ", data);
     setScore(null);
     setClear(true);
     setDataOfOpponent(null);
@@ -99,7 +99,7 @@ const GamePage = (props: any) => {
   };
 
   const handleData = async (data: any) => {
-    // console.log("after");
+    // // console.log("after");
     const token = localStorage.getItem("token");
     if (!token) {
       router.push("/signin");
@@ -111,7 +111,7 @@ const GamePage = (props: any) => {
       return;
     }
     try {
-      // console.log("matchData men handleData", data);
+      // // console.log("matchData men handleData", data);
       if (data?.opponent || data?.opponnet) {
         let url = undefined;
         if (data?.opponnet) url = `${process.env.NEXT_PUBLIC_API}/users/profile/${data?.opponnet}`;
@@ -121,13 +121,13 @@ const GamePage = (props: any) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("respo?.", respo?.data);
+        // console.log("respo?.", respo?.data);
         setDataOfOpponent(respo?.data);
-        // console.log("after setting:", dataOpponent);
+        // // console.log("after setting:", dataOpponent);
       }
     } catch (error) {
-      // console.log("errrror dzeb")
-      console.log(error);
+      // // console.log("errrror dzeb")
+      // console.log(error);
       return;
     }
   };
@@ -139,7 +139,7 @@ const GamePage = (props: any) => {
 
   const initializeSocket = () => {
     socket.on("connect", () => {
-      console.log("connected......");
+      // console.log("connected......");
     });
     socket.on("cancel-join", cancelJoinCallback);
     socket.on("error", errorEventCallback);
@@ -147,13 +147,13 @@ const GamePage = (props: any) => {
     socket.on("match", gameStartedCallback);
     socket.on("gameState", (data: any) => {
       setStart(false);
-      // console.log("game state ", data);
+      // // console.log("game state ", data);
       // setScore(data);
       game?.updateState(data);
     });
 
     socket.on("scoreUpdate", (data: any) => {
-      // console.log("score update ", data);
+      // // console.log("score update ", data);
       setScore(data);
       // game?.updateState(data);
     });

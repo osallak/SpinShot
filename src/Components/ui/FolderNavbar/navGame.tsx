@@ -21,11 +21,11 @@ const NavGame = (props: any) => {
     try {
       await dispatch(getProfile(parseJwt(JSON.stringify(token)).sub)).unwrap();
     } catch (error) {
-      // console.log(error);
+      // // console.log(error);
       return;
     }
   };
-  console.log("data", props?.dataOpponent);
+  // console.log("data", props?.dataOpponent);
 
   useEffect(() => {
     getData();

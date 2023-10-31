@@ -121,7 +121,7 @@ const Chat = () => {
     setReload(true);
   };
   const updateIndividualConversation = (data: any) => {
-    // console.log("data:", data);
+    // // console.log("data:", data);
     const parsedData = JSON.parse(String(data));
     setId(parsedData.from);
 
@@ -206,9 +206,9 @@ const Chat = () => {
         updateChannelConversation(data);
       });
     }
-    chatSocket.on("exception", (data:any) => {toast.error(data?.message ?? "Invalid Operation");
-    console.log("exception", data)});
-    // chatSocket.on("disconnect", (data: any) => console.log("disconnect"));
+    chatSocket.on("exception", (data:any) => {toast.error(data?.message ?? "Invalid Operation")});
+    // console.log("exception", data)});
+    // chatSocket.on("disconnect", (data: any) => // console.log("disconnect"));
   };
 
   const fetchDataExploreChannel = async () => {
@@ -410,7 +410,7 @@ const Chat = () => {
       // chatSocket.off("connect", () => {});
     };
     // return () => {
-    //   console.log("disconnected !!");
+    //   // console.log("disconnected !!");
     //   chatSocket.off("connect");
     //   chatSocket.off("pm");
     //   chatSocket.off("gm");

@@ -52,7 +52,7 @@ const ConversationIndividual = (props: {
       toast.error("You need to login first");
       return;
     }
-    // console.log("invite:", { id: props.id});
+    // // console.log("invite:", { id: props.id});
     socket.emit("invite", {id: props.id});
     toast.success("Invitation sent");
     // router.push(`/game/${router.query.id}`);
@@ -115,7 +115,7 @@ const ConversationIndividual = (props: {
       };
       return [...prev, newIndividualConversation];
     });
-    console.log("messageData:", messageData);
+    // console.log("messageData:", messageData);
     props.socket.emit("pm", messageData);
     setMessage("");
   };

@@ -17,7 +17,7 @@ type FuncProps = {
 
 const Func = ({ children }: FuncProps) => {
   const auth_status = useAppSelector((state) => state.Profile.auth_status);
-  console.log("auth status", auth_status);
+  // console.log("auth status", auth_status);
   let { socket, setSocket, setChatSocket, chatSocket, setGlobalSocketAuth, getGlobalSocket, connectGlobalSocket, setChatSocketAuth, connectChatSocket } = useContext(SocketContext);
   useEffect(() => {
     const s = io(`${process.env.NEXT_PUBLIC_API}/games`, {
@@ -29,7 +29,7 @@ const Func = ({ children }: FuncProps) => {
       autoConnect: false,
     });
     if (auth_status === true) {
-      console.log("you shall not pass");
+      // console.log("you shall not pass");
       if (!chatSocket?.connected) {
         setChatSocketAuth(localStorage.getItem("token") as string);
         // chatSocket.auth = {
@@ -44,7 +44,7 @@ const Func = ({ children }: FuncProps) => {
         // setChatSocket(sc);
         // setChatSocketAuth(localStorage.getItem("token") as string);
         // connectChatSocket();
-        // console.log("chat socket", getChatSocket());
+        // // console.log("chat socket", getChatSocket());
         store.dispatch(updateAuthStatus(false));
       }
       if (!socket.connected) {
@@ -52,13 +52,13 @@ const Func = ({ children }: FuncProps) => {
         //   token: localStorage.getItem("token"),
         // };
         // s.on("connect_error", (err: any) => {
-        //   // console.log(`connect_error due to ${err.message}`);
+        //   // // console.log(`connect_error due to ${err.message}`);
         // });
         // setSocket(s);
         setGlobalSocketAuth(localStorage.getItem("token") as string);
         connectGlobalSocket();
         store.dispatch(updateAuthStatus(false));
-        // console.log("game socket", getGlobalSocket());
+        // // console.log("game socket", getGlobalSocket());
       }
     }
   }, [auth_status]);

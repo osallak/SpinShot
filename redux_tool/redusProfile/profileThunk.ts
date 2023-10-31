@@ -27,7 +27,7 @@ export const getProfile = createAsyncThunk("profile", async (user: any) => {
     store.dispatch(setProfile({}));
     // store.dispatch(updateImage(test));
     // store.dispatch((test));
-    // console.log(error);
+    // // console.log(error);
     throw error;
   }
 });

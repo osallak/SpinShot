@@ -85,7 +85,7 @@ const Signin = () => {
   };
 
   const ContinueIntra = async (e: MouseEvent<HTMLButtonElement>) => {
-    console.log("intra:", process.env.NEXT_PUBLIC_INTRA);
+    // console.log("intra:", process.env.NEXT_PUBLIC_INTRA);
     e.preventDefault();
     Router.push(
       `${process.env.NEXT_PUBLIC_INTRA}`

@@ -66,9 +66,9 @@ const DropDownChannel: React.FC<any> = (props: {
             },
           }
         );
-        // console.log("result from delete axios: ", res);
+        // // console.log("result from delete axios: ", res);
       } catch (error: any) {
-        // console.log("error from kick someone in rooms: ", error);
+        // // console.log("error from kick someone in rooms: ", error);
       }
     } else if (content === "Ban") {
       try {
@@ -81,9 +81,9 @@ const DropDownChannel: React.FC<any> = (props: {
             },
           }
         );
-        // console.log("res from ban: ", res);
+        // // console.log("res from ban: ", res);
       } catch (error: any) {
-        // console.log("error from ban : ", error);
+        // // console.log("error from ban : ", error);
       }
     } else if (content === "Mute") {
       const params: any = {
@@ -101,13 +101,13 @@ const DropDownChannel: React.FC<any> = (props: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        // console.log("res from mute: ", res);
+        // // console.log("res from mute: ", res);
       } catch (error: any) {
-        // console.log("error from mute: ", error);
+        // // console.log("error from mute: ", error);
       }
     } else if (content === "Add as admin") {
       try {
-        // console.log("here");
+        // // console.log("here");
         const res = await axios.patch(
           `${process.env.NEXT_PUBLIC_API}/room/elevate`,
           { room: props.id, user: props.userId },
@@ -117,9 +117,9 @@ const DropDownChannel: React.FC<any> = (props: {
             },
           }
         );
-        // console.log("res from add as admin: ", res);
+        // // console.log("res from add as admin: ", res);
       } catch (error: any) {
-        // console.log("error from add as admin: ", error);
+        // // console.log("error from add as admin: ", error);
       }
     } else if (content === "Leave") {
       try {
@@ -132,9 +132,9 @@ const DropDownChannel: React.FC<any> = (props: {
             },
           }
         );
-        // console.log("res from leave: ", res);
+        // // console.log("res from leave: ", res);
       } catch (error: any) {
-        // console.log("error from leave: ", error);
+        // // console.log("error from leave: ", error);
       }
     }
   };

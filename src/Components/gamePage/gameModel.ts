@@ -73,7 +73,7 @@ class GameModel {
       let x: number = this.mouse.position.x;
       let min: number = this.normalize(150 / 2, 0, 650, 0, this.width) - 5;
       let max: number = this.width - min + 10;
-      // console.log("mouse x", this.mouse.position.x);
+      // // console.log("mouse x", this.mouse.position.x);
       if (x >= min && x <= max) {
         this.socket?.emit("movePlayer", {
           x: this.normalize(this.mouse.position.x, 0, this.width, 0, 650),
@@ -242,7 +242,7 @@ class GameModel {
         x: this.normalize(data.userPaddle, 0, 650, 0, this.width),
         y: this.player1.position.y,
       });
-      // console.log('opponentPaddle: ..... ->', data.opponentPaddle.x);
+      // // console.log('opponentPaddle: ..... ->', data.opponentPaddle.x);
       // Matter.World.add(this.world, this.ball);
       Matter.Body.setPosition(this.player2, {
         x: this.normalize(data.opponentPaddle, 0, 650, 0, this.width),

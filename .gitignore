@@ -1,0 +1,8 @@
+**/node_modules
+**/.next
+**/dist
+**/out
+**/.env
+**/.env.local
+**/.cache
+**/gcs_keyfile.json

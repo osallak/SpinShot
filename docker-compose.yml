@@ -1,0 +1,71 @@
+version: '3'
+
+services:
+  db:
+    container_name: db
+    image: postgres:alpine               
+    restart: always                  
+    env_file:
+      - ./.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB -U $POSTGRES_USER"]
+      interval: 30s                  
+      timeout: 5s                    
+      retries: 3
+    networks:
+      - spinshot-network
+    
+  frontend:
+    container_name: frontend
+    working_dir: /frontend
+    command: sh -c "apk update && apk upgrade && apk --no-cache add curl && npm i
+                && npm run build
+                && npm run start"
+    volumes:
+      - ./frontend:/frontend
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:3000 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 1000
+    depends_on:
+      backend: 
+        condition: "service_healthy"
+
+    env_file:
+      - frontend/.env
+    image: node:lts-alpine
+    restart: always
+    ports:
+      - 3000-3010:3000-3010
+    networks:
+      - spinshot-network
+  backend:
+    container_name: backend
+    working_dir: /backend
+    command: sh -c "apk update && apk upgrade && apk --no-cache add curl && npm i
+                && npx prisma migrate dev --name init
+                && npm run build
+                && npm run start"
+    volumes:
+      - ./backend:/backend
+    depends_on:
+      db:
+        condition: "service_healthy"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:4000/docs || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 1000
+    env_file:
+      - backend/.env
+    image: node:lts-alpine
+    restart: always
+    ports:
+      - 4000:4000
+    networks:
+      - spinshot-network
+
+
+networks:
+  spinshot-network:

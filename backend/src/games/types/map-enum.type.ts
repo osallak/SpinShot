@@ -1,0 +1,1 @@
+export type MapEnum = 'normal' | 'hard' | 'expert';

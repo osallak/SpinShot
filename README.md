@@ -88,6 +88,11 @@ play a default pong game without any added stuff.
 The game must be responsive!
 Other users can watch the game live without interfering in it.
 
+
+# Design
+<img width="2058" alt="Screen Shot 2023-12-13 at 10 23 48 AM" src="https://github.com/osallak/SpinShot/assets/93767526/efe2baaa-d1fa-4ce3-b215-609e0aff132d">
+<a href="https://www.figma.com/file/rtUm0u3VeBVxLbqz96GpnU/whiff-whaff?type=design&node-id=281-63&mode=design&t=RTdg8lqSZ8HmAQyo-0" target="_blank">See detailed design</a>
+
 # Requirements
 
 -   docker
@@ -95,7 +100,7 @@ Other users can watch the game live without interfering in it.
 -   FORTYTWO_APP_ID
 -   FORTYTWO_APP_SECRET
 -   FORTYTWO_APP_CALLBACK_URL
--   (google and mail credentials can be skipped)
+-   (mail credentials can be skipped)
 
 # Installation
 
